@@ -1,0 +1,10 @@
+opencv-python==4.8.1.78
+numpy==1.26.2
+Pillow==10.1.0
+torch==2.1.2+cu121
+torchvision==0.16.2+cu121
+easyocr==1.7.1
+keyboard==0.13.5
+mss==9.0.1
+python-dotenv==1.0.0
+PySide6==6.6.1
