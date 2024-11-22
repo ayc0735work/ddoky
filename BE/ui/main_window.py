@@ -8,7 +8,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("또키 - 종합 매크로")
-        self.setFixedSize(1200, 1000)
+        self.setFixedSize(1200, 1200)
         
         # 폰트 설정
         title_font = QFont("Noto Sans CJK KR", 20, QFont.Weight.Bold)
@@ -62,12 +62,16 @@ class MainWindow(QMainWindow):
         for btn in [self.up_btn, self.down_btn, self.edit_btn, self.delete_btn]:
             btn.setFixedWidth(280//4)  # 목록 상자 너비를 4등분
             logic_buttons_layout.addWidget(btn)
+            btn.setEnabled(False)  # 초기 상태는 비활성화
             
         # 버튼 클릭 이벤트 연결
-        self.up_btn.clicked.connect(self.on_up_clicked)
-        self.down_btn.clicked.connect(self.on_down_clicked)
-        self.edit_btn.clicked.connect(self.on_edit_clicked)
-        self.delete_btn.clicked.connect(self.on_delete_clicked)
+        self.up_btn.clicked.connect(self.on_up_btn_clicked)
+        self.down_btn.clicked.connect(self.on_down_btn_clicked)
+        self.edit_btn.clicked.connect(self.on_edit_btn_clicked)
+        self.delete_btn.clicked.connect(self.on_delete_btn_clicked)
+        
+        # 리스트 아이템 선택 이벤트 연결
+        self.logic_listwidget.itemSelectionChanged.connect(self.on_logic_selection_changed)
         
         logic_layout.addLayout(logic_buttons_layout)
         logic_list.setLayout(logic_layout)
@@ -92,6 +96,10 @@ class MainWindow(QMainWindow):
         reset_btn = QPushButton("초기화")
         name_layout.addWidget(save_btn)
         name_layout.addWidget(reset_btn)
+        
+        # 버튼 클릭 이벤트 연결
+        save_btn.clicked.connect(self.on_save_btn_clicked)
+        reset_btn.clicked.connect(self.on_reset_btn_clicked)
         
         order_layout.addLayout(name_layout)
         
@@ -120,12 +128,16 @@ class MainWindow(QMainWindow):
         for btn in [self.order_up_btn, self.order_down_btn, self.order_edit_btn, self.order_delete_btn]:
             btn.setFixedWidth(280//4)  # 목록 상자 너비를 4등분
             order_buttons_layout.addWidget(btn)
+            btn.setEnabled(False)  # 초기 상태는 비활성화
             
         # 버튼 클릭 이벤트 연결
-        self.order_up_btn.clicked.connect(self.on_order_up_clicked)
-        self.order_down_btn.clicked.connect(self.on_order_down_clicked)
-        self.order_edit_btn.clicked.connect(self.on_order_edit_clicked)
-        self.order_delete_btn.clicked.connect(self.on_order_delete_clicked)
+        self.order_up_btn.clicked.connect(self.on_order_up_btn_clicked)
+        self.order_down_btn.clicked.connect(self.on_order_down_btn_clicked)
+        self.order_edit_btn.clicked.connect(self.on_order_edit_btn_clicked)
+        self.order_delete_btn.clicked.connect(self.on_order_delete_btn_clicked)
+        
+        # 리스트 아이템 선택 이벤트 연결
+        self.order_listwidget.itemSelectionChanged.connect(self.on_order_selection_changed)
         
         order_layout.addLayout(order_buttons_layout)
         order_frame.setLayout(order_layout)
@@ -154,10 +166,10 @@ class MainWindow(QMainWindow):
         tools_layout.addWidget(self.delay_btn)
         
         # 버튼 클릭 이벤트 연결
-        self.record_btn.clicked.connect(self.on_record_clicked)
-        self.key_input_btn.clicked.connect(self.on_key_input_clicked)
-        self.mouse_input_btn.clicked.connect(self.on_mouse_input_clicked)
-        self.delay_btn.clicked.connect(self.on_delay_clicked)
+        self.record_btn.clicked.connect(self.on_record_btn_clicked)
+        self.key_input_btn.clicked.connect(self.on_key_input_btn_clicked)
+        self.mouse_input_btn.clicked.connect(self.on_mouse_input_btn_clicked)
+        self.delay_btn.clicked.connect(self.on_delay_btn_clicked)
         
         tools_frame.setLayout(tools_layout)
         tools_frame.setFixedSize(200, 480)
@@ -284,7 +296,7 @@ class MainWindow(QMainWindow):
                    self.record_btn, self.key_input_btn, self.mouse_input_btn, self.delay_btn]:
             btn.setStyleSheet(button_style)
             
-    def on_up_clicked(self):
+    def on_up_btn_clicked(self):
         print("위로 이동 버튼 클릭됨")
         current_row = self.logic_listwidget.currentRow()
         if current_row > 0:
@@ -292,7 +304,7 @@ class MainWindow(QMainWindow):
             self.logic_listwidget.insertItem(current_row - 1, item)
             self.logic_listwidget.setCurrentRow(current_row - 1)
             
-    def on_down_clicked(self):
+    def on_down_btn_clicked(self):
         print("아래로 이동 버튼 클릭됨")
         current_row = self.logic_listwidget.currentRow()
         if current_row < self.logic_listwidget.count() - 1:
@@ -300,19 +312,19 @@ class MainWindow(QMainWindow):
             self.logic_listwidget.insertItem(current_row + 1, item)
             self.logic_listwidget.setCurrentRow(current_row + 1)
             
-    def on_edit_clicked(self):
+    def on_edit_btn_clicked(self):
         print("수정 버튼 클릭됨")
         current_item = self.logic_listwidget.currentItem()
         if current_item:
             print(f"Edit item: {current_item.text()}")
             
-    def on_delete_clicked(self):
+    def on_delete_btn_clicked(self):
         print("삭제 버튼 클릭됨")
         current_row = self.logic_listwidget.currentRow()
         if current_row >= 0:
             self.logic_listwidget.takeItem(current_row)
             
-    def on_order_up_clicked(self):
+    def on_order_up_btn_clicked(self):
         print("순서 위로 이동 버튼 클릭됨")
         current_row = self.order_listwidget.currentRow()
         if current_row > 0:
@@ -320,7 +332,7 @@ class MainWindow(QMainWindow):
             self.order_listwidget.insertItem(current_row - 1, item)
             self.order_listwidget.setCurrentRow(current_row - 1)
             
-    def on_order_down_clicked(self):
+    def on_order_down_btn_clicked(self):
         print("순서 아래로 이동 버튼 클릭됨")
         current_row = self.order_listwidget.currentRow()
         if current_row < self.order_listwidget.count() - 1:
@@ -328,26 +340,58 @@ class MainWindow(QMainWindow):
             self.order_listwidget.insertItem(current_row + 1, item)
             self.order_listwidget.setCurrentRow(current_row + 1)
             
-    def on_order_edit_clicked(self):
+    def on_order_edit_btn_clicked(self):
         print("순서 수정 버튼 클릭됨")
         current_item = self.order_listwidget.currentItem()
         if current_item:
             print(f"Edit order item: {current_item.text()}")
             
-    def on_order_delete_clicked(self):
+    def on_order_delete_btn_clicked(self):
         print("순서 삭제 버튼 클릭됨")
         current_row = self.order_listwidget.currentRow()
         if current_row >= 0:
             self.order_listwidget.takeItem(current_row)
             
-    def on_record_clicked(self):
+    def on_record_btn_clicked(self):
         print("기록 모드 클릭됨")
-        
-    def on_key_input_clicked(self):
+
+    def on_key_input_btn_clicked(self):
         print("키 입력 추가 클릭됨")
-        
-    def on_mouse_input_clicked(self):
+
+    def on_mouse_input_btn_clicked(self):
         print("마우스 입력 추가 클릭됨")
-        
-    def on_delay_clicked(self):
+
+    def on_delay_btn_clicked(self):
         print("지연시간 추가 클릭됨")
+
+    def on_logic_selection_changed(self):
+        if self.logic_listwidget.currentItem():
+            self.up_btn.setEnabled(True)
+            self.down_btn.setEnabled(True)
+            self.edit_btn.setEnabled(True)
+            self.delete_btn.setEnabled(True)
+        else:
+            self.up_btn.setEnabled(False)
+            self.down_btn.setEnabled(False)
+            self.edit_btn.setEnabled(False)
+            self.delete_btn.setEnabled(False)
+
+    def on_order_selection_changed(self):
+        if self.order_listwidget.currentItem():
+            self.order_up_btn.setEnabled(True)
+            self.order_down_btn.setEnabled(True)
+            self.order_edit_btn.setEnabled(True)
+            self.order_delete_btn.setEnabled(True)
+        else:
+            self.order_up_btn.setEnabled(False)
+            self.order_down_btn.setEnabled(False)
+            self.order_edit_btn.setEnabled(False)
+            self.order_delete_btn.setEnabled(False)
+            
+    def on_save_btn_clicked(self):
+        print("저장 버튼 클릭됨")
+        # TODO: 저장 로직 구현
+
+    def on_reset_btn_clicked(self):
+        print("초기화 버튼 클릭됨")
+        # TODO: 초기화 로직 구현
