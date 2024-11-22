@@ -21,12 +21,11 @@ class LogRedirector:
 class MainWindow(QMainWindow):
     # 상수 정의
     WINDOW_WIDTH = 900
-    WINDOW_HEIGHT = 1400
-    TITLE_HEIGHT = 40
+    WINDOW_MINIMUM_HEIGHT = 1600
     BASIC_SECTION_HEIGHT = 500
     MIDDLE_SPACE = 20
     ADVANCED_SECTION_HEIGHT = 200
-    LOG_SECTION_HEIGHT = 200
+    LOG_CONTAINER_MIN_HEIGHT = 100
     
     FRAME_STYLE = "QFrame { background: transparent; border: none; }"
     CONTAINER_STYLE = """
@@ -40,7 +39,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("또키 - 종합 매크로")
-        self.setMinimumHeight(800)  # 최소 높이만 1400으로 설정
+        self.setMinimumHeight(self.WINDOW_MINIMUM_HEIGHT)  # 최소 높이 설정
         self.setFixedWidth(self.WINDOW_WIDTH)  # 가로 크기는 고정
         
         # 폰트 설정
@@ -271,7 +270,7 @@ class MainWindow(QMainWindow):
         
         log_container = QFrame()
         log_container.setStyleSheet(self.CONTAINER_STYLE)
-        log_container.setMinimumSize(850, 400)  # 로그 컨테이너도 최소 높이 설정
+        log_container.setMinimumSize(850, self.LOG_CONTAINER_MIN_HEIGHT)  # 로그 컨테이너도 최소 높이 설정
         
         # 로그 컨테이너가 수직으로 늘어날 수 있도록 설정
         size_policy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
@@ -284,8 +283,12 @@ class MainWindow(QMainWindow):
         # 로그 출력을 위한 QTextEdit 추가
         self.log_text = QTextEdit()
         self.log_text.setReadOnly(True)  # 읽기 전용으로 설정
-        self.log_text.setMinimumHeight(400)  # 최소 높이 400px로 설정
         self.log_text.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)  # 수직 스크롤바 항상 표시
+        
+        # 로그 텍스트의 크기 정책을 Expanding으로 설정하여 컨테이너에 맞추도록 함
+        log_text_size_policy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.log_text.setSizePolicy(log_text_size_policy)
+        
         self.log_text.setStyleSheet("""
             QTextEdit {
                 background-color: white;
