@@ -3,6 +3,20 @@ from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
                            QListWidgetItem, QTextEdit, QSizePolicy)
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
+import sys
+
+class LogRedirector:
+    def __init__(self, text_widget):
+        self.text_widget = text_widget
+        self.original_stdout = sys.stdout
+
+    def write(self, text):
+        self.original_stdout.write(text)  # 터미널에도 출력
+        if text.strip():  # 빈 줄이 아닌 경우에만 출력
+            self.text_widget.append(text.rstrip())  # 오른쪽 공백과 줄바꿈 제거
+
+    def flush(self):
+        self.original_stdout.flush()
 
 class MainWindow(QMainWindow):
     # 상수 정의
@@ -122,70 +136,60 @@ class MainWindow(QMainWindow):
         logic_list.setLayout(logic_layout)
         logic_list.setFixedSize(345, self.BASIC_SECTION_HEIGHT)
         
-        # 로직 순서 영역
-        order_frame = QFrame()
-        order_frame.setStyleSheet(self.FRAME_STYLE)
-        order_layout = QVBoxLayout()
-        order_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        order_layout.setContentsMargins(10, 10, 10, 10)
+        # 로직 구성 영역
+        logic_detail_frame = QFrame()
+        logic_detail_frame.setStyleSheet(self.FRAME_STYLE)
+        logic_detail_layout = QVBoxLayout()
+        logic_detail_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        logic_detail_layout.setContentsMargins(10, 10, 10, 10)
         
-        order_title = QLabel("로직 순서 영역")
-        order_title.setFont(self.section_font)
-        order_layout.addWidget(order_title)
+        logic_detail_title = QLabel("로직 구성 영역")
+        logic_detail_title.setFont(self.section_font)
+        logic_detail_layout.addWidget(logic_detail_title)
         
-        name_layout = QHBoxLayout()
-        name_label = QLabel("로직 이름")
-        name_layout.addWidget(name_label)
-        name_layout.addWidget(QLineEdit())
-        save_btn = QPushButton("저장")
-        reset_btn = QPushButton("초기화")
-        name_layout.addWidget(save_btn)
-        name_layout.addWidget(reset_btn)
-        order_layout.addLayout(name_layout)
-        
-        self.order_listwidget = QListWidget()
-        self.order_listwidget.setFixedSize(325, 350)
+        self.logic_detail_listwidget = QListWidget()
+        self.logic_detail_listwidget.setFixedSize(325, 350)
         for i in range(1, 7):
             item = QListWidgetItem(f"{i}. 키보드 A 입력")
-            self.order_listwidget.addItem(item)
-        order_layout.addWidget(self.order_listwidget)
+            self.logic_detail_listwidget.addItem(item)
+        logic_detail_layout.addWidget(self.logic_detail_listwidget)
         
         spacer2 = QWidget()
         spacer2.setFixedHeight(30)
-        order_layout.addWidget(spacer2)
+        logic_detail_layout.addWidget(spacer2)
         
-        order_buttons_layout = QHBoxLayout()
-        self.order_up_btn = QPushButton("↑")
-        self.order_down_btn = QPushButton("↓")
-        self.order_edit_btn = QPushButton("수정")
-        self.order_delete_btn = QPushButton("삭제")
+        logic_detail_buttons_layout = QHBoxLayout()
+        self.logic_detail_up_btn = QPushButton("위로")
+        self.logic_detail_down_btn = QPushButton("아래로")
+        self.logic_detail_edit_btn = QPushButton("수정")
+        self.logic_detail_delete_btn = QPushButton("삭제")
         
-        for btn in [self.order_up_btn, self.order_down_btn, self.order_edit_btn, self.order_delete_btn]:
+        for btn in [self.logic_detail_up_btn, self.logic_detail_down_btn, self.logic_detail_edit_btn, self.logic_detail_delete_btn]:
             btn.setFixedWidth(280//4)
-            order_buttons_layout.addWidget(btn)
+            logic_detail_buttons_layout.addWidget(btn)
             btn.setEnabled(False)
         
-        self.order_up_btn.clicked.connect(self.on_order_up_btn_clicked)
-        self.order_down_btn.clicked.connect(self.on_order_down_btn_clicked)
-        self.order_edit_btn.clicked.connect(self.on_order_edit_btn_clicked)
-        self.order_delete_btn.clicked.connect(self.on_order_delete_btn_clicked)
+        self.logic_detail_up_btn.clicked.connect(self.on_logic_detail_up_btn_clicked)
+        self.logic_detail_down_btn.clicked.connect(self.on_logic_detail_down_btn_clicked)
+        self.logic_detail_edit_btn.clicked.connect(self.on_logic_detail_edit_btn_clicked)
+        self.logic_detail_delete_btn.clicked.connect(self.on_logic_detail_delete_btn_clicked)
         
-        self.order_listwidget.itemSelectionChanged.connect(self.on_order_selection_changed)
+        self.logic_detail_listwidget.itemSelectionChanged.connect(self.on_logic_detail_selection_changed)
         
-        order_layout.addLayout(order_buttons_layout)
-        order_frame.setLayout(order_layout)
-        order_frame.setFixedSize(345, self.BASIC_SECTION_HEIGHT)
+        logic_detail_layout.addLayout(logic_detail_buttons_layout)
+        logic_detail_frame.setLayout(logic_detail_layout)
+        logic_detail_frame.setFixedSize(345, self.BASIC_SECTION_HEIGHT)
         
-        # 로직 구성 도구 영역
-        tools_frame = QFrame()
-        tools_frame.setStyleSheet(self.FRAME_STYLE)
-        tools_layout = QVBoxLayout()
-        tools_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        tools_layout.setContentsMargins(10, 10, 10, 10)
+        # 로직 구성 메이커
+        logic_detail_maker_frame = QFrame()
+        logic_detail_maker_frame.setStyleSheet(self.FRAME_STYLE)
+        logic_detail_maker_layout = QVBoxLayout()
+        logic_detail_maker_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        logic_detail_maker_layout.setContentsMargins(10, 10, 10, 10)
         
-        tools_title = QLabel("로직 구성 도구 영역")
-        tools_title.setFont(self.section_font)
-        tools_layout.addWidget(tools_title)
+        logic_detail_maker_title = QLabel("로직 구성 메이커")
+        logic_detail_maker_title.setFont(self.section_font)
+        logic_detail_maker_layout.addWidget(logic_detail_maker_title)
         
         self.key_input_btn = QPushButton("키 입력 추가")
         self.mouse_input_btn = QPushButton("마우스 입력 추가")
@@ -199,14 +203,14 @@ class MainWindow(QMainWindow):
         
         for btn in [self.key_input_btn, self.mouse_input_btn, self.delay_btn, self.record_btn]:
             btn.setFixedWidth(160)
-            tools_layout.addWidget(btn)
+            logic_detail_maker_layout.addWidget(btn)
         
-        tools_frame.setLayout(tools_layout)
-        tools_frame.setFixedSize(180, self.BASIC_SECTION_HEIGHT)
+        logic_detail_maker_frame.setLayout(logic_detail_maker_layout)
+        logic_detail_maker_frame.setFixedSize(180, self.BASIC_SECTION_HEIGHT)
         
         basic_features_layout.addWidget(logic_list)
-        basic_features_layout.addWidget(order_frame)
-        basic_features_layout.addWidget(tools_frame)
+        basic_features_layout.addWidget(logic_detail_frame)
+        basic_features_layout.addWidget(logic_detail_maker_frame)
         
         self.main_layout.addLayout(basic_features_layout)
     
@@ -253,6 +257,27 @@ class MainWindow(QMainWindow):
         # 로그 컨테이너가 수직으로 늘어날 수 있도록 설정
         size_policy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
         log_container.setSizePolicy(size_policy)
+        
+        # 로그 컨테이너 내부 레이아웃
+        log_container_layout = QVBoxLayout()
+        log_container.setLayout(log_container_layout)
+        
+        # 로그 출력을 위한 QTextEdit 추가
+        self.log_text = QTextEdit()
+        self.log_text.setReadOnly(True)  # 읽기 전용으로 설정
+        self.log_text.setStyleSheet("""
+            QTextEdit {
+                background-color: white;
+                border: none;
+                font-family: 'Consolas', monospace;
+                font-size: 12px;
+                line-height: 0.5;
+            }
+        """)
+        log_container_layout.addWidget(self.log_text)
+        
+        # 표준 출력을 로그로 리다이렉트
+        sys.stdout = LogRedirector(self.log_text)
         
         log_layout.addWidget(log_container)
         
@@ -315,10 +340,10 @@ class MainWindow(QMainWindow):
         """
         
         self.logic_listwidget.setStyleSheet(list_style)
-        self.order_listwidget.setStyleSheet(list_style)
+        self.logic_detail_listwidget.setStyleSheet(list_style)
         
         for btn in [self.up_btn, self.down_btn, self.edit_btn, self.delete_btn,
-                   self.order_up_btn, self.order_down_btn, self.order_edit_btn, self.order_delete_btn,
+                   self.logic_detail_up_btn, self.logic_detail_down_btn, self.logic_detail_edit_btn, self.logic_detail_delete_btn,
                    self.record_btn, self.key_input_btn, self.mouse_input_btn, self.delay_btn]:
             btn.setStyleSheet(button_style)
     
@@ -342,41 +367,43 @@ class MainWindow(QMainWindow):
         print("수정 버튼 클릭됨")
         current_item = self.logic_listwidget.currentItem()
         if current_item:
-            print(f"Edit item: {current_item.text()}")
+            print(f"수정된 로직: {current_item.text()}")
             
     def on_delete_btn_clicked(self):
         print("삭제 버튼 클릭됨")
         current_row = self.logic_listwidget.currentRow()
         if current_row >= 0:
-            self.logic_listwidget.takeItem(current_row)
+            item = self.logic_listwidget.takeItem(current_row)
+            print(f"삭제된 로직: {item.text()}")
             
-    def on_order_up_btn_clicked(self):
+    def on_logic_detail_up_btn_clicked(self):
         print("순서 위로 이동 버튼 클릭됨")
-        current_row = self.order_listwidget.currentRow()
+        current_row = self.logic_detail_listwidget.currentRow()
         if current_row > 0:
-            item = self.order_listwidget.takeItem(current_row)
-            self.order_listwidget.insertItem(current_row - 1, item)
-            self.order_listwidget.setCurrentRow(current_row - 1)
+            item = self.logic_detail_listwidget.takeItem(current_row)
+            self.logic_detail_listwidget.insertItem(current_row - 1, item)
+            self.logic_detail_listwidget.setCurrentRow(current_row - 1)
             
-    def on_order_down_btn_clicked(self):
+    def on_logic_detail_down_btn_clicked(self):
         print("순서 아래로 이동 버튼 클릭됨")
-        current_row = self.order_listwidget.currentRow()
-        if current_row < self.order_listwidget.count() - 1:
-            item = self.order_listwidget.takeItem(current_row)
-            self.order_listwidget.insertItem(current_row + 1, item)
-            self.order_listwidget.setCurrentRow(current_row + 1)
+        current_row = self.logic_detail_listwidget.currentRow()
+        if current_row < self.logic_detail_listwidget.count() - 1:
+            item = self.logic_detail_listwidget.takeItem(current_row)
+            self.logic_detail_listwidget.insertItem(current_row + 1, item)
+            self.logic_detail_listwidget.setCurrentRow(current_row + 1)
             
-    def on_order_edit_btn_clicked(self):
+    def on_logic_detail_edit_btn_clicked(self):
         print("순서 수정 버튼 클릭됨")
-        current_item = self.order_listwidget.currentItem()
+        current_item = self.logic_detail_listwidget.currentItem()
         if current_item:
-            print(f"Edit order item: {current_item.text()}")
+            print(f"수정된 로직 구성: {current_item.text()}")
             
-    def on_order_delete_btn_clicked(self):
+    def on_logic_detail_delete_btn_clicked(self):
         print("순서 삭제 버튼 클릭됨")
-        current_row = self.order_listwidget.currentRow()
+        current_row = self.logic_detail_listwidget.currentRow()
         if current_row >= 0:
-            self.order_listwidget.takeItem(current_row)
+            item = self.logic_detail_listwidget.takeItem(current_row)
+            print(f"삭제된 로직 구성: {item.text()}")
             
     def on_record_btn_clicked(self):
         print("기록 모드 클릭됨")
@@ -402,17 +429,17 @@ class MainWindow(QMainWindow):
             self.edit_btn.setEnabled(False)
             self.delete_btn.setEnabled(False)
 
-    def on_order_selection_changed(self):
-        if self.order_listwidget.currentItem():
-            self.order_up_btn.setEnabled(True)
-            self.order_down_btn.setEnabled(True)
-            self.order_edit_btn.setEnabled(True)
-            self.order_delete_btn.setEnabled(True)
+    def on_logic_detail_selection_changed(self):
+        if self.logic_detail_listwidget.currentItem():
+            self.logic_detail_up_btn.setEnabled(True)
+            self.logic_detail_down_btn.setEnabled(True)
+            self.logic_detail_edit_btn.setEnabled(True)
+            self.logic_detail_delete_btn.setEnabled(True)
         else:
-            self.order_up_btn.setEnabled(False)
-            self.order_down_btn.setEnabled(False)
-            self.order_edit_btn.setEnabled(False)
-            self.order_delete_btn.setEnabled(False)
+            self.logic_detail_up_btn.setEnabled(False)
+            self.logic_detail_down_btn.setEnabled(False)
+            self.logic_detail_edit_btn.setEnabled(False)
+            self.logic_detail_delete_btn.setEnabled(False)
             
     def on_save_btn_clicked(self):
         print("저장 버튼 클릭됨")
