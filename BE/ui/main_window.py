@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
                            QPushButton, QLabel, QLineEdit, QFrame, QListWidget,
-                           QListWidgetItem, QTextEdit, QSizePolicy)
+                           QListWidgetItem, QTextEdit, QSizePolicy, QScrollArea)
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 import sys
@@ -23,7 +23,7 @@ class MainWindow(QMainWindow):
     WINDOW_WIDTH = 900
     WINDOW_HEIGHT = 1400
     TITLE_HEIGHT = 40
-    BASIC_SECTION_HEIGHT = 480
+    BASIC_SECTION_HEIGHT = 500
     MIDDLE_SPACE = 20
     ADVANCED_SECTION_HEIGHT = 200
     LOG_SECTION_HEIGHT = 200
@@ -40,11 +40,21 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("또키 - 종합 매크로")
-        self.setFixedSize(self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
+        self.setMinimumHeight(800)  # 최소 높이만 1400으로 설정
+        self.setFixedWidth(self.WINDOW_WIDTH)  # 가로 크기는 고정
         
         # 폰트 설정
         self.title_font = QFont("Noto Sans CJK KR", 20, QFont.Weight.Bold)
         self.section_font = QFont("Noto Sans CJK KR", 14, QFont.Weight.Bold)
+        
+        # 스크롤 영역 생성
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        
+        # 메인 위젯 생성
+        main_widget = QWidget()
         
         # 레이아웃 초기화
         self.init_layouts()
@@ -54,10 +64,14 @@ class MainWindow(QMainWindow):
         self.init_basic_features()
         self.init_advanced_features()
         
-        # 메인 위젯 설정
-        main_widget = QWidget()
+        # 메인 위젯에 레이아웃 설정
         main_widget.setLayout(self.main_layout)
-        self.setCentralWidget(main_widget)
+        
+        # 스크롤 영역에 메인 위젯 설정
+        scroll_area.setWidget(main_widget)
+        
+        # 중앙 위젯으로 스크롤 영역 설정
+        self.setCentralWidget(scroll_area)
         
         # 스타일 적용
         self.apply_styles()
@@ -97,22 +111,19 @@ class MainWindow(QMainWindow):
         logic_layout = QVBoxLayout()
         logic_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         logic_layout.setContentsMargins(10, 10, 10, 10)
+        logic_layout.setSpacing(10)  # 위젯 간 간격을 10px로 설정
         
         logic_title = QLabel("만든 로직 영역")
         logic_title.setFont(self.section_font)
         logic_layout.addWidget(logic_title)
         
         self.logic_listwidget = QListWidget()
-        self.logic_listwidget.setFixedSize(325, 380)
+        self.logic_listwidget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)  # 남은 공간을 자동으로 채우도록
         for i in range(1, 7):
             item_text = f"키보드 A 입력" if i > 3 else f"{'ABCD'[i-1]*4} 로직"
             item = QListWidgetItem(f"{i}. {item_text}")
             self.logic_listwidget.addItem(item)
         logic_layout.addWidget(self.logic_listwidget)
-        
-        spacer = QWidget()
-        spacer.setFixedHeight(30)
-        logic_layout.addWidget(spacer)
         
         logic_buttons_layout = QHBoxLayout()
         self.up_btn = QPushButton("↑")
@@ -142,21 +153,18 @@ class MainWindow(QMainWindow):
         logic_detail_layout = QVBoxLayout()
         logic_detail_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         logic_detail_layout.setContentsMargins(10, 10, 10, 10)
+        logic_detail_layout.setSpacing(10)  # 위젯 간 간격을 10px로 설정
         
         logic_detail_title = QLabel("로직 구성 영역")
         logic_detail_title.setFont(self.section_font)
         logic_detail_layout.addWidget(logic_detail_title)
         
         self.logic_detail_listwidget = QListWidget()
-        self.logic_detail_listwidget.setFixedSize(325, 350)
+        self.logic_detail_listwidget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)  # 남은 공간을 자동으로 채우도록
         for i in range(1, 7):
             item = QListWidgetItem(f"{i}. 키보드 A 입력")
             self.logic_detail_listwidget.addItem(item)
         logic_detail_layout.addWidget(self.logic_detail_listwidget)
-        
-        spacer2 = QWidget()
-        spacer2.setFixedHeight(30)
-        logic_detail_layout.addWidget(spacer2)
         
         logic_detail_buttons_layout = QHBoxLayout()
         self.logic_detail_up_btn = QPushButton("위로")
@@ -186,10 +194,18 @@ class MainWindow(QMainWindow):
         logic_detail_maker_layout = QVBoxLayout()
         logic_detail_maker_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         logic_detail_maker_layout.setContentsMargins(10, 10, 10, 10)
+        logic_detail_maker_layout.setSpacing(10)
         
         logic_detail_maker_title = QLabel("로직 구성 메이커")
         logic_detail_maker_title.setFont(self.section_font)
         logic_detail_maker_layout.addWidget(logic_detail_maker_title)
+        
+        # 버튼을 담을 컨테이너 프레임
+        button_container = QFrame()
+        button_container.setStyleSheet(self.FRAME_STYLE)
+        button_container_layout = QVBoxLayout()
+        button_container_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        button_container_layout.setSpacing(10)
         
         self.key_input_btn = QPushButton("키 입력 추가")
         self.mouse_input_btn = QPushButton("마우스 입력 추가")
@@ -203,7 +219,10 @@ class MainWindow(QMainWindow):
         
         for btn in [self.key_input_btn, self.mouse_input_btn, self.delay_btn, self.record_btn]:
             btn.setFixedWidth(160)
-            logic_detail_maker_layout.addWidget(btn)
+            button_container_layout.addWidget(btn)
+        
+        button_container.setLayout(button_container_layout)
+        logic_detail_maker_layout.addWidget(button_container, 1)  # stretch factor 1을 주어 남은 공간을 채우도록
         
         logic_detail_maker_frame.setLayout(logic_detail_maker_layout)
         logic_detail_maker_frame.setFixedSize(180, self.BASIC_SECTION_HEIGHT)
@@ -252,7 +271,7 @@ class MainWindow(QMainWindow):
         
         log_container = QFrame()
         log_container.setStyleSheet(self.CONTAINER_STYLE)
-        log_container.setMinimumSize(850, self.LOG_SECTION_HEIGHT)
+        log_container.setMinimumSize(850, 400)  # 로그 컨테이너도 최소 높이 설정
         
         # 로그 컨테이너가 수직으로 늘어날 수 있도록 설정
         size_policy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
@@ -265,6 +284,8 @@ class MainWindow(QMainWindow):
         # 로그 출력을 위한 QTextEdit 추가
         self.log_text = QTextEdit()
         self.log_text.setReadOnly(True)  # 읽기 전용으로 설정
+        self.log_text.setMinimumHeight(400)  # 최소 높이 400px로 설정
+        self.log_text.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)  # 수직 스크롤바 항상 표시
         self.log_text.setStyleSheet("""
             QTextEdit {
                 background-color: white;
