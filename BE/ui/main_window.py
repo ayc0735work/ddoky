@@ -1,93 +1,138 @@
 from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
                            QPushButton, QLabel, QLineEdit, QFrame, QListWidget,
-                           QListWidgetItem, QTextEdit)
+                           QListWidgetItem, QTextEdit, QSizePolicy)
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 
 class MainWindow(QMainWindow):
+    # 상수 정의
+    WINDOW_WIDTH = 900
+    WINDOW_HEIGHT = 1400
+    TITLE_HEIGHT = 40
+    BASIC_SECTION_HEIGHT = 480
+    MIDDLE_SPACE = 20
+    ADVANCED_SECTION_HEIGHT = 200
+    LOG_SECTION_HEIGHT = 200
+    
+    FRAME_STYLE = "QFrame { background: transparent; border: none; }"
+    CONTAINER_STYLE = """
+        QFrame {
+            background-color: #f8f8f8;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    """
+    
     def __init__(self):
         super().__init__()
         self.setWindowTitle("또키 - 종합 매크로")
-        self.setFixedSize(1200, 1200)
+        self.setFixedSize(self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
         
         # 폰트 설정
-        title_font = QFont("Noto Sans CJK KR", 20, QFont.Weight.Bold)
-        section_font = QFont("Noto Sans CJK KR", 14, QFont.Weight.Bold)
+        self.title_font = QFont("Noto Sans CJK KR", 20, QFont.Weight.Bold)
+        self.section_font = QFont("Noto Sans CJK KR", 14, QFont.Weight.Bold)
         
-        # 메인 위젯과 레이아웃
+        # 레이아웃 초기화
+        self.init_layouts()
+        
+        # UI 구성요소 초기화
+        self.init_title()
+        self.init_basic_features()
+        self.init_advanced_features()
+        
+        # 메인 위젯 설정
         main_widget = QWidget()
-        main_layout = QVBoxLayout()
-        main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        main_widget.setLayout(self.main_layout)
+        self.setCentralWidget(main_widget)
         
-        # 타이틀
+        # 스타일 적용
+        self.apply_styles()
+    
+    def init_layouts(self):
+        """레이아웃 초기화"""
+        # 메인 레이아웃
+        self.main_layout = QVBoxLayout()
+        self.main_layout.setSpacing(self.MIDDLE_SPACE)  # 레이아웃 간 간격 설정
+        
+        # 기본 기능 영역 레이아웃
+        self.basic_features_layout = QHBoxLayout()
+        self.basic_features_layout.setSpacing(0)
+        
+        # 고급 기능 영역 레이아웃
+        self.advanced_features_layout = QHBoxLayout()
+        self.advanced_features_layout.setSpacing(0)
+        
+        # 로그 영역 레이아웃
+        self.log_layout = QHBoxLayout()
+        self.log_layout.setSpacing(0)
+    
+    def init_title(self):
+        """타이틀 초기화"""
         title = QLabel("또키 - 종합 매크로")
-        title.setFont(title_font)
-        main_layout.addWidget(title)
+        title.setFont(self.title_font)
+        self.main_layout.addWidget(title)
+    
+    def init_basic_features(self):
+        """기본 기능 영역 초기화"""
+        # 기본 기능 영역 레이아웃
+        basic_features_layout = self.basic_features_layout
         
-        # 상단 컨텐츠 영역
-        content_layout = QHBoxLayout()
-        content_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        
-        # 만든 직 영역
+        # 로직 목록 영역
         logic_list = QFrame()
+        logic_list.setStyleSheet(self.FRAME_STYLE)
         logic_layout = QVBoxLayout()
         logic_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        logic_layout.setContentsMargins(10, 10, 10, 10)
+        
         logic_title = QLabel("만든 로직 영역")
-        logic_title.setFont(section_font)
+        logic_title.setFont(self.section_font)
         logic_layout.addWidget(logic_title)
         
-        # 만든 로직 목록
         self.logic_listwidget = QListWidget()
-        self.logic_listwidget.setFixedSize(325, 400)
+        self.logic_listwidget.setFixedSize(325, 380)
         for i in range(1, 7):
             item_text = f"키보드 A 입력" if i > 3 else f"{'ABCD'[i-1]*4} 로직"
             item = QListWidgetItem(f"{i}. {item_text}")
             self.logic_listwidget.addItem(item)
-            
         logic_layout.addWidget(self.logic_listwidget)
         
-        # 10px 간격 추가
         spacer = QWidget()
-        spacer.setFixedHeight(10)
+        spacer.setFixedHeight(30)
         logic_layout.addWidget(spacer)
         
-        # 만든 로직 버튼 영역
         logic_buttons_layout = QHBoxLayout()
         self.up_btn = QPushButton("↑")
         self.down_btn = QPushButton("↓")
         self.edit_btn = QPushButton("수정")
         self.delete_btn = QPushButton("삭제")
         
-        # 버튼들의 크기를 동일하게 설정
         for btn in [self.up_btn, self.down_btn, self.edit_btn, self.delete_btn]:
-            btn.setFixedWidth(280//4)  # 목록 상자 너비를 4등분
+            btn.setFixedWidth(280//4)
             logic_buttons_layout.addWidget(btn)
-            btn.setEnabled(False)  # 초기 상태는 비활성화
-            
-        # 버튼 클릭 이벤트 연결
+            btn.setEnabled(False)
+        
         self.up_btn.clicked.connect(self.on_up_btn_clicked)
         self.down_btn.clicked.connect(self.on_down_btn_clicked)
         self.edit_btn.clicked.connect(self.on_edit_btn_clicked)
         self.delete_btn.clicked.connect(self.on_delete_btn_clicked)
         
-        # 리스트 아이템 선택 이벤트 연결
         self.logic_listwidget.itemSelectionChanged.connect(self.on_logic_selection_changed)
         
         logic_layout.addLayout(logic_buttons_layout)
         logic_list.setLayout(logic_layout)
-        logic_list.setFixedSize(345, 480)
+        logic_list.setFixedSize(345, self.BASIC_SECTION_HEIGHT)
         
         # 로직 순서 영역
         order_frame = QFrame()
+        order_frame.setStyleSheet(self.FRAME_STYLE)
         order_layout = QVBoxLayout()
         order_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        order_layout.setContentsMargins(10, 10, 10, 10)
         
-        # 로직 순서 타이틀
         order_title = QLabel("로직 순서 영역")
-        order_title.setFont(section_font)
+        order_title.setFont(self.section_font)
         order_layout.addWidget(order_title)
         
-        # 로직 이름 입력 영역
         name_layout = QHBoxLayout()
         name_label = QLabel("로직 이름")
         name_layout.addWidget(name_label)
@@ -96,146 +141,128 @@ class MainWindow(QMainWindow):
         reset_btn = QPushButton("초기화")
         name_layout.addWidget(save_btn)
         name_layout.addWidget(reset_btn)
-        
-        # 버튼 클릭 이벤트 연결
-        save_btn.clicked.connect(self.on_save_btn_clicked)
-        reset_btn.clicked.connect(self.on_reset_btn_clicked)
-        
         order_layout.addLayout(name_layout)
         
-        # 로직 순서 목록
         self.order_listwidget = QListWidget()
-        self.order_listwidget.setFixedSize(325, 370)
+        self.order_listwidget.setFixedSize(325, 350)
         for i in range(1, 7):
             item = QListWidgetItem(f"{i}. 키보드 A 입력")
             self.order_listwidget.addItem(item)
-            
         order_layout.addWidget(self.order_listwidget)
         
-        # 10px 간격 추가
         spacer2 = QWidget()
-        spacer2.setFixedHeight(10)
+        spacer2.setFixedHeight(30)
         order_layout.addWidget(spacer2)
         
-        # 로직 순서 버튼 영역
         order_buttons_layout = QHBoxLayout()
         self.order_up_btn = QPushButton("↑")
         self.order_down_btn = QPushButton("↓")
         self.order_edit_btn = QPushButton("수정")
         self.order_delete_btn = QPushButton("삭제")
         
-        # 버튼들의 크기를 동일하게 설정
         for btn in [self.order_up_btn, self.order_down_btn, self.order_edit_btn, self.order_delete_btn]:
-            btn.setFixedWidth(280//4)  # 목록 상자 너비를 4등분
+            btn.setFixedWidth(280//4)
             order_buttons_layout.addWidget(btn)
-            btn.setEnabled(False)  # 초기 상태는 비활성화
-            
-        # 버튼 클릭 이벤트 연결
+            btn.setEnabled(False)
+        
         self.order_up_btn.clicked.connect(self.on_order_up_btn_clicked)
         self.order_down_btn.clicked.connect(self.on_order_down_btn_clicked)
         self.order_edit_btn.clicked.connect(self.on_order_edit_btn_clicked)
         self.order_delete_btn.clicked.connect(self.on_order_delete_btn_clicked)
         
-        # 리스트 아이템 선택 이벤트 연결
         self.order_listwidget.itemSelectionChanged.connect(self.on_order_selection_changed)
         
         order_layout.addLayout(order_buttons_layout)
         order_frame.setLayout(order_layout)
-        order_frame.setFixedSize(345, 480)
+        order_frame.setFixedSize(345, self.BASIC_SECTION_HEIGHT)
         
         # 로직 구성 도구 영역
         tools_frame = QFrame()
+        tools_frame.setStyleSheet(self.FRAME_STYLE)
         tools_layout = QVBoxLayout()
         tools_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        tools_layout.setContentsMargins(10, 10, 10, 10)
         
-        # 로직 구성 도구 이틀
-        tools_title = QLabel("로직 구성 도구")
-        tools_title.setFont(section_font)
+        tools_title = QLabel("로직 구성 도구 영역")
+        tools_title.setFont(self.section_font)
         tools_layout.addWidget(tools_title)
         
-        # 도구 버튼 생성 및 이벤트 연결
-        self.record_btn = QPushButton("기록 모드")
         self.key_input_btn = QPushButton("키 입력 추가")
         self.mouse_input_btn = QPushButton("마우스 입력 추가")
         self.delay_btn = QPushButton("지연시간 추가")
+        self.record_btn = QPushButton("기록 모드")
         
-        # 버튼을 레이아웃에 추가
-        tools_layout.addWidget(self.record_btn)
-        tools_layout.addWidget(self.key_input_btn)
-        tools_layout.addWidget(self.mouse_input_btn)
-        tools_layout.addWidget(self.delay_btn)
-        
-        # 버튼 클릭 이벤트 연결
-        self.record_btn.clicked.connect(self.on_record_btn_clicked)
         self.key_input_btn.clicked.connect(self.on_key_input_btn_clicked)
         self.mouse_input_btn.clicked.connect(self.on_mouse_input_btn_clicked)
         self.delay_btn.clicked.connect(self.on_delay_btn_clicked)
+        self.record_btn.clicked.connect(self.on_record_btn_clicked)
+        
+        for btn in [self.key_input_btn, self.mouse_input_btn, self.delay_btn, self.record_btn]:
+            btn.setFixedWidth(160)
+            tools_layout.addWidget(btn)
         
         tools_frame.setLayout(tools_layout)
-        tools_frame.setFixedSize(200, 480)
+        tools_frame.setFixedSize(180, self.BASIC_SECTION_HEIGHT)
         
-        # 컨텐츠 레이아웃에 위젯 추가
-        content_layout.addWidget(logic_list)
-        content_layout.addWidget(order_frame)
-        content_layout.addWidget(tools_frame)
+        basic_features_layout.addWidget(logic_list)
+        basic_features_layout.addWidget(order_frame)
+        basic_features_layout.addWidget(tools_frame)
         
-        main_layout.addLayout(content_layout)
+        self.main_layout.addLayout(basic_features_layout)
+    
+    def init_advanced_features(self):
+        """고급 기능 영역 초기화"""
+        # 고급 기능 영역 레이아웃
+        advanced_features_layout = self.advanced_features_layout
         
-        # 40px 간격 추가
-        top_spacer = QWidget()
-        top_spacer.setFixedHeight(40)
-        main_layout.addWidget(top_spacer)
-        
-        # 고급 기능 영역
         advanced_frame = QFrame()
+        advanced_frame.setStyleSheet(self.FRAME_STYLE)
+        advanced_frame.setFixedWidth(870)
         advanced_layout = QVBoxLayout()
-        advanced_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        advanced_layout.setContentsMargins(10, 10, 10, 10)
         
         advanced_title = QLabel("고급 기능 영역")
-        advanced_title.setFont(section_font)
+        advanced_title.setFont(self.section_font)
         advanced_layout.addWidget(advanced_title)
         
-        # 내용을 담을 내부 프레임 추가
-        inner_frame = QFrame()
-        inner_frame.setStyleSheet("""
-            QFrame {
-                border: 1px solid black;
-                background-color: white;
-            }
-        """)
-        inner_frame.setFixedSize(890, 160)  # 타이틀 영역을 제외한 크기
-        advanced_layout.addWidget(inner_frame)
+        advanced_container = QFrame()
+        advanced_container.setStyleSheet(self.CONTAINER_STYLE)
+        advanced_container.setFixedSize(850, self.ADVANCED_SECTION_HEIGHT)
+        advanced_layout.addWidget(advanced_container)
         
         advanced_frame.setLayout(advanced_layout)
-        advanced_frame.setFixedSize(890, 200)
-        main_layout.addWidget(advanced_frame)
+        advanced_features_layout.addWidget(advanced_frame)
         
-        # 40px 간격 추가
-        middle_spacer = QWidget()
-        middle_spacer.setFixedHeight(40)
-        main_layout.addWidget(middle_spacer)
+        self.main_layout.addLayout(advanced_features_layout)
         
-        # 로그 영역
+        # 로그 영역 초기화
         log_frame = QFrame()
+        log_frame.setStyleSheet(self.FRAME_STYLE)
+        log_frame.setFixedWidth(870)
         log_layout = QVBoxLayout()
-        log_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        log_layout.setContentsMargins(10, 10, 10, 10)
         
         log_title = QLabel("로그 영역")
-        log_title.setFont(section_font)
+        log_title.setFont(self.section_font)
         log_layout.addWidget(log_title)
         
-        log_text = QTextEdit()
-        log_text.setReadOnly(True)
-        log_layout.addWidget(log_text)
+        log_container = QFrame()
+        log_container.setStyleSheet(self.CONTAINER_STYLE)
+        log_container.setMinimumSize(850, self.LOG_SECTION_HEIGHT)
+        
+        # 로그 컨테이너가 수직으로 늘어날 수 있도록 설정
+        size_policy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
+        log_container.setSizePolicy(size_policy)
+        
+        log_layout.addWidget(log_container)
         
         log_frame.setLayout(log_layout)
-        log_frame.setFixedSize(890, 200)  # 세 영역의 너비 합계
-        main_layout.addWidget(log_frame)
+        self.log_layout.addWidget(log_frame)
         
-        main_widget.setLayout(main_layout)
-        self.setCentralWidget(main_widget)
-        
-        # 스타일 설정
+        self.main_layout.addLayout(self.log_layout)
+    
+    def apply_styles(self):
+        """스타일 적용"""
         list_style = """
             QListWidget {
                 border: 1px solid #ccc;
@@ -290,12 +317,11 @@ class MainWindow(QMainWindow):
         self.logic_listwidget.setStyleSheet(list_style)
         self.order_listwidget.setStyleSheet(list_style)
         
-        # 버튼 스타일 적용
         for btn in [self.up_btn, self.down_btn, self.edit_btn, self.delete_btn,
                    self.order_up_btn, self.order_down_btn, self.order_edit_btn, self.order_delete_btn,
                    self.record_btn, self.key_input_btn, self.mouse_input_btn, self.delay_btn]:
             btn.setStyleSheet(button_style)
-            
+    
     def on_up_btn_clicked(self):
         print("위로 이동 버튼 클릭됨")
         current_row = self.logic_listwidget.currentRow()
