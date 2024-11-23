@@ -1,0 +1,22 @@
+# Window dimensions
+MAIN_WINDOW_WIDTH = 900
+MAIN_WINDOW_HEIGHT = 1600
+
+# Section heights
+BASIC_SECTION_HEIGHT = 500
+ADVANCED_SECTION_HEIGHT = 200
+LOG_CONTAINER_MIN_HEIGHT = 100
+
+# Spacing
+MIDDLE_SPACE = 20
+
+# Widget specific dimensions
+LOGIC_LIST_WIDTH = 345
+LOGIC_DETAIL_WIDTH = 345
+LOGIC_MAKER_WIDTH = 180
+ADVANCED_FRAME_WIDTH = 870
+LOG_FRAME_WIDTH = 870
+
+# Button dimensions
+LOGIC_BUTTON_WIDTH = 280 // 4  # For logic list and detail buttons
+MAKER_BUTTON_WIDTH = 160  # For logic maker buttons
