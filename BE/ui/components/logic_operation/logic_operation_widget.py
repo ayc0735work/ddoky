@@ -1,10 +1,11 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
-                             QLabel, QCheckBox, QPushButton)
+                             QLabel, QCheckBox, QPushButton, QDialog)
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
 
 from ...constants.styles import (FRAME_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
+from BE.ui.components.process_selector.process_selector_dialog import ProcessSelectorDialog
 
 class LogicOperationWidget(QFrame):
     """로직 동작 온오프 위젯"""
@@ -94,8 +95,12 @@ class LogicOperationWidget(QFrame):
         
     def _on_select_process(self):
         """프로세스 선택 버튼 클릭 시 호출"""
-        # 실제 프로세스 선택 로직은 컨트롤러에서 구현
-        pass
+        dialog = ProcessSelectorDialog(self)
+        if dialog.exec() == QDialog.Accepted and dialog.selected_process:
+            process = dialog.selected_process
+            text = f"선택된 프로세스 : [ PID : {process['pid']} ] {process['name']} - {process['title']}"
+            self.selected_process_label.setText(text)
+            self.selected_process = process
         
     def _on_reset_process(self):
         """프로세스 초기화 버튼 클릭 시 호출"""
