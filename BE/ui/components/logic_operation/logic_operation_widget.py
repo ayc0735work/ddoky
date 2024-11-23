@@ -97,13 +97,15 @@ class LogicOperationWidget(QFrame):
         pass
         
     def _get_process_info_text(self, process):
-        """프로세스 정보 텍스트 형식 반환"""
+        """프로세스 정보를 텍스트로 반환"""
+        if not process:
+            return "선택된 프로세스 없음"
         return f"[ PID : {process['pid']} ] {process['name']} - {process['title']}"
 
     def _on_operation_toggled(self, checked):
-        """로직 동작 토글 시 호출"""
-        if checked and not self.selected_process:
-            QMessageBox.warning(self, "경고", "프로세스를 먼저 선택해주세요.")
+        """체크박스 상태가 변경될 때 호출"""
+        if not self.selected_process:
+            self.log_message.emit("프로세스를 선택한 후 로직 동작을 시작할 수 있습니다")
             self.operation_checkbox.setChecked(False)
             return
             

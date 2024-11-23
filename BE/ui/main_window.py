@@ -1,23 +1,24 @@
 from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
                            QPushButton, QLabel, QLineEdit, QFrame, QListWidget,
                            QListWidgetItem, QTextEdit, QSizePolicy, QScrollArea)
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QPoint, QSize
 from PySide6.QtGui import QFont
 import sys
 
-from .components.title.title_widget import TitleWidget
-from .components.logic_list.logic_list_widget import LogicListWidget
-from .components.logic_list.logic_list_controller import LogicListController
-from .components.logic_detail.logic_detail_widget import LogicDetailWidget
-from .components.logic_detail.logic_detail_controller import LogicDetailController
-from .components.logic_maker.logic_maker_widget import LogicMakerWidget
-from .components.logic_maker.logic_maker_controller import LogicMakerController
-from .components.logic_operation.logic_operation_controller import LogicOperationController
-from .components.logic_operation.logic_operation_widget import LogicOperationWidget
-from .components.advanced.advanced_widget import AdvancedWidget
-from .components.log.log_widget import LogWidget
+from BE.ui.components.title.title_widget import TitleWidget
+from BE.ui.components.logic_list.logic_list_widget import LogicListWidget
+from BE.ui.components.logic_list.logic_list_controller import LogicListController
+from BE.ui.components.logic_detail.logic_detail_widget import LogicDetailWidget
+from BE.ui.components.logic_detail.logic_detail_controller import LogicDetailController
+from BE.ui.components.logic_maker.logic_maker_widget import LogicMakerWidget
+from BE.ui.components.logic_maker.logic_maker_controller import LogicMakerController
+from BE.ui.components.logic_operation.logic_operation_controller import LogicOperationController
+from BE.ui.components.logic_operation.logic_operation_widget import LogicOperationWidget
+from BE.ui.components.advanced.advanced_widget import AdvancedWidget
+from BE.ui.components.log.log_widget import LogWidget
+from BE.settings.settings_manager import SettingsManager
 
-from .constants.dimensions import (MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, BASIC_SECTION_HEIGHT,
+from BE.ui.constants.dimensions import (MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, BASIC_SECTION_HEIGHT,
                                MIDDLE_SPACE, ADVANCED_SECTION_HEIGHT)
 
 class MainWindow(QMainWindow):
@@ -25,8 +26,10 @@ class MainWindow(QMainWindow):
     
     def __init__(self):
         super().__init__()
+        self.settings_manager = SettingsManager()
         self.init_ui()
         self._setup_connections()  # 시그널/슬롯 연결 설정
+        self._load_window_settings()
         
     def init_ui(self):
         """UI 초기화"""
@@ -148,3 +151,23 @@ class MainWindow(QMainWindow):
 
     def _append_log(self, message):
         self.log_widget.append(message)
+
+    def _load_window_settings(self):
+        """윈도우 설정 로드"""
+        settings = self.settings_manager.get_window_settings()
+        position = settings["position"]
+        size = settings["size"]
+        
+        self.resize(size["width"], size["height"])
+        self.move(position["x"], position["y"])
+        
+    def closeEvent(self, event):
+        """윈도우가 닫힐 때 호출되는 이벤트 핸들러"""
+        # 현재 윈도우 위치와 크기 저장
+        position = self.pos()
+        size = self.size()
+        
+        self.settings_manager.set_window_position(position.x(), position.y())
+        self.settings_manager.set_window_size(size.width(), size.height())
+        
+        super().closeEvent(event)
