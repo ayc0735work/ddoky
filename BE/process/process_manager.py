@@ -44,3 +44,32 @@ class ProcessManager:
         
         win32gui.EnumWindows(enum_window_callback, processes)
         return processes
+
+    @staticmethod
+    def get_active_process():
+        """현재 활성화된 창의 프로세스 정보를 반환"""
+        try:
+            hwnd = win32gui.GetForegroundWindow()
+            if not hwnd:
+                return None
+
+            _, pid = win32process.GetWindowThreadProcessId(hwnd)
+            title = win32gui.GetWindowText(hwnd)
+            
+            if not title:  # 창 제목이 없는 경우
+                return None
+            
+            try:
+                process = psutil.Process(pid)
+                process_name = process.name()
+                
+                return {
+                    'pid': pid,
+                    'name': process_name,
+                    'title': title,
+                    'hwnd': hwnd
+                }
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                return None
+        except Exception:
+            return None

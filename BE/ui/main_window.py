@@ -84,6 +84,7 @@ class MainWindow(QMainWindow):
         
         # 로직 동작 온오프 위젯
         self.logic_operation_widget = LogicOperationWidget()
+        self.logic_operation_controller = LogicOperationController(self.logic_operation_widget)
         self.main_layout.addWidget(self.logic_operation_widget)
         
         # 기본 기능 영역
