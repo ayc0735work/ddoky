@@ -1,12 +1,10 @@
 from PySide6.QtWidgets import QFrame, QVBoxLayout, QLabel, QTextEdit, QSizePolicy
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
-import sys
 
 from ...constants.styles import (FRAME_STYLE, CONTAINER_STYLE, LOG_TEXT_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from ...constants.dimensions import LOG_FRAME_WIDTH, LOG_CONTAINER_MIN_HEIGHT
-from .log_redirector import LogRedirector
 
 class LogWidget(QFrame):
     """로그를 표시하는 위젯"""
@@ -57,9 +55,7 @@ class LogWidget(QFrame):
         
         self.setLayout(layout)
         
-        # 표준 출력을 로그로 리다이렉트
-        sys.stdout = LogRedirector(self.log_text)
-
     def append(self, message):
         """로그 메시지 추가"""
-        self.log_text.append(message)
+        if message and message.strip():  # 빈 메시지가 아닌 경우에만 추가
+            self.log_text.append(message.rstrip())  # 오른쪽 공백과 줄바꿈 제거

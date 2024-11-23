@@ -11,6 +11,7 @@ class AdvancedWidget(QFrame):
     
     # 시그널 정의
     advanced_action = Signal(str)  # 고급 기능 액션이 발생했을 때
+    log_message = Signal(str)  # 로그 메시지 시그널
     
     def __init__(self, parent=None):
         super().__init__(parent)

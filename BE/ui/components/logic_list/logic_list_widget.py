@@ -16,6 +16,7 @@ class LogicListWidget(QFrame):
     item_edited = Signal(str)  # 아이템이 수정되었을 때
     item_deleted = Signal(str)  # 아이템이 삭제되었을 때
     logic_selected = Signal(str)  # 로직이 선택되었을 때
+    log_message = Signal(str)  # 로그 메시지 시그널
     
     def __init__(self, parent=None):
         super().__init__(parent)

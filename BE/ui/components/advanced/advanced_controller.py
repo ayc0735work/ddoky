@@ -14,5 +14,10 @@ class AdvancedController:
         self.widget.advanced_action.connect(self._handle_advanced_action)
         
     def _handle_advanced_action(self, action):
-        """고급 기능 액션 처리"""
-        print(f"고급 기능 실행: {action}")
+        """고급 기능 실행 처리
+        
+        Args:
+            action (str): 실행된 고급 기능의 종류
+        """
+        log_msg = f"고급 기능이 실행되었습니다: {action}"
+        self.widget.log_message.emit(log_msg)

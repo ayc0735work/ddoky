@@ -20,17 +20,23 @@ class LogicOperationController(QObject):
         """시그널 연결 설정"""
         self.widget.operation_toggled.connect(self._handle_operation_toggle)
         self.widget.process_reset.connect(self._handle_process_reset)
+        self.widget.process_selected.connect(self._handle_process_selected)
         self.widget.select_process_btn.clicked.connect(self._handle_process_selection)
         
     def _handle_operation_toggle(self, checked):
         """로직 동작 토글 처리"""
-        # TODO: 실제 로직 동작 처리 구현
-        pass
+        if checked:
+            self.widget.log_message.emit("프로세스에서 로직 동작을 시작합니다")
+        else:
+            self.widget.log_message.emit("프로세스에서 로직 동작을 종료합니다")
         
     def _handle_process_reset(self):
         """프로세스 초기화 처리"""
-        # TODO: 실제 프로세스 초기화 처리 구현
-        pass
+        self.widget.log_message.emit("선택된 프로세스를 초기화 했습니다")
+        
+    def _handle_process_selected(self, process_info):
+        """프로세스 선택 처리"""
+        self.widget.log_message.emit(f"{process_info} 프로세스를 선택했습니다")
         
     def _handle_process_selection(self):
         """프로세스 선택 처리"""

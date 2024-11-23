@@ -31,7 +31,8 @@ class LogicMakerController:
         Args:
             mouse_text (str): 마우스 입력 텍스트
         """
-        print(f"마우스 입력이 추가되었습니다: {mouse_text}")
+        log_msg = f"마우스 입력이 추가되었습니다: {mouse_text}"
+        self.widget.log_message.emit(log_msg)
         
     def _handle_delay_input(self, delay_text):
         """지연시간 처리
@@ -39,7 +40,8 @@ class LogicMakerController:
         Args:
             delay_text (str): 지연시간 텍스트
         """
-        print(f"지연시간이 추가되었습니다: {delay_text}")
+        log_msg = f"지연시간이 추가되었습니다: {delay_text}"
+        self.widget.log_message.emit(log_msg)
         
     def _handle_record_mode(self, is_recording):
         """기록 모드 처리
@@ -48,4 +50,5 @@ class LogicMakerController:
             is_recording (bool): 기록 모드 활성화 여부
         """
         status = "시작" if is_recording else "중지"
-        print(f"기록 모드가 {status}되었습니다.")
+        log_msg = f"기록 모드가 {status}되었습니다."
+        self.widget.log_message.emit(log_msg)

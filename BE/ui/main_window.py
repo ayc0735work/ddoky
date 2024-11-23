@@ -17,6 +17,7 @@ from BE.ui.components.logic_operation.logic_operation_widget import LogicOperati
 from BE.ui.components.advanced.advanced_widget import AdvancedWidget
 from BE.ui.components.log.log_widget import LogWidget
 from BE.settings.settings_manager import SettingsManager
+from BE.ui.utils.error_handler import ErrorHandler
 
 from BE.ui.constants.dimensions import (MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, BASIC_SECTION_HEIGHT,
                                MIDDLE_SPACE, ADVANCED_SECTION_HEIGHT)
@@ -27,6 +28,10 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.settings_manager = SettingsManager()
+        
+        # 전역 예외 처리기 설정
+        self.error_handler = ErrorHandler()
+        
         self.init_ui()
         self._setup_connections()  # 시그널/슬롯 연결 설정
         self._load_window_settings()
@@ -136,6 +141,9 @@ class MainWindow(QMainWindow):
         
     def _setup_connections(self):
         """컴포넌트 간 시그널/슬롯 연결 설정"""
+        # 전역 에러 핸들러 연결
+        self.error_handler.error_occurred.connect(self._append_log)
+        
         # 로직 리스트와 상세 정보 연결
         self.logic_list_widget.logic_selected.connect(self.logic_detail_controller.on_logic_selected)
         
@@ -147,7 +155,16 @@ class MainWindow(QMainWindow):
         self.logic_maker_widget.mouse_input.connect(self._on_mouse_input)
         self.logic_maker_widget.delay_input.connect(self._on_delay_input)
         self.logic_maker_widget.log_message.connect(self._append_log)  # 로그 메시지 연결
-
+        
+        # 로직 상세 정보 로그 메시지 연결
+        self.logic_detail_widget.log_message.connect(self._append_log)
+        
+        # 로직 리스트 로그 메시지 연결
+        self.logic_list_widget.log_message.connect(self._append_log)
+        
+        # 고급 기능 로그 메시지 연결
+        self.advanced_widget.log_message.connect(self._append_log)
+        
     def _handle_record_mode(self):
         # TODO: Implement record mode handling
         pass

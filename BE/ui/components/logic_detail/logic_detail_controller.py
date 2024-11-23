@@ -17,15 +17,18 @@ class LogicDetailController:
         
     def _handle_item_moved(self):
         """아이템 이동 처리"""
-        print("로직 구성 순서가 변경되었습니다.")
+        log_msg = "로직 구성 순서가 변경되었습니다."
+        self.widget.log_message.emit(log_msg)
         
     def _handle_item_edited(self, item_text):
         """아이템 수정 처리"""
-        print(f"수정된 로직 구성: {item_text}")
+        log_msg = f"수정된 로직 구성: {item_text}"
+        self.widget.log_message.emit(log_msg)
         
     def _handle_item_deleted(self, item_text):
         """아이템 삭제 처리"""
-        print(f"삭제된 로직 구성: {item_text}")
+        log_msg = f"삭제된 로직 구성: {item_text}"
+        self.widget.log_message.emit(log_msg)
         
     def on_logic_selected(self, logic_name):
         """로직이 선택되었을 때의 처리
@@ -41,4 +44,5 @@ class LogicDetailController:
             action (str): 실행된 고급 기능의 종류
         """
         # TODO: 고급 기능에 따른 로직 상세 정보 업데이트
-        print(f"고급 기능에 따른 로직 상세 정보 업데이트: {action}")
+        log_msg = f"고급 기능에 따른 로직 상세 정보 업데이트: {action}"
+        self.widget.log_message.emit(log_msg)

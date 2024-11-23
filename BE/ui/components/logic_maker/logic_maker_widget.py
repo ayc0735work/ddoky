@@ -88,11 +88,10 @@ class LogicMakerWidget(QFrame):
                   f"키보드 위치: {self._get_key_location(key_info['scan_code'])}, "
                   f"수정자 키: {self._get_modifier_text(key_info['modifiers'])} ]")
         
-        # 로그 메시지 출력 및 전달
-        print(log_msg)  # 터미널에 출력
-        self.log_message.emit(log_msg)  # 로그 위젯에 출력
+        # 로그 메시지 전달
+        self.log_message.emit(log_msg)
         
-        # 키 정보 전달 (로그 출력 없이)
+        # 키 정보 전달
         self.key_input.emit(key_info)
             
     def _get_key_location(self, scan_code):

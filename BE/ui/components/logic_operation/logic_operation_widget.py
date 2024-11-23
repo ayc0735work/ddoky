@@ -104,16 +104,12 @@ class LogicOperationWidget(QFrame):
 
     def _on_operation_toggled(self, checked):
         """체크박스 상태가 변경될 때 호출"""
-        if not self.selected_process:
-            self.log_message.emit("프로세스를 선택한 후 로직 동작을 시작할 수 있습니다")
+        if checked and not self.selected_process:
+            self.operation_checkbox.blockSignals(True)  # 시그널 임시 차단
             self.operation_checkbox.setChecked(False)
+            self.operation_checkbox.blockSignals(False)  # 시그널 차단 해제
+            self.log_message.emit("선택된 프로세스가 없습니다. 프로세스를 먼저 선택해주세요")
             return
-            
-        process_info = self._get_process_info_text(self.selected_process)
-        if checked:
-            self.log_message.emit(f"{process_info} 프로세스에서 로직 동작을 시작합니다")
-        else:
-            self.log_message.emit(f"{process_info} 프로세스에서 로직 동작을 종료합니다")
         self.operation_toggled.emit(checked)
         
     def _on_select_process(self):
@@ -124,12 +120,10 @@ class LogicOperationWidget(QFrame):
             text = f"선택된 프로세스 : {self._get_process_info_text(process)}"
             self.selected_process_label.setText(text)
             self.selected_process = process
-            self.log_message.emit(f"{self._get_process_info_text(process)} 프로세스를 선택했습니다")
+            self.process_selected.emit(self._get_process_info_text(process))
         
     def _on_reset_process(self):
         """프로세스 초기화 버튼 클릭 시 호출"""
-        if self.selected_process:
-            self.log_message.emit("선택된 프로세스를 초기화 했습니다")
         self.process_reset.emit()
         self.selected_process = None
         self.selected_process_label.setText("선택된 프로세스: 없음")
