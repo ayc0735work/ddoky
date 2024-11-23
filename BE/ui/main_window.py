@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
                            QPushButton, QLabel, QLineEdit, QFrame, QListWidget,
                            QListWidgetItem, QTextEdit, QSizePolicy, QScrollArea)
-from PySide6.QtCore import Qt, QPoint, QSize
+from PySide6.QtCore import Qt, QPoint, QSize, QSettings
 from PySide6.QtGui import QFont
 import sys
 
@@ -144,13 +144,53 @@ class MainWindow(QMainWindow):
         
         # 고급 기능과 로직 상세 정보 연결
         self.advanced_widget.advanced_action.connect(self.logic_detail_controller.on_advanced_action)
+        
+        # 로직 메이커 시그널 연결
+        self.logic_maker_widget.key_input.connect(self._on_key_input)
+        self.logic_maker_widget.mouse_input.connect(self._on_mouse_input)
+        self.logic_maker_widget.delay_input.connect(self._on_delay_input)
+        self.logic_maker_widget.record_mode.connect(self._on_record_mode)
+        self.logic_maker_widget.log_message.connect(self._append_log)  # 로그 메시지 연결
 
     def _handle_record_mode(self):
         # TODO: Implement record mode handling
         pass
 
     def _append_log(self, message):
+        """로그 메시지 추가"""
         self.log_widget.append(message)
+        
+    def _on_key_input(self, key_info):
+        """키 입력이 추가되었을 때 호출"""
+        # 키 정보를 문자열로 변환
+        key_text = key_info.get('text', '')
+        modifiers = key_info.get('modifiers', 0)
+        modifier_text = ""
+        
+        if modifiers & Qt.ControlModifier:
+            modifier_text += "Ctrl+"
+        if modifiers & Qt.ShiftModifier:
+            modifier_text += "Shift+"
+        if modifiers & Qt.AltModifier:
+            modifier_text += "Alt+"
+            
+        display_text = f"키 입력: {modifier_text}{key_text.upper()}"
+        self.logic_detail_widget.add_item(display_text)
+        
+    def _on_mouse_input(self, mouse_info):
+        """마우스 입력이 추가되었을 때 호출"""
+        # TODO: 마우스 입력 처리 로직 구현
+        pass
+        
+    def _on_delay_input(self, delay_info):
+        """지연시간이 추가되었을 때 호출"""
+        # TODO: 지연시간 처리 로직 구현
+        pass
+        
+    def _on_record_mode(self, is_recording):
+        """기록 모드가 토글되었을 때 호출"""
+        # TODO: 기록 모드 처리 로직 구현
+        pass
 
     def _load_window_settings(self):
         """윈도우 설정 로드"""

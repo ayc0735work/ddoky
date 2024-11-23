@@ -6,15 +6,17 @@ from PySide6.QtGui import QFont
 from ...constants.styles import (FRAME_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from ...constants.dimensions import LOGIC_MAKER_WIDTH, BASIC_SECTION_HEIGHT
+from .key_input_dialog import KeyInputDialog
 
 class LogicMakerWidget(QFrame):
     """로직 메이커 위젯"""
     
     # 시그널 정의
-    key_input = Signal(str)  # 키 입력이 추가되었을 때
+    key_input = Signal(dict)  # 키 입력이 추가되었을 때 (키 정보를 딕셔너리로 전달)
     mouse_input = Signal(str)  # 마우스 입력이 추가되었을 때
     delay_input = Signal(str)  # 지연시간이 추가되었을 때
     record_mode = Signal(bool)  # 기록 모드가 토글되었을 때
+    log_message = Signal(str)  # 로그 메시지를 전달하는 시그널
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -71,9 +73,49 @@ class LogicMakerWidget(QFrame):
         
     def _add_key_input(self):
         """키 입력 추가"""
-        key, ok = QInputDialog.getText(self, "키 입력", "입력할 키:")
-        if ok and key:
-            self.key_input.emit(f"키 입력: {key}")
+        dialog = KeyInputDialog(self)
+        dialog.key_selected.connect(self._on_key_selected)
+        dialog.exec()
+        
+    def _on_key_selected(self, key_info):
+        """키가 선택되었을 때 호출"""
+        # 키 정보 전달
+        self.key_input.emit(key_info)
+        
+        # 로그 메시지 생성
+        key_text = key_info['text'] if key_info['text'] else f"Key_{key_info['key']}"
+        log_msg = (f"키 입력이 추가되었습니다 [ "
+                  f"키: {key_text}, "
+                  f"스캔 코드: {key_info['scan_code']}, "
+                  f"가상 키: {key_info['virtual_key']}, "
+                  f"키보드 위치: {self._get_key_location(key_info['scan_code'])}, "
+                  f"수정자 키: {self._get_modifier_text(key_info['modifiers'])} ]")
+        
+        # 로그 메시지 전달
+        self.log_message.emit(log_msg)
+            
+    def _get_key_location(self, scan_code):
+        """키의 키보드 위치 정보 반환"""
+        if scan_code in [42, 29, 56]:  # 왼쪽 Shift, Ctrl, Alt
+            return "키보드 왼쪽"
+        elif scan_code in [54, 285, 312]:  # 오른쪽 Shift, Ctrl, Alt
+            return "키보드 오른쪽"
+        elif 71 <= scan_code <= 83:  # 숫자패드 영역
+            return "숫자패드"
+        return "메인 키보드"
+        
+    def _get_modifier_text(self, modifiers):
+        """수정자 키 텍스트 생성"""
+        mod_texts = []
+        
+        if modifiers & Qt.ShiftModifier:
+            mod_texts.append("Shift")
+        if modifiers & Qt.ControlModifier:
+            mod_texts.append("Ctrl")
+        if modifiers & Qt.AltModifier:
+            mod_texts.append("Alt")
+            
+        return " + ".join(mod_texts) if mod_texts else "없음"
             
     def _add_mouse_input(self):
         """마우스 입력 추가"""
