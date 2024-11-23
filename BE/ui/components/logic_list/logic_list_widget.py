@@ -48,8 +48,8 @@ class LogicListWidget(QFrame):
         button_layout = QHBoxLayout()
         
         # 버튼 생성
-        self.up_btn = QPushButton("↑")
-        self.down_btn = QPushButton("↓")
+        self.up_btn = QPushButton("위로")
+        self.down_btn = QPushButton("아래로")
         self.edit_btn = QPushButton("수정")
         self.delete_btn = QPushButton("삭제")
         

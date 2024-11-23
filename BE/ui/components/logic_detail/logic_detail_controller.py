@@ -33,8 +33,6 @@ class LogicDetailController:
         Args:
             logic_name (str): 선택된 로직의 이름
         """
-        # TODO: 로직 상세 정보를 불러와서 위젯에 표시
-        print(f"로직 상세 정보 표시: {logic_name}")
         
     def on_advanced_action(self, action):
         """고급 기능이 실행되었을 때의 처리
