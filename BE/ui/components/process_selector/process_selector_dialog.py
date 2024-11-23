@@ -17,6 +17,9 @@ class ProcessSelectorDialog(QDialog):
         
         self._init_ui()
         self._connect_signals()
+        
+        # 초기 검색 실행
+        self._search_processes()
     
     def _init_ui(self):
         layout = QVBoxLayout()
@@ -57,6 +60,7 @@ class ProcessSelectorDialog(QDialog):
         self.search_input.returnPressed.connect(self._search_processes)
     
     def _search_processes(self):
+        """프로세스 검색 및 결과 표시"""
         search_text = self.search_input.text().lower()
         self.process_list.clear()
         
@@ -66,9 +70,28 @@ class ProcessSelectorDialog(QDialog):
             item = QListWidgetItem(item_text)
             item.setData(Qt.UserRole, process)
             self.process_list.addItem(item)
+        
+        # 검색 결과에 따른 포커스 처리
+        if self.process_list.count() > 0:
+            # 검색 결과가 있으면 첫 번째 항목 선택
+            self.process_list.setCurrentRow(0)
+            self.process_list.setFocus()
+        else:
+            # 검색 결과가 없으면 검색어 입력창에 포커스
+            self.search_input.setFocus()
     
     def _on_select(self):
         current_item = self.process_list.currentItem()
         if current_item:
             self.selected_process = current_item.data(Qt.UserRole)
             self.accept()
+    
+    def keyPressEvent(self, event):
+        """키 입력 이벤트 처리"""
+        if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
+            # 프로세스 목록에 포커스가 있고 항목이 선택되어 있으면 선택 버튼 클릭
+            if (self.process_list.hasFocus() and 
+                self.process_list.currentItem() is not None):
+                self._on_select()
+        else:
+            super().keyPressEvent(event)
