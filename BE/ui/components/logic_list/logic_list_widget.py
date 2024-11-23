@@ -44,8 +44,10 @@ class LogicListWidget(QFrame):
         self.list_widget.itemSelectionChanged.connect(self._on_selection_changed)
         layout.addWidget(self.list_widget)
         
-        # 버튼 레이아웃
-        button_layout = QHBoxLayout()
+        # 버튼 그룹 레이아웃
+        button_group = QHBoxLayout()
+        button_group.setContentsMargins(0, 0, 0, 0)
+        button_group.setSpacing(5)
         
         # 버튼 생성
         self.up_btn = QPushButton("위로")
@@ -58,9 +60,9 @@ class LogicListWidget(QFrame):
             btn.setFixedWidth(LOGIC_BUTTON_WIDTH)
             btn.setStyleSheet(BUTTON_STYLE)
             btn.setEnabled(False)
-            button_layout.addWidget(btn)
+            button_group.addWidget(btn)
         
-        layout.addLayout(button_layout)
+        layout.addLayout(button_group)
         self.setLayout(layout)
         
         # 버튼 시그널 연결

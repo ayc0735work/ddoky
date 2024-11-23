@@ -12,6 +12,8 @@ from .components.logic_detail.logic_detail_widget import LogicDetailWidget
 from .components.logic_detail.logic_detail_controller import LogicDetailController
 from .components.logic_maker.logic_maker_widget import LogicMakerWidget
 from .components.logic_maker.logic_maker_controller import LogicMakerController
+from .components.logic_operation.logic_operation_controller import LogicOperationController
+from .components.logic_operation.logic_operation_widget import LogicOperationWidget
 from .components.advanced.advanced_widget import AdvancedWidget
 from .components.log.log_widget import LogWidget
 
@@ -79,6 +81,10 @@ class MainWindow(QMainWindow):
         # 타이틀
         self.title_widget = TitleWidget()
         self.main_layout.addWidget(self.title_widget)
+        
+        # 로직 동작 온오프 위젯
+        self.logic_operation_widget = LogicOperationWidget()
+        self.main_layout.addWidget(self.logic_operation_widget)
         
         # 기본 기능 영역
         self.init_basic_features()

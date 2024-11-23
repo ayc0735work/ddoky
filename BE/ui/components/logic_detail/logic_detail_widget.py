@@ -67,23 +67,40 @@ class LogicDetailWidget(QFrame):
         self.list_widget.itemSelectionChanged.connect(self._on_selection_changed)
         layout.addWidget(self.list_widget)
         
-        # 버튼 레이아웃
-        button_layout = QHBoxLayout()
+        # 버튼 그룹 레이아웃
+        button_group = QHBoxLayout()
+        button_group.setContentsMargins(0, 0, 0, 0)
+        button_group.setSpacing(5)
         
-        # 버튼 생성
+        # 위로 버튼
         self.up_btn = QPushButton("위로")
+        self.up_btn.setFixedWidth(LOGIC_BUTTON_WIDTH)
+        self.up_btn.setStyleSheet(BUTTON_STYLE)
+        self.up_btn.setEnabled(False)
+        button_group.addWidget(self.up_btn)
+        
+        # 아래로 버튼
         self.down_btn = QPushButton("아래로")
+        self.down_btn.setFixedWidth(LOGIC_BUTTON_WIDTH)
+        self.down_btn.setStyleSheet(BUTTON_STYLE)
+        self.down_btn.setEnabled(False)
+        button_group.addWidget(self.down_btn)
+        
+        # 수정 버튼
         self.edit_btn = QPushButton("수정")
+        self.edit_btn.setFixedWidth(LOGIC_BUTTON_WIDTH)
+        self.edit_btn.setStyleSheet(BUTTON_STYLE)
+        self.edit_btn.setEnabled(False)
+        button_group.addWidget(self.edit_btn)
+        
+        # 삭제 버튼
         self.delete_btn = QPushButton("삭제")
+        self.delete_btn.setFixedWidth(LOGIC_BUTTON_WIDTH)
+        self.delete_btn.setStyleSheet(BUTTON_STYLE)
+        self.delete_btn.setEnabled(False)
+        button_group.addWidget(self.delete_btn)
         
-        # 버튼 설정
-        for btn in [self.up_btn, self.down_btn, self.edit_btn, self.delete_btn]:
-            btn.setFixedWidth(LOGIC_BUTTON_WIDTH)
-            btn.setStyleSheet(BUTTON_STYLE)
-            btn.setEnabled(False)
-            button_layout.addWidget(btn)
-        
-        layout.addLayout(button_layout)
+        layout.addLayout(button_group)
         self.setLayout(layout)
         
         # 버튼 시그널 연결
