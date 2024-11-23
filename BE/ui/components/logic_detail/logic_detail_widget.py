@@ -1,10 +1,10 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
                              QPushButton, QLabel, QListWidget, QListWidgetItem,
-                             QSizePolicy)
+                             QSizePolicy, QLineEdit)
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
 
-from ...constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE,
+from ...constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE, CONTAINER_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from ...constants.dimensions import (LOGIC_DETAIL_WIDTH, BASIC_SECTION_HEIGHT,
                                  LOGIC_BUTTON_WIDTH)
@@ -16,6 +16,7 @@ class LogicDetailWidget(QFrame):
     item_moved = Signal()  # 아이템이 이동되었을 때
     item_edited = Signal(str)  # 아이템이 수정되었을 때
     item_deleted = Signal(str)  # 아이템이 삭제되었을 때
+    logic_name_saved = Signal(str)  # 로직 이름이 저장되었을 때
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -36,6 +37,28 @@ class LogicDetailWidget(QFrame):
         title = QLabel("로직 구성 영역")
         title.setFont(QFont(TITLE_FONT_FAMILY, SECTION_FONT_SIZE, QFont.Weight.Bold))
         layout.addWidget(title)
+        
+        # 로직 이름 레이아웃
+        name_layout = QHBoxLayout()
+        name_layout.setContentsMargins(0, 0, 0, 0)
+        name_layout.setSpacing(5)
+        
+        # 로직 이름 라벨
+        name_label = QLabel("로직 이름:")
+        name_layout.addWidget(name_label)
+        
+        # 로직 이름 입력
+        self.name_input = QLineEdit()
+        self.name_input.setPlaceholderText("로직의 이름을 입력하세요")
+        name_layout.addWidget(self.name_input, 1)  # stretch factor 1을 주어 남은 공간을 채우도록
+        
+        # 저장 버튼
+        self.save_btn = QPushButton("저장")
+        self.save_btn.setStyleSheet(BUTTON_STYLE)
+        self.save_btn.clicked.connect(self._save_logic_name)
+        name_layout.addWidget(self.save_btn)
+        
+        layout.addLayout(name_layout)
         
         # 리스트 위젯
         self.list_widget = QListWidget()
@@ -115,3 +138,9 @@ class LogicDetailWidget(QFrame):
             row = self.list_widget.row(current_item)
             item = self.list_widget.takeItem(row)
             self.item_deleted.emit(item.text())
+
+    def _save_logic_name(self):
+        """로직 이름 저장"""
+        name = self.name_input.text().strip()
+        if name:
+            self.logic_name_saved.emit(name)
