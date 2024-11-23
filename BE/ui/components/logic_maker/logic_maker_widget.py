@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (QFrame, QVBoxLayout, QPushButton,
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
 
-from ...constants.styles import (FRAME_STYLE, BUTTON_STYLE, CONTAINER_STYLE,
+from ...constants.styles import (FRAME_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from ...constants.dimensions import LOGIC_MAKER_WIDTH, BASIC_SECTION_HEIGHT
 
@@ -36,12 +36,10 @@ class LogicMakerWidget(QFrame):
         title.setFont(QFont(TITLE_FONT_FAMILY, SECTION_FONT_SIZE, QFont.Weight.Bold))
         layout.addWidget(title)
         
-        # 버튼 컨테이너
-        button_container = QFrame()
-        button_container.setStyleSheet(CONTAINER_STYLE)
+        # 버튼 레이아웃
         button_layout = QVBoxLayout()
+        button_layout.setContentsMargins(0, 0, 0, 0)
         button_layout.setSpacing(5)
-        button_container.setLayout(button_layout)
         
         # 키 입력 버튼
         self.key_btn = QPushButton("키 입력 추가")
@@ -68,7 +66,7 @@ class LogicMakerWidget(QFrame):
         self.record_btn.clicked.connect(self._toggle_record_mode)
         button_layout.addWidget(self.record_btn)
         
-        layout.addWidget(button_container)
+        layout.addLayout(button_layout)
         self.setLayout(layout)
         
     def _add_key_input(self):
