@@ -85,6 +85,7 @@ class MainWindow(QMainWindow):
         # 로직 동작 온오프 위젯
         self.logic_operation_widget = LogicOperationWidget()
         self.logic_operation_controller = LogicOperationController(self.logic_operation_widget)
+        self.logic_operation_widget.log_message.connect(self._append_log)  # 로그 메시지 연결
         self.main_layout.addWidget(self.logic_operation_widget)
         
         # 기본 기능 영역
@@ -144,3 +145,6 @@ class MainWindow(QMainWindow):
     def _handle_record_mode(self):
         # TODO: Implement record mode handling
         pass
+
+    def _append_log(self, message):
+        self.log_widget.append(message)

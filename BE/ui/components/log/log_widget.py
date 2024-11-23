@@ -59,3 +59,7 @@ class LogWidget(QFrame):
         
         # 표준 출력을 로그로 리다이렉트
         sys.stdout = LogRedirector(self.log_text)
+
+    def append(self, message):
+        """로그 메시지 추가"""
+        self.log_text.append(message)

@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
-                             QLabel, QCheckBox, QPushButton, QDialog)
+                             QLabel, QCheckBox, QPushButton, QDialog,
+                             QMessageBox)
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
 
@@ -11,14 +12,17 @@ class LogicOperationWidget(QFrame):
     """로직 동작 온오프 위젯"""
     
     process_selected = Signal(str)  # 프로세스가 선택되었을 때
-    operation_toggled = Signal(bool)  # 로직 동작이 토글되었을 때
     process_reset = Signal()  # 프로세스가 초기화되었을 때
+    operation_toggled = Signal(bool)  # 로직 동작이 토글되었을 때
+    log_message = Signal(str)  # 로그 메시지 시그널
     
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.init_ui()
+        self.selected_process = None
+        self._init_ui()
+        self._connect_signals()
         
-    def init_ui(self):
+    def _init_ui(self):
         """UI 초기화"""
         self.setStyleSheet(FRAME_STYLE)
         
@@ -89,8 +93,25 @@ class LogicOperationWidget(QFrame):
         
         self.setLayout(layout)
         
+    def _connect_signals(self):
+        pass
+        
+    def _get_process_info_text(self, process):
+        """프로세스 정보 텍스트 형식 반환"""
+        return f"[ PID : {process['pid']} ] {process['name']} - {process['title']}"
+
     def _on_operation_toggled(self, checked):
         """로직 동작 토글 시 호출"""
+        if checked and not self.selected_process:
+            QMessageBox.warning(self, "경고", "프로세스를 먼저 선택해주세요.")
+            self.operation_checkbox.setChecked(False)
+            return
+            
+        process_info = self._get_process_info_text(self.selected_process)
+        if checked:
+            self.log_message.emit(f"{process_info} 프로세스에서 로직 동작을 시작합니다")
+        else:
+            self.log_message.emit(f"{process_info} 프로세스에서 로직 동작을 종료합니다")
         self.operation_toggled.emit(checked)
         
     def _on_select_process(self):
@@ -98,15 +119,19 @@ class LogicOperationWidget(QFrame):
         dialog = ProcessSelectorDialog(self)
         if dialog.exec() == QDialog.Accepted and dialog.selected_process:
             process = dialog.selected_process
-            text = f"선택된 프로세스 : [ PID : {process['pid']} ] {process['name']} - {process['title']}"
+            text = f"선택된 프로세스 : {self._get_process_info_text(process)}"
             self.selected_process_label.setText(text)
             self.selected_process = process
+            self.log_message.emit(f"{self._get_process_info_text(process)} 프로세스를 선택했습니다")
         
     def _on_reset_process(self):
         """프로세스 초기화 버튼 클릭 시 호출"""
+        if self.selected_process:
+            self.log_message.emit("선택된 프로세스를 초기화 했습니다")
         self.process_reset.emit()
+        self.selected_process = None
         self.selected_process_label.setText("선택된 프로세스: 없음")
-        self.active_process_label.setText("활성 프로세스: 없음")
+        self.operation_checkbox.setChecked(False)
         
     def update_selected_process(self, process_name):
         """선택된 프로세스 업데이트"""
