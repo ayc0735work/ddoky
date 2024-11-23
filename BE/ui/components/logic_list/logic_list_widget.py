@@ -80,31 +80,35 @@ class LogicListWidget(QFrame):
             self.list_widget.addItem(item)
             
     def _on_selection_changed(self):
-        """아이템 선택 상태 변경 시 호출"""
-        has_selection = bool(self.list_widget.currentItem())
-        for btn in [self.up_btn, self.down_btn, self.edit_btn, self.delete_btn]:
-            btn.setEnabled(has_selection)
-            
+        """리스트 아이템 선택이 변경되었을 때의 처리"""
+        has_selection = self.list_widget.currentRow() >= 0
+        
+        # 버튼 활성화/비활성화
+        self.up_btn.setEnabled(has_selection and self.list_widget.currentRow() > 0)
+        self.down_btn.setEnabled(has_selection and self.list_widget.currentRow() < self.list_widget.count() - 1)
+        self.edit_btn.setEnabled(has_selection)
+        self.delete_btn.setEnabled(has_selection)
+        
         # 선택된 아이템이 있으면 시그널 발생
         if has_selection:
             self.logic_selected.emit(self.list_widget.currentItem().text())
             
     def _move_item_up(self):
-        """선택된 아이템을 위로 이동"""
+        """현재 선택된 아이템을 위로 이동"""
         current_row = self.list_widget.currentRow()
         if current_row > 0:
-            item = self.list_widget.takeItem(current_row)
-            self.list_widget.insertItem(current_row - 1, item)
-            self.list_widget.setCurrentItem(item)
+            current_item = self.list_widget.takeItem(current_row)
+            self.list_widget.insertItem(current_row - 1, current_item)
+            self.list_widget.setCurrentItem(current_item)
             self.item_moved.emit()
             
     def _move_item_down(self):
-        """선택된 아이템을 아래로 이동"""
+        """현재 선택된 아이템을 아래로 이동"""
         current_row = self.list_widget.currentRow()
         if current_row < self.list_widget.count() - 1:
-            item = self.list_widget.takeItem(current_row)
-            self.list_widget.insertItem(current_row + 1, item)
-            self.list_widget.setCurrentItem(item)
+            current_item = self.list_widget.takeItem(current_row)
+            self.list_widget.insertItem(current_row + 1, current_item)
+            self.list_widget.setCurrentItem(current_item)
             self.item_moved.emit()
             
     def _edit_item(self):

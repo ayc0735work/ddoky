@@ -18,6 +18,10 @@ class LogicListController:
         
     def _handle_item_moved(self):
         """아이템 이동 처리"""
+        self.on_item_moved()
+        
+    def on_item_moved(self):
+        """아이템이 이동되었을 때의 처리"""
         print("로직 순서가 변경되었습니다.")
         
     def _handle_item_edited(self, item_text):
@@ -29,8 +33,20 @@ class LogicListController:
         print(f"삭제된 로직: {item_text}")
 
     def _handle_logic_selected(self, logic_name):
-        """로직 선택 처리"""
-        print(f"선택된 로직: {logic_name}")
+        """로직이 선택되었을 때의 처리
+        
+        Args:
+            logic_name (str): 선택된 로직의 이름
+        """
+        self.on_logic_selected(logic_name)
+        
+    def on_logic_selected(self, logic_name):
+        """로직이 선택되었을 때의 처리
+        
+        Args:
+            logic_name (str): 선택된 로직의 이름
+        """
+        pass  # 로그 출력 제거
 
     def on_logic_created(self, logic_name):
         """새로운 로직이 생성되었을 때의 처리
