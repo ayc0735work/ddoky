@@ -79,9 +79,6 @@ class LogicMakerWidget(QFrame):
         
     def _on_key_selected(self, key_info):
         """키가 선택되었을 때 호출"""
-        # 키 정보 전달
-        self.key_input.emit(key_info)
-        
         # 로그 메시지 생성
         key_text = key_info['text'] if key_info['text'] else f"Key_{key_info['key']}"
         log_msg = (f"키 입력이 추가되었습니다 [ "
@@ -91,8 +88,12 @@ class LogicMakerWidget(QFrame):
                   f"키보드 위치: {self._get_key_location(key_info['scan_code'])}, "
                   f"수정자 키: {self._get_modifier_text(key_info['modifiers'])} ]")
         
-        # 로그 메시지 전달
-        self.log_message.emit(log_msg)
+        # 로그 메시지 출력 및 전달
+        print(log_msg)  # 터미널에 출력
+        self.log_message.emit(log_msg)  # 로그 위젯에 출력
+        
+        # 키 정보 전달 (로그 출력 없이)
+        self.key_input.emit(key_info)
             
     def _get_key_location(self, scan_code):
         """키의 키보드 위치 정보 반환"""

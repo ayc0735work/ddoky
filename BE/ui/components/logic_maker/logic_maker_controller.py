@@ -23,7 +23,7 @@ class LogicMakerController:
         Args:
             key_text (str): 입력된 키 텍스트
         """
-        print(f"키 입력이 추가되었습니다: {key_text}")
+        pass
         
     def _handle_mouse_input(self, mouse_text):
         """마우스 입력 처리

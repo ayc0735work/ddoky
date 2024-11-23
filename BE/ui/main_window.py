@@ -118,9 +118,6 @@ class MainWindow(QMainWindow):
         self.basic_features_layout.addWidget(self.logic_maker_widget)
         
         # 시그널 연결
-        self.logic_maker_widget.key_input.connect(self.logic_detail_widget.add_item)
-        self.logic_maker_widget.mouse_input.connect(self.logic_detail_widget.add_item)
-        self.logic_maker_widget.delay_input.connect(self.logic_detail_widget.add_item)
         self.logic_maker_widget.record_mode.connect(self._handle_record_mode)
         
         self.main_layout.addLayout(self.basic_features_layout)
@@ -149,7 +146,6 @@ class MainWindow(QMainWindow):
         self.logic_maker_widget.key_input.connect(self._on_key_input)
         self.logic_maker_widget.mouse_input.connect(self._on_mouse_input)
         self.logic_maker_widget.delay_input.connect(self._on_delay_input)
-        self.logic_maker_widget.record_mode.connect(self._on_record_mode)
         self.logic_maker_widget.log_message.connect(self._append_log)  # 로그 메시지 연결
 
     def _handle_record_mode(self):
