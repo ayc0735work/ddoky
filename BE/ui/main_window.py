@@ -101,10 +101,16 @@ class MainWindow(QMainWindow):
         self.logic_detail_controller = LogicDetailController(self.logic_detail_widget)
         self.basic_features_layout.addWidget(self.logic_detail_widget)
         
-        # 로직 생성 위젯과 컨트롤러
+        # 로직 메이커
         self.logic_maker_widget = LogicMakerWidget()
         self.logic_maker_controller = LogicMakerController(self.logic_maker_widget)
         self.basic_features_layout.addWidget(self.logic_maker_widget)
+        
+        # 시그널 연결
+        self.logic_maker_widget.key_input.connect(self.logic_detail_widget.add_item)
+        self.logic_maker_widget.mouse_input.connect(self.logic_detail_widget.add_item)
+        self.logic_maker_widget.delay_input.connect(self.logic_detail_widget.add_item)
+        self.logic_maker_widget.record_mode.connect(self._handle_record_mode)
         
         self.main_layout.addLayout(self.basic_features_layout)
         
@@ -125,8 +131,9 @@ class MainWindow(QMainWindow):
         # 로직 리스트와 상세 정보 연결
         self.logic_list_widget.logic_selected.connect(self.logic_detail_controller.on_logic_selected)
         
-        # 로직 생성과 리스트 연결
-        self.logic_maker_widget.logic_created.connect(self.logic_list_controller.on_logic_created)
-        
         # 고급 기능과 로직 상세 정보 연결
         self.advanced_widget.advanced_action.connect(self.logic_detail_controller.on_advanced_action)
+
+    def _handle_record_mode(self):
+        # TODO: Implement record mode handling
+        pass

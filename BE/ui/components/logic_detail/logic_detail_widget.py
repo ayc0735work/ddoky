@@ -144,3 +144,13 @@ class LogicDetailWidget(QFrame):
         name = self.name_input.text().strip()
         if name:
             self.logic_name_saved.emit(name)
+
+    def add_item(self, item_text):
+        """아이템 추가
+        
+        Args:
+            item_text (str): 추가할 아이템의 텍스트
+        """
+        item = QListWidgetItem(item_text)
+        self.list_widget.addItem(item)
+        self.list_widget.setCurrentItem(item)
