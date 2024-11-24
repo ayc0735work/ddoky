@@ -176,7 +176,7 @@ class MainWindow(QMainWindow):
     def _on_key_input(self, key_info):
         """키 입력이 추가되었을 때 호출"""
         # 키 정보를 문자열로 변환
-        key_text = key_info.get('text', '')
+        key_text = key_info.get('display_text', '')  # 이벤트 타입이 포함된 텍스트 사용
         modifiers = key_info.get('modifiers', 0)
         modifier_text = ""
         
@@ -187,7 +187,7 @@ class MainWindow(QMainWindow):
         if modifiers & Qt.AltModifier:
             modifier_text += "Alt+"
             
-        display_text = f"키 입력: {modifier_text}{key_text.upper()}"
+        display_text = f"키 입력: {modifier_text}{key_text}"
         self.logic_detail_widget.add_item(display_text)
         
     def _on_mouse_input(self, mouse_info):

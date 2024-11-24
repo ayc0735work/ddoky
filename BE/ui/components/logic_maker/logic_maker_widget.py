@@ -91,8 +91,15 @@ class LogicMakerWidget(QFrame):
         # 로그 메시지 전달
         self.log_message.emit(log_msg)
         
-        # 키 정보 전달
-        self.key_input.emit(key_info)
+        # 누르기 이벤트용 키 정보
+        press_info = key_info.copy()
+        press_info['display_text'] = f"{key_info['text']} --- 누르기"
+        self.key_input.emit(press_info)
+        
+        # 떼기 이벤트용 키 정보
+        release_info = key_info.copy()
+        release_info['display_text'] = f"{key_info['text']} --- 떼기"
+        self.key_input.emit(release_info)
             
     def _get_key_location(self, scan_code):
         """키의 키보드 위치 정보 반환"""
