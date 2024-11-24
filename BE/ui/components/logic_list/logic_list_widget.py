@@ -60,8 +60,12 @@ class LogicListWidget(QFrame):
         self.delete_btn = QPushButton("로직 삭제")
         
         # 버튼 설정
+        self.up_btn.setFixedWidth(LOGIC_BUTTON_WIDTH - 30)
+        self.down_btn.setFixedWidth(LOGIC_BUTTON_WIDTH - 30)
+        self.edit_btn.setFixedWidth(LOGIC_BUTTON_WIDTH + 30)
+        self.delete_btn.setFixedWidth(LOGIC_BUTTON_WIDTH)
+        
         for btn in [self.up_btn, self.down_btn, self.edit_btn, self.delete_btn]:
-            btn.setFixedWidth(LOGIC_BUTTON_WIDTH)
             btn.setStyleSheet(BUTTON_STYLE)
             btn.setEnabled(False)
             button_group.addWidget(btn)
