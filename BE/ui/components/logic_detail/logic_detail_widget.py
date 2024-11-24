@@ -64,6 +64,36 @@ class LogicDetailWidget(QFrame):
         
         layout.addLayout(name_layout)
         
+        # 트리거 키 정보 영역
+        trigger_key_layout = QVBoxLayout()
+        trigger_key_layout.setContentsMargins(0, 0, 0, 0)
+        trigger_key_layout.setSpacing(5)
+        
+        # 트리거 키 입력 레이아웃
+        key_input_layout = QHBoxLayout()
+        key_input_layout.setContentsMargins(0, 0, 0, 0)
+        key_input_layout.setSpacing(5)
+        
+        # 트리거 키 입력 라벨
+        key_input_label = QLabel("트리거 키:")
+        key_input_layout.addWidget(key_input_label)
+        
+        # 트리거 키 입력 박스
+        self.key_input = QLineEdit()
+        self.key_input.setPlaceholderText("트리거 키를 입력하세요")
+        self.key_input.textChanged.connect(self._on_trigger_key_changed)
+        key_input_layout.addWidget(self.key_input, 1)
+        
+        trigger_key_layout.addLayout(key_input_layout)
+        
+        # 트리거 키 정보 라벨
+        self.key_info_label = QLabel()
+        self.key_info_label.setWordWrap(True)  # 긴 텍스트 자동 줄바꿈
+        self.key_info_label.setStyleSheet("QLabel { background-color: #f0f0f0; padding: 5px; border-radius: 3px; }")
+        trigger_key_layout.addWidget(self.key_info_label)
+        
+        layout.addLayout(trigger_key_layout)
+        
         # 리스트 위젯
         self.list_widget = QListWidget()
         self.list_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -205,3 +235,21 @@ class LogicDetailWidget(QFrame):
         item = QListWidgetItem(item_text)
         self.list_widget.addItem(item)
         self.list_widget.setCurrentItem(item)
+
+    def _on_trigger_key_changed(self):
+        """트리거 키 입력 시 호출"""
+        key_text = self.key_input.text()
+        if not key_text:
+            self.key_info_label.clear()
+            return
+            
+        # 임시로 더미 데이터로 표시 (실제로는 키 입력 처리 로직과 연동 필요)
+        key_info = (
+            f"키: {key_text}, "
+            f"키 코드: 1, "
+            f"스캔 코드 (하드웨어 고유값): 2, "
+            f"확장 가상 키 (운영체제 레벨의 고유 값): 49, "
+            f"키보드 위치: 메인 키보드, "
+            f"수정자 키: 없음"
+        )
+        self.key_info_label.setText(key_info)
