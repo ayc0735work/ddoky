@@ -78,27 +78,28 @@ class LogicMakerWidget(QFrame):
         dialog.exec()
         
     def _on_key_selected(self, key_info):
-        """키가 선택되었을 때 호출"""
+        """키가 선택되었을 때"""
         # 로그 메시지 생성
-        log_msg = (f"키 입력이 추가되었습니다 [ "
-                  f"키: {key_info['text']}, "
-                  f"키 코드: {key_info['key']}, "
-                  f"스캔 코드 (하드웨어 고유값): {key_info['scan_code']}, "
-                  f"확장 가상 키 (운영체제 레벨의 고유 값): {key_info['virtual_key']}, "
-                  f"키보드 위치: {self._get_key_location(key_info['scan_code'])}, "
-                  f"수정자 키: {self._get_modifier_text(key_info['modifiers'])} ]")
+        log_msg = (
+            f"키 입력이 추가되었습니다 [ "
+            f"키: {key_info['key_code']}, "
+            f"스캔 코드 (하드웨어 고유값): {key_info['scan_code']}, "
+            f"확장 가상 키 (운영체제 레벨의 고유 값): {key_info['virtual_key']}, "
+            f"키보드 위치: {self._get_key_location(key_info['scan_code'])}, "
+            f"수정자 키: {self._get_modifier_text(key_info['modifiers'])} ]"
+        )
         
         # 로그 메시지 전달
         self.log_message.emit(log_msg)
         
         # 누르기 이벤트용 키 정보
         press_info = key_info.copy()
-        press_info['display_text'] = f"{key_info['text']} --- 누르기"
+        press_info['display_text'] = f"{key_info['key_code']} --- 누르기"
         self.key_input.emit(press_info)
         
         # 떼기 이벤트용 키 정보
         release_info = key_info.copy()
-        release_info['display_text'] = f"{key_info['text']} --- 떼기"
+        release_info['display_text'] = f"{key_info['key_code']} --- 떼기"
         self.key_input.emit(release_info)
             
     def _get_key_location(self, scan_code):

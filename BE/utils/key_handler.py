@@ -1,7 +1,7 @@
 import win32con
 import ctypes
 from ctypes import wintypes
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QObject, Signal
 
 # Windows hook structures
 LRESULT = ctypes.c_long
@@ -107,6 +107,7 @@ def get_qt_modifiers():
 
 def get_key_location(scan_code):
     """키의 위치 정보 반환"""
+    # 예시적인 위치 판단 (실제 구현 시 더 자세한 매핑 필요)
     if scan_code in [42, 29, 56]:  # 왼쪽 Shift, Ctrl, Alt
         return "왼쪽"
     elif scan_code in [54, 285, 312]:  # 오른쪽 Shift, Ctrl, Alt
@@ -117,13 +118,12 @@ def get_key_location(scan_code):
 
 def get_key_display_text(key_info):
     """키 표시 텍스트 생성"""
-    if not key_info:
-        return ""
-        
-    key = key_info['key']
-    location = get_key_location(key_info['scan_code'])
+    key = key_info['key_code']  # 'key'에서 'key_code'로 변경
+    location = get_key_location(key_info['scan_code'])  # scan_code를 직접 전달
     
-    return f"{key} ({location})"
+    if key:
+        return f"{key} ({location})"
+    return f"알 수 없는 키 ({location})"
 
 def get_modifier_text(modifiers):
     """수정자 키 텍스트 생성"""
@@ -138,15 +138,28 @@ def get_modifier_text(modifiers):
         
     return " + ".join(mod_texts) if mod_texts else "없음"
 
-class KeyboardHook:
-    """키보드 훅 관리 클래스"""
-    def __init__(self, callback):
-        self.callback = callback
+def format_key_info(key_info):
+    """키 정보를 일관된 형식의 문자열로 변환"""
+    return (
+        f"키: {key_info['key_code']}, "
+        f"스캔 코드 (하드웨어 고유값): {key_info['scan_code']}, "
+        f"확장 가상 키 (운영체제 레벨의 고유 값): {key_info['virtual_key']}, "
+        f"키보드 위치: {get_key_location(key_info['scan_code'])}, "
+        f"수정자 키: {get_modifier_text(key_info['modifiers'])}"
+    )
+
+class KeyboardHook(QObject):
+    """키보드 훅을 관리하는 클래스"""
+    
+    key_pressed = Signal(dict)  # 키가 눌렸을 때 발생하는 시그널
+    
+    def __init__(self):
+        super().__init__()
         self.hook = None
         self.hook_id = None
         
-    def setup(self):
-        """키보드 훅 설정"""
+    def start(self):
+        """키보드 훅 시작"""
         def hook_callback(nCode, wParam, lParam):
             if nCode >= 0 and (wParam == WM_KEYDOWN or wParam == WM_SYSKEYDOWN):
                 kb = lParam.contents
@@ -172,20 +185,17 @@ class KeyboardHook:
                         vk_code = win32con.VK_LCONTROL
                     elif vk_code == win32con.VK_MENU:
                         vk_code = win32con.VK_LMENU
-                            
-                key_name = get_key_name(vk_code)
                 
                 # 키 정보 생성
                 key_info = {
-                    'key': key_name,
+                    'key_code': get_key_name(vk_code),
                     'scan_code': scan_code,
                     'virtual_key': vk_code,
-                    'text': key_name,
                     'modifiers': get_qt_modifiers()
                 }
                 
-                # 콜백 호출
-                self.callback(key_info)
+                # 시그널 발생
+                self.key_pressed.emit(key_info)
                 
             return user32.CallNextHookEx(None, nCode, wParam, ctypes.cast(lParam, ctypes.c_void_p))
         
@@ -198,9 +208,13 @@ class KeyboardHook:
         )
         if not self.hook_id:
             raise ctypes.WinError(ctypes.get_last_error())
-            
-    def cleanup(self):
-        """키보드 훅 정리"""
+        
+        # 정리 함수 등록
+        import atexit
+        atexit.register(self.stop)
+        
+    def stop(self):
+        """키보드 훅 중지"""
         if self.hook_id:
             user32.UnhookWindowsHookEx(self.hook_id)
             self.hook_id = None

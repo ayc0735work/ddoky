@@ -9,7 +9,8 @@ from ...constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE, CONTAINE
 from ...constants.dimensions import (LOGIC_DETAIL_WIDTH, BASIC_SECTION_HEIGHT,
                                  LOGIC_BUTTON_WIDTH)
 from ....utils.key_handler import (KeyboardHook, get_key_display_text, get_key_location,
-                                get_modifier_text)
+                                get_modifier_text, format_key_info)
+from ..common.key_input_widget import KeyInputWidget  # 수정된 import 경로
 
 class LogicDetailWidget(QFrame):
     """로직 상세 내용을 표시하고 관리하는 위젯"""
@@ -82,12 +83,9 @@ class LogicDetailWidget(QFrame):
         key_input_label = QLabel("트리거 키:")
         key_input_layout.addWidget(key_input_label)
         
-        # 트리거 키 입력 박스
-        self.key_input = QLineEdit()
-        self.key_input.setPlaceholderText("여기를 클릭하고 키를 입력하세요")
-        self.key_input.setReadOnly(True)  # 직접 텍스트 입력 방지
-        self.key_input.focusInEvent = self._on_key_input_focus_in
-        self.key_input.focusOutEvent = self._on_key_input_focus_out
+        # 트리거 키 입력 위젯
+        self.key_input = KeyInputWidget(self, show_details=False)
+        self.key_input.key_input_changed.connect(self._on_key_input_changed)
         key_input_layout.addWidget(self.key_input, 1)
         
         trigger_key_layout.addLayout(key_input_layout)
@@ -209,7 +207,7 @@ class LogicDetailWidget(QFrame):
             
         # 트리거 키 정보 포함
         trigger_key_info = {
-            'key': self.key_input.text(),
+            'key': self.key_input.get_key_code(),
             'info': self.key_info_label.text()
         }
             
@@ -223,7 +221,7 @@ class LogicDetailWidget(QFrame):
         # 저장 후 초기화
         self.name_input.clear()
         self.list_widget.clear()
-        self.key_input.clear()  # 트리거 키 입력 초기화
+        self.key_input.clear_key()  # 트리거 키 입력 초기화
         self.key_info_label.clear()  # 트리거 키 정보 초기화
         
         self.edit_mode = False  # 수정 모드 해제
@@ -243,7 +241,7 @@ class LogicDetailWidget(QFrame):
             
         # 트리거 키 정보 로드
         if trigger_key_info:
-            self.key_input.setText(trigger_key_info.get('key', ''))
+            self.key_input.set_key_code(trigger_key_info.get('key', ''))
             self.key_info_label.setText(trigger_key_info.get('info', ''))
             
     def add_item(self, item_text):
@@ -256,37 +254,9 @@ class LogicDetailWidget(QFrame):
         self.list_widget.addItem(item)
         self.list_widget.setCurrentItem(item)
 
-    def _on_key_input_focus_in(self, event):
-        """키 입력 박스가 포커스를 받았을 때"""
-        def on_key_info(key_info):
-            self.last_key_info = key_info
-            
-            # 키 표시 텍스트 설정
-            self.key_input.setText(get_key_display_text(key_info))
-            
-            # 키 정보 레이블 업데이트
-            info_text = (
-                f"키 코드: {key_info['key']}\n"
-                f"스캔 코드 (하드웨어 고유값): {key_info['scan_code']}\n"
-                f"확장 가상 키 (운영체제 레벨의 고유 값): {key_info['virtual_key']}\n"
-                f"위치: {get_key_location(key_info['scan_code'])}\n"
-                f"수정자 키: {get_modifier_text(key_info['modifiers'])}"
-            )
-            self.key_info_label.setText(info_text)
-            
-        # 키보드 훅 설정
-        self.keyboard_hook = KeyboardHook(on_key_info)
-        self.keyboard_hook.setup()
-        
-    def _on_key_input_focus_out(self, event):
-        """키 입력 박스가 포커스를 잃었을 때"""
-        if self.keyboard_hook:
-            self.keyboard_hook.cleanup()
-            self.keyboard_hook = None
-            
-    def eventFilter(self, obj, event):
-        """이벤트 필터"""
-        return super().eventFilter(obj, event)
+    def _on_key_input_changed(self, key_info):
+        """키 입력이 변경되었을 때"""
+        self.key_info_label.setText(format_key_info(key_info))
 
     def _copy_key_info_to_clipboard(self, event):
         """트리거 키 정보를 클립보드에 복사"""
