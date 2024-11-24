@@ -1,10 +1,11 @@
 from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, 
                              QPushButton, QLabel, QFrame, QLineEdit)
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt, Signal, QTimerEvent
 import win32con
 import ctypes
 from ctypes import wintypes
 import atexit
+import win32api
 
 user32 = ctypes.WinDLL('user32', use_last_error=True)
 
@@ -56,17 +57,26 @@ class KeyInputDialog(QDialog):
         guide_label.setAlignment(Qt.AlignCenter)
         layout.addWidget(guide_label)
         
-        # 입력된 키 표시
+        # NumLock 경고 메시지
+        self.numlock_warning = QLabel()
+        self.numlock_warning.setStyleSheet("color: red;")
+        self.numlock_warning.setAlignment(Qt.AlignCenter)
+        self.numlock_warning.setWordWrap(True)
+        layout.addWidget(self.numlock_warning)
+        
+        # 키 정보 표시 프레임
+        info_frame = QFrame()
+        info_frame.setFrameStyle(QFrame.StyledPanel)
+        info_frame.setLineWidth(1)
+        
+        info_layout = QVBoxLayout()
+        
+        # 키 입력 표시
         self.key_display = QLineEdit()
         self.key_display.setReadOnly(True)
         self.key_display.setAlignment(Qt.AlignCenter)
         self.key_display.setPlaceholderText("키를 입력하세요")
-        layout.addWidget(self.key_display)
-        
-        # 키 정보 프레임
-        info_frame = QFrame()
-        info_frame.setFrameStyle(QFrame.StyledPanel)
-        info_layout = QVBoxLayout()
+        info_layout.addWidget(self.key_display)
         
         # 키 정보 레이블들
         self.key_code_label = QLabel("키 코드: ")
@@ -98,6 +108,19 @@ class KeyInputDialog(QDialog):
         layout.addLayout(button_layout)
         self.setLayout(layout)
         
+        # NumLock 상태 체크 타이머 설정
+        self.check_numlock_timer = self.startTimer(500)  # 500ms 간격으로 체크
+    
+    def timerEvent(self, event):
+        """타이머 이벤트 처리"""
+        if event.timerId() == self.check_numlock_timer:
+            # NumLock 상태 확인
+            numlock_state = win32api.GetKeyState(win32con.VK_NUMLOCK)
+            if not numlock_state:
+                self.numlock_warning.setText("NumLock 키가 꺼져있어서 숫자패드에서 정확한 키 입력이 안될 수 있습니다\nNumLock을 켜주세요")
+            else:
+                self.numlock_warning.clear()
+    
     def _setup_keyboard_hook(self):
         """키보드 훅 설정"""
         def hook_callback(nCode, wParam, lParam):
@@ -322,5 +345,6 @@ class KeyInputDialog(QDialog):
         
     def closeEvent(self, event):
         """다이얼로그가 닫힐 때 정리"""
+        self.killTimer(self.check_numlock_timer)
         self._cleanup_hook()
         super().closeEvent(event)
