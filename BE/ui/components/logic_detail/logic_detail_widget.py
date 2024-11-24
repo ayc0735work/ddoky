@@ -115,9 +115,7 @@ class LogicDetailWidget(QFrame):
         
     def _load_test_data(self):
         """테스트용 데이터 로드"""
-        for i in range(1, 7):
-            item = QListWidgetItem(f"{i}. 키보드 A 입력")
-            self.list_widget.addItem(item)
+        pass  # 더미 데이터 제거
             
     def _on_selection_changed(self):
         """아이템 선택 상태 변경 시 호출"""
