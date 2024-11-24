@@ -32,7 +32,7 @@ class LogicDetailWidget(QFrame):
         self.keyboard_hook = None
         self.trigger_key_info = None  # 트리거 키 정보
         self.original_name = None  # 원래 이름
-        self.copied_item = None  # 복사된 아이템 저장
+        self.copied_items = []  # 복사된 아이템들 저장 (리스트로 변경)
         
         # 키보드 이벤트 필터 설치
         self.installEventFilter(self)
@@ -464,6 +464,33 @@ class LogicDetailWidget(QFrame):
             clipboard.setText(self.key_info_label.text())
             self.log_message.emit("트리거 키 정보가 클립보드에 복사되었습니다")
 
+    def _copy_item(self):
+        """선택된 아이템들을 복사"""
+        selected_items = self.list_widget.selectedItems()
+        if selected_items:
+            self.copied_items = [item.text() for item in selected_items]
+            items_count = len(self.copied_items)
+            self.log_message.emit(f"{items_count}개의 아이템이 복사되었습니다")
+            
+    def _paste_item(self):
+        """복사된 아이템들을 현재 선택된 아이템 아래에 붙여넣기"""
+        if not self.copied_items:
+            self.log_message.emit("복사된 아이템이 없습니다")
+            return
+            
+        current_row = self.list_widget.currentRow()
+        if current_row == -1:  # 선택된 아이템이 없으면 마지막에 추가
+            current_row = self.list_widget.count() - 1
+            
+        # 복사된 아이템들을 순서대로 추가
+        for i, item_text in enumerate(self.copied_items):
+            new_item = QListWidgetItem(item_text)
+            insert_row = current_row + 1 + i
+            self.list_widget.insertItem(insert_row, new_item)
+        
+        items_count = len(self.copied_items)
+        self.log_message.emit(f"{items_count}개의 아이템이 붙여넣기 되었습니다")
+
     def eventFilter(self, obj, event):
         """이벤트 필터"""
         if event.type() == QEvent.KeyPress:
@@ -486,25 +513,3 @@ class LogicDetailWidget(QFrame):
                 return True
                 
         return super().eventFilter(obj, event)
-        
-    def _copy_item(self):
-        """현재 선택된 아이템 복사"""
-        current_item = self.list_widget.currentItem()
-        if current_item:
-            self.copied_item = current_item.text()
-            self.log_message.emit("아이템이 복사되었습니다")
-            
-    def _paste_item(self):
-        """복사된 아이템을 현재 선택된 아이템 아래에 붙여넣기"""
-        if not self.copied_item:
-            self.log_message.emit("복사된 아이템이 없습니다")
-            return
-            
-        current_row = self.list_widget.currentRow()
-        if current_row == -1:  # 선택된 아이템이 없으면 마지막에 추가
-            current_row = self.list_widget.count() - 1
-            
-        # 복사된 아이템 추가
-        new_item = QListWidgetItem(self.copied_item)
-        self.list_widget.insertItem(current_row + 1, new_item)
-        self.log_message.emit("아이템이 붙여넣기 되었습니다")
