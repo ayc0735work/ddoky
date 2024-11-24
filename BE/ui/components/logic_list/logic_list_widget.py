@@ -119,14 +119,26 @@ class LogicListWidget(QFrame):
         self.list_widget.addItem(QListWidgetItem(name))
         self.log_message.emit(f"로직 '{name}'이(가) 목록에 추가되었습니다")
         
-    def on_logic_updated(self, name, items, trigger_key_info):
+    def on_logic_updated(self, original_name, new_name, items, trigger_key_info):
         """로직이 수정되었을 때 호출되는 메서드"""
-        # 저장된 로직 정보 업데이트
-        self.saved_logics[name] = {
+        # 저장된 로직 정보에서 원래 이름의 데이터를 삭제
+        if original_name in self.saved_logics:
+            del self.saved_logics[original_name]
+        
+        # 새 이름으로 로직 정보 저장
+        self.saved_logics[new_name] = {
             'items': items,
             'trigger_key': trigger_key_info
         }
-        self.log_message.emit(f"로직 '{name}'이(가) 업데이트되었습니다")
+        
+        # 리스트 위젯의 아이템 텍스트 업데이트
+        for i in range(self.list_widget.count()):
+            item = self.list_widget.item(i)
+            if item.text() == original_name:
+                item.setText(new_name)
+                break
+                
+        self.log_message.emit(f"로직 '{new_name}'이(가) 업데이트되었습니다")
         
     def _item_double_clicked(self, item):
         """아이템이 더블클릭되었을 때 호출"""

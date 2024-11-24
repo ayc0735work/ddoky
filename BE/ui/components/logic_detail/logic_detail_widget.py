@@ -22,7 +22,7 @@ class LogicDetailWidget(QFrame):
     logic_name_saved = Signal(str)  # 로직 이름이 저장되었을 때
     log_message = Signal(str)  # 로그 메시지 시그널
     logic_saved = Signal(str, list, dict)  # 로직 저장 시그널 (이름, 아이템 리스트, 트리거 키 정보)
-    logic_updated = Signal(str, list, dict)  # 로직 수정 시그널 (이름, 아이템 리스트, 트리거 키 정보)
+    logic_updated = Signal(str, str, list, dict)  # 로직 수정 시그널 (원래 이름, 이름, 아이템 리스트, 트리거 키 정보)
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -31,6 +31,7 @@ class LogicDetailWidget(QFrame):
         self.last_key_info = None
         self.keyboard_hook = None
         self.trigger_key_info = None  # 트리거 키 정보
+        self.original_name = None  # 원래 이름
         
     def init_ui(self):
         """UI 초기화"""
@@ -203,6 +204,7 @@ class LogicDetailWidget(QFrame):
         self.key_info_label.clear()       # 트리거 키 정보 초기화
         self.trigger_key_info = None      # 트리거 키 정보 초기화
         self.edit_mode = False            # 수정 모드 해제
+        self.original_name = None         # 원래 이름 초기화
 
     def _on_key_input_changed(self, key_info):
         """키 입력이 변경되었을 때"""
@@ -239,7 +241,8 @@ class LogicDetailWidget(QFrame):
             items.append(self.list_widget.item(i).text())
             
         if self.edit_mode:
-            self.logic_updated.emit(logic_info['name'], items, logic_info)
+            # 수정 모드일 때는 원래 이름을 함께 전달
+            self.logic_updated.emit(self.original_name, logic_info['name'], items, logic_info)
             self.log_message.emit(f"로직 '{logic_info['name']}'이(가) 수정되었습니다")
         else:
             self.logic_saved.emit(logic_info['name'], items, logic_info)
@@ -256,6 +259,7 @@ class LogicDetailWidget(QFrame):
         """로직 데이터 로드"""
         self.edit_mode = True
         self.name_input.setText(name)
+        self.original_name = name  # 원래 이름 저장
         
         # 목록 아이템 로드
         self.list_widget.clear()

@@ -147,7 +147,7 @@ class MainWindow(QMainWindow):
         
         # 로직 리스트와 상세 정보 연결
         self.logic_list_widget.logic_selected.connect(self.logic_detail_controller.on_logic_selected)
-        self.logic_list_widget.edit_logic.connect(self.logic_detail_widget.load_logic)
+        self.logic_list_widget.edit_logic.connect(self._handle_edit_logic)
         
         # 로직 저장/수정 시그널 연결
         self.logic_detail_widget.logic_saved.connect(self.logic_list_widget.on_logic_saved)
