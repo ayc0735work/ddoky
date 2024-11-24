@@ -80,9 +80,8 @@ class LogicMakerWidget(QFrame):
     def _on_key_selected(self, key_info):
         """키가 선택되었을 때 호출"""
         # 로그 메시지 생성
-        key_text = self._get_key_name(key_info)
         log_msg = (f"키 입력이 추가되었습니다 [ "
-                  f"키: {key_text}, "
+                  f"키: {key_info['text']}, "
                   f"키 코드: {key_info['key']}, "
                   f"스캔 코드 (하드웨어 고유값): {key_info['scan_code']}, "
                   f"확장 가상 키 (운영체제 레벨의 고유 값): {key_info['virtual_key']}, "
@@ -95,75 +94,6 @@ class LogicMakerWidget(QFrame):
         # 키 정보 전달
         self.key_input.emit(key_info)
             
-    def _get_key_name(self, key_info):
-        """키 이름을 사람이 읽기 쉬운 형태로 변환"""
-        # 특수 키 매핑
-        special_keys = {
-            Qt.Key_Return: "엔터",
-            Qt.Key_Enter: "숫자패드 엔터ㅁㅁ",
-            Qt.Key_Tab: "탭",
-            Qt.Key_Escape: "ESC",
-            Qt.Key_Space: "스페이스",
-            Qt.Key_Backspace: "백스페이스",
-            Qt.Key_Delete: "삭제",
-            Qt.Key_Up: "방향키 위",
-            Qt.Key_Down: "방향키 아래",
-            Qt.Key_Left: "방향키 왼쪽",
-            Qt.Key_Right: "방향키 오른쪽",
-            Qt.Key_F1: "F1",
-            Qt.Key_F2: "F2",
-            Qt.Key_F3: "F3",
-            Qt.Key_F4: "F4",
-            Qt.Key_F5: "F5",
-            Qt.Key_F6: "F6",
-            Qt.Key_F7: "F7",
-            Qt.Key_F8: "F8",
-            Qt.Key_F9: "F9",
-            Qt.Key_F10: "F10",
-            Qt.Key_F11: "F11",
-            Qt.Key_F12: "F12",
-            Qt.Key_Home: "Home",
-            Qt.Key_End: "End",
-            Qt.Key_PageUp: "Page Up",
-            Qt.Key_PageDown: "Page Down",
-            Qt.Key_Insert: "Insert",
-            Qt.Key_CapsLock: "Caps Lock",
-            Qt.Key_Shift: "쉬프트",
-            Qt.Key_Control: "컨트롤",
-            Qt.Key_Alt: "알트",
-            Qt.Key_Meta: "윈도우",
-        }
-        
-        key = key_info['key']
-        text = key_info['text']
-        scan_code = key_info['scan_code']
-        
-        # 스캔 코드로 특수 키 식별 (키보드 위치 기반)
-        scan_code_map = {
-            42: "왼쪽 쉬프트",    # Left Shift
-            54: "오른쪽 쉬프트",  # Right Shift
-            29: "왼쪽 컨트롤",    # Left Control
-            285: "오른쪽 컨트롤",  # Right Control
-            56: "왼쪽 알트",      # Left Alt
-            312: "오른쪽 알트",    # Right Alt
-            91: "왼쪽 윈도우",    # Left Windows
-            92: "오른쪽 윈도우",  # Right Windows
-        }
-        
-        # 스캔 코드로 먼저 확인 (왼쪽/오른쪽 구분이 필요한 키)
-        if scan_code in scan_code_map:
-            return scan_code_map[scan_code]
-        
-        # 특수 키인 경우
-        if key in special_keys:
-            return special_keys[key]
-        # 일반 문자인 경우
-        elif text:
-            return text
-        # 그 외의 경우
-        else:
-            return f"Key_{key}"
-
     def _get_key_location(self, scan_code):
         """키의 키보드 위치 정보 반환"""
         if scan_code in [42, 29, 56, 91]:  # 왼쪽 Shift, Ctrl, Alt, Win
