@@ -1,8 +1,8 @@
 {
     "window": {
         "position": {
-            "x": 2719,
-            "y": 29
+            "x": 2475,
+            "y": 10
         },
         "size": {
             "width": 900,
@@ -10,6 +10,81 @@
         }
     },
     "logics": {
+        "xxx": {
+            "name": "xxx",
+            "items": [
+                {
+                    "action": "떼기",
+                    "display_text": "키 입력: A --- 떼기",
+                    "key_code": "A",
+                    "modifiers": 0,
+                    "scan_code": 30,
+                    "type": "key_input",
+                    "virtual_key": 65
+                },
+                {
+                    "action": "누르기",
+                    "display_text": "키 입력: A --- 누르기",
+                    "key_code": "A",
+                    "modifiers": 0,
+                    "scan_code": 30,
+                    "type": "key_input",
+                    "virtual_key": 65
+                },
+                {
+                    "action": "떼기",
+                    "display_text": "키 입력: A --- 떼기",
+                    "key_code": "A",
+                    "modifiers": 0,
+                    "scan_code": 30,
+                    "type": "key_input",
+                    "virtual_key": 65
+                },
+                {
+                    "action": "누르기",
+                    "display_text": "키 입력: Space --- 누르기",
+                    "key_code": "Space",
+                    "modifiers": 0,
+                    "scan_code": 57,
+                    "type": "key_input",
+                    "virtual_key": 32
+                },
+                {
+                    "action": "떼기",
+                    "display_text": "키 입력: Space --- 떼기",
+                    "key_code": "Space",
+                    "modifiers": 0,
+                    "scan_code": 57,
+                    "type": "key_input",
+                    "virtual_key": 32
+                },
+                {
+                    "action": "누르기",
+                    "display_text": "키 입력: Space --- 누르기",
+                    "key_code": "Space",
+                    "modifiers": 0,
+                    "scan_code": 57,
+                    "type": "key_input",
+                    "virtual_key": 32
+                },
+                {
+                    "action": "떼기",
+                    "display_text": "키 입력: Space --- 떼기",
+                    "key_code": "Space",
+                    "modifiers": 0,
+                    "scan_code": 57,
+                    "type": "key_input",
+                    "virtual_key": 32
+                }
+            ],
+            "trigger_key": {
+                "key_code": "키 코드 192",
+                "scan_code": 41,
+                "virtual_key": 192,
+                "display_text": "",
+                "modifiers": 0
+            }
+        },
         "체력 회복": {
             "name": "체력 회복",
             "items": [
@@ -23,8 +98,8 @@
                     "virtual_key": 160
                 },
                 {
-                    "display_text": "지연시간 : 0.010초",
-                    "duration": 0.01,
+                    "display_text": "지연시간 : 0.013초",
+                    "duration": 0.013,
                     "type": "delay"
                 },
                 {
@@ -37,8 +112,8 @@
                     "virtual_key": 90
                 },
                 {
-                    "display_text": "지연시간 : 0.010초",
-                    "duration": 0.01,
+                    "display_text": "지연시간 : 0.013초",
+                    "duration": 0.013,
                     "type": "delay"
                 },
                 {
@@ -51,8 +126,8 @@
                     "virtual_key": 90
                 },
                 {
-                    "display_text": "지연시간 : 0.010초",
-                    "duration": 0.01,
+                    "display_text": "지연시간 : 0.013초",
+                    "duration": 0.013,
                     "type": "delay"
                 },
                 {
@@ -65,8 +140,8 @@
                     "virtual_key": 160
                 },
                 {
-                    "display_text": "지연시간 : 0.010초",
-                    "duration": 0.01,
+                    "display_text": "지연시간 : 0.013초",
+                    "duration": 0.013,
                     "type": "delay"
                 },
                 {
@@ -79,8 +154,8 @@
                     "virtual_key": 71
                 },
                 {
-                    "display_text": "지연시간 : 0.010초",
-                    "duration": 0.01,
+                    "display_text": "지연시간 : 0.013초",
+                    "duration": 0.013,
                     "type": "delay"
                 },
                 {
@@ -93,8 +168,8 @@
                     "virtual_key": 71
                 },
                 {
-                    "display_text": "지연시간 : 0.010초",
-                    "duration": 0.01,
+                    "display_text": "지연시간 : 0.013초",
+                    "duration": 0.013,
                     "type": "delay"
                 },
                 {
@@ -107,8 +182,8 @@
                     "virtual_key": 36
                 },
                 {
-                    "display_text": "지연시간 : 0.010초",
-                    "duration": 0.01,
+                    "display_text": "지연시간 : 0.013초",
+                    "duration": 0.013,
                     "type": "delay"
                 },
                 {
@@ -121,8 +196,8 @@
                     "virtual_key": 36
                 },
                 {
-                    "display_text": "지연시간 : 0.010초",
-                    "duration": 0.01,
+                    "display_text": "지연시간 : 0.013초",
+                    "duration": 0.013,
                     "type": "delay"
                 },
                 {
@@ -133,6 +208,11 @@
                     "scan_code": 28,
                     "type": "key_input",
                     "virtual_key": 13
+                },
+                {
+                    "display_text": "지연시간 : 0.013초",
+                    "duration": 0.013,
+                    "type": "delay"
                 },
                 {
                     "action": "떼기",

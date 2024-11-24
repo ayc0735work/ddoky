@@ -110,6 +110,7 @@ class LogicDetailWidget(QFrame):
         self.list_widget = QListWidget()
         self.list_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.list_widget.setStyleSheet(LIST_STYLE)
+        self.list_widget.setSelectionMode(QListWidget.ExtendedSelection)  # 다중 선택 모드 활성화
         self.list_widget.itemSelectionChanged.connect(self._on_selection_changed)
         self.list_widget.itemDoubleClicked.connect(self._edit_item)  # 더블클릭 시그널 연결
         layout.addWidget(self.list_widget)
@@ -164,11 +165,17 @@ class LogicDetailWidget(QFrame):
         pass  # 더미 데이터 제거
             
     def _on_selection_changed(self):
-        """아이템 선택 상태 변경 시 호출"""
-        has_selection = bool(self.list_widget.currentItem())
-        for btn in [self.up_btn, self.down_btn, self.edit_btn, self.delete_btn]:
-            btn.setEnabled(has_selection)
-            
+        """리스트 아이템 선택이 변경되었을 때의 처리"""
+        selected_items = self.list_widget.selectedItems()
+        has_selection = len(selected_items) > 0
+        
+        # 버튼 활성화/비활성화
+        current_row = self.list_widget.currentRow()
+        self.up_btn.setEnabled(has_selection and current_row > 0)
+        self.down_btn.setEnabled(has_selection and current_row < self.list_widget.count() - 1)
+        self.edit_btn.setEnabled(len(selected_items) == 1)  # 수정은 단일 선택만 가능
+        self.delete_btn.setEnabled(has_selection)  # 삭제는 다중 선택 가능
+
     def _move_item_up(self):
         """선택된 아이템을 위로 이동"""
         current_row = self.list_widget.currentRow()
@@ -224,11 +231,13 @@ class LogicDetailWidget(QFrame):
             
     def _delete_item(self):
         """선택된 아이템 삭제"""
-        current_item = self.list_widget.currentItem()
-        if current_item:
-            row = self.list_widget.row(current_item)
-            item = self.list_widget.takeItem(row)
-            self.item_deleted.emit(item.text())
+        selected_items = self.list_widget.selectedItems()
+        if selected_items:
+            for item in selected_items:
+                row = self.list_widget.row(item)
+                item = self.list_widget.takeItem(row)
+                self.item_deleted.emit(item.text())
+            self.log_message.emit(f"{len(selected_items)}개의 항목이 삭제되었습니다")
 
     def clear_all(self):
         """모든 입력과 상태를 초기화"""
@@ -423,6 +432,10 @@ class LogicDetailWidget(QFrame):
                     self.add_item(item['content'])
             else:
                 self.add_item(item)  # 이전 형식 지원
+        
+        # 첫 번째 아이템 선택
+        if self.list_widget.count() > 0:
+            self.list_widget.setCurrentItem(self.list_widget.item(0))
             
         # 트리거 키 정보 로드
         if 'trigger_key' in logic_info:
@@ -443,7 +456,6 @@ class LogicDetailWidget(QFrame):
         """
         item = QListWidgetItem(item_text)
         self.list_widget.addItem(item)
-        self.list_widget.setCurrentItem(item)
 
     def _copy_key_info_to_clipboard(self, event):
         """트리거 키 정보를 클립보드에 복사"""
@@ -495,5 +507,4 @@ class LogicDetailWidget(QFrame):
         # 복사된 아이템 추가
         new_item = QListWidgetItem(self.copied_item)
         self.list_widget.insertItem(current_row + 1, new_item)
-        self.list_widget.setCurrentItem(new_item)
         self.log_message.emit("아이템이 붙여넣기 되었습니다")

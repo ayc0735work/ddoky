@@ -47,6 +47,7 @@ class LogicListWidget(QFrame):
         self.list_widget = QListWidget()
         self.list_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.list_widget.setStyleSheet(LIST_STYLE)
+        self.list_widget.setSelectionMode(QListWidget.ExtendedSelection)  # 다중 선택 모드 활성화
         self.list_widget.itemSelectionChanged.connect(self._on_selection_changed)
         self.list_widget.itemDoubleClicked.connect(self._item_double_clicked)
         layout.addWidget(self.list_widget)
@@ -84,17 +85,19 @@ class LogicListWidget(QFrame):
         
     def _on_selection_changed(self):
         """리스트 아이템 선택이 변경되었을 때의 처리"""
-        has_selection = self.list_widget.currentRow() >= 0
+        selected_items = self.list_widget.selectedItems()
+        has_selection = len(selected_items) > 0
         
         # 버튼 활성화/비활성화
-        self.up_btn.setEnabled(has_selection and self.list_widget.currentRow() > 0)
-        self.down_btn.setEnabled(has_selection and self.list_widget.currentRow() < self.list_widget.count() - 1)
-        self.edit_btn.setEnabled(has_selection)
-        self.delete_btn.setEnabled(has_selection)
+        current_row = self.list_widget.currentRow()
+        self.up_btn.setEnabled(has_selection and current_row > 0)
+        self.down_btn.setEnabled(has_selection and current_row < self.list_widget.count() - 1)
+        self.edit_btn.setEnabled(len(selected_items) == 1)  # 수정은 단일 선택만 가능
+        self.delete_btn.setEnabled(has_selection)  # 삭제는 다중 선택 가능
         
-        # 선택된 아이템이 있으면 시그널 발생
-        if has_selection:
-            self.logic_selected.emit(self.list_widget.currentItem().text())
+        # 선택된 아이템이 있고 단일 선택인 경우에만 시그널 발생
+        if has_selection and len(selected_items) == 1:
+            self.logic_selected.emit(selected_items[0].text())
             
     def _move_item_up(self):
         """현재 선택된 아이템을 위로 이동"""
