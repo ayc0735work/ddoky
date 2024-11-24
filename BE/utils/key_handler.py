@@ -2,6 +2,7 @@ import win32con
 import ctypes
 from ctypes import wintypes
 from PySide6.QtCore import Qt, QObject, Signal
+import win32api
 
 # Windows hook structures
 LRESULT = ctypes.c_long
@@ -29,7 +30,7 @@ HOOKPROC = ctypes.CFUNCTYPE(LRESULT, ctypes.c_int, wintypes.WPARAM, ctypes.POINT
 
 user32 = ctypes.WinDLL('user32', use_last_error=True)
 
-def get_key_name(vk_code):
+def get_key_name(vk_code, kb_flags):
     """가상 키 코드를 키 이름으로 변환"""
     # 특수 키 이름
     special_keys = {
@@ -40,7 +41,6 @@ def get_key_name(vk_code):
         
         # 제어 키
         win32con.VK_RETURN: '엔터',
-        0x10E: '숫자패드 엔터',
         win32con.VK_ESCAPE: 'ESC',
         win32con.VK_TAB: 'Tab',
         win32con.VK_SPACE: 'Space',
@@ -83,6 +83,10 @@ def get_key_name(vk_code):
         win32con.VK_DECIMAL: '숫자패드 .',
         win32con.VK_DIVIDE: '숫자패드 /',
     }
+
+    # 숫자패드 엔터 특수 처리
+    if vk_code == win32con.VK_RETURN and (kb_flags & 0x1):  # 확장 키 플래그 확인
+        return '숫자패드 엔터'
     
     if vk_code in special_keys:
         return special_keys[vk_code]
@@ -154,6 +158,62 @@ def format_key_info(key_info):
         f"수정자 키: {get_modifier_text(key_info['modifiers'])}"
     )
 
+def get_scan_code(key):
+    # 시스템 키 매핑
+    key_code_map = {
+        '왼쪽 쉬프트': win32con.VK_LSHIFT,
+        '오른쪽 쉬프트': win32con.VK_RSHIFT,
+        '왼쪽 컨트롤': win32con.VK_LCONTROL,
+        '오른쪽 컨트롤': win32con.VK_RCONTROL,
+        '왼쪽 알트': win32con.VK_LMENU,
+        '오른쪽 알트': win32con.VK_RMENU,
+        'Home': win32con.VK_HOME,
+        '엔터': win32con.VK_RETURN,
+        'Tab': win32con.VK_TAB,
+        'ESC': win32con.VK_ESCAPE,
+        'Space': win32con.VK_SPACE,
+        'Backspace': win32con.VK_BACK,
+        'Delete': win32con.VK_DELETE,
+        'Insert': win32con.VK_INSERT,
+        'End': win32con.VK_END,
+        'Page Up': win32con.VK_PRIOR,
+        'Page Down': win32con.VK_NEXT,
+        '방향키 왼쪽 ←': win32con.VK_LEFT,
+        '방향키 오른쪽 →': win32con.VK_RIGHT,
+        '방향키 위쪽 ↑': win32con.VK_UP,
+        '방향키 아래쪽 ↓': win32con.VK_DOWN,
+        '숫자패드 0': win32con.VK_NUMPAD0,
+        '숫자패드 1': win32con.VK_NUMPAD1,
+        '숫자패드 2': win32con.VK_NUMPAD2,
+        '숫자패드 3': win32con.VK_NUMPAD3,
+        '숫자패드 4': win32con.VK_NUMPAD4,
+        '숫자패드 5': win32con.VK_NUMPAD5,
+        '숫자패드 6': win32con.VK_NUMPAD6,
+        '숫자패드 7': win32con.VK_NUMPAD7,
+        '숫자패드 8': win32con.VK_NUMPAD8,
+        '숫자패드 9': win32con.VK_NUMPAD9,
+        '숫자패드 *': win32con.VK_MULTIPLY,
+        '숫자패드 +': win32con.VK_ADD,
+        '숫자패드 -': win32con.VK_SUBTRACT,
+        '숫자패드 .': win32con.VK_DECIMAL,
+        '숫자패드 /': win32con.VK_DIVIDE,
+    }
+
+    # 가상 키 코드 얻기
+    if key in key_code_map:
+        virtual_key = key_code_map[key]
+    else:
+        # 일반 문자키의 경우
+        virtual_key = ord(key.upper())
+
+    # 숫자패드 엔터 키의 특수 처리
+    if key == '엔터':
+        scan_code = 28  # 0x1C (28) 
+    else:
+        scan_code = win32api.MapVirtualKey(virtual_key, 0)
+
+    return scan_code, virtual_key
+
 class KeyboardHook(QObject):
     """키보드 훅을 관리하는 클래스"""
     
@@ -177,14 +237,17 @@ class KeyboardHook(QObject):
                 vk_code = kb.vkCode
                 scan_code = kb.scanCode
                 
-                # 확장 키 처리
+                # 확장 키 처리 (시스템 키 포함)
                 if is_extended:
                     if vk_code == win32con.VK_RETURN:
-                        vk_code = 0x10E  # 숫자패드 Enter
+                        vk_code = win32con.VK_RETURN
+                        scan_code = 0x1C + 0xE0  # 252 (숫자패드 엔터의 확장 스캔 코드)
                     elif vk_code == win32con.VK_CONTROL:
                         vk_code = win32con.VK_RCONTROL
+                        scan_code = scan_code | 0xE0  # 확장 키 플래그 추가
                     elif vk_code == win32con.VK_MENU:
                         vk_code = win32con.VK_RMENU
+                        scan_code = scan_code | 0xE0  # 확장 키 플래그 추가
                 elif not is_extended:
                     if vk_code == win32con.VK_SHIFT:
                         vk_code = win32con.VK_LSHIFT if scan_code == 42 else win32con.VK_RSHIFT
@@ -192,10 +255,12 @@ class KeyboardHook(QObject):
                         vk_code = win32con.VK_LCONTROL
                     elif vk_code == win32con.VK_MENU:
                         vk_code = win32con.VK_LMENU
+                    # 시스템 키의 스캔 코드 처리
+                    scan_code = win32api.MapVirtualKey(vk_code, 0)
                 
                 # 키 정보 생성
                 key_info = {
-                    'key_code': get_key_name(vk_code),
+                    'key_code': get_key_name(vk_code, kb.flags),
                     'scan_code': scan_code,
                     'virtual_key': vk_code,
                     'modifiers': get_qt_modifiers()

@@ -178,10 +178,15 @@ class LogicExecutor(QObject):
             virtual_key = step['virtual_key']
             scan_code = step['scan_code']
             
+            # 확장 키 플래그 설정
+            flags = 0
+            if step['key_code'] == '숫자패드 엔터' or scan_code > 0xFF:
+                flags |= win32con.KEYEVENTF_EXTENDEDKEY
+            
             if step['action'] == '누르기':
-                win32api.keybd_event(virtual_key, scan_code, 0, 0)
+                win32api.keybd_event(virtual_key, scan_code, flags, 0)
             else:  # 떼기
-                win32api.keybd_event(virtual_key, scan_code, win32con.KEYEVENTF_KEYUP, 0)
+                win32api.keybd_event(virtual_key, scan_code, flags | win32con.KEYEVENTF_KEYUP, 0)
                 
         elif step['type'] == 'delay':
             duration = float(step['duration'])

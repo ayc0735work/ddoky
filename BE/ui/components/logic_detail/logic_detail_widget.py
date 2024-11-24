@@ -10,7 +10,7 @@ from ...constants.dimensions import (LOGIC_DETAIL_WIDTH, BASIC_SECTION_HEIGHT,
                                  LOGIC_BUTTON_WIDTH)
 from ....utils.key_handler import (KeyboardHook, get_key_display_text, get_key_location,
                                 get_modifier_text, format_key_info)
-from ..common.key_input_widget import KeyInputWidget  # 수정된 import 경로
+from ..common.key_input_widget import KeyInputWidget  
 
 class LogicDetailWidget(QFrame):
     """로직 상세 내용을 표시하고 관리하는 위젯"""
@@ -60,12 +60,13 @@ class LogicDetailWidget(QFrame):
         
         # 로직 이름 라벨
         name_label = QLabel("로직 이름:")
+        name_label.setFixedWidth(70)
         name_layout.addWidget(name_label)
         
         # 로직 이름 입력
         self.name_input = QLineEdit()
         self.name_input.setPlaceholderText("로직의 이름을 입력하세요")
-        name_layout.addWidget(self.name_input, 1)  # stretch factor 1을 주어 남은 공간을 채우도록
+        name_layout.addWidget(self.name_input)
         
         # 로직 저장 버튼
         self.save_btn = QPushButton("로직 저장")
@@ -76,7 +77,7 @@ class LogicDetailWidget(QFrame):
         layout.addLayout(name_layout)
         
         # 트리거 키 정보 영역
-        trigger_key_layout = QVBoxLayout()
+        trigger_key_layout = QVBoxLayout()  # 수직 레이아웃으로 변경
         trigger_key_layout.setContentsMargins(0, 0, 0, 0)
         trigger_key_layout.setSpacing(5)
         
@@ -86,21 +87,20 @@ class LogicDetailWidget(QFrame):
         key_input_layout.setSpacing(5)
         
         # 트리거 키 입력 라벨
-        key_input_label = QLabel("트리거 키:")
-        key_input_layout.addWidget(key_input_label)
+        trigger_label = QLabel("트리거 키:")
+        trigger_label.setFixedWidth(70)
+        key_input_layout.addWidget(trigger_label)
         
         # 트리거 키 입력 위젯
         self.key_input = KeyInputWidget(self, show_details=False)
         self.key_input.key_input_changed.connect(self._on_key_input_changed)
-        key_input_layout.addWidget(self.key_input, 1)
+        key_input_layout.addWidget(self.key_input)
         
         trigger_key_layout.addLayout(key_input_layout)
         
         # 트리거 키 정보 라벨
         self.key_info_label = QLabel()
-        self.key_info_label.setWordWrap(True)  # 긴 텍스트 자동 줄바꿈
-        self.key_info_label.setStyleSheet("QLabel { background-color: #f0f0f0; padding: 0px; border-radius: 3px; }")
-        self.key_info_label.setCursor(Qt.CursorShape.PointingHandCursor)  # 커서 모양 변경
+        self.key_info_label.setStyleSheet(CONTAINER_STYLE)
         self.key_info_label.mousePressEvent = self._copy_key_info_to_clipboard
         trigger_key_layout.addWidget(self.key_info_label)
         
@@ -111,6 +111,7 @@ class LogicDetailWidget(QFrame):
         self.list_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.list_widget.setStyleSheet(LIST_STYLE)
         self.list_widget.itemSelectionChanged.connect(self._on_selection_changed)
+        self.list_widget.itemDoubleClicked.connect(self._edit_item)  # 더블클릭 시그널 연결
         layout.addWidget(self.list_widget)
         
         # 버튼 그룹 레이아웃
@@ -289,17 +290,48 @@ class LogicDetailWidget(QFrame):
                     key = key.strip()
                     
                     # 가상 키 코드와 스캔 코드 가져오기
-                    from win32con import VK_SHIFT, VK_CONTROL, VK_MENU
+                    import win32con
                     import win32api
                     
                     # 키 코드 매핑
                     key_code_map = {
-                        '왼쪽 쉬프트': VK_SHIFT,
-                        '오른쪽 쉬프트': VK_SHIFT,
-                        '왼쪽 컨트롤': VK_CONTROL,
-                        '오른쪽 컨트롤': VK_CONTROL,
-                        '왼쪽 알트': VK_MENU,
-                        '오른쪽 알트': VK_MENU,
+                        '왼쪽 쉬프트': win32con.VK_LSHIFT,
+                        '오른쪽 쉬프트': win32con.VK_RSHIFT,
+                        '왼쪽 컨트롤': win32con.VK_LCONTROL,
+                        '오른쪽 컨트롤': win32con.VK_RCONTROL,
+                        '왼쪽 알트': win32con.VK_LMENU,
+                        '오른쪽 알트': win32con.VK_RMENU,
+                        'Home': win32con.VK_HOME,
+                        '엔터': win32con.VK_RETURN,
+                        '숫자패드 엔터': win32con.VK_RETURN,  # 일반 엔터와 같은 가상 키 코드 사용
+                        'Tab': win32con.VK_TAB,
+                        'ESC': win32con.VK_ESCAPE,
+                        'Space': win32con.VK_SPACE,
+                        'Backspace': win32con.VK_BACK,
+                        'Delete': win32con.VK_DELETE,
+                        'Insert': win32con.VK_INSERT,
+                        'End': win32con.VK_END,
+                        'Page Up': win32con.VK_PRIOR,
+                        'Page Down': win32con.VK_NEXT,
+                        '방향키 왼쪽 ←': win32con.VK_LEFT,
+                        '방향키 오른쪽 →': win32con.VK_RIGHT,
+                        '방향키 위쪽 ↑': win32con.VK_UP,
+                        '방향키 아래쪽 ↓': win32con.VK_DOWN,
+                        '숫자패드 0': win32con.VK_NUMPAD0,
+                        '숫자패드 1': win32con.VK_NUMPAD1,
+                        '숫자패드 2': win32con.VK_NUMPAD2,
+                        '숫자패드 3': win32con.VK_NUMPAD3,
+                        '숫자패드 4': win32con.VK_NUMPAD4,
+                        '숫자패드 5': win32con.VK_NUMPAD5,
+                        '숫자패드 6': win32con.VK_NUMPAD6,
+                        '숫자패드 7': win32con.VK_NUMPAD7,
+                        '숫자패드 8': win32con.VK_NUMPAD8,
+                        '숫자패드 9': win32con.VK_NUMPAD9,
+                        '숫자패드 *': win32con.VK_MULTIPLY,
+                        '숫자패드 +': win32con.VK_ADD,
+                        '숫자패드 -': win32con.VK_SUBTRACT,
+                        '숫자패드 .': win32con.VK_DECIMAL,
+                        '숫자패드 /': win32con.VK_DIVIDE,
                     }
                     
                     # 가상 키 코드 얻기
@@ -313,7 +345,10 @@ class LogicDetailWidget(QFrame):
                             virtual_key = 0  # 알 수 없는 키
                     
                     # 스캔 코드 얻기
-                    scan_code = win32api.MapVirtualKey(virtual_key, 0)
+                    if key == '숫자패드 엔터':
+                        scan_code = 0x1C + 0xE0  # 252 (숫자패드 엔터의 확장 스캔 코드)
+                    else:
+                        scan_code = win32api.MapVirtualKey(virtual_key, 0)
                     
                     # 수정자 키를 정수값으로 매핑
                     modifier_map = {
@@ -431,6 +466,11 @@ class LogicDetailWidget(QFrame):
             # Ctrl+V: 붙여넣기
             elif modifiers == Qt.ControlModifier and key == Qt.Key_V:
                 self._paste_item()
+                return True
+                
+            # Delete: 삭제
+            elif key == Qt.Key_Delete:
+                self._delete_item()
                 return True
                 
         return super().eventFilter(obj, event)
