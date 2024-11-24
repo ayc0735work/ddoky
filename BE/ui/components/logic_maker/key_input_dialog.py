@@ -40,7 +40,15 @@ class KeyInputDialog(QDialog):
         super().__init__(parent)
         self.setWindowTitle("키 입력")
         self.setFixedSize(400, 300)
-        self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
+        # ESC 키로 닫히는 것을 방지하기 위한 플래그 설정
+        self.setWindowFlags(
+            self.windowFlags() 
+            & ~Qt.WindowContextHelpButtonHint 
+            | Qt.WindowStaysOnTopHint 
+            | Qt.CustomizeWindowHint 
+            | Qt.WindowTitleHint 
+            | Qt.WindowCloseButtonHint
+        )
         
         self.last_key_info = None
         self.hook = None
@@ -149,11 +157,6 @@ class KeyInputDialog(QDialog):
                     elif vk_code == win32con.VK_MENU:
                         vk_code = win32con.VK_LMENU
                 
-                # ESC 키 처리
-                if vk_code == win32con.VK_ESCAPE:
-                    self.reject()
-                    return user32.CallNextHookEx(None, nCode, wParam, ctypes.cast(lParam, ctypes.c_void_p))
-                
                 # 키 이름 얻기
                 key_name = self._get_key_name(vk_code)
                 
@@ -162,7 +165,7 @@ class KeyInputDialog(QDialog):
                     'key': key_name,
                     'scan_code': scan_code,
                     'virtual_key': vk_code,
-                    'text': key_name,  # 키 이름을 text로 사용
+                    'text': key_name,
                     'modifiers': self._get_qt_modifiers()
                 }
                 self._update_key_info()
@@ -209,7 +212,7 @@ class KeyInputDialog(QDialog):
             # 제어 키
             win32con.VK_RETURN: '엔터',
             0x10E: '숫자패드 엔터',
-            win32con.VK_ESCAPE: 'ESC',
+            win32con.VK_ESCAPE: 'ESC',  # ESC 키 추가
             win32con.VK_TAB: 'Tab',
             win32con.VK_SPACE: 'Space',
             win32con.VK_BACK: 'Backspace',
@@ -348,3 +351,8 @@ class KeyInputDialog(QDialog):
         self.killTimer(self.check_numlock_timer)
         self._cleanup_hook()
         super().closeEvent(event)
+        
+    def keyPressEvent(self, event):
+        """Qt의 키 이벤트를 무시"""
+        # ESC 키를 포함한 모든 키 이벤트를 무시
+        event.ignore()
