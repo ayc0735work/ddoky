@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
                            QPushButton, QLabel, QLineEdit, QFrame, QListWidget,
-                           QListWidgetItem, QTextEdit, QSizePolicy, QScrollArea)
+                           QListWidgetItem, QTextEdit, QSizePolicy, QScrollArea,
+                           QMessageBox)
 from PySide6.QtCore import Qt, QPoint, QSize, QSettings
 from PySide6.QtGui import QFont
 import sys
@@ -165,6 +166,11 @@ class MainWindow(QMainWindow):
         # 고급 기능 로그 메시지 연결
         self.advanced_widget.log_message.connect(self._append_log)
         
+        # 로직 저장 및 수정 연결
+        self.logic_detail_widget.logic_saved.connect(self.logic_list_widget.add_logic)
+        self.logic_detail_widget.logic_updated.connect(self.logic_list_widget.update_logic)
+        self.logic_list_widget.edit_logic.connect(self._handle_edit_logic)
+
     def _handle_record_mode(self):
         # TODO: Implement record mode handling
         pass
@@ -204,6 +210,26 @@ class MainWindow(QMainWindow):
         """기록 모드가 토글되었을 때 호출"""
         # TODO: 기록 모드 처리 로직 구현
         pass
+
+    def _handle_edit_logic(self, logic_name, items):
+        """로직 수정 처리"""
+        if self.logic_detail_widget.has_items():
+            # 확인 모달 표시
+            reply = QMessageBox.question(
+                self,
+                "로직 수정",
+                "현재 작성 중인 로직이 있습니다. 덮어쓰시겠습니까?",
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No
+            )
+            
+            if reply == QMessageBox.No:
+                self._append_log("로직 수정이 취소되었습니다")
+                return
+        
+        # 로직 데이터 로드
+        self.logic_detail_widget.load_logic(logic_name, items)
+        self._append_log(f"로직 '{logic_name}'을(를) 수정합니다")
 
     def _load_window_settings(self):
         """윈도우 설정 로드"""

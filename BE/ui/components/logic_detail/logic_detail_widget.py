@@ -18,10 +18,13 @@ class LogicDetailWidget(QFrame):
     item_deleted = Signal(str)  # 아이템이 삭제되었을 때
     logic_name_saved = Signal(str)  # 로직 이름이 저장되었을 때
     log_message = Signal(str)  # 로그 메시지 시그널
+    logic_saved = Signal(str, list)  # 로직 저장 시그널 (이름, 아이템 리스트)
+    logic_updated = Signal(str, list)  # 로직 수정 시그널 (이름, 아이템 리스트)
     
     def __init__(self, parent=None):
         super().__init__(parent)
         self.init_ui()
+        self.edit_mode = False  # 수정 모드 여부
         
     def init_ui(self):
         """UI 초기화"""
@@ -156,10 +159,42 @@ class LogicDetailWidget(QFrame):
             self.item_deleted.emit(item.text())
 
     def _save_logic_name(self):
-        """로직 이름 저장"""
-        name = self.name_input.text().strip()
-        if name:
-            self.logic_name_saved.emit(name)
+        """로직 이름 저장 및 목록 전달"""
+        logic_name = self.name_input.text().strip()
+        if not logic_name:
+            self.log_message.emit("로직 이름을 입력해주세요")
+            return
+            
+        # 현재 목록의 모든 아이템을 리스트로 변환
+        items = []
+        for i in range(self.list_widget.count()):
+            items.append(self.list_widget.item(i).text())
+        
+        if self.edit_mode:
+            # 수정 모드일 경우 업데이트 시그널 발생
+            self.logic_updated.emit(logic_name, items)
+            self.edit_mode = False
+        else:
+            # 새로운 로직 저장
+            self.logic_saved.emit(logic_name, items)
+        
+        # 저장 후 초기화
+        self.name_input.clear()
+        self.list_widget.clear()
+        self.log_message.emit(f"로직 '{logic_name}'이(가) {'수정' if self.edit_mode else '저장'}되었습니다")
+
+    def has_items(self):
+        """목록에 아이템이 있는지 확인"""
+        return self.list_widget.count() > 0
+
+    def load_logic(self, name, items):
+        """로직 데이터 로드"""
+        self.edit_mode = True  # 수정 모드로 설정
+        self.name_input.setText(name)
+        self.name_input.setReadOnly(True)  # 이름 수정 불가
+        self.list_widget.clear()
+        for item in items:
+            self.list_widget.addItem(QListWidgetItem(item))
 
     def add_item(self, item_text):
         """아이템 추가
