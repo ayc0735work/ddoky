@@ -133,9 +133,24 @@ class LogicMakerWidget(QFrame):
             
     def _add_delay(self):
         """지연시간 추가"""
-        delay, ok = QInputDialog.getInt(self, "지연시간", "지연시간(ms):", 1000, 0, 100000, 100)
-        if ok:
-            self.delay_input.emit(f"지연시간: {delay}ms")
+        # QInputDialog 커스터마이징
+        dialog = QInputDialog(self)
+        dialog.setWindowTitle("지연시간")
+        dialog.setLabelText("지연시간(초):")
+        dialog.setDoubleDecimals(3)  # 소수점 3자리까지 표시 (0.001초 단위)
+        dialog.setDoubleValue(0.01)  # 기본값 0.01초
+        dialog.setDoubleRange(0.001, 100.0)  # 0.001초 ~ 100초
+        dialog.setDoubleStep(0.001)  # 증가/감소 단위
+        
+        # 버튼 텍스트 변경
+        dialog.setOkButtonText("지연시간 저장")
+        dialog.setCancelButtonText("지연시간 입력 취소")
+        
+        if dialog.exec():
+            delay = dialog.doubleValue()
+            delay_text = f"지연시간 : {delay:.3f}초"
+            self.delay_input.emit(delay_text)
+            self.log_message.emit(f"지연시간 {delay:.3f}초가 추가되었습니다")
             
     def _toggle_record_mode(self):
         """기록 모드 토글"""

@@ -198,8 +198,7 @@ class MainWindow(QMainWindow):
         
     def _on_delay_input(self, delay_info):
         """지연시간이 추가되었을 때 호출"""
-        # TODO: 지연시간 처리 로직 구현
-        pass
+        self.logic_detail_widget.add_item(delay_info)
         
     def _on_record_mode(self, is_recording):
         """기록 모드가 토글되었을 때 호출"""
