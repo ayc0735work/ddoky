@@ -38,7 +38,8 @@ class SettingsManager:
                     "width": 800,
                     "height": 600
                 }
-            }
+            },
+            "logics": {}  # 로직 설정을 위한 기본값 추가
         }
     
     def get_window_settings(self):

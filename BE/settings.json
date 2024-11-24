@@ -10,8 +10,8 @@
         }
     },
     "logics": {
-        "테스트22": {
-            "name": "테스트22",
+        "테스트22evf": {
+            "name": "테스트22evf",
             "items": [
                 {
                     "action": "누르기",
@@ -71,13 +71,79 @@
                     "scan_code": 42,
                     "type": "key_input",
                     "virtual_key": 16
+                },
+                {
+                    "action": "누르기",
+                    "display_text": "키 입력: Tab --- 누르기",
+                    "key_code": "Tab",
+                    "modifiers": 0,
+                    "scan_code": 0,
+                    "type": "key_input",
+                    "virtual_key": 0
+                },
+                {
+                    "action": "떼기",
+                    "display_text": "키 입력: Tab --- 떼기",
+                    "key_code": "Tab",
+                    "modifiers": 0,
+                    "scan_code": 0,
+                    "type": "key_input",
+                    "virtual_key": 0
                 }
             ],
             "trigger_key": {
-                "key_code": "F",
-                "scan_code": 33,
-                "virtual_key": 70,
-                "display_text": "키: F, 스캔 코드 (하드웨어 고유값): 33, 확장 가상 키 (운영체제 레벨의 고유 값): 70, 키보드 위치: 메인, 수정자 키: 없음",
+                "key_code": "3",
+                "scan_code": 4,
+                "virtual_key": 51,
+                "display_text": "",
+                "modifiers": 0
+            }
+        },
+        "체력 회복": {
+            "name": "체력 회복",
+            "items": [
+                {
+                    "action": "누르기",
+                    "display_text": "키 입력: 왼쪽 쉬프트 --- 누르기",
+                    "key_code": "왼쪽 쉬프트",
+                    "modifiers": 0,
+                    "scan_code": 42,
+                    "type": "key_input",
+                    "virtual_key": 16
+                },
+                {
+                    "action": "누르기",
+                    "display_text": "키 입력: Z --- 누르기",
+                    "key_code": "Z",
+                    "modifiers": 0,
+                    "scan_code": 44,
+                    "type": "key_input",
+                    "virtual_key": 90
+                },
+                {
+                    "action": "떼기",
+                    "display_text": "키 입력: Z --- 떼기",
+                    "key_code": "Z",
+                    "modifiers": 0,
+                    "scan_code": 44,
+                    "type": "key_input",
+                    "virtual_key": 90
+                },
+                {
+                    "action": "떼기",
+                    "display_text": "키 입력: 왼쪽 쉬프트 --- 떼기",
+                    "key_code": "왼쪽 쉬프트",
+                    "modifiers": 0,
+                    "scan_code": 42,
+                    "type": "key_input",
+                    "virtual_key": 16
+                }
+            ],
+            "trigger_key": {
+                "key_code": "숫자패드 /",
+                "scan_code": 53,
+                "virtual_key": 111,
+                "display_text": "",
                 "modifiers": 0
             }
         }

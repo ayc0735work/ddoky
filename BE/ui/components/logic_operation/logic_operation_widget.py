@@ -11,7 +11,7 @@ from BE.ui.components.process_selector.process_selector_dialog import ProcessSel
 class LogicOperationWidget(QFrame):
     """로직 동작 온오프 위젯"""
     
-    process_selected = Signal(str)  # 프로세스가 선택되었을 때
+    process_selected = Signal(dict)  # 프로세스가 선택되었을 때
     process_reset = Signal()  # 프로세스가 초기화되었을 때
     operation_toggled = Signal(bool)  # 로직 동작이 토글되었을 때
     log_message = Signal(str)  # 로그 메시지 시그널
@@ -120,7 +120,8 @@ class LogicOperationWidget(QFrame):
             text = f"선택된 프로세스 : {self._get_process_info_text(process)}"
             self.selected_process_label.setText(text)
             self.selected_process = process
-            self.process_selected.emit(self._get_process_info_text(process))
+            self.log_message.emit(f"프로세스에서 로직 동작을 시작합니다")
+            self.process_selected.emit(process)  # 프로세스 정보 전체를 전달
         
     def _on_reset_process(self):
         """프로세스 초기화 버튼 클릭 시 호출"""
