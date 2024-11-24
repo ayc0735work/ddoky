@@ -206,19 +206,19 @@ class MainWindow(QMainWindow):
         pass
 
     def _handle_edit_logic(self, logic_info):
-        """로직 수정 처리"""
+        """로직 불러오기 처리"""
         if self.logic_detail_widget.has_items():
             # 확인 모달 표시
             reply = QMessageBox.question(
                 self,
-                "로직 수정",
+                "로직 불러오기",
                 "현재 작성 중인 로직이 있습니다. 덮어쓰시겠습니까?",
                 QMessageBox.Yes | QMessageBox.No,
                 QMessageBox.No
             )
             
             if reply == QMessageBox.No:
-                self._append_log("로직 수정이 취소되었습니다")
+                self._append_log("로직 불러오기가 취소되었습니다")
                 return
         
         # 로직 데이터 로드

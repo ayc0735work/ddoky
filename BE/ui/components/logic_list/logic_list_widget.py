@@ -16,7 +16,7 @@ class LogicListWidget(QFrame):
     item_edited = Signal(dict)  # 아이템이 수정되었을 때
     item_deleted = Signal(str)  # 아이템이 삭제되었을 때
     logic_selected = Signal(str)  # 로직이 선택되었을 때
-    edit_logic = Signal(dict)  # 로직 수정 시그널 (로직 정보)
+    edit_logic = Signal(dict)  # 로직 불러오기 시그널 (로직 정보)
     log_message = Signal(str)  # 로그 메시지 시그널
     
     def __init__(self, parent=None):
@@ -56,7 +56,7 @@ class LogicListWidget(QFrame):
         # 버튼 생성
         self.up_btn = QPushButton("위로")
         self.down_btn = QPushButton("아래로")
-        self.edit_btn = QPushButton("로직 수정")
+        self.edit_btn = QPushButton("로직 불러오기")
         self.delete_btn = QPushButton("로직 삭제")
         
         # 버튼 설정
@@ -145,7 +145,7 @@ class LogicListWidget(QFrame):
             self.edit_logic.emit(logic_info)
             
     def _edit_item(self):
-        """선택된 로직 수정"""
+        """선택된 로직 불러오기"""
         current_item = self.list_widget.currentItem()
         if current_item:
             logic_name = current_item.text()

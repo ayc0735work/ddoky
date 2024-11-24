@@ -22,7 +22,7 @@ class LogicDetailWidget(QFrame):
     logic_name_saved = Signal(str)  # 로직 이름이 저장되었을 때
     log_message = Signal(str)  # 로그 메시지 시그널
     logic_saved = Signal(dict)  # 로직 저장 시그널 (로직 정보)
-    logic_updated = Signal(str, dict)  # 로직 수정 시그널 (원래 이름, 로직 정보)
+    logic_updated = Signal(str, dict)  # 로직 불러오기 시그널 (원래 이름, 로직 정보)
     
     def __init__(self, parent=None):
         super().__init__(parent)
