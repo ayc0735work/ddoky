@@ -10,16 +10,68 @@
         }
     },
     "logics": {
-        "테스트": {
-            "name": "테스트",
+        "테스트22": {
+            "name": "테스트22",
             "items": [
-                "키 입력: A --- 누르기",
-                "키 입력: A --- 떼기",
-                "지연시간 : 0.010초",
-                "키 입력: Shift+오른쪽 쉬프트 --- 누르기",
-                "키 입력: G --- 누르기",
-                "키 입력: G --- 떼기",
-                "키 입력: Shift+오른쪽 쉬프트 --- 떼기"
+                {
+                    "action": "누르기",
+                    "display_text": "키 입력: A --- 누르기",
+                    "key_code": "A",
+                    "modifiers": 0,
+                    "scan_code": 30,
+                    "type": "key_input",
+                    "virtual_key": 65
+                },
+                {
+                    "action": "떼기",
+                    "display_text": "키 입력: A --- 떼기",
+                    "key_code": "A",
+                    "modifiers": 0,
+                    "scan_code": 30,
+                    "type": "key_input",
+                    "virtual_key": 65
+                },
+                {
+                    "display_text": "지연시간 : 0.010초",
+                    "duration": 0.01,
+                    "type": "delay"
+                },
+                {
+                    "action": "누르기",
+                    "display_text": "키 입력: Shift+오른쪽 쉬프트 --- 누르기",
+                    "key_code": "오른쪽 쉬프트",
+                    "modifiers": 33554432,
+                    "scan_code": 42,
+                    "type": "key_input",
+                    "virtual_key": 16
+                },
+                {
+                    "action": "누르기",
+                    "display_text": "키 입력: G --- 누르기",
+                    "key_code": "G",
+                    "modifiers": 0,
+                    "scan_code": 34,
+                    "type": "key_input",
+                    "virtual_key": 71
+                },
+                {
+                    "action": "떼기",
+                    "display_text": "키 입력: G --- 떼기",
+                    "key_code": "G",
+                    "modifiers": 0,
+                    "scan_code": 34,
+                    "type": "key_input",
+                    "virtual_key": 71
+                },
+                {
+                    "action": "떼기",
+                    "display_text": "키 입력: Shift+오른쪽 쉬프트 --- 떼기",
+                    "key_code": "오른쪽 쉬프트",
+                    "modifiers": 33554432,
+                    "scan_code": 42,
+                    "type": "key_input",
+                    "virtual_key": 16
+                }
             ],
             "trigger_key": {
                 "key_code": "F",

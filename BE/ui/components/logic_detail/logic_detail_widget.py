@@ -217,45 +217,125 @@ class LogicDetailWidget(QFrame):
 
     def _save_logic_name(self):
         """로직 이름을 저장"""
-        if not self.name_input.text():
+        name = self.name_input.text().strip()
+        if not name:
+            self.log_message.emit("로직 이름을 입력하세요")
             return
-            
-        key_info = getattr(self, 'trigger_key_info', None)
-        if not key_info:
-            self.log_message.emit("트리거 키를 입력해주세요")
+        
+        # 아이템 목록이 비어있는지 확인
+        if not self.has_items():
+            self.log_message.emit("로직에 아이템을 추가하세요")
             return
-            
-        # 로직의 모든 정보를 하나의 구조로 저장
+        
+        # 트리거 키가 설정되어 있는지 확인
+        if not self.trigger_key_info:
+            self.log_message.emit("트리거 키를 설정하세요")
+            return
+        
+        # 아이템 목록 가져오기
         items = []
         for i in range(self.list_widget.count()):
-            items.append(self.list_widget.item(i).text())
+            item = self.list_widget.item(i)
+            item_text = item.text()
             
+            # 키 입력 아이템인 경우 구조화된 형태로 저장
+            if item_text.startswith("키 입력:"):
+                key_parts = item_text.split(" --- ")
+                if len(key_parts) == 2:
+                    key_text = key_parts[0].replace("키 입력: ", "").strip()
+                    action = key_parts[1]  # "누르기" 또는 "떼기"
+                    
+                    # 수정자 키가 있는 경우 처리
+                    if "+" in key_text:
+                        modifiers_text, key = key_text.rsplit("+", 1)
+                        modifiers = modifiers_text.strip()
+                    else:
+                        modifiers = "없음"
+                        key = key_text
+                    
+                    key = key.strip()
+                    
+                    # 가상 키 코드와 스캔 코드 가져오기
+                    from win32con import VK_SHIFT, VK_CONTROL, VK_MENU
+                    import win32api
+                    
+                    # 키 코드 매핑
+                    key_code_map = {
+                        '왼쪽 쉬프트': VK_SHIFT,
+                        '오른쪽 쉬프트': VK_SHIFT,
+                        '왼쪽 컨트롤': VK_CONTROL,
+                        '오른쪽 컨트롤': VK_CONTROL,
+                        '왼쪽 알트': VK_MENU,
+                        '오른쪽 알트': VK_MENU,
+                    }
+                    
+                    # 가상 키 코드 얻기
+                    if key in key_code_map:
+                        virtual_key = key_code_map[key]
+                    else:
+                        # 일반 문자키인 경우
+                        if len(key) == 1:
+                            virtual_key = ord(key.upper())
+                        else:
+                            virtual_key = 0  # 알 수 없는 키
+                    
+                    # 스캔 코드 얻기
+                    scan_code = win32api.MapVirtualKey(virtual_key, 0)
+                    
+                    # 수정자 키를 정수값으로 매핑
+                    modifier_map = {
+                        'Shift': 0x02000000,  # Qt.ShiftModifier 값
+                        'Ctrl': 0x04000000,   # Qt.ControlModifier 값
+                        'Alt': 0x08000000,    # Qt.AltModifier 값
+                    }
+                    
+                    modifier_value = 0
+                    if modifiers != "없음":
+                        for mod in modifiers.split('+'):
+                            mod = mod.strip()
+                            if mod in modifier_map:
+                                modifier_value |= modifier_map[mod]
+                    
+                    # 구조화된 형태로 저장
+                    items.append({
+                        "type": "key_input",
+                        "key_code": key,
+                        "scan_code": scan_code,
+                        "virtual_key": virtual_key,
+                        "modifiers": modifier_value,
+                        "action": action,
+                        "display_text": item_text
+                    })
+                else:
+                    items.append({"type": "text", "content": item_text})
+            # 지연시간 아이템인 경우
+            elif item_text.startswith("지연시간"):
+                items.append({
+                    "type": "delay",
+                    "duration": float(item_text.split(":")[1].replace("초", "").strip()),
+                    "display_text": item_text
+                })
+            # 기타 아이템
+            else:
+                items.append({"type": "text", "content": item_text})
+        
+        # 로직 정보 생성
         logic_info = {
-            'name': self.name_input.text(),
-            'trigger_key': {
-                'key_code': key_info['key_code'],
-                'scan_code': key_info['scan_code'],
-                'virtual_key': key_info['virtual_key'],
-                'modifiers': key_info['modifiers'],
-                'display_text': format_key_info(key_info)
-            },
-            'items': items
+            "name": name,
+            "items": items,
+            "trigger_key": self.trigger_key_info
         }
-            
-        if self.edit_mode:
-            # 수정 모드일 때는 원래 이름을 함께 전달
+        
+        # 수정 모드인 경우 업데이트 시그널 발생
+        if self.edit_mode and self.original_name:
             self.logic_updated.emit(self.original_name, logic_info)
-            self.log_message.emit(f"로직 '{logic_info['name']}'이(가) 수정되었습니다")
+            self.log_message.emit(f"로직 '{name}'이(가) 수정되었습니다")
         else:
             self.logic_saved.emit(logic_info)
-            self.log_message.emit(f"로직 '{logic_info['name']}'이(가) 저장되었습니다")
+            self.log_message.emit(f"로직 '{name}'이(가) 저장되었습니다")
         
         # 저장 후 초기화
         self.clear_all()
-
-    def has_items(self):
-        """목록에 아이템이 있는지 확인"""
-        return self.list_widget.count() > 0
 
     def load_logic(self, logic_info):
         """로직 데이터 로드"""
@@ -266,15 +346,26 @@ class LogicDetailWidget(QFrame):
         # 목록 아이템 로드
         self.list_widget.clear()
         for item in logic_info['items']:
-            self.add_item(item)
+            if isinstance(item, dict):
+                if item['type'] == 'key_input':
+                    self.add_item(item['display_text'])
+                elif item['type'] == 'delay':
+                    self.add_item(item['display_text'])
+                else:
+                    self.add_item(item['content'])
+            else:
+                self.add_item(item)  # 이전 형식 지원
             
         # 트리거 키 정보 로드
-        self.log_message.emit(f"트리거 키 정보: {logic_info['trigger_key']}")  # 로깅 추가
         if 'trigger_key' in logic_info:
             key_info = logic_info['trigger_key']
             self.trigger_key_info = key_info  # 트리거 키 정보 저장
             self.key_input.set_key_info(key_info)  # key_input 위젯에 키 정보 설정
             self.key_info_label.setText(format_key_info(key_info))  # 키 정보 표시
+
+    def has_items(self):
+        """목록에 아이템이 있는지 확인"""
+        return self.list_widget.count() > 0
 
     def add_item(self, item_text):
         """아이템 추가
