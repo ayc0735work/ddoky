@@ -13,16 +13,16 @@ class LogicListWidget(QFrame):
     
     # 시그널 정의
     item_moved = Signal()  # 아이템이 이동되었을 때
-    item_edited = Signal(str)  # 아이템이 수정되었을 때
+    item_edited = Signal(str, list, dict)  # 아이템이 수정되었을 때
     item_deleted = Signal(str)  # 아이템이 삭제되었을 때
     logic_selected = Signal(str)  # 로직이 선택되었을 때
-    edit_logic = Signal(str, list)  # 로직 수정 시그널 (이름, 아이템 리스트)
+    edit_logic = Signal(str, list, dict)  # 로직 수정 시그널 (이름, 아이템 리스트, 트리거 키 정보)
     log_message = Signal(str)  # 로그 메시지 시그널
     
     def __init__(self, parent=None):
         super().__init__(parent)
         self.init_ui()
-        self.saved_logics = {}  # 저장된 로직들을 관리하는 딕셔너리
+        self.saved_logics = {}  # 저장된 로직들을 관리하는 딕셔너리: {이름: {'items': [...], 'trigger_key': {...}}}
         
     def init_ui(self):
         """UI 초기화"""
@@ -45,6 +45,7 @@ class LogicListWidget(QFrame):
         self.list_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.list_widget.setStyleSheet(LIST_STYLE)
         self.list_widget.itemSelectionChanged.connect(self._on_selection_changed)
+        self.list_widget.itemDoubleClicked.connect(self._item_double_clicked)
         layout.addWidget(self.list_widget)
         
         # 버튼 그룹 레이아웃
@@ -106,40 +107,42 @@ class LogicListWidget(QFrame):
             self.list_widget.setCurrentItem(current_item)
             self.item_moved.emit()
             
-    def add_logic(self, name, items):
-        """로직 추가
-        
-        Args:
-            name (str): 로직 이름
-            items (list): 로직 구성 아이템 리스트
-        """
-        # 로직 정보 저장
-        self.saved_logics[name] = items
+    def on_logic_saved(self, name, items, trigger_key_info):
+        """로직이 저장되었을 때 호출되는 메서드"""
+        # 저장된 로직 정보 업데이트
+        self.saved_logics[name] = {
+            'items': items,
+            'trigger_key': trigger_key_info
+        }
         
         # 리스트에 추가
-        item = QListWidgetItem(name)
-        self.list_widget.addItem(item)
-        self.log_message.emit(f"로직 '{name}'이(가) 추가되었습니다")
-
-    def update_logic(self, name, items):
-        """로직 업데이트
+        self.list_widget.addItem(QListWidgetItem(name))
+        self.log_message.emit(f"로직 '{name}'이(가) 목록에 추가되었습니다")
         
-        Args:
-            name (str): 로직 이름
-            items (list): 로직 구성 아이템 리스트
-        """
-        if name in self.saved_logics:
-            # 저장된 로직 정보 업데이트
-            self.saved_logics[name] = items
-            self.log_message.emit(f"로직 '{name}'이(가) 수정되었습니다")
-
+    def on_logic_updated(self, name, items, trigger_key_info):
+        """로직이 수정되었을 때 호출되는 메서드"""
+        # 저장된 로직 정보 업데이트
+        self.saved_logics[name] = {
+            'items': items,
+            'trigger_key': trigger_key_info
+        }
+        self.log_message.emit(f"로직 '{name}'이(가) 업데이트되었습니다")
+        
+    def _item_double_clicked(self, item):
+        """아이템이 더블클릭되었을 때 호출"""
+        logic_name = item.text()
+        if logic_name in self.saved_logics:
+            logic_data = self.saved_logics[logic_name]
+            self.edit_logic.emit(logic_name, logic_data['items'], logic_data.get('trigger_key', {}))
+            
     def _edit_item(self):
         """선택된 로직 수정"""
         current_item = self.list_widget.currentItem()
         if current_item:
             logic_name = current_item.text()
             if logic_name in self.saved_logics:
-                self.edit_logic.emit(logic_name, self.saved_logics[logic_name])
+                logic_data = self.saved_logics[logic_name]
+                self.edit_logic.emit(logic_name, logic_data['items'], logic_data.get('trigger_key', {}))
             
     def _delete_item(self):
         """선택된 아이템 삭제"""

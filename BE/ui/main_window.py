@@ -147,6 +147,16 @@ class MainWindow(QMainWindow):
         
         # 로직 리스트와 상세 정보 연결
         self.logic_list_widget.logic_selected.connect(self.logic_detail_controller.on_logic_selected)
+        self.logic_list_widget.edit_logic.connect(self.logic_detail_widget.load_logic)
+        
+        # 로직 저장/수정 시그널 연결
+        self.logic_detail_widget.logic_saved.connect(self.logic_list_widget.on_logic_saved)
+        self.logic_detail_widget.logic_updated.connect(self.logic_list_widget.on_logic_updated)
+        
+        # 로그 메시지 연결
+        self.logic_list_widget.log_message.connect(self._append_log)
+        self.logic_detail_widget.log_message.connect(self._append_log)
+        self.logic_maker_widget.log_message.connect(self._append_log)
         
         # 고급 기능과 로직 상세 정보 연결
         self.advanced_widget.advanced_action.connect(self.logic_detail_controller.on_advanced_action)
@@ -155,22 +165,7 @@ class MainWindow(QMainWindow):
         self.logic_maker_widget.key_input.connect(self._on_key_input)
         self.logic_maker_widget.mouse_input.connect(self._on_mouse_input)
         self.logic_maker_widget.delay_input.connect(self._on_delay_input)
-        self.logic_maker_widget.log_message.connect(self._append_log)  # 로그 메시지 연결
         
-        # 로직 상세 정보 로그 메시지 연결
-        self.logic_detail_widget.log_message.connect(self._append_log)
-        
-        # 로직 리스트 로그 메시지 연결
-        self.logic_list_widget.log_message.connect(self._append_log)
-        
-        # 고급 기능 로그 메시지 연결
-        self.advanced_widget.log_message.connect(self._append_log)
-        
-        # 로직 저장 및 수정 연결
-        self.logic_detail_widget.logic_saved.connect(self.logic_list_widget.add_logic)
-        self.logic_detail_widget.logic_updated.connect(self.logic_list_widget.update_logic)
-        self.logic_list_widget.edit_logic.connect(self._handle_edit_logic)
-
     def _handle_record_mode(self):
         # TODO: Implement record mode handling
         pass

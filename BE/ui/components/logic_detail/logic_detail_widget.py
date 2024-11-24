@@ -1,13 +1,15 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
                              QPushButton, QLabel, QListWidget, QListWidgetItem,
                              QSizePolicy, QLineEdit)
-from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QFont
+from PySide6.QtCore import Qt, Signal, QObject, QEvent
+from PySide6.QtGui import QFont, QGuiApplication
 
 from ...constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE, CONTAINER_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from ...constants.dimensions import (LOGIC_DETAIL_WIDTH, BASIC_SECTION_HEIGHT,
                                  LOGIC_BUTTON_WIDTH)
+from ....utils.key_handler import (KeyboardHook, get_key_display_text, get_key_location,
+                                get_modifier_text)
 
 class LogicDetailWidget(QFrame):
     """로직 상세 내용을 표시하고 관리하는 위젯"""
@@ -18,13 +20,15 @@ class LogicDetailWidget(QFrame):
     item_deleted = Signal(str)  # 아이템이 삭제되었을 때
     logic_name_saved = Signal(str)  # 로직 이름이 저장되었을 때
     log_message = Signal(str)  # 로그 메시지 시그널
-    logic_saved = Signal(str, list)  # 로직 저장 시그널 (이름, 아이템 리스트)
-    logic_updated = Signal(str, list)  # 로직 수정 시그널 (이름, 아이템 리스트)
+    logic_saved = Signal(str, list, dict)  # 로직 저장 시그널 (이름, 아이템 리스트, 트리거 키 정보)
+    logic_updated = Signal(str, list, dict)  # 로직 수정 시그널 (이름, 아이템 리스트, 트리거 키 정보)
     
     def __init__(self, parent=None):
         super().__init__(parent)
         self.init_ui()
         self.edit_mode = False  # 수정 모드 여부
+        self.last_key_info = None
+        self.keyboard_hook = None
         
     def init_ui(self):
         """UI 초기화"""
@@ -56,8 +60,8 @@ class LogicDetailWidget(QFrame):
         self.name_input.setPlaceholderText("로직의 이름을 입력하세요")
         name_layout.addWidget(self.name_input, 1)  # stretch factor 1을 주어 남은 공간을 채우도록
         
-        # 저장 버튼
-        self.save_btn = QPushButton("저장")
+        # 로직 저장 버튼
+        self.save_btn = QPushButton("로직 저장")
         self.save_btn.setStyleSheet(BUTTON_STYLE)
         self.save_btn.clicked.connect(self._save_logic_name)
         name_layout.addWidget(self.save_btn)
@@ -80,8 +84,10 @@ class LogicDetailWidget(QFrame):
         
         # 트리거 키 입력 박스
         self.key_input = QLineEdit()
-        self.key_input.setPlaceholderText("트리거 키를 입력하세요")
-        self.key_input.textChanged.connect(self._on_trigger_key_changed)
+        self.key_input.setPlaceholderText("여기를 클릭하고 키를 입력하세요")
+        self.key_input.setReadOnly(True)  # 직접 텍스트 입력 방지
+        self.key_input.focusInEvent = self._on_key_input_focus_in
+        self.key_input.focusOutEvent = self._on_key_input_focus_out
         key_input_layout.addWidget(self.key_input, 1)
         
         trigger_key_layout.addLayout(key_input_layout)
@@ -89,7 +95,9 @@ class LogicDetailWidget(QFrame):
         # 트리거 키 정보 라벨
         self.key_info_label = QLabel()
         self.key_info_label.setWordWrap(True)  # 긴 텍스트 자동 줄바꿈
-        self.key_info_label.setStyleSheet("QLabel { background-color: #f0f0f0; padding: 5px; border-radius: 3px; }")
+        self.key_info_label.setStyleSheet("QLabel { background-color: #f0f0f0; padding: 0px; border-radius: 3px; }")
+        self.key_info_label.setCursor(Qt.CursorShape.PointingHandCursor)  # 커서 모양 변경
+        self.key_info_label.mousePressEvent = self._copy_key_info_to_clipboard
         trigger_key_layout.addWidget(self.key_info_label)
         
         layout.addLayout(trigger_key_layout)
@@ -195,37 +203,49 @@ class LogicDetailWidget(QFrame):
             self.log_message.emit("로직 이름을 입력해주세요")
             return
             
-        # 현재 목록의 모든 아이템을 리스트로 변환
         items = []
         for i in range(self.list_widget.count()):
             items.append(self.list_widget.item(i).text())
-        
+            
+        # 트리거 키 정보 포함
+        trigger_key_info = {
+            'key': self.key_input.text(),
+            'info': self.key_info_label.text()
+        }
+            
         if self.edit_mode:
-            # 수정 모드일 경우 업데이트 시그널 발생
-            self.logic_updated.emit(logic_name, items)
-            self.edit_mode = False
+            self.logic_updated.emit(logic_name, items, trigger_key_info)
+            self.log_message.emit(f"로직 '{logic_name}'이(가) 수정되었습니다")
         else:
-            # 새로운 로직 저장
-            self.logic_saved.emit(logic_name, items)
+            self.logic_saved.emit(logic_name, items, trigger_key_info)
+            self.log_message.emit(f"로직 '{logic_name}'이(가) 저장되었습니다")
         
         # 저장 후 초기화
         self.name_input.clear()
         self.list_widget.clear()
-        self.log_message.emit(f"로직 '{logic_name}'이(가) {'수정' if self.edit_mode else '저장'}되었습니다")
+        self.key_input.clear()  # 트리거 키 입력 초기화
+        self.key_info_label.clear()  # 트리거 키 정보 초기화
+        
+        self.edit_mode = False  # 수정 모드 해제
 
     def has_items(self):
         """목록에 아이템이 있는지 확인"""
         return self.list_widget.count() > 0
 
-    def load_logic(self, name, items):
+    def load_logic(self, name, items, trigger_key_info=None):
         """로직 데이터 로드"""
-        self.edit_mode = True  # 수정 모드로 설정
+        self.edit_mode = True
         self.name_input.setText(name)
         self.name_input.setReadOnly(True)  # 이름 수정 불가
         self.list_widget.clear()
         for item in items:
-            self.list_widget.addItem(QListWidgetItem(item))
-
+            self.add_item(item)
+            
+        # 트리거 키 정보 로드
+        if trigger_key_info:
+            self.key_input.setText(trigger_key_info.get('key', ''))
+            self.key_info_label.setText(trigger_key_info.get('info', ''))
+            
     def add_item(self, item_text):
         """아이템 추가
         
@@ -236,20 +256,41 @@ class LogicDetailWidget(QFrame):
         self.list_widget.addItem(item)
         self.list_widget.setCurrentItem(item)
 
-    def _on_trigger_key_changed(self):
-        """트리거 키 입력 시 호출"""
-        key_text = self.key_input.text()
-        if not key_text:
-            self.key_info_label.clear()
-            return
+    def _on_key_input_focus_in(self, event):
+        """키 입력 박스가 포커스를 받았을 때"""
+        def on_key_info(key_info):
+            self.last_key_info = key_info
             
-        # 임시로 더미 데이터로 표시 (실제로는 키 입력 처리 로직과 연동 필요)
-        key_info = (
-            f"키: {key_text}, "
-            f"키 코드: 1, "
-            f"스캔 코드 (하드웨어 고유값): 2, "
-            f"확장 가상 키 (운영체제 레벨의 고유 값): 49, "
-            f"키보드 위치: 메인 키보드, "
-            f"수정자 키: 없음"
-        )
-        self.key_info_label.setText(key_info)
+            # 키 표시 텍스트 설정
+            self.key_input.setText(get_key_display_text(key_info))
+            
+            # 키 정보 레이블 업데이트
+            info_text = (
+                f"키 코드: {key_info['key']}\n"
+                f"스캔 코드 (하드웨어 고유값): {key_info['scan_code']}\n"
+                f"확장 가상 키 (운영체제 레벨의 고유 값): {key_info['virtual_key']}\n"
+                f"위치: {get_key_location(key_info['scan_code'])}\n"
+                f"수정자 키: {get_modifier_text(key_info['modifiers'])}"
+            )
+            self.key_info_label.setText(info_text)
+            
+        # 키보드 훅 설정
+        self.keyboard_hook = KeyboardHook(on_key_info)
+        self.keyboard_hook.setup()
+        
+    def _on_key_input_focus_out(self, event):
+        """키 입력 박스가 포커스를 잃었을 때"""
+        if self.keyboard_hook:
+            self.keyboard_hook.cleanup()
+            self.keyboard_hook = None
+            
+    def eventFilter(self, obj, event):
+        """이벤트 필터"""
+        return super().eventFilter(obj, event)
+
+    def _copy_key_info_to_clipboard(self, event):
+        """트리거 키 정보를 클립보드에 복사"""
+        if self.key_info_label.text():
+            clipboard = QGuiApplication.clipboard()
+            clipboard.setText(self.key_info_label.text())
+            self.log_message.emit("트리거 키 정보가 클립보드에 복사되었습니다")
