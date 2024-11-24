@@ -131,12 +131,15 @@ class KeyInputDialog(QDialog):
                     self.reject()
                     return user32.CallNextHookEx(None, nCode, wParam, ctypes.cast(lParam, ctypes.c_void_p))
                 
+                # 키 이름 얻기
+                key_name = self._get_key_name(vk_code)
+                
                 # 키 정보 업데이트
                 self.last_key_info = {
-                    'key': self._get_key_name(vk_code),
+                    'key': key_name,
                     'scan_code': scan_code,
                     'virtual_key': vk_code,
-                    'text': chr(vk_code) if 32 <= vk_code <= 126 else '',
+                    'text': key_name,  # 키 이름을 text로 사용
                     'modifiers': self._get_qt_modifiers()
                 }
                 self._update_key_info()
@@ -166,19 +169,19 @@ class KeyInputDialog(QDialog):
         """가상 키 코드를 키 이름으로 변환"""
         # 특수 키 이름
         special_keys = {
-            # 기능 키
-            win32con.VK_F1: 'F1',
-            win32con.VK_F2: 'F2',
-            win32con.VK_F3: 'F3',
-            win32con.VK_F4: 'F4',
-            win32con.VK_F5: 'F5',
-            win32con.VK_F6: 'F6',
-            win32con.VK_F7: 'F7',
-            win32con.VK_F8: 'F8',
-            win32con.VK_F9: 'F9',
-            win32con.VK_F10: 'F10',
-            win32con.VK_F11: 'F11',
-            win32con.VK_F12: 'F12',
+            # 기능 키 (F1-F12: 0x70-0x7B)
+            0x70: 'F1',
+            0x71: 'F2',
+            0x72: 'F3',
+            0x73: 'F4',
+            0x74: 'F5',
+            0x75: 'F6',
+            0x76: 'F7',
+            0x77: 'F8',
+            0x78: 'F9',
+            0x79: 'F10',
+            0x7A: 'F11',
+            0x7B: 'F12',
             
             # 제어 키
             win32con.VK_RETURN: '엔터',
@@ -195,10 +198,10 @@ class KeyInputDialog(QDialog):
             win32con.VK_NEXT: 'Page Down',
             
             # 화살표 키
-            win32con.VK_LEFT: '←',
-            win32con.VK_RIGHT: '→',
-            win32con.VK_UP: '↑',
-            win32con.VK_DOWN: '↓',
+            win32con.VK_LEFT: '방향키 왼쪽 ←',
+            win32con.VK_RIGHT: '방향키 오른쪽 →',
+            win32con.VK_UP: '방향키 위쪽 ↑',
+            win32con.VK_DOWN: '방향키 아래쪽 ↓',
             
             # 수정자 키
             win32con.VK_LSHIFT: '왼쪽 쉬프트',
@@ -225,6 +228,9 @@ class KeyInputDialog(QDialog):
             win32con.VK_DECIMAL: '숫자패드 .',
             win32con.VK_DIVIDE: '숫자패드 /',
         }
+        
+        # 디버깅을 위한 로그
+        print(f"Virtual Key Code: 0x{vk_code:02X} ({vk_code})")
         
         if vk_code in special_keys:
             return special_keys[vk_code]
