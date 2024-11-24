@@ -129,6 +129,10 @@ def get_modifier_text(modifiers):
     """수정자 키 텍스트 생성"""
     mod_texts = []
     
+    # modifiers가 정수인 경우 Qt.KeyboardModifier로 변환
+    if isinstance(modifiers, int):
+        modifiers = Qt.KeyboardModifier(modifiers)
+    
     if modifiers & Qt.ShiftModifier:
         mod_texts.append("Shift")
     if modifiers & Qt.ControlModifier:

@@ -47,10 +47,24 @@ class SettingsManager:
     
     def set_window_position(self, x, y):
         """윈도우 위치 설정"""
-        self.settings.setdefault("window", {})["position"] = {"x": x, "y": y}
+        # 현재 설정 파일의 최신 내용을 로드
+        current_settings = self._load_settings()
+        
+        # window 설정 업데이트
+        current_settings.setdefault("window", {})["position"] = {"x": x, "y": y}
+        self.settings = current_settings
+        
+        # 업데이트된 설정 저장
         self._save_settings()
     
     def set_window_size(self, width, height):
         """윈도우 크기 설정"""
-        self.settings.setdefault("window", {})["size"] = {"width": width, "height": height}
+        # 현재 설정 파일의 최신 내용을 로드
+        current_settings = self._load_settings()
+        
+        # window 설정 업데이트
+        current_settings.setdefault("window", {})["size"] = {"width": width, "height": height}
+        self.settings = current_settings
+        
+        # 업데이트된 설정 저장
         self._save_settings()

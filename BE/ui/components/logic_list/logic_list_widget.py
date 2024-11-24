@@ -3,6 +3,8 @@ from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
                              QSizePolicy, QMessageBox)
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
+import json
+import os
 
 from ...constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
@@ -23,6 +25,7 @@ class LogicListWidget(QFrame):
         super().__init__(parent)
         self.init_ui()
         self.saved_logics = {}  # 저장된 로직들을 관리하는 딕셔너리: {이름: 로직 정보}
+        self.load_saved_logics()  # 저장된 로직 정보 불러오기
         
     def init_ui(self):
         """UI 초기화"""
@@ -114,24 +117,29 @@ class LogicListWidget(QFrame):
     def on_logic_saved(self, logic_info):
         """로직이 저장되었을 때 호출되는 메서드"""
         name = logic_info['name']
-        # 저장된 로직 정보 업데이트
         self.saved_logics[name] = logic_info
         
-        # 리스트에 추가
-        self.list_widget.addItem(QListWidgetItem(name))
-        self.log_message.emit(f"로직 '{name}'이(가) 목록에 추가되었습니다")
+        # 리스트에 아이템 추가
+        items = self.list_widget.findItems(name, Qt.MatchExactly)
+        if not items:
+            item = QListWidgetItem(name)
+            self.list_widget.addItem(item)
+        
+        self.log_message.emit(f"로직 '{name}'이(가) 저장되었습니다")
+        self.save_logics_to_settings()  # settings.json에 저장
         
     def on_logic_updated(self, original_name, logic_info):
         """로직이 수정되었을 때 호출되는 메서드"""
-        # 저장된 로직 정보에서 원래 이름의 데이터를 삭제
+        name = logic_info['name']
+        
+        # 기존 이름의 로직 제거
         if original_name in self.saved_logics:
             del self.saved_logics[original_name]
         
-        # 새 이름으로 로직 정보 저장
-        name = logic_info['name']
+        # 새 이름으로 로직 저장
         self.saved_logics[name] = logic_info
         
-        # 리스트 위젯의 아이템 텍스트 업데이트
+        # 리스트 아이템 텍스트 업데이트
         for i in range(self.list_widget.count()):
             item = self.list_widget.item(i)
             if item.text() == original_name:
@@ -139,6 +147,67 @@ class LogicListWidget(QFrame):
                 break
                 
         self.log_message.emit(f"로직 '{name}'이(가) 업데이트되었습니다")
+        self.save_logics_to_settings()  # settings.json에 저장
+        
+    def load_saved_logics(self):
+        """저장된 로직 정보를 settings.json에서 불러옴"""
+        try:
+            settings_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'settings.json')
+            if os.path.exists(settings_path):
+                with open(settings_path, 'r', encoding='utf-8') as f:
+                    settings = json.load(f)
+                    if 'logics' in settings:
+                        self.saved_logics = settings['logics']
+                        # 저장된 로직들을 리스트에 추가
+                        for logic_name in self.saved_logics:
+                            item = QListWidgetItem(logic_name)
+                            self.list_widget.addItem(item)
+        except Exception as e:
+            self.log_message.emit(f"로직 정보를 불러오는 중 오류 발생: {str(e)}")
+
+    def save_logics_to_settings(self):
+        """현재 로직 정보를 settings.json에 저장"""
+        try:
+            settings_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'settings.json')
+            settings = {}
+            if os.path.exists(settings_path):
+                with open(settings_path, 'r', encoding='utf-8') as f:
+                    settings = json.load(f)
+            
+            # 저장을 위해 로직 정보 복사 및 수정
+            logics_to_save = {}
+            for name, logic_info in self.saved_logics.items():
+                # 딕셔너리 깊은 복사
+                logic_copy = json.loads(json.dumps({
+                    'name': logic_info['name'],
+                    'items': logic_info['items']
+                }))
+                
+                # trigger_key 정보 처리
+                if 'trigger_key' in logic_info:
+                    trigger_key = logic_info['trigger_key']
+                    modifiers = trigger_key.get('modifiers')
+                    # KeyboardModifier 객체인 경우 value 속성을 사용하여 정수값 얻기
+                    modifiers_value = modifiers.value if hasattr(modifiers, 'value') else (0 if modifiers is None else modifiers)
+                    
+                    logic_copy['trigger_key'] = {
+                        'key_code': trigger_key.get('key_code', ''),
+                        'scan_code': trigger_key.get('scan_code', 0),
+                        'virtual_key': trigger_key.get('virtual_key', 0),
+                        'display_text': trigger_key.get('display_text', ''),
+                        'modifiers': modifiers_value
+                    }
+                
+                logics_to_save[name] = logic_copy
+            
+            settings['logics'] = logics_to_save
+            
+            with open(settings_path, 'w', encoding='utf-8') as f:
+                json.dump(settings, f, indent=4, ensure_ascii=False)
+            
+            self.log_message.emit("로직 정보가 저장되었습니다")
+        except Exception as e:
+            self.log_message.emit(f"로직 정보를 저장하는 중 오류 발생: {str(e)}")
         
     def _item_double_clicked(self, item):
         """로직 불러오기 방법 - 더블클릭으로 호출"""
@@ -162,21 +231,9 @@ class LogicListWidget(QFrame):
         current_item = self.list_widget.currentItem()
         if current_item:
             logic_name = current_item.text()
-            
-            # 확인 모달 표시
-            reply = QMessageBox.question(
-                self,
-                "로직 삭제",
-                f"로직 '{logic_name}'을(를) 삭제하시겠습니까?",
-                QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.No
-            )
-            
-            if reply == QMessageBox.Yes:
-                # 저장된 로직 정보에서 삭제
-                if logic_name in self.saved_logics:
-                    del self.saved_logics[logic_name]
-                
-                # 리스트에서 삭제
+            if logic_name in self.saved_logics:
+                del self.saved_logics[logic_name]
                 self.list_widget.takeItem(self.list_widget.row(current_item))
                 self.log_message.emit(f"로직 '{logic_name}'이(가) 삭제되었습니다")
+                self.item_deleted.emit(logic_name)
+                self.save_logics_to_settings()  # settings.json에 저장
