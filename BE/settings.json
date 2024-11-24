@@ -112,8 +112,8 @@
                     "virtual_key": 16
                 },
                 {
-                    "display_text": "지연시간 : 1.000초",
-                    "duration": 1.0,
+                    "display_text": "지연시간 : 0.300초",
+                    "duration": 0.3,
                     "type": "delay"
                 },
                 {
@@ -126,8 +126,8 @@
                     "virtual_key": 90
                 },
                 {
-                    "display_text": "지연시간 : 1.000초",
-                    "duration": 1.0,
+                    "display_text": "지연시간 : 0.300초",
+                    "duration": 0.3,
                     "type": "delay"
                 },
                 {
@@ -140,8 +140,8 @@
                     "virtual_key": 90
                 },
                 {
-                    "display_text": "지연시간 : 1.000초",
-                    "duration": 1.0,
+                    "display_text": "지연시간 : 0.300초",
+                    "duration": 0.3,
                     "type": "delay"
                 },
                 {
@@ -154,6 +154,11 @@
                     "virtual_key": 16
                 },
                 {
+                    "display_text": "지연시간 : 0.300초",
+                    "duration": 0.3,
+                    "type": "delay"
+                },
+                {
                     "action": "누르기",
                     "display_text": "키 입력: G --- 누르기",
                     "key_code": "G",
@@ -163,8 +168,8 @@
                     "virtual_key": 71
                 },
                 {
-                    "display_text": "지연시간 : 1.000초",
-                    "duration": 1.0,
+                    "display_text": "지연시간 : 0.300초",
+                    "duration": 0.3,
                     "type": "delay"
                 },
                 {
@@ -177,8 +182,8 @@
                     "virtual_key": 71
                 },
                 {
-                    "display_text": "지연시간 : 0.050초",
-                    "duration": 0.05,
+                    "display_text": "지연시간 : 0.300초",
+                    "duration": 0.3,
                     "type": "delay"
                 }
             ],
