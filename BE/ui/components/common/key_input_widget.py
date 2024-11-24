@@ -94,3 +94,15 @@ class KeyInputWidget(QWidget):
                 self.virtual_key_label.setText(f"가상 키: {key_info['virtual_key']}")
                 self.location_label.setText(f"위치: {get_key_location(key_info)}")
                 self.modifiers_label.setText(f"수정자 키: {get_modifier_text(key_info)}")
+
+    def clear_key(self):
+        """키 입력 초기화"""
+        self.last_key_info = None
+        self.key_display.clear()
+        if self.show_details:
+            self.key_code_label.setText("키 코드: ")
+            self.scan_code_label.setText("스캔 코드: ")
+            self.virtual_key_label.setText("가상 키: ")
+            self.location_label.setText("위치: ")
+            self.modifiers_label.setText("수정자 키: ")
+        self.key_input_changed.emit({})

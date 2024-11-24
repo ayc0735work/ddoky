@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QKeyEvent
+from PySide6.QtGui import QKeyEvent, QGuiApplication
 from ....utils.key_handler import format_key_info
 from ..common.key_input_widget import KeyInputWidget
 
@@ -46,6 +46,13 @@ class KeyInputDialog(QDialog):
         self.key_input_widget.key_input_changed.connect(self._on_key_input_changed)
         layout.addWidget(self.key_input_widget)
         
+        # 키 정보 라벨
+        self.key_info_label = QLabel()
+        self.key_info_label.setWordWrap(True)
+        self.key_info_label.mousePressEvent = self._copy_key_info_to_clipboard
+        self.key_info_label.setCursor(Qt.PointingHandCursor)  # 마우스 커서를 손가락 모양으로 변경
+        layout.addWidget(self.key_info_label)
+        
         # 버튼 레이아웃
         button_layout = QHBoxLayout()
         
@@ -69,6 +76,7 @@ class KeyInputDialog(QDialog):
             self.numlock_warning.setText("NumLock 키는 트리거 키로 사용할 수 없습니다.")
         else:
             self.numlock_warning.setText("")
+        self.key_info_label.setText(format_key_info(key_info))
             
     def _on_confirm(self):
         """확인 버튼 클릭 시"""
@@ -81,6 +89,12 @@ class KeyInputDialog(QDialog):
         """현재 입력된 키 정보 반환"""
         return self.key_input_widget.get_key_info()
         
+    def _copy_key_info_to_clipboard(self, event):
+        """키 정보를 클립보드에 복사"""
+        if self.key_info_label.text():
+            clipboard = QGuiApplication.clipboard()
+            clipboard.setText(self.key_info_label.text())
+
     def keyPressEvent(self, event: QKeyEvent):
         """키 이벤트 처리"""
         # ESC와 Enter 키를 무시

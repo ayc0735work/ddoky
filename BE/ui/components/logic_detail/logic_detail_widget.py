@@ -30,6 +30,7 @@ class LogicDetailWidget(QFrame):
         self.edit_mode = False  # 수정 모드 여부
         self.last_key_info = None
         self.keyboard_hook = None
+        self.trigger_key_info = None  # 트리거 키 정보
         
     def init_ui(self):
         """UI 초기화"""
@@ -194,37 +195,58 @@ class LogicDetailWidget(QFrame):
             item = self.list_widget.takeItem(row)
             self.item_deleted.emit(item.text())
 
-    def _save_logic_name(self):
-        """로직 이름 저장 및 목록 전달"""
-        logic_name = self.name_input.text().strip()
-        if not logic_name:
-            self.log_message.emit("로직 이름을 입력해주세요")
+    def clear_all(self):
+        """모든 입력과 상태를 초기화"""
+        self.name_input.clear()           # 로직 이름 초기화
+        self.list_widget.clear()          # 목록 초기화
+        self.key_input.clear_key()        # 트리거 키 입력 초기화
+        self.key_info_label.clear()       # 트리거 키 정보 초기화
+        self.trigger_key_info = None      # 트리거 키 정보 초기화
+        self.edit_mode = False            # 수정 모드 해제
+
+    def _on_key_input_changed(self, key_info):
+        """키 입력이 변경되었을 때"""
+        if not key_info:  # 키 정보가 비어있으면 라벨 초기화
+            self.key_info_label.clear()
             return
             
+        self.key_info_label.setText(format_key_info(key_info))
+        self.trigger_key_info = key_info  # 트리거 키 정보 저장
+
+    def _save_logic_name(self):
+        """로직 이름을 저장"""
+        if not self.name_input.text():
+            return
+            
+        key_info = getattr(self, 'trigger_key_info', None)
+        if not key_info:
+            self.log_message.emit("트리거 키를 입력해주세요")
+            return
+            
+        logic_info = {
+            'name': self.name_input.text(),
+            'trigger_key': {  # 트리거 키 정보를 별도 필드로 저장
+                'key_code': key_info['key_code'],
+                'scan_code': key_info['scan_code'],
+                'virtual_key': key_info['virtual_key'],
+                'modifiers': key_info['modifiers'],
+                'display_text': format_key_info(key_info)  # 표시용 텍스트도 저장
+            }
+        }
+        
         items = []
         for i in range(self.list_widget.count()):
             items.append(self.list_widget.item(i).text())
             
-        # 트리거 키 정보 포함
-        trigger_key_info = {
-            'key': self.key_input.get_key_code(),
-            'info': self.key_info_label.text()
-        }
-            
         if self.edit_mode:
-            self.logic_updated.emit(logic_name, items, trigger_key_info)
-            self.log_message.emit(f"로직 '{logic_name}'이(가) 수정되었습니다")
+            self.logic_updated.emit(logic_info['name'], items, logic_info)
+            self.log_message.emit(f"로직 '{logic_info['name']}'이(가) 수정되었습니다")
         else:
-            self.logic_saved.emit(logic_name, items, trigger_key_info)
-            self.log_message.emit(f"로직 '{logic_name}'이(가) 저장되었습니다")
+            self.logic_saved.emit(logic_info['name'], items, logic_info)
+            self.log_message.emit(f"로직 '{logic_info['name']}'이(가) 저장되었습니다")
         
         # 저장 후 초기화
-        self.name_input.clear()
-        self.list_widget.clear()
-        self.key_input.clear_key()  # 트리거 키 입력 초기화
-        self.key_info_label.clear()  # 트리거 키 정보 초기화
-        
-        self.edit_mode = False  # 수정 모드 해제
+        self.clear_all()
 
     def has_items(self):
         """목록에 아이템이 있는지 확인"""
@@ -234,16 +256,19 @@ class LogicDetailWidget(QFrame):
         """로직 데이터 로드"""
         self.edit_mode = True
         self.name_input.setText(name)
-        self.name_input.setReadOnly(True)  # 이름 수정 불가
+        
+        # 목록 아이템 로드
         self.list_widget.clear()
         for item in items:
             self.add_item(item)
             
         # 트리거 키 정보 로드
-        if trigger_key_info:
-            self.key_input.set_key_code(trigger_key_info.get('key', ''))
-            self.key_info_label.setText(trigger_key_info.get('info', ''))
-            
+        if trigger_key_info and 'trigger_key' in trigger_key_info:
+            self.trigger_key_info = trigger_key_info['trigger_key']  # trigger_key 필드에서 키 정보 추출
+            if self.trigger_key_info:
+                self.key_input.set_key_info(self.trigger_key_info)  # key_input 위젯에 키 정보 설정
+                self.key_info_label.setText(format_key_info(self.trigger_key_info))  # 키 정보 표시
+
     def add_item(self, item_text):
         """아이템 추가
         
@@ -253,10 +278,6 @@ class LogicDetailWidget(QFrame):
         item = QListWidgetItem(item_text)
         self.list_widget.addItem(item)
         self.list_widget.setCurrentItem(item)
-
-    def _on_key_input_changed(self, key_info):
-        """키 입력이 변경되었을 때"""
-        self.key_info_label.setText(format_key_info(key_info))
 
     def _copy_key_info_to_clipboard(self, event):
         """트리거 키 정보를 클립보드에 복사"""
