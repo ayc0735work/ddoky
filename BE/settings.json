@@ -177,8 +177,8 @@
                     "virtual_key": 71
                 },
                 {
-                    "display_text": "지연시간 : 1.000초",
-                    "duration": 1.0,
+                    "display_text": "지연시간 : 0.050초",
+                    "duration": 0.05,
                     "type": "delay"
                 }
             ],

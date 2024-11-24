@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
                              QPushButton, QLabel, QListWidget, QListWidgetItem,
-                             QSizePolicy, QLineEdit)
+                             QSizePolicy, QLineEdit, QInputDialog)
 from PySide6.QtCore import Qt, Signal, QObject, QEvent
 from PySide6.QtGui import QFont, QGuiApplication
 
@@ -186,7 +186,36 @@ class LogicDetailWidget(QFrame):
         """선택된 아이템 수정"""
         current_item = self.list_widget.currentItem()
         if current_item:
-            self.item_edited.emit(current_item.text())
+            item_text = current_item.text()
+            
+            # 지연시간 아이템인 경우
+            if item_text.startswith("지연시간"):
+                try:
+                    current_delay = float(item_text.split(":")[1].replace("초", "").strip())
+                    
+                    # QInputDialog 커스터마이징
+                    dialog = QInputDialog(self)
+                    dialog.setWindowTitle("지연시간 수정")
+                    dialog.setLabelText("지연시간(초):")
+                    dialog.setDoubleDecimals(3)  # 소수점 3자리까지 표시 (0.001초 단위)
+                    dialog.setDoubleValue(current_delay)  # 현재 지연시간을 기본값으로 설정
+                    dialog.setDoubleRange(0.001, 100.0)  # 0.001초 ~ 100초
+                    dialog.setDoubleStep(0.001)  # 증가/감소 단위
+                    
+                    # 버튼 텍스트 변경
+                    dialog.setOkButtonText("지연시간 저장")
+                    dialog.setCancelButtonText("지연시간 입력 취소")
+                    
+                    if dialog.exec():
+                        delay = dialog.doubleValue()
+                        delay_text = f"지연시간 : {delay:.3f}초"
+                        current_item.setText(delay_text)
+                        self.item_edited.emit(delay_text)
+                        self.log_message.emit(f"지연시간이 {delay:.3f}초로 수정되었습니다")
+                except ValueError:
+                    self.log_message.emit("지연시간 형식이 올바르지 않습니다")
+            else:
+                self.item_edited.emit(item_text)
             
     def _delete_item(self):
         """선택된 아이템 삭제"""
