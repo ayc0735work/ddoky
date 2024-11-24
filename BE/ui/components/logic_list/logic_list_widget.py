@@ -137,7 +137,7 @@ class LogicListWidget(QFrame):
         self.log_message.emit(f"로직 '{name}'이(가) 업데이트되었습니다")
         
     def _item_double_clicked(self, item):
-        """아이템이 더블클릭되었을 때 호출"""
+        """로직 불러오기 방법 - 더블클릭으로 호출"""
         logic_name = item.text()
         if logic_name in self.saved_logics:
             logic_info = self.saved_logics[logic_name]
