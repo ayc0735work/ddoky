@@ -83,17 +83,22 @@ class KeyInputWidget(QWidget):
         
     def set_key_info(self, key_info):
         """키 정보 설정"""
+        if not key_info:
+            return
+        
         self.last_key_info = key_info
-        if key_info:
-            display_text = get_key_display_text(key_info)
-            self.key_display.setText(display_text)
-            
-            if self.show_details:
-                self.key_code_label.setText(f"키 코드: {key_info['key_code']}")
-                self.scan_code_label.setText(f"스캔 코드: {key_info['scan_code']}")
-                self.virtual_key_label.setText(f"가상 키: {key_info['virtual_key']}")
-                self.location_label.setText(f"위치: {get_key_location(key_info)}")
-                self.modifiers_label.setText(f"수정자 키: {get_modifier_text(key_info)}")
+        display_text = get_key_display_text(key_info)
+        self.key_display.setText(display_text)
+        
+        if self.show_details:
+            self.key_code_label.setText(f"키 코드: {key_info['key_code']}")
+            self.scan_code_label.setText(f"스캔 코드: {key_info['scan_code']}")
+            self.virtual_key_label.setText(f"가상 키: {key_info['virtual_key']}")
+            self.location_label.setText(f"위치: {get_key_location(key_info['scan_code'])}")
+            self.modifiers_label.setText(f"수정자 키: {get_modifier_text(key_info['modifiers'])}")
+        
+        # 키 정보 변경 시그널 발생
+        self.key_input_changed.emit(key_info)
 
     def clear_key(self):
         """키 입력 초기화"""

@@ -205,7 +205,7 @@ class MainWindow(QMainWindow):
         # TODO: 기록 모드 처리 로직 구현
         pass
 
-    def _handle_edit_logic(self, logic_name, items):
+    def _handle_edit_logic(self, logic_info):
         """로직 수정 처리"""
         if self.logic_detail_widget.has_items():
             # 확인 모달 표시
@@ -222,8 +222,8 @@ class MainWindow(QMainWindow):
                 return
         
         # 로직 데이터 로드
-        self.logic_detail_widget.load_logic(logic_name, items)
-        self._append_log(f"로직 '{logic_name}'을(를) 수정합니다")
+        self.logic_detail_widget.load_logic(logic_info)
+        self._append_log(f"로직 '{logic_info['name']}'을(를) 수정합니다")
 
     def _load_window_settings(self):
         """윈도우 설정 로드"""

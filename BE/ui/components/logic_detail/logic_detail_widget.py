@@ -21,8 +21,8 @@ class LogicDetailWidget(QFrame):
     item_deleted = Signal(str)  # 아이템이 삭제되었을 때
     logic_name_saved = Signal(str)  # 로직 이름이 저장되었을 때
     log_message = Signal(str)  # 로그 메시지 시그널
-    logic_saved = Signal(str, list, dict)  # 로직 저장 시그널 (이름, 아이템 리스트, 트리거 키 정보)
-    logic_updated = Signal(str, str, list, dict)  # 로직 수정 시그널 (원래 이름, 이름, 아이템 리스트, 트리거 키 정보)
+    logic_saved = Signal(dict)  # 로직 저장 시그널 (로직 정보)
+    logic_updated = Signal(str, dict)  # 로직 수정 시그널 (원래 이름, 로직 정보)
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -225,27 +225,29 @@ class LogicDetailWidget(QFrame):
             self.log_message.emit("트리거 키를 입력해주세요")
             return
             
-        logic_info = {
-            'name': self.name_input.text(),
-            'trigger_key': {  # 트리거 키 정보를 별도 필드로 저장
-                'key_code': key_info['key_code'],
-                'scan_code': key_info['scan_code'],
-                'virtual_key': key_info['virtual_key'],
-                'modifiers': key_info['modifiers'],
-                'display_text': format_key_info(key_info)  # 표시용 텍스트도 저장
-            }
-        }
-        
+        # 로직의 모든 정보를 하나의 구조로 저장
         items = []
         for i in range(self.list_widget.count()):
             items.append(self.list_widget.item(i).text())
             
+        logic_info = {
+            'name': self.name_input.text(),
+            'trigger_key': {
+                'key_code': key_info['key_code'],
+                'scan_code': key_info['scan_code'],
+                'virtual_key': key_info['virtual_key'],
+                'modifiers': key_info['modifiers'],
+                'display_text': format_key_info(key_info)
+            },
+            'items': items
+        }
+            
         if self.edit_mode:
             # 수정 모드일 때는 원래 이름을 함께 전달
-            self.logic_updated.emit(self.original_name, logic_info['name'], items, logic_info)
+            self.logic_updated.emit(self.original_name, logic_info)
             self.log_message.emit(f"로직 '{logic_info['name']}'이(가) 수정되었습니다")
         else:
-            self.logic_saved.emit(logic_info['name'], items, logic_info)
+            self.logic_saved.emit(logic_info)
             self.log_message.emit(f"로직 '{logic_info['name']}'이(가) 저장되었습니다")
         
         # 저장 후 초기화
@@ -255,23 +257,24 @@ class LogicDetailWidget(QFrame):
         """목록에 아이템이 있는지 확인"""
         return self.list_widget.count() > 0
 
-    def load_logic(self, name, items, trigger_key_info=None):
+    def load_logic(self, logic_info):
         """로직 데이터 로드"""
         self.edit_mode = True
-        self.name_input.setText(name)
-        self.original_name = name  # 원래 이름 저장
+        self.name_input.setText(logic_info['name'])
+        self.original_name = logic_info['name']  # 원래 이름 저장
         
         # 목록 아이템 로드
         self.list_widget.clear()
-        for item in items:
+        for item in logic_info['items']:
             self.add_item(item)
             
         # 트리거 키 정보 로드
-        if trigger_key_info and 'trigger_key' in trigger_key_info:
-            self.trigger_key_info = trigger_key_info['trigger_key']  # trigger_key 필드에서 키 정보 추출
-            if self.trigger_key_info:
-                self.key_input.set_key_info(self.trigger_key_info)  # key_input 위젯에 키 정보 설정
-                self.key_info_label.setText(format_key_info(self.trigger_key_info))  # 키 정보 표시
+        self.log_message.emit(f"트리거 키 정보: {logic_info['trigger_key']}")  # 로깅 추가
+        if 'trigger_key' in logic_info:
+            key_info = logic_info['trigger_key']
+            self.trigger_key_info = key_info  # 트리거 키 정보 저장
+            self.key_input.set_key_info(key_info)  # key_input 위젯에 키 정보 설정
+            self.key_info_label.setText(format_key_info(key_info))  # 키 정보 표시
 
     def add_item(self, item_text):
         """아이템 추가
