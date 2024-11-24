@@ -34,7 +34,7 @@ class LogicExecutor(QObject):
             return
             
         self.keyboard_hook = KeyboardHook()
-        self.keyboard_hook.key_pressed.connect(self._on_key_pressed)
+        self.keyboard_hook.key_released.connect(self._on_key_released)  # 키를 뗄 때 이벤트 연결
         self.keyboard_hook.start()
     
     def stop_monitoring(self):
@@ -43,19 +43,31 @@ class LogicExecutor(QObject):
             self.keyboard_hook.stop()
             self.keyboard_hook = None
     
-    def _on_key_pressed(self, key_info):
-        """키 입력 감지 시 호출
+    def _on_key_released(self, key_info):
+        """키를 뗄 때 호출
         
         Args:
             key_info (dict): 입력된 키 정보
         """
-        self.log_message.emit(f"키 입력 감지: {key_info}")  # 키 입력 로그
+        self.log_message.emit(f"키 입력 감지: {key_info}")
         
         if not self._should_execute_logic():
-            self.log_message.emit("로직 실행 조건이 맞지 않습니다.")  # 실행 조건 로그
+            self.log_message.emit("로직 실행 조건이 맞지 않습니다.")
             return
         
-        self.execute_logic(key_info)
+        # 로직 찾기 및 실행
+        for logic_name, logic in self.logic_manager.get_all_logics().items():
+            self.log_message.emit(f"트리거 키: {logic.get('trigger_key', {})}, 입력 키: {key_info}")
+            if self._is_trigger_key_matched(logic, key_info):
+                self.selected_logic = logic
+                self.is_executing = True
+                self.current_step_index = 0
+                self.log_message.emit(f"로직 '{logic_name}' 실행 시작")
+                self.stop_monitoring()  # 로직 실행 중에는 키 입력 감지를 하지 않도록 중지
+                self._execute_next_step()  # 첫 번째 스텝 실행
+                return
+            
+        self.log_message.emit("일치하는 트리거 키를 찾을 수 없습니다.")
     
     def _should_execute_logic(self):
         """로직 실행 조건 확인
@@ -65,15 +77,11 @@ class LogicExecutor(QObject):
         """
         # 이미 실행 중이면 실행하지 않음
         if self.is_executing:
-            self.log_message.emit("이미 로직이 실행 중입니다.")
             return False
         
         # 선택된 프로세스와 활성 프로세스가 동일한지 확인
         selected_process = self.process_manager.get_selected_process()
         active_process = self.process_manager.get_active_process()
-        
-        self.log_message.emit(f"선택된 프로세스: {selected_process}")  # 프로세스 정보 로그
-        self.log_message.emit(f"활성 프로세스: {active_process}")
         
         if not selected_process:
             self.log_message.emit("선택된 프로세스가 없습니다.")
@@ -84,7 +92,6 @@ class LogicExecutor(QObject):
             return False
             
         is_match = selected_process['pid'] == active_process['pid']
-        self.log_message.emit(f"프로세스 일치 여부: {is_match}")
         return is_match
     
     def execute_logic(self, key_info):
@@ -93,35 +100,34 @@ class LogicExecutor(QObject):
             self.log_message.emit("로직 실행 조건이 맞지 않습니다.")
             return
             
+        # 트리거 키 정보 저장
+        self.trigger_key_info = key_info
+            
         # 프로세스 정보 로깅
         selected = self.process_manager.get_selected_process()
         active = self.process_manager.get_active_process()
         self.log_message.emit(f"선택된 프로세스: {selected}")
         self.log_message.emit(f"활성 프로세스: {active}")
-        self.log_message.emit(f"프로세스 일치 여부: {self._should_execute_logic()}")
         
-        # 키 입력 로깅
-        self.log_message.emit(f"키 입력 감지: {key_info}")
-        
-        # 트리거 키 매칭 확인
-        if not self.is_executing:
-            # 모든 로직을 가져와서 트리거 키 매칭 확인
-            all_logics = self.logic_manager.get_all_logics()
-            self.log_message.emit(f"사용 가능한 로직 수: {len(all_logics)}")
-            
-            for logic_name, logic in all_logics.items():
-                self.log_message.emit(f"로직 '{logic_name}' 트리거 키 매칭 시도")
-                self.log_message.emit(f"트리거 키: {logic.get('trigger_key')}, 입력 키: {key_info}")
+        # 로직 찾기 및 실행
+        for logic_name, logic in self.logic_manager.get_all_logics().items():
+            self.log_message.emit(f"트리거 키: {logic.get('trigger_key', {})}, 입력 키: {key_info}")
+            if self._is_trigger_key_matched(logic, key_info):
+                self.selected_logic = logic
+                self.is_executing = True
+                self.current_step_index = 0
+                self.log_message.emit(f"로직 '{logic_name}' 실행 시작")
+                self.stop_monitoring()  # 로직 실행 중에는 키 입력 감지를 하지 않도록 중지
                 
-                if self._is_trigger_key_matched(logic, key_info):
-                    self.selected_logic = logic
-                    self.is_executing = True
-                    self.current_step_index = 0
-                    self.log_message.emit(f"로직 '{logic_name}' 실행 시작")
-                    self._execute_next_step()  # 첫 번째 스텝 실행
-                    return
+                # 트리거 키를 떼는 동작 추가
+                virtual_key = key_info['virtual_key']
+                scan_code = key_info['scan_code']
+                win32api.keybd_event(virtual_key, scan_code, win32con.KEYEVENTF_KEYUP, 0)
+                
+                self._execute_next_step()  # 첫 번째 스텝 실행
+                return
             
-            self.log_message.emit("일치하는 트리거 키를 찾을 수 없습니다.")
+        self.log_message.emit("일치하는 트리거 키를 찾을 수 없습니다.")
         
         # 로직 실행 중이면 다음 스텝 키 매칭 확인
         if self.is_executing and self.selected_logic:
@@ -142,45 +148,48 @@ class LogicExecutor(QObject):
                     
     def _execute_next_step(self):
         """다음 스텝 실행"""
-        if not self.is_executing or not self.selected_logic:
+        if not self.selected_logic or not self.is_executing:
             return
             
-        steps = self.selected_logic.get('items', [])
-        if self.current_step_index < len(steps):
-            current_step = steps[self.current_step_index]
-            self.log_message.emit(f"스텝 {self.current_step_index + 1} 실행: {current_step.get('display_text')}")
+        items = self.selected_logic.get('items', [])
+        
+        # 모든 스텝이 완료되었는지 확인
+        if self.current_step_index >= len(items):
+            self.log_message.emit(f"로직 '{self.selected_logic['name']}' 실행 완료")
+            self.is_executing = False
+            self.selected_logic = None
+            self.current_step_index = 0
+            self.start_monitoring()  # 로직 실행이 완료되면 키 입력 감지를 다시 시작
+            return
             
-            if current_step['type'] == 'key_input':
-                self._execute_step(current_step)
-                self.current_step_index += 1
-                self._execute_next_step()  # 다음 스텝 실행
-            elif current_step['type'] == 'delay':
-                self._execute_step(current_step)
-                self.current_step_index += 1
-                self._execute_next_step()  # 다음 스텝 실행
-            
-            if self.current_step_index >= len(steps):
-                self.is_executing = False
-                self.log_message.emit(f"로직 '{self.selected_logic.get('name')}' 실행 완료")
-                self.selected_logic = None
-                self.current_step_index = 0
-                
+        # 현재 스텝 실행
+        current_step = items[self.current_step_index]
+        self.current_step_index += 1
+        self._execute_step(current_step)
+        
     def _execute_step(self, step):
         """스텝 실행"""
+        self.log_message.emit(f"스텝 {self.current_step_index} 실행: {step['display_text']}")
+        
         if step['type'] == 'key_input':
-            key_code = step['key_code']
+            self.log_message.emit(f"키 입력 실행: {step['key_code']} - {step['action']}")
+            
+            # 키 코드를 가상 키 코드로 변환
             virtual_key = step['virtual_key']
             scan_code = step['scan_code']
-            action = step['action']
-            modifiers = step.get('modifiers', 0)
             
-            if action == '누르기':
+            if step['action'] == '누르기':
                 win32api.keybd_event(virtual_key, scan_code, 0, 0)
             else:  # 떼기
                 win32api.keybd_event(virtual_key, scan_code, win32con.KEYEVENTF_KEYUP, 0)
                 
         elif step['type'] == 'delay':
-            time.sleep(step['duration'])
+            duration = float(step['duration'])
+            self.log_message.emit(f"지연 시간 실행: {duration}초")
+            time.sleep(duration)
+            
+        # 다음 스텝 실행
+        self._execute_next_step()
             
     def _is_trigger_key_matched(self, logic, key_info):
         """트리거 키 매칭 확인"""

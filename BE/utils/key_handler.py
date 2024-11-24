@@ -21,6 +21,8 @@ WH_KEYBOARD_LL = 13
 # Event types
 WM_KEYDOWN = 0x0100
 WM_SYSKEYDOWN = 0x0104
+WM_KEYUP = 0x0101
+WM_SYSKEYUP = 0x0105
 
 # Hook callback prototype
 HOOKPROC = ctypes.CFUNCTYPE(LRESULT, ctypes.c_int, wintypes.WPARAM, ctypes.POINTER(KBDLLHOOKSTRUCT))
@@ -156,6 +158,7 @@ class KeyboardHook(QObject):
     """키보드 훅을 관리하는 클래스"""
     
     key_pressed = Signal(dict)  # 키가 눌렸을 때 발생하는 시그널
+    key_released = Signal(dict)  # 키가 떼졌을 때 발생하는 시그널
     
     def __init__(self):
         super().__init__()
@@ -165,7 +168,7 @@ class KeyboardHook(QObject):
     def start(self):
         """키보드 훅 시작"""
         def hook_callback(nCode, wParam, lParam):
-            if nCode >= 0 and (wParam == WM_KEYDOWN or wParam == WM_SYSKEYDOWN):
+            if nCode >= 0:
                 kb = lParam.contents
                 # 확장 키 플래그 (0x1)
                 is_extended = (kb.flags & 0x1) == 0x1
@@ -198,10 +201,13 @@ class KeyboardHook(QObject):
                     'modifiers': get_qt_modifiers()
                 }
                 
-                # 시그널 발생
-                self.key_pressed.emit(key_info)
+                # 키 누름/뗌 이벤트 구분
+                if wParam in [WM_KEYDOWN, WM_SYSKEYDOWN]:
+                    self.key_pressed.emit(key_info)
+                elif wParam in [WM_KEYUP, WM_SYSKEYUP]:
+                    self.key_released.emit(key_info)
                 
-            return user32.CallNextHookEx(None, nCode, wParam, ctypes.cast(lParam, ctypes.c_void_p))
+            return user32.CallNextHookEx(self.hook_id, nCode, wParam, lParam)
         
         self.hook = HOOKPROC(hook_callback)
         self.hook_id = user32.SetWindowsHookExW(

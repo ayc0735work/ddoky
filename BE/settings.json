@@ -112,6 +112,11 @@
                     "virtual_key": 16
                 },
                 {
+                    "display_text": "지연시간 : 1.000초",
+                    "duration": 1.0,
+                    "type": "delay"
+                },
+                {
                     "action": "누르기",
                     "display_text": "키 입력: Z --- 누르기",
                     "key_code": "Z",
@@ -119,6 +124,11 @@
                     "scan_code": 44,
                     "type": "key_input",
                     "virtual_key": 90
+                },
+                {
+                    "display_text": "지연시간 : 1.000초",
+                    "duration": 1.0,
+                    "type": "delay"
                 },
                 {
                     "action": "떼기",
@@ -130,13 +140,46 @@
                     "virtual_key": 90
                 },
                 {
+                    "display_text": "지연시간 : 1.000초",
+                    "duration": 1.0,
+                    "type": "delay"
+                },
+                {
                     "action": "떼기",
-                    "display_text": "키 입력: 왼쪽 쉬프트 --- 떼기",
+                    "display_text": "키 입력: Shift+왼쪽 쉬프트 --- 떼기",
                     "key_code": "왼쪽 쉬프트",
-                    "modifiers": 0,
+                    "modifiers": 33554432,
                     "scan_code": 42,
                     "type": "key_input",
                     "virtual_key": 16
+                },
+                {
+                    "action": "누르기",
+                    "display_text": "키 입력: G --- 누르기",
+                    "key_code": "G",
+                    "modifiers": 0,
+                    "scan_code": 34,
+                    "type": "key_input",
+                    "virtual_key": 71
+                },
+                {
+                    "display_text": "지연시간 : 1.000초",
+                    "duration": 1.0,
+                    "type": "delay"
+                },
+                {
+                    "action": "떼기",
+                    "display_text": "키 입력: G --- 떼기",
+                    "key_code": "G",
+                    "modifiers": 0,
+                    "scan_code": 34,
+                    "type": "key_input",
+                    "virtual_key": 71
+                },
+                {
+                    "display_text": "지연시간 : 1.000초",
+                    "duration": 1.0,
+                    "type": "delay"
                 }
             ],
             "trigger_key": {
