@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout, 
                              QPushButton, QLabel, QListWidget, QListWidgetItem,
-                             QSizePolicy)
+                             QSizePolicy, QMessageBox)
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
 
@@ -74,16 +74,6 @@ class LogicListWidget(QFrame):
         self.edit_btn.clicked.connect(self._edit_item)
         self.delete_btn.clicked.connect(self._delete_item)
         
-        # 초기 데이터 로드 (테스트용)
-        self._load_test_data()
-        
-    def _load_test_data(self):
-        """테스트용 데이터 로드"""
-        for i in range(1, 7):
-            item_text = f"키보드 A 입력" if i > 3 else f"{'ABCD'[i-1]*4} 로직"
-            item = QListWidgetItem(f"{i}. {item_text}")
-            self.list_widget.addItem(item)
-            
     def _on_selection_changed(self):
         """리스트 아이템 선택이 변경되었을 때의 처리"""
         has_selection = self.list_widget.currentRow() >= 0
@@ -155,6 +145,22 @@ class LogicListWidget(QFrame):
         """선택된 아이템 삭제"""
         current_item = self.list_widget.currentItem()
         if current_item:
-            row = self.list_widget.row(current_item)
-            item = self.list_widget.takeItem(row)
-            self.item_deleted.emit(item.text())
+            logic_name = current_item.text()
+            
+            # 확인 모달 표시
+            reply = QMessageBox.question(
+                self,
+                "로직 삭제",
+                f"로직 '{logic_name}'을(를) 삭제하시겠습니까?",
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No
+            )
+            
+            if reply == QMessageBox.Yes:
+                # 저장된 로직 정보에서 삭제
+                if logic_name in self.saved_logics:
+                    del self.saved_logics[logic_name]
+                
+                # 리스트에서 삭제
+                self.list_widget.takeItem(self.list_widget.row(current_item))
+                self.log_message.emit(f"로직 '{logic_name}'이(가) 삭제되었습니다")

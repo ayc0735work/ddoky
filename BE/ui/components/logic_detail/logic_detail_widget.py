@@ -91,14 +91,14 @@ class LogicDetailWidget(QFrame):
         button_group.addWidget(self.down_btn)
         
         # 수정 버튼
-        self.edit_btn = QPushButton("수정")
+        self.edit_btn = QPushButton("항목 수정")
         self.edit_btn.setFixedWidth(LOGIC_BUTTON_WIDTH)
         self.edit_btn.setStyleSheet(BUTTON_STYLE)
         self.edit_btn.setEnabled(False)
         button_group.addWidget(self.edit_btn)
         
         # 삭제 버튼
-        self.delete_btn = QPushButton("삭제")
+        self.delete_btn = QPushButton("항목 삭제")
         self.delete_btn.setFixedWidth(LOGIC_BUTTON_WIDTH)
         self.delete_btn.setStyleSheet(BUTTON_STYLE)
         self.delete_btn.setEnabled(False)
