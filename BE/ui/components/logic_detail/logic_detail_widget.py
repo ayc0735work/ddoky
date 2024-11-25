@@ -160,6 +160,9 @@ class LogicDetailWidget(QFrame):
         self.LogicItemList__QListWidget.setSelectionMode(QListWidget.ExtendedSelection)  # 다중 선택 모드 활성화
         self.LogicItemList__QListWidget.itemSelectionChanged.connect(self._on_selection_changed)
         self.LogicItemList__QListWidget.itemDoubleClicked.connect(self._edit_item)  # 더블클릭 시그널 연결
+        # 아이템 목록 변경 시 새 로직 버튼 상태 업데이트
+        self.LogicItemList__QListWidget.model().rowsInserted.connect(self._check_data_entered)
+        self.LogicItemList__QListWidget.model().rowsRemoved.connect(self._check_data_entered)
         LogicConfigurationLayout__QVBoxLayout.addWidget(self.LogicItemList__QListWidget)
         
         # 버튼 그룹 레이아웃
@@ -568,29 +571,26 @@ class LogicDetailWidget(QFrame):
 
     def _check_data_entered(self, *args):
         """입력된 데이터가 있는지 확인하고 새 로직 버튼 상태를 업데이트"""
-        has_data = False
+        # 새 로직 버튼 활성화 조건:
+        # 1. 로직 이름이 입력되어 있는 경우
+        # 2. 트리거 키가 설정되어 있는 경우
+        # 3. 아이템 목록에 하나 이상의 아이템이 있는 경우
+        # 4. 반복 횟수가 1이 아닌 경우
+        has_logic_name = bool(self.LogicNameInput__QLineEdit.text().strip())
+        has_trigger_key = bool(self.trigger_key_info)
+        has_items = self.LogicItemList__QListWidget.count() > 0
         
-        # 로직 이름 확인
-        if self.LogicNameInput__QLineEdit.text().strip():
-            has_data = True
-            
-        # 트리거 키 확인
-        if self.trigger_key_info:
-            has_data = True
-            
-        # 반복 횟수 확인 (1이 아닌 경우에만)
+        # 반복 횟수 확인
         try:
             repeat_count = int(self.RepeatCountInput__QLineEdit.text())
-            if repeat_count != 1:
-                has_data = True
+            has_different_repeat = repeat_count != 1
         except ValueError:
-            pass
-            
-        # 아이템 목록 확인
-        if self.LogicItemList__QListWidget.count() > 0:
-            has_data = True
-            
-        self.NewLogicButton__QPushButton.setEnabled(has_data)
+            has_different_repeat = False
+        
+        # 네 조건 중 하나라도 만족하면 버튼 활성화
+        enable_button = has_logic_name or has_trigger_key or has_items or has_different_repeat
+        
+        self.NewLogicButton__QPushButton.setEnabled(enable_button)
         
     def _create_new_logic(self):
         """새 로직 버튼 클릭 시 호출되는 메서드"""
