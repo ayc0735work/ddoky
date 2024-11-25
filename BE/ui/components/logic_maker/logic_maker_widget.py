@@ -17,6 +17,7 @@ class LogicMakerWidget(QFrame):
     delay_input = Signal(str)  # 지연시간이 추가되었을 때
     record_mode = Signal(bool)  # 기록 모드가 토글되었을 때
     log_message = Signal(str)  # 로그 메시지를 전달하는 시그널
+    add_logic = Signal()  # 만든 로직 추가 시그널
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -67,6 +68,12 @@ class LogicMakerWidget(QFrame):
         self.record_btn.setCheckable(True)
         self.record_btn.clicked.connect(self._toggle_record_mode)
         button_layout.addWidget(self.record_btn)
+        
+        # 만든 로직 추가 버튼
+        self.add_logic_btn = QPushButton("만든 로직 추가")
+        self.add_logic_btn.setStyleSheet(BUTTON_STYLE)
+        self.add_logic_btn.clicked.connect(self._add_logic)
+        button_layout.addWidget(self.add_logic_btn)
         
         layout.addLayout(button_layout)
         self.setLayout(layout)
@@ -152,6 +159,10 @@ class LogicMakerWidget(QFrame):
             self.delay_input.emit(delay_text)
             self.log_message.emit(f"지연시간 {delay:.3f}초가 추가되었습니다")
             
-    def _toggle_record_mode(self):
+    def _toggle_record_mode(self, checked):
         """기록 모드 토글"""
-        self.record_mode.emit(self.record_btn.isChecked())
+        self.record_mode.emit(checked)
+        
+    def _add_logic(self):
+        """만든 로직 추가"""
+        self.add_logic.emit()
