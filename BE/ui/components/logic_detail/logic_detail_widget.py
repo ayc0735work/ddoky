@@ -278,6 +278,7 @@ class LogicDetailWidget(QFrame):
         self.trigger_key_info = None      # 트리거 키 정보 초기화
         self.edit_mode = False            # 수정 모드 해제
         self.original_name = None         # 원래 이름 초기화
+        self.repeat_input.setText("1")    # 반복 횟수를 기본값(1)으로 초기화
 
     def _on_key_input_changed(self, key_info):
         """키 입력이 변경되었을 때"""
