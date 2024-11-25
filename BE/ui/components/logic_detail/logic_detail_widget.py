@@ -531,6 +531,7 @@ class LogicDetailWidget(QFrame):
             if isinstance(trigger_key, dict) and trigger_key:
                 self.trigger_key_info = trigger_key.copy()
                 self.TriggerKeyInfoLabel__QLabel.setText(format_key_info(trigger_key))
+                self.TriggerKeyInputWidget__KeyInputWidget.set_key_info(trigger_key)  # 트리거 키 입력 위젯에도 설정
             
             # 반복 횟수 설정
             repeat_count = logic_info.get('repeat_count', 1)

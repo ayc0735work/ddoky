@@ -242,15 +242,27 @@ class LogicListWidget(QFrame):
             return ""
         name = logic_info.get('name', '')  # name이 없는 경우 빈 문자열 반환
         trigger_key = logic_info.get('trigger_key', {})
-        if trigger_key:
-            try:
-                key_code = trigger_key.get('key_code', '')
-                if key_code:
-                    return f"[ {name} ] --- {key_code}"
-            except Exception as e:
-                self.log_message.emit(f"트리거 키 정보 포맷 중 오류 발생: {e}")
-                return name
-        return name
+        if trigger_key and 'key_code' in trigger_key:
+            key_text = trigger_key['key_code']
+            modifiers = trigger_key.get('modifiers', 0)
+            
+            # 수정자 키 텍스트 생성
+            modifier_text = []
+            if modifiers & 1:  # Alt
+                modifier_text.append("Alt")
+            if modifiers & 2:  # Ctrl
+                modifier_text.append("Ctrl")
+            if modifiers & 4:  # Shift
+                modifier_text.append("Shift")
+            if modifiers & 8:  # Win
+                modifier_text.append("Win")
+                
+            # 수정자 키가 있는 경우 조합하여 표시
+            if modifier_text:
+                return f"[ {name} ] --- {' + '.join(modifier_text)} + {key_text}"
+            else:
+                return f"[ {name} ] --- {key_text}"
+        return f"[ {name} ]"
 
     def _get_logic_name_from_text(self, text):
         """표시 텍스트에서 로직 이름을 추출하는 메서드"""
@@ -345,3 +357,20 @@ class LogicListWidget(QFrame):
                 self.save_logics_to_settings()
                 self.item_deleted.emit(name)  # 아이템 삭제 시그널 발생
                 self.log_message.emit(f'로직 "{name}"이(가) 삭제되었습니다')
+
+    def _update_logic_in_list(self, logic_info):
+        """리스트에서 로직 정보를 업데이트"""
+        if not logic_info or not isinstance(logic_info, dict):
+            return
+            
+        name = logic_info.get('name')
+        if not name:
+            return
+            
+        # 리스트에서 해당 로직 찾기
+        for i in range(self.SavedLogicList__QListWidget.count()):
+            item = self.SavedLogicList__QListWidget.item(i)
+            if item and item.data(Qt.UserRole) == logic_info.get('id'):
+                # 아이템 텍스트 업데이트
+                item.setText(self._format_logic_item_text(logic_info))
+                break
