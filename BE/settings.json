@@ -621,9 +621,9 @@
             "repeat_count": 1,
             "order": 3,
             "trigger_key": {
-                "key_code": "키 코드 190",
-                "scan_code": 52,
-                "virtual_key": 190,
+                "key_code": "숫자패드 .",
+                "scan_code": 83,
+                "virtual_key": 110,
                 "display_text": "",
                 "modifiers": 0
             }

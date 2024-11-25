@@ -275,9 +275,9 @@ class LogicListWidget(QFrame):
         trigger_key = logic_info.get('trigger_key', {})
         if trigger_key:
             try:
-                from BE.ui.utils.key_utils import format_key_info
-                trigger_key_text = format_key_info(trigger_key)
-                return f"{name} -- 트리거키: {trigger_key_text}"
+                key_code = trigger_key.get('key_code', '')
+                if key_code:
+                    return f"{name} -- 트리거키: {key_code}"
             except Exception as e:
                 self.log_message.emit(f"트리거 키 정보 포맷 중 오류 발생: {e}")
                 return name
