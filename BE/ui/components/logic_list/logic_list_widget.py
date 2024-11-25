@@ -98,32 +98,18 @@ class LogicListWidget(QFrame):
         
         # 선택된 아이템이 있고 단일 선택인 경우에만 시그널 발생
         if has_selection and len(selected_items) == 1:
-            self.logic_selected.emit(selected_items[0].text())
+            logic_name = self._get_logic_name_from_text(selected_items[0].text())
+            self.logic_selected.emit(logic_name)
             
     def _check_editing_logic(self, current_item):
-        """현재 수정 중인 로직인지 확인하고 경고 메시지 표시
+        """현재 수정 중인 로직인지 확인
         
-        Returns:
-            bool: 이동을 계속할지 여부
-        """
-        # 현재 선택된 로직이 수정 중인지 확인
-        if self.LoadLogicButton__QPushButton.isEnabled():
-            dialog = QMessageBox(self)
-            dialog.setWindowTitle("경고")
-            dialog.setText("현재 수정 중인 로직의 순서를 변경하려고 합니다.\n"
-                         "계속 진행하면 수정 중인 내용이 모두 초기화됩니다.\n"
-                         "계속하시겠습니까?")
-            dialog.setIcon(QMessageBox.Warning)
-            yes_button = dialog.addButton("예", QMessageBox.YesRole)
-            no_button = dialog.addButton("아니오", QMessageBox.NoRole)
-            dialog.setDefaultButton(no_button)
+        Args:
+            current_item: 현재 선택된 아이템
             
-            dialog.exec()
-            if dialog.clickedButton() == yes_button:
-                # 로직 구성 영역 초기화 시그널 발생
-                self.edit_logic.emit(None)
-                return True
-            return False
+        Returns:
+            bool: 항상 True 반환
+        """
         return True
             
     def _move_item_up(self):
@@ -133,29 +119,28 @@ class LogicListWidget(QFrame):
             return
 
         # 현재 로직이 편집 중인지 확인
-        if self._check_editing_logic(self.SavedLogicList__QListWidget.currentItem()):
-            reply = QMessageBox.warning(
-                self,
-                "경고",
-                "현재 로직이 편집 중입니다. 변경사항이 저장되지 않습니다.\n계속하시겠습니까?",
-                QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.No
-            )
-            if reply == QMessageBox.No:
-                return
-            # 초기화 시그널 발생
-            self.logic_selected.emit(None)
+        current_item = self.SavedLogicList__QListWidget.currentItem()
+        if not current_item:  # 아이템이 None인 경우
+            return
 
-        # 아이템 이동
-        item = self.SavedLogicList__QListWidget.takeItem(current_row)
-        self.SavedLogicList__QListWidget.insertItem(current_row - 1, item)
-        self.SavedLogicList__QListWidget.setCurrentRow(current_row - 1)
-        
-        # 아이템 이동 시그널 발생
-        self.item_moved.emit()
-        
-        # 변경사항 즉시 저장
-        self.save_logics_to_settings()  # 순서 변경 즉시 저장
+        if not self._check_editing_logic(current_item):
+            return
+
+        try:
+            # 아이템 이동
+            item = self.SavedLogicList__QListWidget.takeItem(current_row)
+            if not item:  # takeItem이 실패한 경우
+                return
+            self.SavedLogicList__QListWidget.insertItem(current_row - 1, item)
+            self.SavedLogicList__QListWidget.setCurrentRow(current_row - 1)
+            
+            # 아이템 이동 시그널 발생
+            self.item_moved.emit()
+            
+            # 변경사항 즉시 저장
+            self.save_logics_to_settings()  # 순서 변경 즉시 저장
+        except Exception as e:
+            self.log_message.emit(f"아이템 이동 중 오류 발생: {e}")
             
     def _move_item_down(self):
         """선택된 아이템을 아래로 이동"""
@@ -164,30 +149,29 @@ class LogicListWidget(QFrame):
             return
 
         # 현재 로직이 편집 중인지 확인
-        if self._check_editing_logic(self.SavedLogicList__QListWidget.currentItem()):
-            reply = QMessageBox.warning(
-                self,
-                "경고",
-                "현재 로직이 편집 중입니다. 변경사항이 저장되지 않습니다.\n계속하시겠습니까?",
-                QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.No
-            )
-            if reply == QMessageBox.No:
-                return
-            # 초기화 시그널 발생
-            self.logic_selected.emit(None)
+        current_item = self.SavedLogicList__QListWidget.currentItem()
+        if not current_item:  # 아이템이 None인 경우
+            return
 
-        # 아이템 이동
-        item = self.SavedLogicList__QListWidget.takeItem(current_row)
-        self.SavedLogicList__QListWidget.insertItem(current_row + 1, item)
-        self.SavedLogicList__QListWidget.setCurrentRow(current_row + 1)
-        
-        # 아이템 이동 시그널 발생
-        self.item_moved.emit()
-        
-        # 변경사항 즉시 저장
-        self.save_logics_to_settings()  # 순서 변경 즉시 저장
+        if not self._check_editing_logic(current_item):
+            return
+
+        try:
+            # 아이템 이동
+            item = self.SavedLogicList__QListWidget.takeItem(current_row)
+            if not item:  # takeItem이 실패한 경우
+                return
+            self.SavedLogicList__QListWidget.insertItem(current_row + 1, item)
+            self.SavedLogicList__QListWidget.setCurrentRow(current_row + 1)
             
+            # 아이템 이동 시그널 발생
+            self.item_moved.emit()
+            
+            # 변경사항 즉시 저장
+            self.save_logics_to_settings()  # 순서 변경 즉시 저장
+        except Exception as e:
+            self.log_message.emit(f"아이템 이동 중 오류 발생: {e}")
+
     def on_logic_saved(self, logic_info):
         """로직이 저장되었을 때 호출되는 메서드"""
         name = logic_info['name']
@@ -195,50 +179,116 @@ class LogicListWidget(QFrame):
         
         # 리스트에 아이템 추가
         items = self.SavedLogicList__QListWidget.findItems(name, Qt.MatchExactly)
-        if not items:
-            item = QListWidgetItem(name)
+        display_text = self._format_logic_item_text(logic_info)
+        
+        if items:
+            items[0].setText(display_text)
+        else:
+            item = QListWidgetItem(display_text)
             self.SavedLogicList__QListWidget.addItem(item)
         
         self.log_message.emit(f"로직 '{name}'이(가) 저장되었습니다")
         self.save_logics_to_settings()  # settings.json에 저장
-        
+
     def on_logic_updated(self, original_name, logic_info):
         """로직이 수정되었을 때 호출되는 메서드"""
-        name = logic_info['name']
-        
-        # 기존 이름의 로직 제거
-        if original_name in self.saved_logics:
-            del self.saved_logics[original_name]
-        
-        # 새 이름으로 로직 저장
-        self.saved_logics[name] = logic_info
-        
-        # 리스트 아이템 텍스트 업데이트
-        for i in range(self.SavedLogicList__QListWidget.count()):
-            item = self.SavedLogicList__QListWidget.item(i)
-            if item.text() == original_name:
-                item.setText(name)
-                break
-                
-        self.log_message.emit(f"로직 '{name}'이(가) 업데이트되었습니다")
-        self.save_logics_to_settings()  # settings.json에 저장
-        
-    def load_saved_logics(self):
-        """저장된 로직 정보를 settings.json에서 불러옴"""
         try:
-            settings_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'settings.json')
-            if os.path.exists(settings_path):
-                with open(settings_path, 'r', encoding='utf-8') as f:
-                    settings = json.load(f)
-                    if 'logics' in settings:
-                        self.saved_logics = settings['logics']
-                        # order 값을 기준으로 정렬하여 리스트에 추가
-                        sorted_logics = sorted(self.saved_logics.items(), key=lambda x: x[1].get('order', float('inf')))
-                        for logic_name, _ in sorted_logics:
-                            item = QListWidgetItem(logic_name)
-                            self.SavedLogicList__QListWidget.addItem(item)
+            if not logic_info:  # logic_info가 None인 경우
+                self.log_message.emit("업데이트할 로직 정보가 없습니다")
+                return
+                
+            name = logic_info.get('name', '')  # 새 이름
+            if not name:  # 새 이름이 비어있는 경우
+                self.log_message.emit("업데이트할 로직의 이름이 없습니다")
+                return
+                
+            # 새 이름이 이미 존재하고, 원래 이름과 다른 경우
+            if name != original_name and name in self.saved_logics:
+                self.log_message.emit(f"이미 '{name}' 이름의 로직이 존재합니다")
+                return
+            
+            # 기존 이름의 로직 제거
+            if original_name in self.saved_logics:
+                del self.saved_logics[original_name]
+            else:
+                self.log_message.emit(f"원본 로직 '{original_name}'을(를) 찾을 수 없습니다")
+                return
+            
+            # 새 이름으로 로직 저장
+            self.saved_logics[name] = logic_info
+            
+            # 리스트 아이템 텍스트 업데이트
+            display_text = self._format_logic_item_text(logic_info)
+            item_found = False
+            
+            for i in range(self.SavedLogicList__QListWidget.count()):
+                item = self.SavedLogicList__QListWidget.item(i)
+                if not item:  # item이 None인 경우
+                    continue
+                    
+                if self._get_logic_name_from_text(item.text()) == original_name:
+                    item.setText(display_text)
+                    item_found = True
+                    break
+            
+            if not item_found:
+                self.log_message.emit(f"리스트에서 로직 '{original_name}'을(를) 찾을 수 없습니다")
+                return
+                
+            self.log_message.emit(f"로직 '{name}'이(가) 업데이트되었습니다")
+            self.save_logics_to_settings()  # settings.json에 저장
+            
+            # 아이템이 수정되었음을 알림
+            self.item_edited.emit(logic_info)
+            
         except Exception as e:
-            self.log_message.emit(f"로직 정보를 불러오는 중 오류 발생: {str(e)}")
+            self.log_message.emit(f"로직 업데이트 중 오류 발생: {e}")
+
+    def load_saved_logics(self):
+        """저장된 로직 정보 불러오기"""
+        try:
+            # settings.json 파일 경로
+            settings_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'settings.json')
+            
+            if os.path.exists(settings_file):
+                with open(settings_file, 'r', encoding='utf-8') as f:
+                    settings = json.load(f)
+                    self.saved_logics = settings.get('logics', {})
+                    
+                    # 리스트 위젯에 로직 추가 (order 기준으로 정렬)
+                    self.SavedLogicList__QListWidget.clear()
+                    sorted_logics = sorted(self.saved_logics.items(), key=lambda x: x[1].get('order', float('inf')))
+                    for name, logic_info in sorted_logics:
+                        display_text = self._format_logic_item_text(logic_info)
+                        item = QListWidgetItem(display_text)
+                        self.SavedLogicList__QListWidget.addItem(item)
+            else:
+                self.log_message.emit("설정 파일이 존재하지 않습니다")
+        except Exception as e:
+            self.log_message.emit(f"로직 정보를 불러오는 중 오류 발생: {e}")
+
+    def _format_logic_item_text(self, logic_info):
+        """로직 아이템의 표시 텍스트를 생성하는 메서드"""
+        if not logic_info:  # logic_info가 None인 경우 처리
+            return ""
+        name = logic_info.get('name', '')  # name이 없는 경우 빈 문자열 반환
+        trigger_key = logic_info.get('trigger_key', {})
+        if trigger_key:
+            try:
+                from BE.ui.utils.key_utils import format_key_info
+                trigger_key_text = format_key_info(trigger_key)
+                return f"{name} -- 트리거키: {trigger_key_text}"
+            except Exception as e:
+                self.log_message.emit(f"트리거 키 정보 포맷 중 오류 발생: {e}")
+                return name
+        return name
+
+    def _get_logic_name_from_text(self, text):
+        """표시 텍스트에서 로직 이름을 추출하는 메서드"""
+        try:
+            return text.split(' -- ')[0]
+        except (AttributeError, IndexError):
+            return text
 
     def save_logics_to_settings(self):
         """현재 로직 정보를 settings.json에 저장"""
@@ -254,13 +304,15 @@ class LogicListWidget(QFrame):
             # 현재 리스트 위젯의 순서대로 로직 저장
             for i in range(self.SavedLogicList__QListWidget.count()):
                 item = self.SavedLogicList__QListWidget.item(i)
-                name = item.text()
+                if not item:  # item이 None인 경우 처리
+                    continue
+                name = self._get_logic_name_from_text(item.text())
                 if name in self.saved_logics:
                     logic_info = self.saved_logics[name]
                     # 딕셔너리 깊은 복사
                     logic_copy = json.loads(json.dumps({
                         'name': logic_info['name'],
-                        'items': logic_info['items'],
+                        'items': logic_info.get('items', []),  # items가 없는 경우 빈 리스트 반환
                         'repeat_count': logic_info.get('repeat_count', 1),  # 반복 횟수 추가
                         'order': i + 1  # 순서 정보 추가 (1부터 시작)
                     }))
@@ -293,7 +345,9 @@ class LogicListWidget(QFrame):
         
     def _item_double_clicked(self, item):
         """로직 불러오기 방법 - 더블클릭으로 호출"""
-        logic_name = item.text()
+        if not item:  # item이 None인 경우 처리
+            return
+        logic_name = self._get_logic_name_from_text(item.text())
         if logic_name in self.saved_logics:
             logic_info = self.saved_logics[logic_name]
             self.log_message.emit(f"로직 데이터: {logic_info}")
@@ -303,7 +357,7 @@ class LogicListWidget(QFrame):
         """선택된 로직 불러오기"""
         current_item = self.SavedLogicList__QListWidget.currentItem()
         if current_item:
-            logic_name = current_item.text()
+            logic_name = self._get_logic_name_from_text(current_item.text())
             if logic_name in self.saved_logics:
                 logic_info = self.saved_logics[logic_name]
                 self.edit_logic.emit(logic_info)
@@ -312,7 +366,7 @@ class LogicListWidget(QFrame):
         """선택된 아이템 삭제"""
         current_item = self.SavedLogicList__QListWidget.currentItem()
         if current_item:
-            logic_name = current_item.text()
+            logic_name = self._get_logic_name_from_text(current_item.text())
             if logic_name in self.saved_logics:
                 del self.saved_logics[logic_name]
                 self.SavedLogicList__QListWidget.takeItem(self.SavedLogicList__QListWidget.row(current_item))
