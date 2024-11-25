@@ -7,6 +7,7 @@ from ...constants.styles import (FRAME_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from ...constants.dimensions import LOGIC_MAKER_WIDTH, BASIC_SECTION_HEIGHT
 from .key_input_dialog import KeyInputDialog
+from .logic_selector_dialog import LogicSelectorDialog
 
 class LogicMakerWidget(QFrame):
     """로직 메이커 위젯"""
@@ -17,10 +18,11 @@ class LogicMakerWidget(QFrame):
     delay_input = Signal(str)  # 지연시간이 추가되었을 때
     record_mode = Signal(bool)  # 기록 모드가 토글되었을 때
     log_message = Signal(str)  # 로그 메시지를 전달하는 시그널
-    add_logic = Signal()  # 만든 로직 추가 시그널
-    
+    add_logic = Signal(str)  # 만든 로직 추가 시그널 (로직 이름)
+
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.saved_logics = {}  # 저장된 로직들을 관리하는 딕셔너리
         self.init_ui()
         
     def init_ui(self):
@@ -165,4 +167,10 @@ class LogicMakerWidget(QFrame):
         
     def _add_logic(self):
         """만든 로직 추가"""
-        self.add_logic.emit()
+        dialog = LogicSelectorDialog(self.saved_logics, self)
+        dialog.logic_selected.connect(lambda name: self.add_logic.emit(name))
+        dialog.exec()
+        
+    def update_saved_logics(self, logics):
+        """저장된 로직 정보 업데이트"""
+        self.saved_logics = logics

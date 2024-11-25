@@ -131,6 +131,10 @@ class MainWindow(QMainWindow):
         # 로직 메이커
         self.logic_maker_widget = LogicMakerWidget()
         self.logic_maker_controller = LogicMakerController(self.logic_maker_widget)
+        
+        # 로직 메이커에 저장된 로직 목록 전달
+        self.logic_maker_widget.update_saved_logics(self.logic_list_widget.saved_logics)
+        
         self.basic_features_layout.addWidget(self.logic_maker_widget)
         
         # 시그널 연결
@@ -177,11 +181,12 @@ class MainWindow(QMainWindow):
         self.logic_maker_widget.key_input.connect(self._on_key_input)
         self.logic_maker_widget.mouse_input.connect(self._on_mouse_input)
         self.logic_maker_widget.delay_input.connect(self._on_delay_input)
+        self.logic_maker_widget.add_logic.connect(self._on_add_logic)  # 로직 추가 시그널 연결
         
         # 로직 실행 관련 시그널 연결
         self.logic_operation_widget.operation_toggled.connect(self._on_logic_operation_toggled)
-        self.logic_operation_widget.process_selected.connect(self._on_process_selected)  # 프로세스 선택 시그널 연결
-        self.logic_operation_widget.process_reset.connect(self._on_process_reset)  # 프로세스 초기화 시그널 연결
+        self.logic_operation_widget.process_selected.connect(self._on_process_selected)
+        self.logic_operation_widget.process_reset.connect(self._on_process_reset)
         self.logic_executor.execution_started.connect(lambda: self._append_log("로직 실행이 시작되었습니다"))
         self.logic_executor.execution_finished.connect(lambda: self._append_log("로직 실행이 완료되었습니다"))
         self.logic_executor.execution_error.connect(lambda msg: self._append_log(f"로직 실행 중 오류 발생: {msg}"))
@@ -278,10 +283,14 @@ class MainWindow(QMainWindow):
     def _on_logic_saved(self, logic_info):
         """로직이 저장되었을 때 호출"""
         self.logic_manager.load_logic(logic_info['name'])
+        # 로직 메이커의 저장된 로직 목록 업데이트
+        self.logic_maker_widget.update_saved_logics(self.logic_list_widget.saved_logics)
     
     def _on_logic_updated(self, original_name, logic_info):
         """로직이 수정되었을 때 호출"""
         self.logic_manager.load_logic(logic_info['name'])
+        # 로직 메이커의 저장된 로직 목록 업데이트
+        self.logic_maker_widget.update_saved_logics(self.logic_list_widget.saved_logics)
 
     def _on_process_selected(self, process_info):
         """프로세스가 선택되었을 때 호출"""
@@ -292,3 +301,10 @@ class MainWindow(QMainWindow):
         """프로세스가 초기화되었을 때 호출"""
         self.process_manager.set_selected_process(None)
         self._append_log("프로세스 선택이 초기화되었습니다")
+
+    def _on_add_logic(self, logic_name):
+        """로직 메이커에서 로직을 추가할 때 호출"""
+        if logic_name in self.logic_list_widget.saved_logics:
+            # 로직 이름을 아이템으로 추가
+            self.logic_detail_widget.add_item(logic_name)
+            self._append_log(f"로직 '{logic_name}'이(가) 추가되었습니다")
