@@ -621,9 +621,63 @@
             "repeat_count": 1,
             "order": 3,
             "trigger_key": {
-                "key_code": "숫자패드 .",
-                "scan_code": 83,
-                "virtual_key": 110,
+                "key_code": "키 코드 190",
+                "scan_code": 52,
+                "virtual_key": 190,
+                "display_text": "",
+                "modifiers": 0
+            }
+        },
+        "모두 줍기": {
+            "name": "모두 줍기",
+            "items": [
+                {
+                    "action": "누르기",
+                    "display_text": "키 입력: 왼쪽 쉬프트 --- 누르기",
+                    "key_code": "왼쪽 쉬프트",
+                    "modifiers": 0,
+                    "order": 1,
+                    "scan_code": 42,
+                    "type": "key_input",
+                    "virtual_key": 160
+                },
+                {
+                    "action": "누르기",
+                    "display_text": "키 입력: , --- 누르기",
+                    "key_code": ",",
+                    "modifiers": 0,
+                    "order": 2,
+                    "scan_code": 84,
+                    "type": "key_input",
+                    "virtual_key": 44
+                },
+                {
+                    "action": "떼기",
+                    "display_text": "키 입력: , --- 떼기",
+                    "key_code": ",",
+                    "modifiers": 0,
+                    "order": 3,
+                    "scan_code": 84,
+                    "type": "key_input",
+                    "virtual_key": 44
+                },
+                {
+                    "action": "떼기",
+                    "display_text": "키 입력: 왼쪽 쉬프트 --- 떼기",
+                    "key_code": "왼쪽 쉬프트",
+                    "modifiers": 0,
+                    "order": 4,
+                    "scan_code": 42,
+                    "type": "key_input",
+                    "virtual_key": 160
+                }
+            ],
+            "repeat_count": 1,
+            "order": 4,
+            "trigger_key": {
+                "key_code": "오른쪽 쉬프트",
+                "scan_code": 54,
+                "virtual_key": 161,
                 "display_text": "",
                 "modifiers": 0
             }

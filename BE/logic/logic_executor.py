@@ -189,10 +189,16 @@ class LogicExecutor(QObject):
         
         if step['type'] == 'key_input':
             self.log_message.emit(f"키 입력 실행: {step['key_code']} - {step['action']}")
+            self.log_message.emit(f"키 상세 정보 - virtual_key: {step['virtual_key']}, scan_code: {step['scan_code']}")
             
             # 키 코드를 가상 키 코드로 변환
             virtual_key = step['virtual_key']
             scan_code = step['scan_code']
+            
+            # 콤마 키 특수 처리
+            if step['key_code'] == ',' and virtual_key in [44, 188]:
+                virtual_key = 0xBC  # VK_OEM_COMMA (188)
+                scan_code = 51  # 콤마 키의 스캔 코드
             
             # 확장 키 플래그 설정
             flags = 0
@@ -217,16 +223,9 @@ class LogicExecutor(QObject):
         trigger_key = logic.get('trigger_key', {})
         self.log_message.emit(f"트리거 키 매칭 확인 - 트리거 키: {trigger_key}, 입력 키: {key_info}")
         
-        # modifiers가 enum인 경우 정수값으로 변환
-        key_modifiers = key_info.get('modifiers')
-        if hasattr(key_modifiers, 'value'):
-            key_modifiers = key_modifiers.value
-        else:
-            key_modifiers = key_info.get('modifiers', 0)
-            
+        # 가상 키와 스캔 코드만 비교
         return (trigger_key.get('virtual_key') == key_info.get('virtual_key') and
-                trigger_key.get('scan_code') == key_info.get('scan_code') and
-                trigger_key.get('modifiers', 0) == key_modifiers)
+                trigger_key.get('scan_code') == key_info.get('scan_code'))
         
     def _is_key_matched(self, key_config, key_info):
         """키 매칭 확인"""

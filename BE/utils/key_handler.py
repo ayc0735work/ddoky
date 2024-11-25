@@ -82,6 +82,10 @@ def get_key_name(vk_code, kb_flags):
         win32con.VK_SUBTRACT: '숫자패드 -',
         win32con.VK_DECIMAL: '숫자패드 .',
         win32con.VK_DIVIDE: '숫자패드 /',
+        
+        # 특수 키
+        44: ',',  # 쉼표 키 (VK_OEM_COMMA)
+        188: ',',  # 쉼표 키 (대체 코드)
     }
 
     # 숫자패드 엔터 특수 처리
@@ -255,8 +259,14 @@ class KeyboardHook(QObject):
                         vk_code = win32con.VK_LCONTROL
                     elif vk_code == win32con.VK_MENU:
                         vk_code = win32con.VK_LMENU
+                
+                # 특수 키 처리 (쉼표 등)
+                if vk_code in [44, 188]:  # 쉼표 키 (VK_OEM_COMMA 또는 대체 코드)
+                    vk_code = 44  # VK_OEM_COMMA로 통일
+                    scan_code = 84  # 쉼표 키의 스캔 코드
+                else:
                     # 시스템 키의 스캔 코드 처리
-                    scan_code = win32api.MapVirtualKey(vk_code, 0)
+                    scan_code = win32api.MapVirtualKey(vk_code, 0) or scan_code
                 
                 # 키 정보 생성
                 key_info = {
