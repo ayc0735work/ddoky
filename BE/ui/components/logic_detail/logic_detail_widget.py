@@ -2,7 +2,7 @@ from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
                              QPushButton, QLabel, QListWidget, QListWidgetItem,
                              QSizePolicy, QLineEdit, QInputDialog)
 from PySide6.QtCore import Qt, Signal, QObject, QEvent
-from PySide6.QtGui import QFont, QGuiApplication
+from PySide6.QtGui import QFont, QGuiApplication, QIntValidator
 
 from ...constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE, CONTAINER_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
@@ -105,6 +105,36 @@ class LogicDetailWidget(QFrame):
         trigger_key_layout.addWidget(self.key_info_label)
         
         layout.addLayout(trigger_key_layout)
+        
+        # 기능 선택 레이아웃
+        function_layout = QHBoxLayout()
+        function_layout.setContentsMargins(0, 0, 0, 0)
+        function_layout.setSpacing(5)
+        
+        # 반복 횟수 입력 레이아웃
+        repeat_layout = QHBoxLayout()
+        repeat_layout.setContentsMargins(0, 0, 0, 0)
+        repeat_layout.setSpacing(5)
+        
+        # 반복 횟수 입력 필드
+        self.repeat_input = QLineEdit()
+        self.repeat_input.setFixedWidth(70)
+        self.repeat_input.setAlignment(Qt.AlignRight)
+        # 숫자만 입력 가능하도록 설정
+        self.repeat_input.setValidator(QIntValidator(1, 9999))
+        self.repeat_input.setText("1")  # 기본값 설정
+        repeat_layout.addWidget(self.repeat_input)
+        
+        # 반복 횟수 라벨
+        repeat_label = QLabel("회 반복")
+        repeat_layout.addWidget(repeat_label)
+        
+        repeat_layout.addStretch()  # 나머지 공간을 채움
+        
+        function_layout.addLayout(repeat_layout)
+        function_layout.addStretch()  # 나머지 공간을 채움
+        
+        layout.addLayout(function_layout)
         
         # 리스트 위젯
         self.list_widget = QListWidget()
