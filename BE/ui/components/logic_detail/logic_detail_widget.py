@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
                              QPushButton, QLabel, QListWidget, QListWidgetItem,
-                             QSizePolicy, QLineEdit, QInputDialog)
+                             QSizePolicy, QLineEdit, QInputDialog, QMessageBox)
 from PySide6.QtCore import Qt, Signal, QObject, QEvent
 from PySide6.QtGui import QFont, QGuiApplication, QIntValidator
 
@@ -66,15 +66,30 @@ class LogicDetailWidget(QFrame):
         # 로직 이름 입력
         self.LogicNameInput__QLineEdit = QLineEdit()
         self.LogicNameInput__QLineEdit.setPlaceholderText("로직의 이름을 입력하세요")
-        LogicNameSection__QHBoxLayout.addWidget(self.LogicNameInput__QLineEdit)
+        self.LogicNameInput__QLineEdit.textChanged.connect(self._check_data_entered)  # 텍스트 변경 시그널 연결
+        LogicNameSection__QHBoxLayout.addWidget(self.LogicNameInput__QLineEdit, 1)  # stretch factor 1을 추가하여 남은 공간을 모두 사용
+        
+        LogicConfigurationLayout__QVBoxLayout.addLayout(LogicNameSection__QHBoxLayout)
+        
+        # 로직 저장 섹션
+        LogicSaveSection__QHBoxLayout = QHBoxLayout()
+        LogicSaveSection__QHBoxLayout.setContentsMargins(0, 0, 0, 0)
+        LogicSaveSection__QHBoxLayout.setSpacing(5)
+        
+        # 새 로직 버튼
+        self.NewLogicButton__QPushButton = QPushButton("새 로직")
+        self.NewLogicButton__QPushButton.setStyleSheet(BUTTON_STYLE)
+        self.NewLogicButton__QPushButton.clicked.connect(self._create_new_logic)
+        self.NewLogicButton__QPushButton.setEnabled(False)  # 초기에는 비활성화
+        LogicSaveSection__QHBoxLayout.addWidget(self.NewLogicButton__QPushButton)
         
         # 로직 저장 버튼
         self.LogicSaveButton__QPushButton = QPushButton("로직 저장")
         self.LogicSaveButton__QPushButton.setStyleSheet(BUTTON_STYLE)
         self.LogicSaveButton__QPushButton.clicked.connect(self._save_logic_name)
-        LogicNameSection__QHBoxLayout.addWidget(self.LogicSaveButton__QPushButton)
+        LogicSaveSection__QHBoxLayout.addWidget(self.LogicSaveButton__QPushButton)
         
-        LogicConfigurationLayout__QVBoxLayout.addLayout(LogicNameSection__QHBoxLayout)
+        LogicConfigurationLayout__QVBoxLayout.addLayout(LogicSaveSection__QHBoxLayout)
         
         # 트리거 키 정보 영역
         TriggerKeySection__QVBoxLayout = QVBoxLayout()
@@ -94,6 +109,7 @@ class LogicDetailWidget(QFrame):
         # 트리거 키 입력 위젯
         self.TriggerKeyInputWidget__KeyInputWidget = KeyInputWidget(self, show_details=False)
         self.TriggerKeyInputWidget__KeyInputWidget.key_input_changed.connect(self._on_key_input_changed)
+        self.TriggerKeyInputWidget__KeyInputWidget.key_input_changed.connect(self._check_data_entered)  # 키 입력 변경 시그널 연결
         TriggerKeyInputRow__QHBoxLayout.addWidget(self.TriggerKeyInputWidget__KeyInputWidget)
         
         TriggerKeySection__QVBoxLayout.addLayout(TriggerKeyInputRow__QHBoxLayout)
@@ -123,6 +139,7 @@ class LogicDetailWidget(QFrame):
         # 숫자만 입력 가능하도록 설정
         self.RepeatCountInput__QLineEdit.setValidator(QIntValidator(1, 9999))
         self.RepeatCountInput__QLineEdit.setText("1")  # 기본값 설정
+        self.RepeatCountInput__QLineEdit.textChanged.connect(self._check_data_entered)  # 텍스트 변경 시그널 연결
         RepeatCountRow__QHBoxLayout.addWidget(self.RepeatCountInput__QLineEdit)
         
         # 반복 횟수 라벨
@@ -557,3 +574,54 @@ class LogicDetailWidget(QFrame):
                 return True
                 
         return super().eventFilter(obj, event)
+
+    def _check_data_entered(self, *args):
+        """입력된 데이터가 있는지 확인하고 새 로직 버튼 상태를 업데이트"""
+        has_data = False
+        
+        # 로직 이름 확인
+        if self.LogicNameInput__QLineEdit.text().strip():
+            has_data = True
+            
+        # 트리거 키 확인
+        if self.trigger_key_info:
+            has_data = True
+            
+        # 반복 횟수 확인 (1이 아닌 경우에만)
+        try:
+            repeat_count = int(self.RepeatCountInput__QLineEdit.text())
+            if repeat_count != 1:
+                has_data = True
+        except ValueError:
+            pass
+            
+        # 아이템 목록 확인
+        if self.LogicItemList__QListWidget.count() > 0:
+            has_data = True
+            
+        self.NewLogicButton__QPushButton.setEnabled(has_data)
+        
+    def _create_new_logic(self):
+        """새 로직 버튼 클릭 시 호출되는 메서드"""
+        # 입력 중인 데이터가 있는지 확인
+        if (self.LogicNameInput__QLineEdit.text().strip() or
+            self.trigger_key_info or
+            self.LogicItemList__QListWidget.count() > 0 or
+            int(self.RepeatCountInput__QLineEdit.text()) != 1):
+            
+            # 확인 메시지 박스 표시
+            reply = QMessageBox.question(
+                self,
+                "새 로직",
+                "입력 중인 데이터가 모두 지워집니다.\n계속하시겠습니까?",
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No
+            )
+            
+            if reply == QMessageBox.Yes:
+                self.clear_all()
+                self.NewLogicButton__QPushButton.setEnabled(False)
+        else:
+            # 입력 중인 데이터가 없으면 바로 초기화
+            self.clear_all()
+            self.NewLogicButton__QPushButton.setEnabled(False)

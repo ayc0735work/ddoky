@@ -1,8 +1,8 @@
 {
     "window": {
         "position": {
-            "x": 2137,
-            "y": 132
+            "x": 4159,
+            "y": 17
         },
         "size": {
             "width": 900,
@@ -442,8 +442,8 @@
                     "virtual_key": 13
                 },
                 {
-                    "display_text": "지연시간 : 0.016초",
-                    "duration": 0.016,
+                    "display_text": "지연시간 : 0.055초",
+                    "duration": 0.055,
                     "type": "delay"
                 }
             ],
@@ -452,6 +452,103 @@
                 "key_code": "숫자패드 .",
                 "scan_code": 83,
                 "virtual_key": 110,
+                "display_text": "",
+                "modifiers": 0
+            }
+        },
+        "첨 마법 반복": {
+            "name": "첨 마법 반복",
+            "items": [
+                {
+                    "display_text": "지연시간 : 0.730초",
+                    "duration": 0.73,
+                    "type": "delay"
+                },
+                {
+                    "action": "누르기",
+                    "display_text": "키 입력: 왼쪽 쉬프트 --- 누르기",
+                    "key_code": "왼쪽 쉬프트",
+                    "modifiers": 0,
+                    "scan_code": 42,
+                    "type": "key_input",
+                    "virtual_key": 160
+                },
+                {
+                    "display_text": "지연시간 : 0.020초",
+                    "duration": 0.02,
+                    "type": "delay"
+                },
+                {
+                    "action": "누르기",
+                    "display_text": "키 입력: Z --- 누르기",
+                    "key_code": "Z",
+                    "modifiers": 0,
+                    "scan_code": 44,
+                    "type": "key_input",
+                    "virtual_key": 90
+                },
+                {
+                    "display_text": "지연시간 : 0.020초",
+                    "duration": 0.02,
+                    "type": "delay"
+                },
+                {
+                    "action": "떼기",
+                    "display_text": "키 입력: Z --- 떼기",
+                    "key_code": "Z",
+                    "modifiers": 0,
+                    "scan_code": 44,
+                    "type": "key_input",
+                    "virtual_key": 90
+                },
+                {
+                    "display_text": "지연시간 : 0.020초",
+                    "duration": 0.02,
+                    "type": "delay"
+                },
+                {
+                    "action": "떼기",
+                    "display_text": "키 입력: 왼쪽 쉬프트 --- 떼기",
+                    "key_code": "왼쪽 쉬프트",
+                    "modifiers": 0,
+                    "scan_code": 42,
+                    "type": "key_input",
+                    "virtual_key": 160
+                },
+                {
+                    "display_text": "지연시간 : 0.020초",
+                    "duration": 0.02,
+                    "type": "delay"
+                },
+                {
+                    "action": "누르기",
+                    "display_text": "키 입력: I --- 누르기",
+                    "key_code": "I",
+                    "modifiers": 0,
+                    "scan_code": 23,
+                    "type": "key_input",
+                    "virtual_key": 73
+                },
+                {
+                    "display_text": "지연시간 : 0.020초",
+                    "duration": 0.02,
+                    "type": "delay"
+                },
+                {
+                    "action": "떼기",
+                    "display_text": "키 입력: I --- 떼기",
+                    "key_code": "I",
+                    "modifiers": 0,
+                    "scan_code": 23,
+                    "type": "key_input",
+                    "virtual_key": 73
+                }
+            ],
+            "repeat_count": 2,
+            "trigger_key": {
+                "key_code": "숫자패드 9",
+                "scan_code": 73,
+                "virtual_key": 105,
                 "display_text": "",
                 "modifiers": 0
             }
