@@ -162,8 +162,9 @@ class LogicListWidget(QFrame):
                     settings = json.load(f)
                     if 'logics' in settings:
                         self.saved_logics = settings['logics']
-                        # 저장된 로직들을 리스트에 추가
-                        for logic_name in self.saved_logics:
+                        # order 값을 기준으로 정렬하여 리스트에 추가
+                        sorted_logics = sorted(self.saved_logics.items(), key=lambda x: x[1].get('order', float('inf')))
+                        for logic_name, _ in sorted_logics:
                             item = QListWidgetItem(logic_name)
                             self.SavedLogicList__QListWidget.addItem(item)
         except Exception as e:
@@ -180,30 +181,36 @@ class LogicListWidget(QFrame):
             
             # 저장을 위해 로직 정보 복사 및 수정
             logics_to_save = {}
-            for name, logic_info in self.saved_logics.items():
-                # 딕셔너리 깊은 복사
-                logic_copy = json.loads(json.dumps({
-                    'name': logic_info['name'],
-                    'items': logic_info['items'],
-                    'repeat_count': logic_info.get('repeat_count', 1)  # 반복 횟수 추가
-                }))
-                
-                # trigger_key 정보 처리
-                if 'trigger_key' in logic_info:
-                    trigger_key = logic_info['trigger_key']
-                    modifiers = trigger_key.get('modifiers')
-                    # KeyboardModifier 객체인 경우 value 속성을 사용하여 정수값 얻기
-                    modifiers_value = modifiers.value if hasattr(modifiers, 'value') else (0 if modifiers is None else modifiers)
+            # 현재 리스트 위젯의 순서대로 로직 저장
+            for i in range(self.SavedLogicList__QListWidget.count()):
+                item = self.SavedLogicList__QListWidget.item(i)
+                name = item.text()
+                if name in self.saved_logics:
+                    logic_info = self.saved_logics[name]
+                    # 딕셔너리 깊은 복사
+                    logic_copy = json.loads(json.dumps({
+                        'name': logic_info['name'],
+                        'items': logic_info['items'],
+                        'repeat_count': logic_info.get('repeat_count', 1),  # 반복 횟수 추가
+                        'order': i + 1  # 순서 정보 추가 (1부터 시작)
+                    }))
                     
-                    logic_copy['trigger_key'] = {
-                        'key_code': trigger_key.get('key_code', ''),
-                        'scan_code': trigger_key.get('scan_code', 0),
-                        'virtual_key': trigger_key.get('virtual_key', 0),
-                        'display_text': trigger_key.get('display_text', ''),
-                        'modifiers': modifiers_value
-                    }
-                
-                logics_to_save[name] = logic_copy
+                    # trigger_key 정보 처리
+                    if 'trigger_key' in logic_info:
+                        trigger_key = logic_info['trigger_key']
+                        modifiers = trigger_key.get('modifiers')
+                        # KeyboardModifier 객체인 경우 value 속성을 사용하여 정수값 얻기
+                        modifiers_value = modifiers.value if hasattr(modifiers, 'value') else (0 if modifiers is None else modifiers)
+                        
+                        logic_copy['trigger_key'] = {
+                            'key_code': trigger_key.get('key_code', ''),
+                            'scan_code': trigger_key.get('scan_code', 0),
+                            'virtual_key': trigger_key.get('virtual_key', 0),
+                            'display_text': trigger_key.get('display_text', ''),
+                            'modifiers': modifiers_value
+                        }
+                    
+                    logics_to_save[name] = logic_copy
             
             settings['logics'] = logics_to_save
             

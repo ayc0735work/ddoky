@@ -223,111 +223,58 @@ class LogicDetailWidget(QFrame):
         self.EditItemButton__QPushButton.setEnabled(len(selected_items) == 1)  # 수정은 단일 선택만 가능
         self.DeleteItemButton__QPushButton.setEnabled(has_selection)  # 삭제는 다중 선택 가능
 
+    def add_item(self, item_text):
+        """아이템 추가
+        
+        Args:
+            item_text (str): 추가할 아이템의 텍스트
+        """
+        item = QListWidgetItem(item_text)
+        # 현재 아이템 수 + 1을 order 값으로 설정
+        order = self.LogicItemList__QListWidget.count() + 1
+        item.setData(Qt.UserRole, {'order': order})
+        self.LogicItemList__QListWidget.addItem(item)
+
     def _move_item_up(self):
-        """선택된 아이템을 위로 이동"""
+        """현재 선택된 아이템을 위로 이동"""
         current_row = self.LogicItemList__QListWidget.currentRow()
         if current_row > 0:
-            item = self.LogicItemList__QListWidget.takeItem(current_row)
-            self.LogicItemList__QListWidget.insertItem(current_row - 1, item)
-            self.LogicItemList__QListWidget.setCurrentItem(item)
+            current_item = self.LogicItemList__QListWidget.takeItem(current_row)
+            # 아이템 이동 시 order 값 업데이트
+            prev_item = self.LogicItemList__QListWidget.item(current_row - 1)
+            current_data = current_item.data(Qt.UserRole) or {}
+            prev_data = prev_item.data(Qt.UserRole) or {}
+            current_data['order'], prev_data['order'] = prev_data.get('order', current_row), current_data.get('order', current_row + 1)
+            current_item.setData(Qt.UserRole, current_data)
+            prev_item.setData(Qt.UserRole, prev_data)
+            self.LogicItemList__QListWidget.insertItem(current_row - 1, current_item)
+            self.LogicItemList__QListWidget.setCurrentItem(current_item)
             self.item_moved.emit()
-            
+
     def _move_item_down(self):
-        """선택된 아이템을 아래로 이동"""
+        """현재 선택된 아이템을 아래로 이동"""
         current_row = self.LogicItemList__QListWidget.currentRow()
         if current_row < self.LogicItemList__QListWidget.count() - 1:
-            item = self.LogicItemList__QListWidget.takeItem(current_row)
-            self.LogicItemList__QListWidget.insertItem(current_row + 1, item)
-            self.LogicItemList__QListWidget.setCurrentItem(item)
+            current_item = self.LogicItemList__QListWidget.takeItem(current_row)
+            # 아이템 이동 시 order 값 업데이트
+            next_item = self.LogicItemList__QListWidget.item(current_row)
+            current_data = current_item.data(Qt.UserRole) or {}
+            next_data = next_item.data(Qt.UserRole) or {}
+            current_data['order'], next_data['order'] = next_data.get('order', current_row + 2), current_data.get('order', current_row + 1)
+            current_item.setData(Qt.UserRole, current_data)
+            next_item.setData(Qt.UserRole, next_data)
+            self.LogicItemList__QListWidget.insertItem(current_row + 1, current_item)
+            self.LogicItemList__QListWidget.setCurrentItem(current_item)
             self.item_moved.emit()
-            
-    def _edit_item(self):
-        """선택된 아이템 수정"""
-        current_item = self.LogicItemList__QListWidget.currentItem()
-        if current_item:
-            item_text = current_item.text()
-            
-            # 지연시간 아이템인 경우
-            if item_text.startswith("지연시간"):
-                try:
-                    current_delay = float(item_text.split(":")[1].replace("초", "").strip())
-                    
-                    # QInputDialog 커스터마이징
-                    dialog = QInputDialog(self)
-                    dialog.setWindowTitle("지연시간 수정")
-                    dialog.setLabelText("지연시간(초):")
-                    dialog.setDoubleDecimals(3)  # 소수점 3자리까지 표시 (0.001초 단위)
-                    dialog.setDoubleValue(current_delay)  # 현재 지연시간을 기본값으로 설정
-                    dialog.setDoubleRange(0.001, 100.0)  # 0.001초 ~ 100초
-                    dialog.setDoubleStep(0.001)  # 증가/감소 단위
-                    
-                    # 버튼 텍스트 변경
-                    dialog.setOkButtonText("지연시간 저장")
-                    dialog.setCancelButtonText("지연시간 입력 취소")
-                    
-                    if dialog.exec():
-                        delay = dialog.doubleValue()
-                        delay_text = f"지연시간 : {delay:.3f}초"
-                        current_item.setText(delay_text)
-                        self.item_edited.emit(delay_text)
-                        self.log_message.emit(f"지연시간이 {delay:.3f}초로 수정되었습니다")
-                except ValueError:
-                    self.log_message.emit("지연시간 형식이 올바르지 않습니다")
-            else:
-                self.item_edited.emit(item_text)
-            
-    def _delete_item(self):
-        """선택된 아이템 삭제"""
-        selected_items = self.LogicItemList__QListWidget.selectedItems()
-        if selected_items:
-            for item in selected_items:
-                row = self.LogicItemList__QListWidget.row(item)
-                item = self.LogicItemList__QListWidget.takeItem(row)
-                self.item_deleted.emit(item.text())
-            self.log_message.emit(f"{len(selected_items)}개의 항목이 삭제되었습니다")
 
-    def clear_all(self):
-        """모든 입력과 상태를 초기화"""
-        self.LogicNameInput__QLineEdit.clear()           # 로직 이름 초기화
-        self.LogicItemList__QListWidget.clear()          # 목록 초기화
-        self.TriggerKeyInputWidget__KeyInputWidget.clear_key()        # 트리거 키 입력 초기화
-        self.TriggerKeyInfoLabel__QLabel.clear()       # 트리거 키 정보 초기화
-        self.trigger_key_info = None      # 트리거 키 정보 초기화
-        self.edit_mode = False            # 수정 모드 해제
-        self.original_name = None         # 원래 이름 초기화
-        self.RepeatCountInput__QLineEdit.setText("1")    # 반복 횟수를 기본값(1)으로 초기화
-
-    def _on_key_input_changed(self, key_info):
-        """키 입력이 변경되었을 때"""
-        if not key_info:  # 키 정보가 비어있으면 라벨 초기화
-            self.TriggerKeyInfoLabel__QLabel.clear()
-            return
-            
-        self.TriggerKeyInfoLabel__QLabel.setText(format_key_info(key_info))
-        self.trigger_key_info = key_info  # 트리거 키 정보 저장
-
-    def _save_logic_name(self):
-        """로직 이름을 저장"""
-        name = self.LogicNameInput__QLineEdit.text().strip()
-        if not name:
-            self.log_message.emit("로직 이름을 입력하세요")
-            return
-        
-        # 아이템 목록이 비어있는지 확인
-        if not self.has_items():
-            self.log_message.emit("로직에 아이템을 추가하세요")
-            return
-        
-        # 트리거 키가 설정되어 있는지 확인
-        if not self.trigger_key_info:
-            self.log_message.emit("트리거 키를 설정하세요")
-            return
-        
-        # 아이템 목록 가져오기
+    def get_items(self):
+        """현재 로직의 아이템 목록을 반환"""
         items = []
         for i in range(self.LogicItemList__QListWidget.count()):
             item = self.LogicItemList__QListWidget.item(i)
             item_text = item.text()
+            user_data = item.data(Qt.UserRole) or {}
+            order = user_data.get('order', i + 1)
             
             # 키 입력 아이템인 경우
             if item_text.startswith("키 입력:"):
@@ -422,27 +369,73 @@ class LogicDetailWidget(QFrame):
                                 modifier_value |= modifier_map[mod]
                     
                     # 구조화된 형태로 저장
-                    items.append({
+                    item_data = {
                         "type": "key_input",
                         "key_code": key,
                         "scan_code": scan_code,
                         "virtual_key": virtual_key,
                         "modifiers": modifier_value,
                         "action": action,
-                        "display_text": item_text
-                    })
+                        "display_text": item_text,
+                        "order": order
+                    }
+                    items.append(item_data)
                 else:
-                    items.append({"type": "text", "content": item_text})
+                    items.append({"type": "text", "content": item_text, "order": order})
             # 지연시간 아이템인 경우
             elif item_text.startswith("지연시간"):
                 items.append({
                     "type": "delay",
                     "duration": float(item_text.split(":")[1].replace("초", "").strip()),
-                    "display_text": item_text
+                    "display_text": item_text,
+                    "order": order
                 })
             # 기타 아이템
             else:
-                items.append({"type": "text", "content": item_text})
+                items.append({"type": "text", "content": item_text, "order": order})
+        
+        # order 값으로 정렬
+        return sorted(items, key=lambda x: x.get('order', float('inf')))
+
+    def clear_all(self):
+        """모든 입력과 상태를 초기화"""
+        self.LogicNameInput__QLineEdit.clear()           # 로직 이름 초기화
+        self.LogicItemList__QListWidget.clear()          # 목록 초기화
+        self.TriggerKeyInputWidget__KeyInputWidget.clear_key()        # 트리거 키 입력 초기화
+        self.TriggerKeyInfoLabel__QLabel.clear()       # 트리거 키 정보 초기화
+        self.trigger_key_info = None      # 트리거 키 정보 초기화
+        self.edit_mode = False            # 수정 모드 해제
+        self.original_name = None         # 원래 이름 초기화
+        self.RepeatCountInput__QLineEdit.setText("1")    # 반복 횟수를 기본값(1)으로 초기화
+
+    def _on_key_input_changed(self, key_info):
+        """키 입력이 변경되었을 때"""
+        if not key_info:  # 키 정보가 비어있으면 라벨 초기화
+            self.TriggerKeyInfoLabel__QLabel.clear()
+            return
+            
+        self.TriggerKeyInfoLabel__QLabel.setText(format_key_info(key_info))
+        self.trigger_key_info = key_info  # 트리거 키 정보 저장
+
+    def _save_logic_name(self):
+        """로직 이름을 저장"""
+        name = self.LogicNameInput__QLineEdit.text().strip()
+        if not name:
+            self.log_message.emit("로직 이름을 입력하세요")
+            return
+        
+        # 아이템 목록이 비어있는지 확인
+        if not self.has_items():
+            self.log_message.emit("로직에 아이템을 추가하세요")
+            return
+        
+        # 트리거 키가 설정되어 있는지 확인
+        if not self.trigger_key_info:
+            self.log_message.emit("트리거 키를 설정하세요")
+            return
+        
+        # 아이템 목록 가져오기
+        items = self.get_items()
         
         # 로직 정보 생성
         logic_info = {
@@ -475,16 +468,23 @@ class LogicDetailWidget(QFrame):
         
         # 목록 아이템 로드
         self.LogicItemList__QListWidget.clear()
-        for item in logic_info['items']:
+        # items를 order 값으로 정렬
+        sorted_items = sorted(logic_info['items'], key=lambda x: x.get('order', float('inf')))
+        for item in sorted_items:
             if isinstance(item, dict):
                 if item['type'] == 'key_input':
-                    self.add_item(item['display_text'])
+                    list_item = QListWidgetItem(item['display_text'])
                 elif item['type'] == 'delay':
-                    self.add_item(item['display_text'])
+                    list_item = QListWidgetItem(item['display_text'])
                 else:
-                    self.add_item(item['content'])
+                    list_item = QListWidgetItem(item['content'])
+                # order 값 저장
+                list_item.setData(Qt.UserRole, {'order': item.get('order', self.LogicItemList__QListWidget.count() + 1)})
+                self.LogicItemList__QListWidget.addItem(list_item)
             else:
-                self.add_item(item)  # 이전 형식 지원
+                list_item = QListWidgetItem(item)
+                list_item.setData(Qt.UserRole, {'order': self.LogicItemList__QListWidget.count() + 1})
+                self.LogicItemList__QListWidget.addItem(list_item)  # 이전 형식 지원
         
         # 첫 번째 아이템 선택
         if self.LogicItemList__QListWidget.count() > 0:
@@ -500,15 +500,6 @@ class LogicDetailWidget(QFrame):
     def has_items(self):
         """목록에 아이템이 있는지 확인"""
         return self.LogicItemList__QListWidget.count() > 0
-
-    def add_item(self, item_text):
-        """아이템 추가
-        
-        Args:
-            item_text (str): 추가할 아이템의 텍스트
-        """
-        item = QListWidgetItem(item_text)
-        self.LogicItemList__QListWidget.addItem(item)
 
     def _copy_key_info_to_clipboard(self, event):
         """트리거 키 정보를 클립보드에 복사"""
@@ -625,3 +616,94 @@ class LogicDetailWidget(QFrame):
             # 입력 중인 데이터가 없으면 바로 초기화
             self.clear_all()
             self.NewLogicButton__QPushButton.setEnabled(False)
+
+    def _edit_item(self):
+        """선택된 아이템 수정"""
+        current_item = self.LogicItemList__QListWidget.currentItem()
+        if current_item:
+            item_text = current_item.text()
+            
+            # 지연시간 아이템인 경우
+            if item_text.startswith("지연시간"):
+                try:
+                    current_delay = float(item_text.split(":")[1].replace("초", "").strip())
+                    
+                    # QInputDialog 커스터마이징
+                    dialog = QInputDialog(self)
+                    dialog.setWindowTitle("지연시간 수정")
+                    dialog.setLabelText("지연시간(초):")
+                    dialog.setDoubleDecimals(3)  # 소수점 3자리까지 표시 (0.001초 단위)
+                    dialog.setDoubleValue(current_delay)  # 현재 지연시간을 기본값으로 설정
+                    dialog.setDoubleRange(0.001, 100.0)  # 0.001초 ~ 100초
+                    dialog.setDoubleStep(0.001)  # 증가/감소 단위
+                    
+                    # 버튼 텍스트 변경
+                    dialog.setOkButtonText("지연시간 저장")
+                    dialog.setCancelButtonText("지연시간 입력 취소")
+                    
+                    if dialog.exec():
+                        delay = dialog.doubleValue()
+                        delay_text = f"지연시간 : {delay:.3f}초"
+                        current_item.setText(delay_text)
+                        # 순서 값 유지
+                        current_data = current_item.data(Qt.UserRole) or {}
+                        current_item.setData(Qt.UserRole, current_data)
+                        self.item_edited.emit(delay_text)
+                        self.log_message.emit(f"지연시간이 {delay:.3f}초로 수정되었습니다")
+                except ValueError:
+                    self.log_message.emit("지연시간 형식이 올바르지 않습니다")
+            # 키 입력 아이템인 경우
+            elif item_text.startswith("키 입력:"):
+                key_parts = item_text.split(" --- ")
+                if len(key_parts) == 2:
+                    key_text = key_parts[0]
+                    current_action = key_parts[1]  # 현재 액션 ("누르기" 또는 "떼기")
+                    
+                    # 액션 선택 대화상자
+                    dialog = QMessageBox(self)
+                    dialog.setWindowTitle("키 입력 액션 선택")
+                    dialog.setText("키 입력 액션을 선택하세요")
+                    dialog.setIcon(QMessageBox.Question)
+                    
+                    # 버튼 추가
+                    press_button = dialog.addButton("누르기", QMessageBox.ActionRole)
+                    release_button = dialog.addButton("떼기", QMessageBox.ActionRole)
+                    cancel_button = dialog.addButton("취소", QMessageBox.RejectRole)
+                    
+                    # 현재 액션에 따라 기본 버튼 설정
+                    if current_action == "누르기":
+                        dialog.setDefaultButton(press_button)
+                    else:
+                        dialog.setDefaultButton(release_button)
+                    
+                    dialog.exec()
+                    clicked_button = dialog.clickedButton()
+                    
+                    if clicked_button in [press_button, release_button]:
+                        new_action = "누르기" if clicked_button == press_button else "떼기"
+                        if new_action != current_action:
+                            new_text = f"{key_text} --- {new_action}"
+                            current_item.setText(new_text)
+                            # 순서 값 유지
+                            current_data = current_item.data(Qt.UserRole) or {}
+                            current_item.setData(Qt.UserRole, current_data)
+                            self.item_edited.emit(new_text)
+                            self.log_message.emit(f"키 입력 액션이 {new_action}로 변경되었습니다")
+            else:
+                self.item_edited.emit(item_text)
+
+    def _delete_item(self):
+        """선택된 아이템 삭제"""
+        selected_items = self.LogicItemList__QListWidget.selectedItems()
+        if selected_items:
+            for item in selected_items:
+                row = self.LogicItemList__QListWidget.row(item)
+                item = self.LogicItemList__QListWidget.takeItem(row)
+                self.item_deleted.emit(item.text())
+            # 아이템 삭제 후 순서 재정렬
+            for i in range(self.LogicItemList__QListWidget.count()):
+                item = self.LogicItemList__QListWidget.item(i)
+                item_data = item.data(Qt.UserRole) or {}
+                item_data['order'] = i + 1
+                item.setData(Qt.UserRole, item_data)
+            self.log_message.emit(f"{len(selected_items)}개의 항목이 삭제되었습니다")
