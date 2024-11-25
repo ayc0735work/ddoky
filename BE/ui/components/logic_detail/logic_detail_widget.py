@@ -1,8 +1,10 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
                              QPushButton, QLabel, QListWidget, QListWidgetItem,
-                             QSizePolicy, QLineEdit, QInputDialog, QMessageBox)
+                             QSizePolicy, QLineEdit, QInputDialog, QMessageBox, QSpinBox)
 from PySide6.QtCore import Qt, Signal, QObject, QEvent
 from PySide6.QtGui import QFont, QGuiApplication, QIntValidator
+import uuid
+from datetime import datetime
 
 from ...constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE, CONTAINER_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
@@ -33,6 +35,7 @@ class LogicDetailWidget(QFrame):
         self.trigger_key_info = None  # 트리거 키 정보
         self.original_name = None  # 원래 이름
         self.copied_items = []  # 복사된 아이템들 저장 (리스트로 변경)
+        self.current_logic = None  # 현재 로직 정보
         
         # 키보드 이벤트 필터 설치
         self.installEventFilter(self)
@@ -86,7 +89,7 @@ class LogicDetailWidget(QFrame):
         # 로직 저장 버튼
         self.LogicSaveButton__QPushButton = QPushButton("로직 저장")
         self.LogicSaveButton__QPushButton.setStyleSheet(BUTTON_STYLE)
-        self.LogicSaveButton__QPushButton.clicked.connect(self._save_logic_name)
+        self.LogicSaveButton__QPushButton.clicked.connect(self._save_logic)
         LogicSaveSection__QHBoxLayout.addWidget(self.LogicSaveButton__QPushButton)
         
         LogicConfigurationLayout__QVBoxLayout.addLayout(LogicSaveSection__QHBoxLayout)
@@ -133,14 +136,14 @@ class LogicDetailWidget(QFrame):
         RepeatCountRow__QHBoxLayout.setSpacing(5)
         
         # 반복 횟수 입력 필드
-        self.RepeatCountInput__QLineEdit = QLineEdit()
-        self.RepeatCountInput__QLineEdit.setFixedWidth(70)
-        self.RepeatCountInput__QLineEdit.setAlignment(Qt.AlignRight)
+        self.RepeatCountInput__QSpinBox = QSpinBox()
+        self.RepeatCountInput__QSpinBox.setFixedWidth(70)
+        self.RepeatCountInput__QSpinBox.setAlignment(Qt.AlignRight)
         # 숫자만 입력 가능하도록 설정
-        self.RepeatCountInput__QLineEdit.setValidator(QIntValidator(1, 9999))
-        self.RepeatCountInput__QLineEdit.setText("1")  # 기본값 설정
-        self.RepeatCountInput__QLineEdit.textChanged.connect(self._check_data_entered)  # 텍스트 변경 시그널 연결
-        RepeatCountRow__QHBoxLayout.addWidget(self.RepeatCountInput__QLineEdit)
+        self.RepeatCountInput__QSpinBox.setRange(1, 9999)
+        self.RepeatCountInput__QSpinBox.setValue(1)  # 기본값 설정
+        self.RepeatCountInput__QSpinBox.valueChanged.connect(self._check_data_entered)  # 값 변경 시그널 연결
+        RepeatCountRow__QHBoxLayout.addWidget(self.RepeatCountInput__QSpinBox)
         
         # 반복 횟수 라벨
         RepeatCountLabel__QLabel = QLabel("회 반복")
@@ -409,7 +412,7 @@ class LogicDetailWidget(QFrame):
         self.trigger_key_info = None      # 트리거 키 정보 초기화
         self.edit_mode = False            # 수정 모드 해제
         self.original_name = None         # 원래 이름 초기화
-        self.RepeatCountInput__QLineEdit.setText("1")    # 반복 횟수를 기본값(1)으로 초기화
+        self.RepeatCountInput__QSpinBox.setValue(1)    # 반복 횟수를 기본값(1)으로 초기화
 
     def _on_key_input_changed(self, key_info):
         """키 입력이 변경되었을 때"""
@@ -420,90 +423,173 @@ class LogicDetailWidget(QFrame):
         self.TriggerKeyInfoLabel__QLabel.setText(format_key_info(key_info))
         self.trigger_key_info = key_info  # 트리거 키 정보 저장
 
-    def _save_logic_name(self):
-        """로직 이름을 저장"""
-        name = self.LogicNameInput__QLineEdit.text().strip()
-        if not name:
-            self.log_message.emit("로직 이름을 입력하세요")
-            return
-        
-        # 아이템 목록이 비어있는지 확인
-        if not self.has_items():
-            self.log_message.emit("로직에 아이템을 추가하세요")
-            return
-        
-        # 트리거 키가 설정되어 있는지 확인
-        if not self.trigger_key_info:
-            self.log_message.emit("트리거 키를 설정하세요")
-            return
-        
-        # 아이템 목록 가져오기
-        items = self.get_items()
-        
-        # 로직 정보 생성
-        logic_info = {
-            "name": name,
-            "items": items,
-            "trigger_key": self.trigger_key_info,
-            "repeat_count": int(self.RepeatCountInput__QLineEdit.text())  # 반복 횟수 추가
-        }
-        
-        # 수정 모드인 경우 업데이트 시그널 발생
-        if self.edit_mode and self.original_name:
-            self.logic_updated.emit(self.original_name, logic_info)
-            self.log_message.emit(f"로직 '{name}'이(가) 수정되었습니다")
-        else:
-            self.logic_saved.emit(logic_info)
-            self.log_message.emit(f"로직 '{name}'이(가) 저장되었습니다")
-        
-        # 저장 후 초기화
-        self.clear_all()
+    def _save_logic(self):
+        """로직 저장"""
+        try:
+            # 로직 이름 가져오기
+            name = self.LogicNameInput__QLineEdit.text().strip()
+            if not name:
+                self.log_message.emit("오류: 로직 이름을 입력해주세요.")
+                return False
+
+            # 트리거 키 확인
+            if not self.trigger_key_info:
+                self.log_message.emit("오류: 트리거 키를 설정해주세요.")
+                return False
+
+            # 아이템 존재 여부 확인
+            if not self.has_items():
+                self.log_message.emit("오류: 로직에 아이템을 추가해주세요.")
+                return False
+
+            # 아이템 목록 가져오기 (순서 정보 포함)
+            items = []
+            for i in range(self.LogicItemList__QListWidget.count()):
+                item = self.LogicItemList__QListWidget.item(i)
+                if item:
+                    item_data = item.data(Qt.UserRole) or {}
+                    display_text = item.text()
+                    
+                    if item_data.get('type') == 'key_input':
+                        # 키 입력 아이템인 경우
+                        item_info = {
+                            'type': 'key_input',
+                            'action': item_data.get('action', '누르기'),
+                            'key_code': item_data.get('key_code', ''),
+                            'scan_code': item_data.get('scan_code', 0),
+                            'virtual_key': item_data.get('virtual_key', 0),
+                            'modifiers': item_data.get('modifiers', 0),
+                            'display_text': display_text,
+                            'order': item_data.get('order', i + 1)
+                        }
+                    elif item_data.get('type') == 'delay':
+                        # 딜레이 아이템인 경우
+                        duration = float(item_data.get('duration', 0.0))
+                        item_info = {
+                            'type': 'delay',
+                            'duration': duration,
+                            'display_text': f"지연시간 : {duration}초",
+                            'order': item_data.get('order', i + 1)
+                        }
+                    else:
+                        # 일반 아이템인 경우
+                        item_info = {
+                            'content': display_text,
+                            'order': item_data.get('order', i + 1)
+                        }
+                    
+                    items.append(item_info)
+            
+            # order 값으로 정렬
+            items = sorted(items, key=lambda x: x.get('order', float('inf')))
+
+            # 현재 로직 정보 구성 (필드 순서 지정)
+            logic_info = {
+                'name': name,
+                'order': self.current_logic.get('order', 0) if self.current_logic else 0,
+                'created_at': self.current_logic.get('created_at', datetime.now().isoformat()),
+                'updated_at': datetime.now().isoformat(),
+                'trigger_key': self.trigger_key_info,
+                'repeat_count': self.RepeatCountInput__QSpinBox.value(),
+                'items': items
+            }
+
+            # 로직 저장 이벤트 발생
+            if self.edit_mode and self.original_name:
+                self.logic_updated.emit(self.original_name, logic_info)
+            else:
+                self.logic_saved.emit(logic_info)
+
+            return True
+        except Exception as e:
+            self.log_message.emit(f"로직 저장 중 오류 발생: {str(e)}")
+            return False
 
     def load_logic(self, logic_info):
-        """로직 데이터 로드"""
-        # None이 전달되면 초기화
-        if logic_info is None:
+        """로직 정보를 위젯에 로드"""
+        try:
+            if not logic_info or not isinstance(logic_info, dict):
+                self.log_message.emit("오류: 잘못된 로직 정보입니다.")
+                return
+
+            name = logic_info.get('name')
+            if not name:
+                self.log_message.emit("오류: 필수 로직 정보가 누락되었습니다.")
+                return
+
+            # UI 초기화
             self.clear_all()
-            return
             
-        self.edit_mode = True
-        self.LogicNameInput__QLineEdit.setText(logic_info['name'])
-        self.original_name = logic_info['name']  # 원래 이름 저장
-        
-        # 반복 횟수 설정
-        repeat_count = logic_info.get('repeat_count', 1)  # 기본값 1
-        self.RepeatCountInput__QLineEdit.setText(str(repeat_count))
-        
-        # 목록 아이템 로드
-        self.LogicItemList__QListWidget.clear()
-        # items를 order 값으로 정렬
-        sorted_items = sorted(logic_info['items'], key=lambda x: x.get('order', float('inf')))
-        for item in sorted_items:
-            if isinstance(item, dict):
-                if item['type'] == 'key_input':
-                    list_item = QListWidgetItem(item['display_text'])
-                elif item['type'] == 'delay':
-                    list_item = QListWidgetItem(item['display_text'])
-                else:
-                    list_item = QListWidgetItem(item['content'])
-                # order 값 저장
-                list_item.setData(Qt.UserRole, {'order': item.get('order', self.LogicItemList__QListWidget.count() + 1)})
-                self.LogicItemList__QListWidget.addItem(list_item)
+            # 기본 정보 설정
+            self.LogicNameInput__QLineEdit.setText(name)
+            self.current_logic = logic_info.copy()
+            self.edit_mode = True
+            self.original_name = name
+            
+            # 트리거 키 설정
+            trigger_key = logic_info.get('trigger_key', {})
+            if isinstance(trigger_key, dict) and trigger_key:
+                self.trigger_key_info = trigger_key.copy()
+                self.TriggerKeyInfoLabel__QLabel.setText(format_key_info(trigger_key))
+            
+            # 반복 횟수 설정
+            repeat_count = logic_info.get('repeat_count', 1)
+            self.RepeatCountInput__QSpinBox.setValue(repeat_count)
+            
+            # 로직 아이템 목록 설정
+            items = logic_info.get('items', [])
+            if isinstance(items, list):
+                sorted_items = sorted(items, key=lambda x: x.get('order', float('inf')))
+                for item in sorted_items:
+                    if isinstance(item, dict):
+                        if item.get('type') == 'delay':
+                            # 딜레이 아이템인 경우
+                            display_text = f"지연시간 : {item.get('duration', 0.0)}초"
+                            item['display_text'] = display_text
+                        self._add_logic_item(item)
+            
+            self.log_message.emit(f"로직 '{name}'이(가) 로드되었습니다.")
+
+        except Exception as e:
+            self.log_message.emit(f"로직 로드 중 오류 발생: {str(e)}")
+            self.clear_all()
+
+    def _add_logic_item(self, item):
+        """로직 아이템을 리스트에 추가"""
+        if isinstance(item, dict):
+            # 아이템 타입에 따른 처리
+            if item.get('type') == 'key_input':
+                list_item = QListWidgetItem(item['display_text'])
+                # 키 입력 관련 모든 속성 저장
+                item_data = {
+                    'type': 'key_input',
+                    'order': item.get('order', self.LogicItemList__QListWidget.count() + 1),
+                    'action': item.get('action'),
+                    'key_code': item.get('key_code'),
+                    'scan_code': item.get('scan_code'),
+                    'virtual_key': item.get('virtual_key'),
+                    'modifiers': item.get('modifiers')
+                }
+            elif item.get('type') == 'delay':
+                list_item = QListWidgetItem(item.get('display_text', ''))
+                item_data = {
+                    'type': 'delay',
+                    'order': item.get('order', self.LogicItemList__QListWidget.count() + 1),
+                    'duration': item.get('duration')
+                }
             else:
-                list_item = QListWidgetItem(item)
-                list_item.setData(Qt.UserRole, {'order': self.LogicItemList__QListWidget.count() + 1})
-                self.LogicItemList__QListWidget.addItem(list_item)  # 이전 형식 지원
+                list_item = QListWidgetItem(item.get('content', ''))
+                item_data = {
+                    'order': item.get('order', self.LogicItemList__QListWidget.count() + 1)
+                }
+            list_item.setData(Qt.UserRole, item_data)
+        else:
+            list_item = QListWidgetItem(str(item))
+            list_item.setData(Qt.UserRole, {
+                'order': self.LogicItemList__QListWidget.count() + 1
+            })
         
-        # 첫 번째 아이템 선택
-        if self.LogicItemList__QListWidget.count() > 0:
-            self.LogicItemList__QListWidget.setCurrentItem(self.LogicItemList__QListWidget.item(0))
-            
-        # 트리거 키 정보 로드
-        if 'trigger_key' in logic_info:
-            key_info = logic_info['trigger_key']
-            self.trigger_key_info = key_info  # 트리거 키 정보 저장
-            self.TriggerKeyInputWidget__KeyInputWidget.set_key_info(key_info)  # key_input 위젯에 키 정보 설정
-            self.TriggerKeyInfoLabel__QLabel.setText(format_key_info(key_info))  # 키 정보 표시
+        self.LogicItemList__QListWidget.addItem(list_item)
 
     def has_items(self):
         """목록에 아이템이 있는지 확인"""
@@ -587,7 +673,7 @@ class LogicDetailWidget(QFrame):
         
         # 반복 횟수 확인
         try:
-            repeat_count = int(self.RepeatCountInput__QLineEdit.text())
+            repeat_count = self.RepeatCountInput__QSpinBox.value()
             has_different_repeat = repeat_count != 1
         except ValueError:
             has_different_repeat = False
@@ -603,7 +689,7 @@ class LogicDetailWidget(QFrame):
         if (self.LogicNameInput__QLineEdit.text().strip() or
             self.trigger_key_info or
             self.LogicItemList__QListWidget.count() > 0 or
-            int(self.RepeatCountInput__QLineEdit.text()) != 1):
+            self.RepeatCountInput__QSpinBox.value() != 1):
             
             # 확인 메시지 박스 표시
             reply = QMessageBox.question(
