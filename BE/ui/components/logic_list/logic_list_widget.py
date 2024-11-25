@@ -183,7 +183,8 @@ class LogicListWidget(QFrame):
                 # 딕셔너리 깊은 복사
                 logic_copy = json.loads(json.dumps({
                     'name': logic_info['name'],
-                    'items': logic_info['items']
+                    'items': logic_info['items'],
+                    'repeat_count': logic_info.get('repeat_count', 1)  # 반복 횟수 추가
                 }))
                 
                 # trigger_key 정보 처리

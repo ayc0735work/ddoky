@@ -49,7 +49,7 @@ class KeyInputDialog(QDialog):
         # 키 정보 라벨
         self.key_info_label = QLabel()
         self.key_info_label.setWordWrap(True)
-        self.key_info_label.mousePressEvent = self._copy_key_info_to_clipboard # 클립보드에 복사
+        self.key_info_label.mousePressEvent = self._copy_key_info_to_clipboard # 
         self.key_info_label.setCursor(Qt.PointingHandCursor)  # 마우스 커서를 손가락 모양으로 변경
         layout.addWidget(self.key_info_label)
         

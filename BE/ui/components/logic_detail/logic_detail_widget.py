@@ -430,7 +430,8 @@ class LogicDetailWidget(QFrame):
         logic_info = {
             "name": name,
             "items": items,
-            "trigger_key": self.trigger_key_info
+            "trigger_key": self.trigger_key_info,
+            "repeat_count": int(self.repeat_input.text())  # 반복 횟수 추가
         }
         
         # 수정 모드인 경우 업데이트 시그널 발생
@@ -449,6 +450,10 @@ class LogicDetailWidget(QFrame):
         self.edit_mode = True
         self.name_input.setText(logic_info['name'])
         self.original_name = logic_info['name']  # 원래 이름 저장
+        
+        # 반복 횟수 설정
+        repeat_count = logic_info.get('repeat_count', 1)  # 기본값 1
+        self.repeat_input.setText(str(repeat_count))
         
         # 목록 아이템 로드
         self.list_widget.clear()

@@ -116,7 +116,9 @@ class LogicExecutor(QObject):
                 self.selected_logic = logic
                 self.is_executing = True
                 self.current_step_index = 0
-                self.log_message.emit(f"로직 '{logic_name}' 실행 시작")
+                self.current_repeat = 1  # 현재 반복 횟수 초기화
+                repeat_count = logic.get('repeat_count', 1)
+                self.log_message.emit(f"로직 '{logic_name}' 실행 시작 (총 {repeat_count}회 반복)")
                 self.stop_monitoring()  # 로직 실행 중에는 키 입력 감지를 하지 않도록 중지
                 
                 # 트리거 키를 떼는 동작 추가
@@ -155,10 +157,24 @@ class LogicExecutor(QObject):
         
         # 모든 스텝이 완료되었는지 확인
         if self.current_step_index >= len(items):
-            self.log_message.emit(f"로직 '{self.selected_logic['name']}' 실행 완료")
+            # 반복 횟수 확인
+            repeat_count = self.selected_logic.get('repeat_count', 1)
+            current_repeat = getattr(self, 'current_repeat', 1)
+            
+            if current_repeat < repeat_count:
+                # 아직 반복 횟수가 남았으면 처음부터 다시 시작
+                self.current_step_index = 0
+                self.current_repeat = current_repeat + 1
+                self.log_message.emit(f"로직 반복 {self.current_repeat}/{repeat_count} 시작")
+                self._execute_next_step()
+                return
+            
+            # 모든 반복이 완료되었을 때
+            self.log_message.emit(f"로직 '{self.selected_logic['name']}' 실행 완료 (총 {repeat_count}회 반복)")
             self.is_executing = False
             self.selected_logic = None
             self.current_step_index = 0
+            self.current_repeat = 1  # 반복 횟수 초기화
             self.start_monitoring()  # 로직 실행이 완료되면 키 입력 감지를 다시 시작
             return
             
