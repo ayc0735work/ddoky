@@ -33,67 +33,68 @@ class LogicListWidget(QFrame):
         self.setFixedSize(LOGIC_LIST_WIDTH, BASIC_SECTION_HEIGHT)
         
         # 메인 레이아웃
-        layout = QVBoxLayout()
-        layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        layout.setContentsMargins(10, 10, 10, 10)
-        layout.setSpacing(10)
+        LogicListLayout__QVBoxLayout = QVBoxLayout()
+        LogicListLayout__QVBoxLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        LogicListLayout__QVBoxLayout.setContentsMargins(10, 10, 10, 10)
+        LogicListLayout__QVBoxLayout.setSpacing(10)
         
         # 타이틀
-        title = QLabel("만든 로직 영역")
-        title.setFont(QFont(TITLE_FONT_FAMILY, SECTION_FONT_SIZE, QFont.Weight.Bold))
-        layout.addWidget(title)
+        LogicListTitle__QLabel = QLabel("만든 로직 영역")
+        LogicListTitle__QLabel.setFont(QFont(TITLE_FONT_FAMILY, SECTION_FONT_SIZE, QFont.Weight.Bold))
+        LogicListLayout__QVBoxLayout.addWidget(LogicListTitle__QLabel)
         
         # 리스트 위젯
-        self.list_widget = QListWidget()
-        self.list_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.list_widget.setStyleSheet(LIST_STYLE)
-        self.list_widget.setSelectionMode(QListWidget.ExtendedSelection)  # 다중 선택 모드 활성화
-        self.list_widget.itemSelectionChanged.connect(self._on_selection_changed)
-        self.list_widget.itemDoubleClicked.connect(self._item_double_clicked)
-        layout.addWidget(self.list_widget)
+        self.SavedLogicList__QListWidget = QListWidget()
+        self.SavedLogicList__QListWidget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.SavedLogicList__QListWidget.setStyleSheet(LIST_STYLE)
+        self.SavedLogicList__QListWidget.setSelectionMode(QListWidget.ExtendedSelection)  # 다중 선택 모드 활성화
+        self.SavedLogicList__QListWidget.itemSelectionChanged.connect(self._on_selection_changed)
+        self.SavedLogicList__QListWidget.itemDoubleClicked.connect(self._item_double_clicked)
+        LogicListLayout__QVBoxLayout.addWidget(self.SavedLogicList__QListWidget)
         
         # 버튼 그룹 레이아웃
-        button_group = QHBoxLayout()
-        button_group.setContentsMargins(0, 0, 0, 0)
-        button_group.setSpacing(5)
+        LogicControlSection__QHBoxLayout = QHBoxLayout()
+        LogicControlSection__QHBoxLayout.setContentsMargins(0, 0, 0, 0)
+        LogicControlSection__QHBoxLayout.setSpacing(5)
         
         # 버튼 생성
-        self.up_btn = QPushButton("위로")
-        self.down_btn = QPushButton("아래로")
-        self.edit_btn = QPushButton("로직 불러오기")
-        self.delete_btn = QPushButton("로직 삭제")
+        self.MoveUpButton__QPushButton = QPushButton("위로")
+        self.MoveDownButton__QPushButton = QPushButton("아래로")
+        self.LoadLogicButton__QPushButton = QPushButton("로직 불러오기")
+        self.DeleteLogicButton__QPushButton = QPushButton("로직 삭제")
         
         # 버튼 설정
-        self.up_btn.setFixedWidth(LOGIC_BUTTON_WIDTH - 30)
-        self.down_btn.setFixedWidth(LOGIC_BUTTON_WIDTH - 30)
-        self.edit_btn.setFixedWidth(LOGIC_BUTTON_WIDTH + 30)
-        self.delete_btn.setFixedWidth(LOGIC_BUTTON_WIDTH)
+        self.MoveUpButton__QPushButton.setFixedWidth(LOGIC_BUTTON_WIDTH - 30)
+        self.MoveDownButton__QPushButton.setFixedWidth(LOGIC_BUTTON_WIDTH - 30)
+        self.LoadLogicButton__QPushButton.setFixedWidth(LOGIC_BUTTON_WIDTH + 30)
+        self.DeleteLogicButton__QPushButton.setFixedWidth(LOGIC_BUTTON_WIDTH)
         
-        for btn in [self.up_btn, self.down_btn, self.edit_btn, self.delete_btn]:
+        for btn in [self.MoveUpButton__QPushButton, self.MoveDownButton__QPushButton, 
+                   self.LoadLogicButton__QPushButton, self.DeleteLogicButton__QPushButton]:
             btn.setStyleSheet(BUTTON_STYLE)
             btn.setEnabled(False)
-            button_group.addWidget(btn)
+            LogicControlSection__QHBoxLayout.addWidget(btn)
         
-        layout.addLayout(button_group)
-        self.setLayout(layout)
+        LogicListLayout__QVBoxLayout.addLayout(LogicControlSection__QHBoxLayout)
+        self.setLayout(LogicListLayout__QVBoxLayout)
         
         # 버튼 시그널 연결
-        self.up_btn.clicked.connect(self._move_item_up)
-        self.down_btn.clicked.connect(self._move_item_down)
-        self.edit_btn.clicked.connect(self._edit_item)
-        self.delete_btn.clicked.connect(self._delete_item)
+        self.MoveUpButton__QPushButton.clicked.connect(self._move_item_up)
+        self.MoveDownButton__QPushButton.clicked.connect(self._move_item_down)
+        self.LoadLogicButton__QPushButton.clicked.connect(self._edit_item)
+        self.DeleteLogicButton__QPushButton.clicked.connect(self._delete_item)
         
     def _on_selection_changed(self):
         """리스트 아이템 선택이 변경되었을 때의 처리"""
-        selected_items = self.list_widget.selectedItems()
+        selected_items = self.SavedLogicList__QListWidget.selectedItems()
         has_selection = len(selected_items) > 0
         
         # 버튼 활성화/비활성화
-        current_row = self.list_widget.currentRow()
-        self.up_btn.setEnabled(has_selection and current_row > 0)
-        self.down_btn.setEnabled(has_selection and current_row < self.list_widget.count() - 1)
-        self.edit_btn.setEnabled(len(selected_items) == 1)  # 수정은 단일 선택만 가능
-        self.delete_btn.setEnabled(has_selection)  # 삭제는 다중 선택 가능
+        current_row = self.SavedLogicList__QListWidget.currentRow()
+        self.MoveUpButton__QPushButton.setEnabled(has_selection and current_row > 0)
+        self.MoveDownButton__QPushButton.setEnabled(has_selection and current_row < self.SavedLogicList__QListWidget.count() - 1)
+        self.LoadLogicButton__QPushButton.setEnabled(len(selected_items) == 1)  # 수정은 단일 선택만 가능
+        self.DeleteLogicButton__QPushButton.setEnabled(has_selection)  # 삭제는 다중 선택 가능
         
         # 선택된 아이템이 있고 단일 선택인 경우에만 시그널 발생
         if has_selection and len(selected_items) == 1:
@@ -101,20 +102,20 @@ class LogicListWidget(QFrame):
             
     def _move_item_up(self):
         """현재 선택된 아이템을 위로 이동"""
-        current_row = self.list_widget.currentRow()
+        current_row = self.SavedLogicList__QListWidget.currentRow()
         if current_row > 0:
-            current_item = self.list_widget.takeItem(current_row)
-            self.list_widget.insertItem(current_row - 1, current_item)
-            self.list_widget.setCurrentItem(current_item)
+            current_item = self.SavedLogicList__QListWidget.takeItem(current_row)
+            self.SavedLogicList__QListWidget.insertItem(current_row - 1, current_item)
+            self.SavedLogicList__QListWidget.setCurrentItem(current_item)
             self.item_moved.emit()
             
     def _move_item_down(self):
         """현재 선택된 아이템을 아래로 이동"""
-        current_row = self.list_widget.currentRow()
-        if current_row < self.list_widget.count() - 1:
-            current_item = self.list_widget.takeItem(current_row)
-            self.list_widget.insertItem(current_row + 1, current_item)
-            self.list_widget.setCurrentItem(current_item)
+        current_row = self.SavedLogicList__QListWidget.currentRow()
+        if current_row < self.SavedLogicList__QListWidget.count() - 1:
+            current_item = self.SavedLogicList__QListWidget.takeItem(current_row)
+            self.SavedLogicList__QListWidget.insertItem(current_row + 1, current_item)
+            self.SavedLogicList__QListWidget.setCurrentItem(current_item)
             self.item_moved.emit()
             
     def on_logic_saved(self, logic_info):
@@ -123,10 +124,10 @@ class LogicListWidget(QFrame):
         self.saved_logics[name] = logic_info
         
         # 리스트에 아이템 추가
-        items = self.list_widget.findItems(name, Qt.MatchExactly)
+        items = self.SavedLogicList__QListWidget.findItems(name, Qt.MatchExactly)
         if not items:
             item = QListWidgetItem(name)
-            self.list_widget.addItem(item)
+            self.SavedLogicList__QListWidget.addItem(item)
         
         self.log_message.emit(f"로직 '{name}'이(가) 저장되었습니다")
         self.save_logics_to_settings()  # settings.json에 저장
@@ -143,8 +144,8 @@ class LogicListWidget(QFrame):
         self.saved_logics[name] = logic_info
         
         # 리스트 아이템 텍스트 업데이트
-        for i in range(self.list_widget.count()):
-            item = self.list_widget.item(i)
+        for i in range(self.SavedLogicList__QListWidget.count()):
+            item = self.SavedLogicList__QListWidget.item(i)
             if item.text() == original_name:
                 item.setText(name)
                 break
@@ -164,7 +165,7 @@ class LogicListWidget(QFrame):
                         # 저장된 로직들을 리스트에 추가
                         for logic_name in self.saved_logics:
                             item = QListWidgetItem(logic_name)
-                            self.list_widget.addItem(item)
+                            self.SavedLogicList__QListWidget.addItem(item)
         except Exception as e:
             self.log_message.emit(f"로직 정보를 불러오는 중 오류 발생: {str(e)}")
 
@@ -223,7 +224,7 @@ class LogicListWidget(QFrame):
             
     def _edit_item(self):
         """선택된 로직 불러오기"""
-        current_item = self.list_widget.currentItem()
+        current_item = self.SavedLogicList__QListWidget.currentItem()
         if current_item:
             logic_name = current_item.text()
             if logic_name in self.saved_logics:
@@ -232,12 +233,12 @@ class LogicListWidget(QFrame):
             
     def _delete_item(self):
         """선택된 아이템 삭제"""
-        current_item = self.list_widget.currentItem()
+        current_item = self.SavedLogicList__QListWidget.currentItem()
         if current_item:
             logic_name = current_item.text()
             if logic_name in self.saved_logics:
                 del self.saved_logics[logic_name]
-                self.list_widget.takeItem(self.list_widget.row(current_item))
+                self.SavedLogicList__QListWidget.takeItem(self.SavedLogicList__QListWidget.row(current_item))
                 self.log_message.emit(f"로직 '{logic_name}'이(가) 삭제되었습니다")
                 self.item_deleted.emit(logic_name)
                 self.save_logics_to_settings()  # settings.json에 저장

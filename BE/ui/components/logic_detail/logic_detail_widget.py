@@ -43,149 +43,149 @@ class LogicDetailWidget(QFrame):
         self.setFixedSize(LOGIC_DETAIL_WIDTH, BASIC_SECTION_HEIGHT)
         
         # 메인 레이아웃
-        layout = QVBoxLayout()
-        layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        layout.setContentsMargins(10, 10, 10, 10)
-        layout.setSpacing(10)
+        LogicConfigurationLayout__QVBoxLayout = QVBoxLayout()
+        LogicConfigurationLayout__QVBoxLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        LogicConfigurationLayout__QVBoxLayout.setContentsMargins(10, 10, 10, 10)
+        LogicConfigurationLayout__QVBoxLayout.setSpacing(10)
         
         # 타이틀
-        title = QLabel("로직 구성 영역")
-        title.setFont(QFont(TITLE_FONT_FAMILY, SECTION_FONT_SIZE, QFont.Weight.Bold))
-        layout.addWidget(title)
+        LogicTitleLabel__QLabel = QLabel("로직 구성 영역")
+        LogicTitleLabel__QLabel.setFont(QFont(TITLE_FONT_FAMILY, SECTION_FONT_SIZE, QFont.Weight.Bold))
+        LogicConfigurationLayout__QVBoxLayout.addWidget(LogicTitleLabel__QLabel)
         
         # 로직 이름 레이아웃
-        name_layout = QHBoxLayout()
-        name_layout.setContentsMargins(0, 0, 0, 0)
-        name_layout.setSpacing(5)
+        LogicNameSection__QHBoxLayout = QHBoxLayout()
+        LogicNameSection__QHBoxLayout.setContentsMargins(0, 0, 0, 0)
+        LogicNameSection__QHBoxLayout.setSpacing(5)
         
         # 로직 이름 라벨
-        name_label = QLabel("로직 이름:")
-        name_label.setFixedWidth(70)
-        name_layout.addWidget(name_label)
+        LogicNameLabel__QLabel = QLabel("로직 이름:")
+        LogicNameLabel__QLabel.setFixedWidth(70)
+        LogicNameSection__QHBoxLayout.addWidget(LogicNameLabel__QLabel)
         
         # 로직 이름 입력
-        self.name_input = QLineEdit()
-        self.name_input.setPlaceholderText("로직의 이름을 입력하세요")
-        name_layout.addWidget(self.name_input)
+        self.LogicNameInput__QLineEdit = QLineEdit()
+        self.LogicNameInput__QLineEdit.setPlaceholderText("로직의 이름을 입력하세요")
+        LogicNameSection__QHBoxLayout.addWidget(self.LogicNameInput__QLineEdit)
         
         # 로직 저장 버튼
-        self.save_btn = QPushButton("로직 저장")
-        self.save_btn.setStyleSheet(BUTTON_STYLE)
-        self.save_btn.clicked.connect(self._save_logic_name)
-        name_layout.addWidget(self.save_btn)
+        self.LogicSaveButton__QPushButton = QPushButton("로직 저장")
+        self.LogicSaveButton__QPushButton.setStyleSheet(BUTTON_STYLE)
+        self.LogicSaveButton__QPushButton.clicked.connect(self._save_logic_name)
+        LogicNameSection__QHBoxLayout.addWidget(self.LogicSaveButton__QPushButton)
         
-        layout.addLayout(name_layout)
+        LogicConfigurationLayout__QVBoxLayout.addLayout(LogicNameSection__QHBoxLayout)
         
         # 트리거 키 정보 영역
-        trigger_key_layout = QVBoxLayout()  # 수직 레이아웃으로 변경
-        trigger_key_layout.setContentsMargins(0, 0, 0, 0)
-        trigger_key_layout.setSpacing(5)
+        TriggerKeySection__QVBoxLayout = QVBoxLayout()
+        TriggerKeySection__QVBoxLayout.setContentsMargins(0, 0, 0, 0)
+        TriggerKeySection__QVBoxLayout.setSpacing(5)
         
         # 트리거 키 입력 레이아웃
-        key_input_layout = QHBoxLayout()
-        key_input_layout.setContentsMargins(0, 0, 0, 0)
-        key_input_layout.setSpacing(5)
+        TriggerKeyInputRow__QHBoxLayout = QHBoxLayout()
+        TriggerKeyInputRow__QHBoxLayout.setContentsMargins(0, 0, 0, 0)
+        TriggerKeyInputRow__QHBoxLayout.setSpacing(5)
         
         # 트리거 키 입력 라벨
-        trigger_label = QLabel("트리거 키:")
-        trigger_label.setFixedWidth(70)
-        key_input_layout.addWidget(trigger_label)
+        TriggerKeyLabel__QLabel = QLabel("트리거 키:")
+        TriggerKeyLabel__QLabel.setFixedWidth(70)
+        TriggerKeyInputRow__QHBoxLayout.addWidget(TriggerKeyLabel__QLabel)
         
         # 트리거 키 입력 위젯
-        self.key_input = KeyInputWidget(self, show_details=False)
-        self.key_input.key_input_changed.connect(self._on_key_input_changed)
-        key_input_layout.addWidget(self.key_input)
+        self.TriggerKeyInputWidget__KeyInputWidget = KeyInputWidget(self, show_details=False)
+        self.TriggerKeyInputWidget__KeyInputWidget.key_input_changed.connect(self._on_key_input_changed)
+        TriggerKeyInputRow__QHBoxLayout.addWidget(self.TriggerKeyInputWidget__KeyInputWidget)
         
-        trigger_key_layout.addLayout(key_input_layout)
+        TriggerKeySection__QVBoxLayout.addLayout(TriggerKeyInputRow__QHBoxLayout)
         
         # 트리거 키 정보 라벨
-        self.key_info_label = QLabel()
-        self.key_info_label.setStyleSheet(CONTAINER_STYLE)
-        self.key_info_label.mousePressEvent = self._copy_key_info_to_clipboard
-        trigger_key_layout.addWidget(self.key_info_label)
+        self.TriggerKeyInfoLabel__QLabel = QLabel()
+        self.TriggerKeyInfoLabel__QLabel.setStyleSheet(CONTAINER_STYLE)
+        self.TriggerKeyInfoLabel__QLabel.mousePressEvent = self._copy_key_info_to_clipboard
+        TriggerKeySection__QVBoxLayout.addWidget(self.TriggerKeyInfoLabel__QLabel)
         
-        layout.addLayout(trigger_key_layout)
+        LogicConfigurationLayout__QVBoxLayout.addLayout(TriggerKeySection__QVBoxLayout)
         
         # 기능 선택 레이아웃
-        function_layout = QHBoxLayout()
-        function_layout.setContentsMargins(0, 0, 0, 0)
-        function_layout.setSpacing(5)
+        LogicOptionsSection__QHBoxLayout = QHBoxLayout()
+        LogicOptionsSection__QHBoxLayout.setContentsMargins(0, 0, 0, 0)
+        LogicOptionsSection__QHBoxLayout.setSpacing(5)
         
         # 반복 횟수 입력 레이아웃
-        repeat_layout = QHBoxLayout()
-        repeat_layout.setContentsMargins(0, 0, 0, 0)
-        repeat_layout.setSpacing(5)
+        RepeatCountRow__QHBoxLayout = QHBoxLayout()
+        RepeatCountRow__QHBoxLayout.setContentsMargins(0, 0, 0, 0)
+        RepeatCountRow__QHBoxLayout.setSpacing(5)
         
         # 반복 횟수 입력 필드
-        self.repeat_input = QLineEdit()
-        self.repeat_input.setFixedWidth(70)
-        self.repeat_input.setAlignment(Qt.AlignRight)
+        self.RepeatCountInput__QLineEdit = QLineEdit()
+        self.RepeatCountInput__QLineEdit.setFixedWidth(70)
+        self.RepeatCountInput__QLineEdit.setAlignment(Qt.AlignRight)
         # 숫자만 입력 가능하도록 설정
-        self.repeat_input.setValidator(QIntValidator(1, 9999))
-        self.repeat_input.setText("1")  # 기본값 설정
-        repeat_layout.addWidget(self.repeat_input)
+        self.RepeatCountInput__QLineEdit.setValidator(QIntValidator(1, 9999))
+        self.RepeatCountInput__QLineEdit.setText("1")  # 기본값 설정
+        RepeatCountRow__QHBoxLayout.addWidget(self.RepeatCountInput__QLineEdit)
         
         # 반복 횟수 라벨
-        repeat_label = QLabel("회 반복")
-        repeat_layout.addWidget(repeat_label)
+        RepeatCountLabel__QLabel = QLabel("회 반복")
+        RepeatCountRow__QHBoxLayout.addWidget(RepeatCountLabel__QLabel)
         
-        repeat_layout.addStretch()  # 나머지 공간을 채움
+        RepeatCountRow__QHBoxLayout.addStretch()  # 나머지 공간을 채움
         
-        function_layout.addLayout(repeat_layout)
-        function_layout.addStretch()  # 나머지 공간을 채움
+        LogicOptionsSection__QHBoxLayout.addLayout(RepeatCountRow__QHBoxLayout)
+        LogicOptionsSection__QHBoxLayout.addStretch()  # 나머지 공간을 채움
         
-        layout.addLayout(function_layout)
+        LogicConfigurationLayout__QVBoxLayout.addLayout(LogicOptionsSection__QHBoxLayout)
         
         # 리스트 위젯
-        self.list_widget = QListWidget()
-        self.list_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.list_widget.setStyleSheet(LIST_STYLE)
-        self.list_widget.setSelectionMode(QListWidget.ExtendedSelection)  # 다중 선택 모드 활성화
-        self.list_widget.itemSelectionChanged.connect(self._on_selection_changed)
-        self.list_widget.itemDoubleClicked.connect(self._edit_item)  # 더블클릭 시그널 연결
-        layout.addWidget(self.list_widget)
+        self.LogicItemList__QListWidget = QListWidget()
+        self.LogicItemList__QListWidget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.LogicItemList__QListWidget.setStyleSheet(LIST_STYLE)
+        self.LogicItemList__QListWidget.setSelectionMode(QListWidget.ExtendedSelection)  # 다중 선택 모드 활성화
+        self.LogicItemList__QListWidget.itemSelectionChanged.connect(self._on_selection_changed)
+        self.LogicItemList__QListWidget.itemDoubleClicked.connect(self._edit_item)  # 더블클릭 시그널 연결
+        LogicConfigurationLayout__QVBoxLayout.addWidget(self.LogicItemList__QListWidget)
         
         # 버튼 그룹 레이아웃
-        button_group = QHBoxLayout()
-        button_group.setContentsMargins(0, 0, 0, 0)
-        button_group.setSpacing(5)
+        LogicControlButtonsSection__QHBoxLayout = QHBoxLayout()
+        LogicControlButtonsSection__QHBoxLayout.setContentsMargins(0, 0, 0, 0)
+        LogicControlButtonsSection__QHBoxLayout.setSpacing(5)
         
         # 위로 버튼
-        self.up_btn = QPushButton("위로")
-        self.up_btn.setFixedWidth(LOGIC_BUTTON_WIDTH)
-        self.up_btn.setStyleSheet(BUTTON_STYLE)
-        self.up_btn.setEnabled(False)
-        button_group.addWidget(self.up_btn)
+        self.MoveUpButton__QPushButton = QPushButton("위로")
+        self.MoveUpButton__QPushButton.setFixedWidth(LOGIC_BUTTON_WIDTH)
+        self.MoveUpButton__QPushButton.setStyleSheet(BUTTON_STYLE)
+        self.MoveUpButton__QPushButton.setEnabled(False)
+        LogicControlButtonsSection__QHBoxLayout.addWidget(self.MoveUpButton__QPushButton)
         
         # 아래로 버튼
-        self.down_btn = QPushButton("아래로")
-        self.down_btn.setFixedWidth(LOGIC_BUTTON_WIDTH)
-        self.down_btn.setStyleSheet(BUTTON_STYLE)
-        self.down_btn.setEnabled(False)
-        button_group.addWidget(self.down_btn)
+        self.MoveDownButton__QPushButton = QPushButton("아래로")
+        self.MoveDownButton__QPushButton.setFixedWidth(LOGIC_BUTTON_WIDTH)
+        self.MoveDownButton__QPushButton.setStyleSheet(BUTTON_STYLE)
+        self.MoveDownButton__QPushButton.setEnabled(False)
+        LogicControlButtonsSection__QHBoxLayout.addWidget(self.MoveDownButton__QPushButton)
         
         # 수정 버튼
-        self.edit_btn = QPushButton("항목 수정")
-        self.edit_btn.setFixedWidth(LOGIC_BUTTON_WIDTH)
-        self.edit_btn.setStyleSheet(BUTTON_STYLE)
-        self.edit_btn.setEnabled(False)
-        button_group.addWidget(self.edit_btn)
+        self.EditItemButton__QPushButton = QPushButton("항목 수정")
+        self.EditItemButton__QPushButton.setFixedWidth(LOGIC_BUTTON_WIDTH)
+        self.EditItemButton__QPushButton.setStyleSheet(BUTTON_STYLE)
+        self.EditItemButton__QPushButton.setEnabled(False)
+        LogicControlButtonsSection__QHBoxLayout.addWidget(self.EditItemButton__QPushButton)
         
         # 삭제 버튼
-        self.delete_btn = QPushButton("항목 삭제")
-        self.delete_btn.setFixedWidth(LOGIC_BUTTON_WIDTH)
-        self.delete_btn.setStyleSheet(BUTTON_STYLE)
-        self.delete_btn.setEnabled(False)
-        button_group.addWidget(self.delete_btn)
+        self.DeleteItemButton__QPushButton = QPushButton("항목 삭제")
+        self.DeleteItemButton__QPushButton.setFixedWidth(LOGIC_BUTTON_WIDTH)
+        self.DeleteItemButton__QPushButton.setStyleSheet(BUTTON_STYLE)
+        self.DeleteItemButton__QPushButton.setEnabled(False)
+        LogicControlButtonsSection__QHBoxLayout.addWidget(self.DeleteItemButton__QPushButton)
         
-        layout.addLayout(button_group)
-        self.setLayout(layout)
+        LogicConfigurationLayout__QVBoxLayout.addLayout(LogicControlButtonsSection__QHBoxLayout)
+        self.setLayout(LogicConfigurationLayout__QVBoxLayout)
         
         # 버튼 시그널 연결
-        self.up_btn.clicked.connect(self._move_item_up)
-        self.down_btn.clicked.connect(self._move_item_down)
-        self.edit_btn.clicked.connect(self._edit_item)
-        self.delete_btn.clicked.connect(self._delete_item)
+        self.MoveUpButton__QPushButton.clicked.connect(self._move_item_up)
+        self.MoveDownButton__QPushButton.clicked.connect(self._move_item_down)
+        self.EditItemButton__QPushButton.clicked.connect(self._edit_item)
+        self.DeleteItemButton__QPushButton.clicked.connect(self._delete_item)
         
         # 초기 데이터 로드 (테스트용)
         self._load_test_data()
@@ -196,37 +196,37 @@ class LogicDetailWidget(QFrame):
             
     def _on_selection_changed(self):
         """리스트 아이템 선택이 변경되었을 때의 처리"""
-        selected_items = self.list_widget.selectedItems()
+        selected_items = self.LogicItemList__QListWidget.selectedItems()
         has_selection = len(selected_items) > 0
         
         # 버튼 활성화/비활성화
-        current_row = self.list_widget.currentRow()
-        self.up_btn.setEnabled(has_selection and current_row > 0)
-        self.down_btn.setEnabled(has_selection and current_row < self.list_widget.count() - 1)
-        self.edit_btn.setEnabled(len(selected_items) == 1)  # 수정은 단일 선택만 가능
-        self.delete_btn.setEnabled(has_selection)  # 삭제는 다중 선택 가능
+        current_row = self.LogicItemList__QListWidget.currentRow()
+        self.MoveUpButton__QPushButton.setEnabled(has_selection and current_row > 0)
+        self.MoveDownButton__QPushButton.setEnabled(has_selection and current_row < self.LogicItemList__QListWidget.count() - 1)
+        self.EditItemButton__QPushButton.setEnabled(len(selected_items) == 1)  # 수정은 단일 선택만 가능
+        self.DeleteItemButton__QPushButton.setEnabled(has_selection)  # 삭제는 다중 선택 가능
 
     def _move_item_up(self):
         """선택된 아이템을 위로 이동"""
-        current_row = self.list_widget.currentRow()
+        current_row = self.LogicItemList__QListWidget.currentRow()
         if current_row > 0:
-            item = self.list_widget.takeItem(current_row)
-            self.list_widget.insertItem(current_row - 1, item)
-            self.list_widget.setCurrentItem(item)
+            item = self.LogicItemList__QListWidget.takeItem(current_row)
+            self.LogicItemList__QListWidget.insertItem(current_row - 1, item)
+            self.LogicItemList__QListWidget.setCurrentItem(item)
             self.item_moved.emit()
             
     def _move_item_down(self):
         """선택된 아이템을 아래로 이동"""
-        current_row = self.list_widget.currentRow()
-        if current_row < self.list_widget.count() - 1:
-            item = self.list_widget.takeItem(current_row)
-            self.list_widget.insertItem(current_row + 1, item)
-            self.list_widget.setCurrentItem(item)
+        current_row = self.LogicItemList__QListWidget.currentRow()
+        if current_row < self.LogicItemList__QListWidget.count() - 1:
+            item = self.LogicItemList__QListWidget.takeItem(current_row)
+            self.LogicItemList__QListWidget.insertItem(current_row + 1, item)
+            self.LogicItemList__QListWidget.setCurrentItem(item)
             self.item_moved.emit()
             
     def _edit_item(self):
         """선택된 아이템 수정"""
-        current_item = self.list_widget.currentItem()
+        current_item = self.LogicItemList__QListWidget.currentItem()
         if current_item:
             item_text = current_item.text()
             
@@ -261,37 +261,37 @@ class LogicDetailWidget(QFrame):
             
     def _delete_item(self):
         """선택된 아이템 삭제"""
-        selected_items = self.list_widget.selectedItems()
+        selected_items = self.LogicItemList__QListWidget.selectedItems()
         if selected_items:
             for item in selected_items:
-                row = self.list_widget.row(item)
-                item = self.list_widget.takeItem(row)
+                row = self.LogicItemList__QListWidget.row(item)
+                item = self.LogicItemList__QListWidget.takeItem(row)
                 self.item_deleted.emit(item.text())
             self.log_message.emit(f"{len(selected_items)}개의 항목이 삭제되었습니다")
 
     def clear_all(self):
         """모든 입력과 상태를 초기화"""
-        self.name_input.clear()           # 로직 이름 초기화
-        self.list_widget.clear()          # 목록 초기화
-        self.key_input.clear_key()        # 트리거 키 입력 초기화
-        self.key_info_label.clear()       # 트리거 키 정보 초기화
+        self.LogicNameInput__QLineEdit.clear()           # 로직 이름 초기화
+        self.LogicItemList__QListWidget.clear()          # 목록 초기화
+        self.TriggerKeyInputWidget__KeyInputWidget.clear_key()        # 트리거 키 입력 초기화
+        self.TriggerKeyInfoLabel__QLabel.clear()       # 트리거 키 정보 초기화
         self.trigger_key_info = None      # 트리거 키 정보 초기화
         self.edit_mode = False            # 수정 모드 해제
         self.original_name = None         # 원래 이름 초기화
-        self.repeat_input.setText("1")    # 반복 횟수를 기본값(1)으로 초기화
+        self.RepeatCountInput__QLineEdit.setText("1")    # 반복 횟수를 기본값(1)으로 초기화
 
     def _on_key_input_changed(self, key_info):
         """키 입력이 변경되었을 때"""
         if not key_info:  # 키 정보가 비어있으면 라벨 초기화
-            self.key_info_label.clear()
+            self.TriggerKeyInfoLabel__QLabel.clear()
             return
             
-        self.key_info_label.setText(format_key_info(key_info))
+        self.TriggerKeyInfoLabel__QLabel.setText(format_key_info(key_info))
         self.trigger_key_info = key_info  # 트리거 키 정보 저장
 
     def _save_logic_name(self):
         """로직 이름을 저장"""
-        name = self.name_input.text().strip()
+        name = self.LogicNameInput__QLineEdit.text().strip()
         if not name:
             self.log_message.emit("로직 이름을 입력하세요")
             return
@@ -308,8 +308,8 @@ class LogicDetailWidget(QFrame):
         
         # 아이템 목록 가져오기
         items = []
-        for i in range(self.list_widget.count()):
-            item = self.list_widget.item(i)
+        for i in range(self.LogicItemList__QListWidget.count()):
+            item = self.LogicItemList__QListWidget.item(i)
             item_text = item.text()
             
             # 키 입력 아이템인 경우
@@ -432,7 +432,7 @@ class LogicDetailWidget(QFrame):
             "name": name,
             "items": items,
             "trigger_key": self.trigger_key_info,
-            "repeat_count": int(self.repeat_input.text())  # 반복 횟수 추가
+            "repeat_count": int(self.RepeatCountInput__QLineEdit.text())  # 반복 횟수 추가
         }
         
         # 수정 모드인 경우 업데이트 시그널 발생
@@ -449,15 +449,15 @@ class LogicDetailWidget(QFrame):
     def load_logic(self, logic_info):
         """로직 데이터 로드"""
         self.edit_mode = True
-        self.name_input.setText(logic_info['name'])
+        self.LogicNameInput__QLineEdit.setText(logic_info['name'])
         self.original_name = logic_info['name']  # 원래 이름 저장
         
         # 반복 횟수 설정
         repeat_count = logic_info.get('repeat_count', 1)  # 기본값 1
-        self.repeat_input.setText(str(repeat_count))
+        self.RepeatCountInput__QLineEdit.setText(str(repeat_count))
         
         # 목록 아이템 로드
-        self.list_widget.clear()
+        self.LogicItemList__QListWidget.clear()
         for item in logic_info['items']:
             if isinstance(item, dict):
                 if item['type'] == 'key_input':
@@ -470,19 +470,19 @@ class LogicDetailWidget(QFrame):
                 self.add_item(item)  # 이전 형식 지원
         
         # 첫 번째 아이템 선택
-        if self.list_widget.count() > 0:
-            self.list_widget.setCurrentItem(self.list_widget.item(0))
+        if self.LogicItemList__QListWidget.count() > 0:
+            self.LogicItemList__QListWidget.setCurrentItem(self.LogicItemList__QListWidget.item(0))
             
         # 트리거 키 정보 로드
         if 'trigger_key' in logic_info:
             key_info = logic_info['trigger_key']
             self.trigger_key_info = key_info  # 트리거 키 정보 저장
-            self.key_input.set_key_info(key_info)  # key_input 위젯에 키 정보 설정
-            self.key_info_label.setText(format_key_info(key_info))  # 키 정보 표시
+            self.TriggerKeyInputWidget__KeyInputWidget.set_key_info(key_info)  # key_input 위젯에 키 정보 설정
+            self.TriggerKeyInfoLabel__QLabel.setText(format_key_info(key_info))  # 키 정보 표시
 
     def has_items(self):
         """목록에 아이템이 있는지 확인"""
-        return self.list_widget.count() > 0
+        return self.LogicItemList__QListWidget.count() > 0
 
     def add_item(self, item_text):
         """아이템 추가
@@ -491,18 +491,18 @@ class LogicDetailWidget(QFrame):
             item_text (str): 추가할 아이템의 텍스트
         """
         item = QListWidgetItem(item_text)
-        self.list_widget.addItem(item)
+        self.LogicItemList__QListWidget.addItem(item)
 
     def _copy_key_info_to_clipboard(self, event):
         """트리거 키 정보를 클립보드에 복사"""
-        if self.key_info_label.text():
+        if self.TriggerKeyInfoLabel__QLabel.text():
             clipboard = QGuiApplication.clipboard()
-            clipboard.setText(self.key_info_label.text())
+            clipboard.setText(self.TriggerKeyInfoLabel__QLabel.text())
             self.log_message.emit("트리거 키 정보가 클립보드에 복사되었습니다")
 
     def _copy_item(self):
         """선택된 아이템들을 복사"""
-        selected_items = self.list_widget.selectedItems()
+        selected_items = self.LogicItemList__QListWidget.selectedItems()
         if selected_items:
             self.copied_items = [item.text() for item in selected_items]
             items_count = len(self.copied_items)
@@ -514,23 +514,23 @@ class LogicDetailWidget(QFrame):
             self.log_message.emit("복사된 아이템이 없습니다")
             return
             
-        current_row = self.list_widget.currentRow()
+        current_row = self.LogicItemList__QListWidget.currentRow()
         if current_row == -1:  # 선택된 아이템이 없으면 마지막에 추가
-            current_row = self.list_widget.count() - 1
+            current_row = self.LogicItemList__QListWidget.count() - 1
         
         # 복사된 아이템들을 순서대로 추가
         first_inserted_item = None
         for i, item_text in enumerate(self.copied_items):
             new_item = QListWidgetItem(item_text)
             insert_row = current_row + 1 + i
-            self.list_widget.insertItem(insert_row, new_item)
+            self.LogicItemList__QListWidget.insertItem(insert_row, new_item)
             if i == 0:
                 first_inserted_item = new_item
     
         # 기존 선택 해제 후 첫 번째로 삽입된 아이템만 선택
         if first_inserted_item:
-            self.list_widget.clearSelection()
-            self.list_widget.setCurrentItem(first_inserted_item)
+            self.LogicItemList__QListWidget.clearSelection()
+            self.LogicItemList__QListWidget.setCurrentItem(first_inserted_item)
     
         items_count = len(self.copied_items)
         self.log_message.emit(f"{items_count}개의 아이템이 붙여넣기 되었습니다")

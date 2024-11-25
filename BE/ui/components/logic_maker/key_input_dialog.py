@@ -27,73 +27,73 @@ class KeyInputDialog(QDialog):
         
     def _setup_ui(self):
         """UI 초기화"""
-        layout = QVBoxLayout()
+        KeyInputLayout__QVBoxLayout = QVBoxLayout()
         
         # 안내 메시지
-        guide_label = QLabel("입력하려는 키를 누르세요")
-        guide_label.setAlignment(Qt.AlignCenter)
-        layout.addWidget(guide_label)
+        GuideLabel__QLabel = QLabel("입력하려는 키를 누르세요")
+        GuideLabel__QLabel.setAlignment(Qt.AlignCenter)
+        KeyInputLayout__QVBoxLayout.addWidget(GuideLabel__QLabel)
         
         # NumLock 경고 메시지
-        self.numlock_warning = QLabel()
-        self.numlock_warning.setStyleSheet("color: red;")
-        self.numlock_warning.setAlignment(Qt.AlignCenter)
-        self.numlock_warning.setWordWrap(True)
-        layout.addWidget(self.numlock_warning)
+        self.NumLockWarning__QLabel = QLabel()
+        self.NumLockWarning__QLabel.setStyleSheet("color: red;")
+        self.NumLockWarning__QLabel.setAlignment(Qt.AlignCenter)
+        self.NumLockWarning__QLabel.setWordWrap(True)
+        KeyInputLayout__QVBoxLayout.addWidget(self.NumLockWarning__QLabel)
         
         # 키 입력 위젯
-        self.key_input_widget = KeyInputWidget(self, show_details=True)
-        self.key_input_widget.key_input_changed.connect(self._on_key_input_changed)
-        layout.addWidget(self.key_input_widget)
+        self.KeyInputWidget__KeyInputWidget = KeyInputWidget(self, show_details=True)
+        self.KeyInputWidget__KeyInputWidget.key_input_changed.connect(self._on_key_input_changed)
+        KeyInputLayout__QVBoxLayout.addWidget(self.KeyInputWidget__KeyInputWidget)
         
         # 키 정보 라벨
-        self.key_info_label = QLabel()
-        self.key_info_label.setWordWrap(True)
-        self.key_info_label.mousePressEvent = self._copy_key_info_to_clipboard # 
-        self.key_info_label.setCursor(Qt.PointingHandCursor)  # 마우스 커서를 손가락 모양으로 변경
-        layout.addWidget(self.key_info_label)
+        self.KeyInfoLabel__QLabel = QLabel()
+        self.KeyInfoLabel__QLabel.setWordWrap(True)
+        self.KeyInfoLabel__QLabel.mousePressEvent = self._copy_key_info_to_clipboard # 
+        self.KeyInfoLabel__QLabel.setCursor(Qt.PointingHandCursor)  # 마우스 커서를 손가락 모양으로 변경
+        KeyInputLayout__QVBoxLayout.addWidget(self.KeyInfoLabel__QLabel)
         
         # 버튼 레이아웃
-        button_layout = QHBoxLayout()
+        KeyInputButtonSection__QHBoxLayout = QHBoxLayout()
         
         # 확인 버튼
-        confirm_button = QPushButton("키 입력 저장")
-        confirm_button.clicked.connect(self._on_confirm)
-        button_layout.addWidget(confirm_button)
+        self.ConfirmButton__QPushButton = QPushButton("키 입력 저장")
+        self.ConfirmButton__QPushButton.clicked.connect(self._on_confirm)
+        KeyInputButtonSection__QHBoxLayout.addWidget(self.ConfirmButton__QPushButton)
         
         # 취소 버튼
-        cancel_button = QPushButton("키 입력 취소")
-        cancel_button.clicked.connect(self.reject)
-        button_layout.addWidget(cancel_button)
+        self.CancelButton__QPushButton = QPushButton("키 입력 취소")
+        self.CancelButton__QPushButton.clicked.connect(self.reject)
+        KeyInputButtonSection__QHBoxLayout.addWidget(self.CancelButton__QPushButton)
         
-        layout.addLayout(button_layout)
-        self.setLayout(layout)
+        KeyInputLayout__QVBoxLayout.addLayout(KeyInputButtonSection__QHBoxLayout)
+        self.setLayout(KeyInputLayout__QVBoxLayout)
         
     def _on_key_input_changed(self, key_info):
         """키 입력이 변경되었을 때"""
         # NumLock 키 경고 처리
         if key_info.get('virtual_key') == 0x90:  # VK_NUMLOCK
-            self.numlock_warning.setText("NumLock 키는 트리거 키로 사용할 수 없습니다.")
+            self.NumLockWarning__QLabel.setText("NumLock 키는 트리거 키로 사용할 수 없습니다.")
         else:
-            self.numlock_warning.setText("")
-        self.key_info_label.setText(format_key_info(key_info))
+            self.NumLockWarning__QLabel.setText("")
+        self.KeyInfoLabel__QLabel.setText(format_key_info(key_info))
             
     def _on_confirm(self):
         """확인 버튼 클릭 시"""
-        key_info = self.key_input_widget.get_key_info()
+        key_info = self.KeyInputWidget__KeyInputWidget.get_key_info()
         if key_info:
             self.key_selected.emit(key_info)
             self.accept()
             
     def get_key_info(self):
         """현재 입력된 키 정보 반환"""
-        return self.key_input_widget.get_key_info()
+        return self.KeyInputWidget__KeyInputWidget.get_key_info()
         
     def _copy_key_info_to_clipboard(self, event):
         """키 정보를 클립보드에 복사"""
-        if self.key_info_label.text():
+        if self.KeyInfoLabel__QLabel.text():
             clipboard = QGuiApplication.clipboard()
-            clipboard.setText(self.key_info_label.text())
+            clipboard.setText(self.KeyInfoLabel__QLabel.text())
 
     def keyPressEvent(self, event: QKeyEvent):
         """키 이벤트 처리"""
