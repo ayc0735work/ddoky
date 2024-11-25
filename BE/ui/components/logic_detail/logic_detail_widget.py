@@ -461,6 +461,11 @@ class LogicDetailWidget(QFrame):
 
     def load_logic(self, logic_info):
         """로직 데이터 로드"""
+        # None이 전달되면 초기화
+        if logic_info is None:
+            self.clear_all()
+            return
+            
         self.edit_mode = True
         self.LogicNameInput__QLineEdit.setText(logic_info['name'])
         self.original_name = logic_info['name']  # 원래 이름 저장

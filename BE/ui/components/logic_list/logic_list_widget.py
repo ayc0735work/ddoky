@@ -100,23 +100,93 @@ class LogicListWidget(QFrame):
         if has_selection and len(selected_items) == 1:
             self.logic_selected.emit(selected_items[0].text())
             
+    def _check_editing_logic(self, current_item):
+        """현재 수정 중인 로직인지 확인하고 경고 메시지 표시
+        
+        Returns:
+            bool: 이동을 계속할지 여부
+        """
+        # 현재 선택된 로직이 수정 중인지 확인
+        if self.LoadLogicButton__QPushButton.isEnabled():
+            dialog = QMessageBox(self)
+            dialog.setWindowTitle("경고")
+            dialog.setText("현재 수정 중인 로직의 순서를 변경하려고 합니다.\n"
+                         "계속 진행하면 수정 중인 내용이 모두 초기화됩니다.\n"
+                         "계속하시겠습니까?")
+            dialog.setIcon(QMessageBox.Warning)
+            yes_button = dialog.addButton("예", QMessageBox.YesRole)
+            no_button = dialog.addButton("아니오", QMessageBox.NoRole)
+            dialog.setDefaultButton(no_button)
+            
+            dialog.exec()
+            if dialog.clickedButton() == yes_button:
+                # 로직 구성 영역 초기화 시그널 발생
+                self.edit_logic.emit(None)
+                return True
+            return False
+        return True
+            
     def _move_item_up(self):
-        """현재 선택된 아이템을 위로 이동"""
+        """선택된 아이템을 위로 이동"""
         current_row = self.SavedLogicList__QListWidget.currentRow()
-        if current_row > 0:
-            current_item = self.SavedLogicList__QListWidget.takeItem(current_row)
-            self.SavedLogicList__QListWidget.insertItem(current_row - 1, current_item)
-            self.SavedLogicList__QListWidget.setCurrentItem(current_item)
-            self.item_moved.emit()
+        if current_row <= 0:
+            return
+
+        # 현재 로직이 편집 중인지 확인
+        if self._check_editing_logic(self.SavedLogicList__QListWidget.currentItem()):
+            reply = QMessageBox.warning(
+                self,
+                "경고",
+                "현재 로직이 편집 중입니다. 변경사항이 저장되지 않습니다.\n계속하시겠습니까?",
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No
+            )
+            if reply == QMessageBox.No:
+                return
+            # 초기화 시그널 발생
+            self.logic_selected.emit(None)
+
+        # 아이템 이동
+        item = self.SavedLogicList__QListWidget.takeItem(current_row)
+        self.SavedLogicList__QListWidget.insertItem(current_row - 1, item)
+        self.SavedLogicList__QListWidget.setCurrentRow(current_row - 1)
+        
+        # 아이템 이동 시그널 발생
+        self.item_moved.emit()
+        
+        # 변경사항 즉시 저장
+        self.save_logics_to_settings()  # 순서 변경 즉시 저장
             
     def _move_item_down(self):
-        """현재 선택된 아이템을 아래로 이동"""
+        """선택된 아이템을 아래로 이동"""
         current_row = self.SavedLogicList__QListWidget.currentRow()
-        if current_row < self.SavedLogicList__QListWidget.count() - 1:
-            current_item = self.SavedLogicList__QListWidget.takeItem(current_row)
-            self.SavedLogicList__QListWidget.insertItem(current_row + 1, current_item)
-            self.SavedLogicList__QListWidget.setCurrentItem(current_item)
-            self.item_moved.emit()
+        if current_row < 0 or current_row >= self.SavedLogicList__QListWidget.count() - 1:
+            return
+
+        # 현재 로직이 편집 중인지 확인
+        if self._check_editing_logic(self.SavedLogicList__QListWidget.currentItem()):
+            reply = QMessageBox.warning(
+                self,
+                "경고",
+                "현재 로직이 편집 중입니다. 변경사항이 저장되지 않습니다.\n계속하시겠습니까?",
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No
+            )
+            if reply == QMessageBox.No:
+                return
+            # 초기화 시그널 발생
+            self.logic_selected.emit(None)
+
+        # 아이템 이동
+        item = self.SavedLogicList__QListWidget.takeItem(current_row)
+        self.SavedLogicList__QListWidget.insertItem(current_row + 1, item)
+        self.SavedLogicList__QListWidget.setCurrentRow(current_row + 1)
+        
+        # 아이템 이동 시그널 발생
+        self.item_moved.emit()
+        
+        # 변경사항 즉시 저장
+        self.save_logics_to_settings()  # 순서 변경 즉시 저장
             
     def on_logic_saved(self, logic_info):
         """로직이 저장되었을 때 호출되는 메서드"""
