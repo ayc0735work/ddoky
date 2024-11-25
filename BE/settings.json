@@ -99,8 +99,8 @@
                     "virtual_key": 160
                 },
                 {
-                    "display_text": "지연시간 : 0.013초",
-                    "duration": 0.013,
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
                     "type": "delay"
                 },
                 {
@@ -113,8 +113,8 @@
                     "virtual_key": 90
                 },
                 {
-                    "display_text": "지연시간 : 0.013초",
-                    "duration": 0.013,
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
                     "type": "delay"
                 },
                 {
@@ -127,8 +127,8 @@
                     "virtual_key": 90
                 },
                 {
-                    "display_text": "지연시간 : 0.013초",
-                    "duration": 0.013,
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
                     "type": "delay"
                 },
                 {
@@ -141,8 +141,8 @@
                     "virtual_key": 160
                 },
                 {
-                    "display_text": "지연시간 : 0.013초",
-                    "duration": 0.013,
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
                     "type": "delay"
                 },
                 {
@@ -155,8 +155,8 @@
                     "virtual_key": 71
                 },
                 {
-                    "display_text": "지연시간 : 0.013초",
-                    "duration": 0.013,
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
                     "type": "delay"
                 },
                 {
@@ -169,8 +169,8 @@
                     "virtual_key": 71
                 },
                 {
-                    "display_text": "지연시간 : 0.013초",
-                    "duration": 0.013,
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
                     "type": "delay"
                 },
                 {
@@ -183,8 +183,8 @@
                     "virtual_key": 36
                 },
                 {
-                    "display_text": "지연시간 : 0.013초",
-                    "duration": 0.013,
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
                     "type": "delay"
                 },
                 {
@@ -197,8 +197,8 @@
                     "virtual_key": 36
                 },
                 {
-                    "display_text": "지연시간 : 0.013초",
-                    "duration": 0.013,
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
                     "type": "delay"
                 },
                 {
@@ -211,8 +211,8 @@
                     "virtual_key": 13
                 },
                 {
-                    "display_text": "지연시간 : 0.013초",
-                    "duration": 0.013,
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
                     "type": "delay"
                 },
                 {
@@ -225,8 +225,8 @@
                     "virtual_key": 13
                 },
                 {
-                    "display_text": "지연시간 : 0.013초",
-                    "duration": 0.013,
+                    "display_text": "지연시간 : 0.040초",
+                    "duration": 0.04,
                     "type": "delay"
                 }
             ],

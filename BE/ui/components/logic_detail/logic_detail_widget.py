@@ -516,13 +516,21 @@ class LogicDetailWidget(QFrame):
         current_row = self.list_widget.currentRow()
         if current_row == -1:  # 선택된 아이템이 없으면 마지막에 추가
             current_row = self.list_widget.count() - 1
-            
+        
         # 복사된 아이템들을 순서대로 추가
+        first_inserted_item = None
         for i, item_text in enumerate(self.copied_items):
             new_item = QListWidgetItem(item_text)
             insert_row = current_row + 1 + i
             self.list_widget.insertItem(insert_row, new_item)
-        
+            if i == 0:
+                first_inserted_item = new_item
+    
+        # 기존 선택 해제 후 첫 번째로 삽입된 아이템만 선택
+        if first_inserted_item:
+            self.list_widget.clearSelection()
+            self.list_widget.setCurrentItem(first_inserted_item)
+    
         items_count = len(self.copied_items)
         self.log_message.emit(f"{items_count}개의 아이템이 붙여넣기 되었습니다")
 
