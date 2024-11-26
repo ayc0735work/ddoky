@@ -1,7 +1,6 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
                              QPushButton, QLabel, QListWidget, QListWidgetItem,
-                             QSizePolicy, QLineEdit, QInputDialog, QMessageBox, QSpinBox,
-                             QCheckBox)
+                             QSizePolicy, QLineEdit, QInputDialog, QMessageBox, QSpinBox)
 from PySide6.QtCore import Qt, Signal, QObject, QEvent
 from PySide6.QtGui import QFont, QGuiApplication, QIntValidator
 from datetime import datetime
@@ -27,7 +26,6 @@ class LogicDetailWidget(QFrame):
     log_message = Signal(str)
     logic_saved = Signal(dict)
     logic_updated = Signal(str, dict)
-    logic_stopped = Signal()  # 로직 중지 시그널
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -55,19 +53,13 @@ class LogicDetailWidget(QFrame):
         LogicConfigurationLayout__QVBoxLayout.setContentsMargins(10, 10, 10, 10)
         LogicConfigurationLayout__QVBoxLayout.setSpacing(10)
         
-        # 타이틀과 체크박스 레이아웃
+        # 타이틀 레이아웃
         TitleRow__QHBoxLayout = QHBoxLayout()
         
         # 타이틀
         LogicTitleLabel__QLabel = QLabel("로직 구성 영역")
         LogicTitleLabel__QLabel.setFont(QFont(TITLE_FONT_FAMILY, SECTION_FONT_SIZE, QFont.Weight.Bold))
         TitleRow__QHBoxLayout.addWidget(LogicTitleLabel__QLabel)
-        
-        # 로직 실행 체크박스
-        self.LogicEnabledCheckBox__QCheckBox = QCheckBox("로직 동작")
-        self.LogicEnabledCheckBox__QCheckBox.setChecked(True)
-        self.LogicEnabledCheckBox__QCheckBox.stateChanged.connect(self._on_logic_enabled_changed)
-        TitleRow__QHBoxLayout.addWidget(self.LogicEnabledCheckBox__QCheckBox)
         
         TitleRow__QHBoxLayout.addStretch()
         LogicConfigurationLayout__QVBoxLayout.addLayout(TitleRow__QHBoxLayout)
@@ -828,29 +820,9 @@ class LogicDetailWidget(QFrame):
         
     def _create_new_logic(self):
         """새 로직 버튼 클릭 시 호출되는 메서드"""
-        # 입력 중인 데이터가 있는지 확인
-        if (self.LogicNameInput__QLineEdit.text().strip() or
-            self.trigger_key_info or
-            self.LogicItemList__QListWidget.count() > 0 or
-            self.RepeatCountInput__QSpinBox.value() != 1):
-            
-            # 확인 메시지 박스 표시
-            reply = QMessageBox.question(
-                self,
-                "새 로직",
-                "입력 중인 데이터가 모두 지워집니다.\n계속하시겠습니까?",
-                QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.No
-            )
-            
-            if reply == QMessageBox.Yes:
-                self.clear_all()
-                self.NewLogicButton__QPushButton.setEnabled(False)
-        else:
-            # 입력 중인 데이터가 없으면 바로 초기화
-            self.clear_all()
-            self.NewLogicButton__QPushButton.setEnabled(False)
-
+        self.clear_all()
+        self.log_message.emit("새 로직을 만듭니다")
+        
     def _edit_item(self):
         """선택된 아이템 수정"""
         current_item = self.LogicItemList__QListWidget.currentItem()
@@ -943,9 +915,3 @@ class LogicDetailWidget(QFrame):
                 item_data['order'] = i + 1
                 item.setData(Qt.UserRole, item_data)
             self.log_message.emit(f"{len(selected_items)}개의 항목이 삭제되었습니다")
-
-    def _on_logic_enabled_changed(self, state):
-        """로직 실행 체크박스 상태가 변경되었을 때 호출"""
-        if not state:  # 체크가 해제되었을 때
-            self.log_message.emit("로직 실행이 비활성화되었습니다. 모든 실행 중인 로직을 중지합니다.")
-            self.logic_stopped.emit()  # 로직 중지 시그널 발생

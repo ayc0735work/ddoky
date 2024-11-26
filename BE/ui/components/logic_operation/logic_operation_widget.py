@@ -19,6 +19,7 @@ class LogicOperationWidget(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.selected_process = None
+        self.logic_executor = None  # LogicExecutor 인스턴스를 저장할 속성 추가
         self._init_ui()
         self._connect_signals()
         

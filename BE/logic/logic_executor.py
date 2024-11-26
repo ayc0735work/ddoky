@@ -288,10 +288,10 @@ class LogicExecutor(QObject):
     def stop_all_logic(self):
         """모든 실행 중인 로직을 강제로 중지"""
         if self.is_executing:
-            self.log_message.emit("모든 실행 중인 로직을 중지합니다.")
+            self.log_message.emit("모든 실행 중인 로직을 강제로 중지합니다")
             self.is_executing = False
             self.selected_logic = None
             self.current_step_index = 0
             self.current_repeat = 1
             self.execution_stack.clear()  # 실행 스택 초기화
-            self.start_monitoring()  # 모니터링 재시작
+            self.start_monitoring()  # 키 모니터링 재시작

@@ -28,6 +28,9 @@ class LogicOperationController(QObject):
         if checked:
             self.widget.log_message.emit("프로세스에서 로직 동작을 시작합니다")
         else:
+            # LogicExecutor의 인스턴스를 사용하여 모든 로직 중지
+            if self.widget.logic_executor:
+                self.widget.logic_executor.stop_all_logic()
             self.widget.log_message.emit("프로세스에서 로직 동작을 종료합니다")
         
     def _handle_process_reset(self):
