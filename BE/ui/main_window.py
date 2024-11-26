@@ -162,6 +162,7 @@ class MainWindow(QMainWindow):
         # 로직 리스트와 상세 정보 연결
         self.logic_list_widget.logic_selected.connect(self.logic_detail_controller.on_logic_selected)
         self.logic_list_widget.edit_logic.connect(self._handle_edit_logic)
+        self.logic_list_widget.item_deleted.connect(self._on_logic_deleted)
         
         # 로직 저장/수정 시그널 연결
         self.logic_detail_widget.logic_saved.connect(self.logic_list_widget.on_logic_saved)
@@ -291,6 +292,15 @@ class MainWindow(QMainWindow):
         self.logic_manager.load_logic(logic_info['name'])
         # 로직 메이커의 저장된 로직 목록 업데이트
         self.logic_maker_widget.update_saved_logics(self.logic_list_widget.saved_logics)
+
+    def _on_logic_deleted(self, logic_name):
+        """로직이 삭제되었을 때 호출"""
+        # 로직 매니저에서 로직 제거
+        self.logic_manager.remove_logic(logic_name)
+        # 로직 메이커의 저장된 로직 목록 업데이트
+        self.logic_maker_widget.update_saved_logics(self.logic_list_widget.saved_logics)
+        # 로직 구성 영역 초기화
+        self.logic_detail_widget.clear_all()
 
     def _on_process_selected(self, process_info):
         """프로세스가 선택되었을 때 호출"""

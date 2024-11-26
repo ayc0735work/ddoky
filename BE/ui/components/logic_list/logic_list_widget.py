@@ -184,6 +184,16 @@ class LogicListWidget(QFrame):
             
             # order 값을 현재 리스트의 마지막 순서 + 1로 설정
             current_count = self.SavedLogicList__QListWidget.count()
+            
+            # 원본 로직의 아이템 정보가 있다면 복사
+            original_logic_name = logic_info.get('name')
+            if original_logic_name:
+                for saved_logic_id, saved_logic in self.saved_logics.items():
+                    if saved_logic.get('name') == original_logic_name:
+                        # 기존 로직의 아이템 정보를 복사
+                        logic_info['items'] = saved_logic.get('items', [])
+                        break
+            
             logic_info['order'] = current_count + 1
             
             # settings_manager를 통해 로직 저장
@@ -274,6 +284,10 @@ class LogicListWidget(QFrame):
             
             # 모든 로직이 성공적으로 저장되면 saved_logics 업데이트
             self.saved_logics = updated_logics
+            
+            # settings_manager의 settings도 업데이트
+            self.settings_manager.settings['logics'] = updated_logics
+            self.settings_manager._save_settings()
             
             self.log_message.emit("로직이 성공적으로 저장되었습니다.")
             
@@ -373,6 +387,9 @@ class LogicListWidget(QFrame):
             if reply == QMessageBox.Yes:
                 # 로직 삭제
                 del self.saved_logics[logic_id]
+                # settings에서도 로직 삭제
+                if logic_id in self.settings_manager.settings.get('logics', {}):
+                    del self.settings_manager.settings['logics'][logic_id]
                 # 리스트에서 아이템 제거
                 self.SavedLogicList__QListWidget.takeItem(self.SavedLogicList__QListWidget.row(current_item))
                 self.save_logics_to_settings()

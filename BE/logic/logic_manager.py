@@ -71,15 +71,12 @@ class LogicManager(QObject):
             print(f"로직 로드 중 오류 발생: {e}")
             return {}
     
-    def get_all_logics(self):
-        """모든 로직 반환
+    def remove_logic(self, logic_name):
+        """로직을 제거합니다.
         
-        Returns:
-            dict: 모든 로직 정보
+        Args:
+            logic_name (str): 제거할 로직의 이름
         """
-        try:
-            settings = self.settings_manager._load_settings()
-            return settings.get('logics', {})
-        except Exception as e:
-            print(f"로직 로드 중 오류 발생: {e}")
-            return {}
+        if self.current_logic_name == logic_name:
+            self.current_logic = None
+            self.current_logic_name = None

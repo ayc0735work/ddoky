@@ -73,8 +73,18 @@ class SettingsManager:
                 f.flush()  # 버퍼 내용을 즉시 디스크에 쓰기
                 os.fsync(f.fileno())  # 파일 디스크립터를 동기화
                 
+            # 파일이 제대로 저장되었는지 확인
+            with open(self.settings_file, 'r', encoding='utf-8') as f:
+                saved_settings = json.load(f)
+                if saved_settings != self.settings:
+                    print("설정 파일이 제대로 저장되지 않았습니다.")
+                    return False
+                
+            return True
+                
         except Exception as e:
             print(f"설정 저장 중 오류 발생: {str(e)}")
+            return False
     
     def _get_default_settings(self):
         """기본 설정값 반환"""

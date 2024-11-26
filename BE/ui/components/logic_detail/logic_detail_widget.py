@@ -236,10 +236,26 @@ class LogicDetailWidget(QFrame):
             item_text (str): 추가할 아이템의 텍스트
         """
         item = QListWidgetItem(item_text)
-        # 현재 아이템 수 + 1을 order 값으로 설정
-        order = self.LogicItemList__QListWidget.count() + 1
-        item.setData(Qt.UserRole, {'order': order, 'content': item_text})
-        self.LogicItemList__QListWidget.addItem(item)
+        current_row = self.LogicItemList__QListWidget.currentRow()
+        
+        # 선택된 아이템이 없거나 마지막 아이템인 경우 마지막에 추가
+        if current_row < 0:
+            insert_position = self.LogicItemList__QListWidget.count()
+        else:
+            insert_position = current_row + 1
+            
+        # order 값 업데이트
+        for i in range(insert_position, self.LogicItemList__QListWidget.count()):
+            existing_item = self.LogicItemList__QListWidget.item(i)
+            if existing_item:
+                existing_data = existing_item.data(Qt.UserRole) or {}
+                existing_data['order'] = i + 2  # 새 아이템이 들어갈 자리 이후의 아이템들의 order 증가
+                existing_item.setData(Qt.UserRole, existing_data)
+        
+        # 새 아이템의 order 설정
+        item.setData(Qt.UserRole, {'order': insert_position + 1, 'content': item_text})
+        self.LogicItemList__QListWidget.insertItem(insert_position, item)
+        self.LogicItemList__QListWidget.setCurrentItem(item)
 
     def _move_item_up(self):
         """현재 선택된 아이템을 위로 이동"""
@@ -446,33 +462,8 @@ class LogicDetailWidget(QFrame):
                 self.log_message.emit("오류: 로직에 아이템을 추가해주세요.")
                 return False
 
-            # 아이템 목록 가져오기 (순서 정보 포함)
-            items = []
-            for i in range(self.LogicItemList__QListWidget.count()):
-                item = self.LogicItemList__QListWidget.item(i)
-                if item:
-                    item_data = item.data(Qt.UserRole) or {}
-                    
-                    # 키 입력 아이템인 경우
-                    if item_data.get('type') == 'key_input':
-                        items.append({
-                            'action': item_data.get('action', ''),
-                            'display_text': item_data.get('display_text', ''),
-                            'key_code': item_data.get('key_code', ''),
-                            'modifiers': item_data.get('modifiers', 0),
-                            'order': i + 1,
-                            'scan_code': item_data.get('scan_code', 0),
-                            'type': 'key_input',
-                            'virtual_key': item_data.get('virtual_key', 0)
-                        })
-                    # 딜레이 아이템인 경우
-                    elif item_data.get('type') == 'delay':
-                        items.append({
-                            'display_text': item_data.get('display_text', ''),
-                            'duration': item_data.get('duration', 0),
-                            'order': i + 1,
-                            'type': 'delay'
-                        })
+            # get_items 메서드를 사용하여 아이템 정보 가져오기
+            items = self.get_items()
 
             # 현재 로직 정보 구성 (필드 순서 지정)
             logic_info = {
@@ -567,8 +558,8 @@ class LogicDetailWidget(QFrame):
             if "키 입력:" in content:
                 # 키 입력 아이템으로 변환
                 parts = content.split(" --- ")
-                key_part = parts[0].replace("키 입력: ", "")
-                action = parts[1]
+                key_part = parts[0].replace("키 입력: ", "").strip()
+                action = parts[1]  # "누르기" 또는 "떼기"
                 
                 # Shift 키가 있는지 확인
                 if "Shift+" in key_part:
@@ -650,25 +641,35 @@ class LogicDetailWidget(QFrame):
             return
             
         current_row = self.LogicItemList__QListWidget.currentRow()
-        if current_row == -1:  # 선택된 아이템이 없으면 마지막에 추가
-            current_row = self.LogicItemList__QListWidget.count() - 1
-        
-        # 복사된 아이템들을 순서대로 추가
-        first_inserted_item = None
-        for i, item_text in enumerate(self.copied_items):
-            new_item = QListWidgetItem(item_text)
-            insert_row = current_row + 1 + i
-            self.LogicItemList__QListWidget.insertItem(insert_row, new_item)
-            if i == 0:
-                first_inserted_item = new_item
-    
-        # 기존 선택 해제 후 첫 번째로 삽입된 아이템만 선택
-        if first_inserted_item:
-            self.LogicItemList__QListWidget.clearSelection()
-            self.LogicItemList__QListWidget.setCurrentItem(first_inserted_item)
-    
+        if current_row < 0:
+            insert_position = self.LogicItemList__QListWidget.count()
+        else:
+            insert_position = current_row + 1
+            
+        # 복사된 아이템들을 선택된 아이템 바로 다음에 순서대로 추가
+        for idx, item_text in enumerate(self.copied_items):
+            item = QListWidgetItem(item_text)
+            current_insert_position = insert_position + idx
+            
+            # 뒤의 아이템들의 order 업데이트
+            for i in range(current_insert_position, self.LogicItemList__QListWidget.count()):
+                existing_item = self.LogicItemList__QListWidget.item(i)
+                if existing_item:
+                    existing_data = existing_item.data(Qt.UserRole) or {}
+                    existing_data['order'] = i + 2  # 새 아이템이 들어갈 자리 이후의 아이템들의 order 증가
+                    existing_item.setData(Qt.UserRole, existing_data)
+            
+            # 새 아이템의 order 설정
+            item.setData(Qt.UserRole, {'order': current_insert_position + 1, 'content': item_text})
+            self.LogicItemList__QListWidget.insertItem(current_insert_position, item)
+            
+        # 마지막으로 붙여넣은 아이템 선택
+        last_inserted_item = self.LogicItemList__QListWidget.item(insert_position + len(self.copied_items) - 1)
+        if last_inserted_item:
+            self.LogicItemList__QListWidget.setCurrentItem(last_inserted_item)
+            
         items_count = len(self.copied_items)
-        self.log_message.emit(f"{items_count}개의 아이템이 붙여넣기 되었습니다")
+        self.log_message.emit(f"{items_count}개의 아이템이 붙여넣기되었습니다")
 
     def eventFilter(self, obj, event):
         """이벤트 필터"""
