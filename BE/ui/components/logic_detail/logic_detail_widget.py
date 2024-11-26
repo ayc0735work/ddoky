@@ -491,6 +491,8 @@ class LogicDetailWidget(QFrame):
                 self.logic_saved.emit(logic_info)
                 self.log_message.emit(f"새 로직 '{name}'이(가) 저장되었습니다.")
 
+            # 저장 후 입력 초기화
+            self.clear_all()
             return True
 
         except Exception as e:

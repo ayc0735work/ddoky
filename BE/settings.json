@@ -14,7 +14,7 @@
             "name": "체력 회복",
             "order": 1,
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-11-26T10:56:09.239649",
+            "updated_at": "2024-11-26T11:01:04.056647",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 /",
@@ -183,6 +183,42 @@
                     "display_text": "지연시간 : 0.055초",
                     "duration": 0.055,
                     "order": 20
+                }
+            ]
+        },
+        "2a3e7194-0e1b-45fa-ac4c-dcb81f816862": {
+            "name": "111",
+            "order": 2,
+            "created_at": "2024-11-26T10:58:29.227835",
+            "updated_at": "2024-11-26T11:01:04.060668",
+            "trigger_key": {
+                "display_text": "",
+                "key_code": "1",
+                "modifiers": 0,
+                "scan_code": 2,
+                "virtual_key": 49
+            },
+            "repeat_count": 1,
+            "items": [
+                {
+                    "order": 1,
+                    "display_text": "키 입력: A --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "A",
+                    "scan_code": 30,
+                    "virtual_key": 65,
+                    "modifiers": 0
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: A --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "A",
+                    "scan_code": 30,
+                    "virtual_key": 65,
+                    "modifiers": 0
                 }
             ]
         }
