@@ -27,6 +27,8 @@ class LogicExecutor(QObject):
         self.selected_logic = None
         self.is_executing = False
         self.current_step_index = 0
+        self.execution_stack = []  # 실행 중인 로직 스택
+        self.MAX_EXECUTION_DEPTH = 5  # 최대 중첩 깊이
     
     def start_monitoring(self):
         """트리거 키 모니터링 시작"""
@@ -169,13 +171,19 @@ class LogicExecutor(QObject):
                 self._execute_next_step()
                 return
             
-            # 모든 반복이 완료되었을 때
-            self.log_message.emit(f"로직 '{self.selected_logic['name']}' 실행 완료 (총 {repeat_count}회 반복)")
-            self.is_executing = False
-            self.selected_logic = None
-            self.current_step_index = 0
-            self.current_repeat = 1  # 반복 횟수 초기화
-            self.start_monitoring()  # 로직 실행이 완료되면 키 입력 감지를 다시 시작
+            # 현재 로직 완료, 이전 로직으로 복원
+            if self.execution_stack:
+                self.log_message.emit(f"중첩 로직 '{self.selected_logic.get('name')}' 실행 완료")
+                self._restore_execution_state()
+                self._execute_next_step()
+            else:
+                # 모든 로직 실행 완료
+                self.log_message.emit(f"로직 '{self.selected_logic.get('name')}' 실행 완료")
+                self.is_executing = False
+                self.selected_logic = None
+                self.current_step_index = 0
+                self.current_repeat = 1
+                self.start_monitoring()
             return
             
         # 현재 스텝 실행
@@ -215,9 +223,49 @@ class LogicExecutor(QObject):
             self.log_message.emit(f"지연 시간 실행: {duration}초")
             time.sleep(duration)
             
+        elif step['type'] == 'logic':
+            # 중첩 로직 실행
+            if len(self.execution_stack) >= self.MAX_EXECUTION_DEPTH:
+                self.log_message.emit("최대 중첩 깊이에 도달했습니다.")
+                return
+                
+            logic_id = step.get('logic_id')
+            if not logic_id:
+                self.log_message.emit("로직 ID가 지정되지 않았습니다.")
+                return
+                
+            # 현재 실행 상태 저장
+            self.execution_stack.append({
+                'logic': self.selected_logic,
+                'step_index': self.current_step_index,
+                'repeat': getattr(self, 'current_repeat', 1)
+            })
+            
+            # 중첩 로직 실행
+            nested_logic = self.logic_manager.get_all_logics().get(logic_id)
+            if nested_logic:
+                self.selected_logic = nested_logic
+                self.current_step_index = 0
+                self.current_repeat = 1
+                repeat_count = step.get('repeat_count', 1)
+                self.log_message.emit(f"중첩 로직 '{nested_logic.get('name')}' 실행 시작 (총 {repeat_count}회 반복)")
+                self._execute_next_step()
+            else:
+                self.log_message.emit(f"로직 ID '{logic_id}'를 찾을 수 없습니다.")
+                # 이전 상태로 복원
+                self._restore_execution_state()
+        
         # 다음 스텝 실행
         self._execute_next_step()
-            
+
+    def _restore_execution_state(self):
+        """실행 상태 복원"""
+        if self.execution_stack:
+            state = self.execution_stack.pop()
+            self.selected_logic = state['logic']
+            self.current_step_index = state['step_index']
+            self.current_repeat = state['repeat']
+
     def _is_trigger_key_matched(self, logic, key_info):
         """트리거 키 매칭 확인"""
         trigger_key = logic.get('trigger_key', {})

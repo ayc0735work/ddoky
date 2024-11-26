@@ -46,6 +46,8 @@ class SettingsManager:
                             elif item['type'] == 'key_input':
                                 # 키 입력 아이템의 경우
                                 ordered_item = self._create_ordered_key_input_item(item)
+                            elif item['type'] == 'logic':
+                                ordered_item = self._create_ordered_logic_item(item)
                         else:
                             # 이전 형식의 아이템의 경우
                             ordered_item = {
@@ -56,8 +58,8 @@ class SettingsManager:
 
                     # 필드 순서 정렬
                     ordered_logic = {
-                        'name': logic_data.get('name', ''),
                         'order': logic_data.get('order', 0),
+                        'name': logic_data.get('name', ''),
                         'created_at': logic_data.get('created_at', ''),
                         'updated_at': logic_data.get('updated_at', ''),
                         'trigger_key': logic_data.get('trigger_key', {}),
@@ -182,6 +184,17 @@ class SettingsManager:
             'order': item.get('order', 0)
         }
 
+    def _create_ordered_logic_item(self, item):
+        """로직 타입 아이템 생성"""
+        return {
+            'order': item.get('order', 0),
+            'type': 'logic',
+            'display_text': f"{item.get('logic_name', '')}",
+            'logic_id': item.get('logic_id', ''),
+            'logic_name': item.get('logic_name', ''),
+            'repeat_count': item.get('repeat_count', 1)
+        }
+
     def _create_ordered_trigger_key(self, trigger_key):
         """트리거 키의 필드를 정해진 순서로 정렬합니다."""
         return {
@@ -241,10 +254,16 @@ class SettingsManager:
                         ordered_item = self._create_ordered_key_input_item(item)
                     elif item.get('type') == 'delay':
                         ordered_item = self._create_ordered_delay_item(item)
-                    else:
-                        # 이전 형식의 아이템이나 알 수 없는 타입의 경우
+                    elif item.get('type') == 'logic':
+                        ordered_item = self._create_ordered_logic_item(item)
+                    elif 'content' in item:  # 이전 형식의 아이템인 경우 로직 타입으로 변환
+                        content = item.get('content', '')
                         ordered_item = {
-                            'content': item.get('content', ''),
+                            'type': 'logic',
+                            'logic_name': content,
+                            'display_text': f"만들어진 다른 로직: {content}",
+                            'logic_id': str(uuid.uuid4()),  # 새로운 UUID 생성
+                            'repeat_count': 1,
                             'order': item.get('order', 0)
                         }
                     ordered_items.append(ordered_item)
@@ -301,6 +320,8 @@ class SettingsManager:
                     elif item['type'] == 'key_input':
                         # 키 입력 아이템의 경우
                         ordered_item = self._create_ordered_key_input_item(item)
+                    elif item['type'] == 'logic':
+                        ordered_item = self._create_ordered_logic_item(item)
                 else:
                     # 이전 형식의 아이템의 경우
                     ordered_item = {

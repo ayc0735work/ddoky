@@ -3,28 +3,29 @@ from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
                              QSizePolicy, QLineEdit, QInputDialog, QMessageBox, QSpinBox)
 from PySide6.QtCore import Qt, Signal, QObject, QEvent
 from PySide6.QtGui import QFont, QGuiApplication, QIntValidator
-import uuid
 from datetime import datetime
-
+import uuid
+import win32con
+import win32api
+from BE.settings.settings_manager import SettingsManager
 from ...constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE, CONTAINER_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from ...constants.dimensions import (LOGIC_DETAIL_WIDTH, BASIC_SECTION_HEIGHT,
                                  LOGIC_BUTTON_WIDTH)
 from ....utils.key_handler import (KeyboardHook, get_key_display_text, get_key_location,
                                 get_modifier_text, format_key_info)
-from ..common.key_input_widget import KeyInputWidget  
+from ..common.key_input_widget import KeyInputWidget
 
 class LogicDetailWidget(QFrame):
     """로직 상세 내용을 표시하고 관리하는 위젯"""
     
-    # 시그널 정의
-    item_moved = Signal()  # 아이템이 이동되었을 때
-    item_edited = Signal(str)  # 아이템이 수정되었을 때
-    item_deleted = Signal(str)  # 아이템이 삭제되었을 때
-    logic_name_saved = Signal(str)  # 로직 이름이 저장되었을 때
-    log_message = Signal(str)  # 로그 메시지 시그널
-    logic_saved = Signal(dict)  # 로직 저장 시그널 (로직 정보)
-    logic_updated = Signal(str, dict)  # 로직 불러오기 시그널 (원래 이름, 로직 정보)
+    item_moved = Signal()
+    item_edited = Signal(str)
+    item_deleted = Signal(str)
+    logic_name_saved = Signal(str)
+    log_message = Signal(str)
+    logic_saved = Signal(dict)
+    logic_updated = Signal(str, dict)
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -36,6 +37,7 @@ class LogicDetailWidget(QFrame):
         self.original_name = None  # 원래 이름
         self.copied_items = []  # 복사된 아이템들 저장 (리스트로 변경)
         self.current_logic = None  # 현재 로직 정보
+        self.settings_manager = SettingsManager()  # SettingsManager 인스턴스 생성
         
         # 키보드 이벤트 필터 설치
         self.installEventFilter(self)
@@ -304,8 +306,36 @@ class LogicDetailWidget(QFrame):
             user_data = item.data(Qt.UserRole) or {}
             order = user_data.get('order', i + 1)
             
+            # 로직 타입 아이템인 경우
+            if item_text.startswith("로직:") or not any(item_text.startswith(prefix) for prefix in ["키 입력:", "지연시간"]):
+                logic_data = user_data.get('logic_data', {})
+                logic_name = logic_data.get('logic_name') or item_text.replace("로직:", "").strip()
+
+                # 기존 로직에서 UUID 찾기
+                logics = self.settings_manager.load_logics()
+                logic_id = None
+                for existing_id, existing_logic in logics.items():
+                    if existing_logic.get('name') == logic_name:
+                        logic_id = existing_id
+                        break
+
+                # UUID가 없는 경우에는 기존에 저장된 UUID 사용 또는 새로 생성
+                if not logic_id:
+                    logic_id = logic_data.get('logic_id')
+                    if not logic_id:
+                        logic_id = str(uuid.uuid4())
+
+                repeat_count = logic_data.get('repeat_count', 1)
+                items.append({
+                    'type': 'logic',
+                    'logic_id': logic_id,
+                    'logic_name': logic_name,
+                    'repeat_count': repeat_count,
+                    'display_text': item_text,
+                    'order': order
+                })
             # 키 입력 아이템인 경우
-            if item_text.startswith("키 입력:"):
+            elif item_text.startswith("키 입력:"):
                 key_parts = item_text.split(" --- ")
                 if len(key_parts) == 2:
                     key_text = key_parts[0].replace("키 입력: ", "").strip()
@@ -420,7 +450,15 @@ class LogicDetailWidget(QFrame):
                 })
             # 기타 아이템
             else:
-                items.append({"type": "text", "content": item_text, "order": order})
+                # 일반 텍스트 아이템을 로직 타입으로 변환
+                items.append({
+                    'type': 'logic',
+                    'logic_name': item_text,
+                    'display_text': f"로직: {item_text}",
+                    'logic_id': str(uuid.uuid4()),  # 새로운 UUID 생성
+                    'repeat_count': 1,
+                    'order': order
+                })
         
         # order 값으로 정렬
         return sorted(items, key=lambda x: x.get('order', float('inf')))
@@ -547,6 +585,11 @@ class LogicDetailWidget(QFrame):
                             # 딜레이 아이템인 경우
                             display_text = f"지연시간 : {item.get('duration', 0.0)}초"
                             item['display_text'] = display_text
+                        elif item.get('type') == 'logic':
+                            # 로직 아이템인 경우
+                            logic_name = item.get('logic_name', '')
+                            display_text = f"{logic_name}"
+                            item['display_text'] = display_text
                         self._add_logic_item(item)
             
             self.log_message.emit(f"로직 '{name}'이(가) 로드되었습니다.")
@@ -567,7 +610,7 @@ class LogicDetailWidget(QFrame):
                 # 키 입력 아이템으로 변환
                 parts = content.split(" --- ")
                 key_part = parts[0].replace("키 입력: ", "").strip()
-                action = parts[1]  # "누르기" 또는 "떼기"
+                action = parts[1]  # 현재 액션 ("누르기" 또는 "떼기")
                 
                 # Shift 키가 있는지 확인
                 if "Shift+" in key_part:
@@ -585,42 +628,65 @@ class LogicDetailWidget(QFrame):
                     'display_text': content,
                     'order': item_info.get('order', 1)
                 }
+            else:
+                # 일반 텍스트를 로직 타입으로 변환
+                item_info = {
+                    'type': 'logic',
+                    'logic_name': content,
+                    'display_text': f"로직: {content}",
+                    'logic_id': str(uuid.uuid4()),  # 새로운 UUID 생성
+                    'repeat_count': 1,
+                    'order': item_info.get('order', 1)
+                }
         
         # 아이템의 순서를 현재 리스트의 아이템 개수 + 1로 설정
         current_count = self.LogicItemList__QListWidget.count()
         item_info['order'] = current_count + 1
         
-        # 새 QListWidgetItem 생성
-        list_item = QListWidgetItem()
-        
         # 아이템 타입에 따라 표시 텍스트와 데이터 설정
-        if item_info.get('type') == 'delay':
-            display_text = item_info.get('display_text', f"지연시간 : {item_info.get('duration', 0)}초")
-            list_item.setData(Qt.UserRole, item_info)
-        elif item_info.get('type') == 'key_input':
-            # 기존 키 입력 정보 유지
-            key_info = {
-                'type': 'key_input',
-                'key_code': item_info.get('key_code', ''),
-                'action': item_info.get('action', ''),
-                'modifiers': item_info.get('modifiers', 0),
-                'scan_code': item_info.get('scan_code', 0),
-                'virtual_key': item_info.get('virtual_key', 0),
-                'display_text': item_info.get('display_text', ''),
-                'order': item_info.get('order', current_count + 1)
+        item_type = item_info.get('type', '')
+        if item_type == 'logic':
+            # 로직 아이템인 경우
+            logic_name = item_info.get('logic_name', '')
+            display_text = f"{logic_name}"
+
+            # 기존 로직에서 UUID 찾기
+            logics = self.settings_manager.load_logics()
+            logic_id = None
+            for existing_id, existing_logic in logics.items():
+                if existing_logic.get('name') == logic_name:
+                    logic_id = existing_id
+                    break
+
+            # UUID가 없는 경우에만 새로 생성
+            if not logic_id:
+                logic_id = item_info.get('logic_id', str(uuid.uuid4()))
+
+            # user_data에 로직 정보 저장
+            user_data = {
+                'order': item_info['order'],
+                'logic_data': {
+                    'logic_id': logic_id,
+                    'logic_name': logic_name,
+                    'repeat_count': item_info.get('repeat_count', 1)
+                }
             }
-            
-            # display_text가 없는 경우 생성
-            if not key_info['display_text']:
-                modifier_text = "Shift+" if key_info['modifiers'] else ""
-                key_info['display_text'] = f"키 입력: {modifier_text}{key_info['key_code']} --- {key_info['action']}"
-            
-            list_item.setData(Qt.UserRole, key_info)
-            display_text = key_info['display_text']
+        elif item_type == 'key_input':
+            # 키 입력 아이템인 경우
+            display_text = item_info.get('display_text', '')
+            user_data = {'order': item_info['order']}
+        elif item_type == 'delay':
+            # 딜레이 아이템인 경우
+            display_text = item_info.get('display_text', '')
+            user_data = {'order': item_info['order']}
         else:
-            return
+            # 기타 아이템
+            display_text = item_info.get('content', '')
+            user_data = {'order': item_info['order'], 'content': display_text}
             
+        list_item = QListWidgetItem()
         list_item.setText(display_text)
+        list_item.setData(Qt.UserRole, user_data)
         self.LogicItemList__QListWidget.addItem(list_item)
 
     def has_items(self):
