@@ -192,6 +192,9 @@ class MainWindow(QMainWindow):
         self.logic_executor.execution_finished.connect(lambda: self._append_log("로직 실행이 완료되었습니다"))
         self.logic_executor.execution_error.connect(lambda msg: self._append_log(f"로직 실행 중 오류 발생: {msg}"))
         self.logic_executor.log_message.connect(self.log_widget.append)
+        
+        # 로직 중지 시그널 연결
+        self.logic_detail_widget.logic_stopped.connect(self.logic_executor.stop_all_logic)
     
     def _handle_record_mode(self):
         # TODO: Implement record mode handling

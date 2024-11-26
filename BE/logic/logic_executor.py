@@ -29,7 +29,7 @@ class LogicExecutor(QObject):
         self.current_step_index = 0
         self.execution_stack = []  # 실행 중인 로직 스택
         self.MAX_EXECUTION_DEPTH = 5  # 최대 중첩 깊이
-    
+
     def start_monitoring(self):
         """트리거 키 모니터링 시작"""
         if self.is_executing:
@@ -284,3 +284,14 @@ class LogicExecutor(QObject):
         return (key_config.get('virtual_key') == key_info.get('virtual_key') and
                 key_config.get('scan_code') == key_info.get('scan_code') and
                 key_config.get('modifiers', 0) == key_info.get('modifiers', 0))
+
+    def stop_all_logic(self):
+        """모든 실행 중인 로직을 강제로 중지"""
+        if self.is_executing:
+            self.log_message.emit("모든 실행 중인 로직을 중지합니다.")
+            self.is_executing = False
+            self.selected_logic = None
+            self.current_step_index = 0
+            self.current_repeat = 1
+            self.execution_stack.clear()  # 실행 스택 초기화
+            self.start_monitoring()  # 모니터링 재시작
