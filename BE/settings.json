@@ -14,7 +14,7 @@
             "name": "체력 회복",
             "order": 1,
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-11-26T11:01:04.056647",
+            "updated_at": "2024-11-26T11:03:53.951856",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 /",
@@ -186,17 +186,17 @@
                 }
             ]
         },
-        "2a3e7194-0e1b-45fa-ac4c-dcb81f816862": {
-            "name": "111",
+        "0d0a5a65-2ae5-46c6-b121-a014e5c7c9a8": {
+            "name": "로직 안 로직",
             "order": 2,
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-11-26T11:01:04.060668",
+            "updated_at": "2024-11-26T11:04:30.682814",
             "trigger_key": {
                 "display_text": "",
-                "key_code": "1",
+                "key_code": "키 코드 25",
                 "modifiers": 0,
-                "scan_code": 2,
-                "virtual_key": 49
+                "scan_code": 29,
+                "virtual_key": 25
             },
             "repeat_count": 1,
             "items": [
@@ -211,7 +211,59 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 2,
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.01초",
+                    "duration": 0.01,
+                    "order": 2
+                },
+                {
+                    "order": 3,
+                    "display_text": "키 입력: A --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "A",
+                    "scan_code": 30,
+                    "virtual_key": 65,
+                    "modifiers": 0
+                },
+                {
+                    "order": 4,
+                    "display_text": "키 입력: B --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "B",
+                    "scan_code": 48,
+                    "virtual_key": 66,
+                    "modifiers": 0
+                },
+                {
+                    "order": 5,
+                    "display_text": "키 입력: B --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "B",
+                    "scan_code": 48,
+                    "virtual_key": 66,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 1.0초",
+                    "duration": 1.0,
+                    "order": 6
+                },
+                {
+                    "order": 7,
+                    "display_text": "키 입력: A --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "A",
+                    "scan_code": 30,
+                    "virtual_key": 65,
+                    "modifiers": 0
+                },
+                {
+                    "order": 8,
                     "display_text": "키 입력: A --- 떼기",
                     "action": "떼기",
                     "type": "key_input",

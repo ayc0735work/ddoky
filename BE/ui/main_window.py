@@ -317,6 +317,8 @@ class MainWindow(QMainWindow):
     def _on_add_logic(self, logic_name):
         """로직 메이커에서 로직을 추가할 때 호출"""
         if logic_name in self.logic_list_widget.saved_logics:
-            # 로직 이름을 아이템으로 추가
-            self.logic_detail_widget.add_item(logic_name)
-            self._append_log(f"로직 '{logic_name}'이(가) 추가되었습니다")
+            # 로직 정보에서 이름을 가져와서 아이템으로 추가
+            logic_info = self.logic_list_widget.saved_logics[logic_name]
+            display_name = logic_info.get('name', logic_name)
+            self.logic_detail_widget.add_item(display_name)
+            self._append_log(f"로직 '{display_name}'이(가) 추가되었습니다")

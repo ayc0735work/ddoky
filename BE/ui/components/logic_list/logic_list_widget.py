@@ -327,7 +327,12 @@ class LogicListWidget(QFrame):
     def _get_logic_name_from_text(self, text):
         """표시 텍스트에서 로직 이름을 추출하는 메서드"""
         try:
-            return text.split(' -- ')[0]
+            # 대괄호 안의 내용을 추출
+            start = text.find('[') + 1
+            end = text.find(']')
+            if start > 0 and end > start:
+                return text[start:end].strip()
+            return text
         except (AttributeError, IndexError):
             return text
 
