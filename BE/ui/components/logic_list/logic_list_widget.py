@@ -211,8 +211,9 @@ class LogicListWidget(QFrame):
         """로직이 수정되었을 때 호출되는 메서드"""
         try:
             # 기존 로직 ID 찾기
+            logics = self.settings_manager.load_logics()
             logic_id = None
-            for id, logic in self.settings_manager.settings.get('logics', {}).items():
+            for id, logic in logics.items():
                 if logic.get('name') == original_name:
                     logic_id = id
                     break
@@ -223,6 +224,9 @@ class LogicListWidget(QFrame):
                 
                 # 목록 아이템 업데이트
                 self._update_logic_in_list(updated_logic)
+                
+                # 저장된 로직 목록 다시 로드
+                self.load_saved_logics()
                 
                 self.log_message.emit(f"로직 '{logic_info.get('name', '')}'이(가) 업데이트되었습니다.")
             else:

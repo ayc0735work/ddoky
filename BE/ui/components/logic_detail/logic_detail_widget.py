@@ -473,6 +473,8 @@ class LogicDetailWidget(QFrame):
         self.edit_mode = False            # 수정 모드 해제
         self.original_name = None         # 원래 이름 초기화
         self.RepeatCountInput__QSpinBox.setValue(1)    # 반복 횟수를 기본값(1)으로 초기화
+        self.current_logic = None         # 현재 로직 정보 초기화
+        self.copied_items = []            # 복사된 아이템 초기화
 
     def _on_key_input_changed(self, key_info):
         """키 입력이 변경되었을 때"""
@@ -526,12 +528,31 @@ class LogicDetailWidget(QFrame):
                 'items': items
             }
 
-            # 수정 모드인 경우 업데이트 시그널 발생
+            # 수정 모드인 경우 업데이트
             if self.edit_mode and self.original_name:
-                self.logic_updated.emit(self.original_name, logic_info)
-                self.log_message.emit(f"로직 '{name}'이(가) 업데이트되었습니다.")
+                # 기존 로직의 ID 찾기
+                logics = self.settings_manager.load_logics()
+                logic_id = None
+                for existing_id, existing_logic in logics.items():
+                    if existing_logic.get('name') == self.original_name:
+                        logic_id = existing_id
+                        break
+                
+                if logic_id:
+                    # 기존 로직 업데이트
+                    self.settings_manager.save_logic(logic_id, logic_info)
+                    self.logic_updated.emit(self.original_name, logic_info)
+                    self.log_message.emit(f"로직 '{name}'이(가) 업데이트되었습니다.")
+                else:
+                    # 기존 로직을 찾을 수 없는 경우 새로 저장
+                    new_logic_id = str(uuid.uuid4())
+                    self.settings_manager.save_logic(new_logic_id, logic_info)
+                    self.logic_saved.emit(logic_info)
+                    self.log_message.emit(f"로직 '{name}'이(가) 새로 저장되었습니다.")
             else:
-                # 새 로직인 경우 저장 시그널 발생
+                # 새 로직 저장
+                new_logic_id = str(uuid.uuid4())
+                self.settings_manager.save_logic(new_logic_id, logic_info)
                 self.logic_saved.emit(logic_info)
                 self.log_message.emit(f"새 로직 '{name}'이(가) 저장되었습니다.")
 
