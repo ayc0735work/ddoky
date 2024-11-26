@@ -238,7 +238,7 @@ class LogicDetailWidget(QFrame):
         item = QListWidgetItem(item_text)
         # 현재 아이템 수 + 1을 order 값으로 설정
         order = self.LogicItemList__QListWidget.count() + 1
-        item.setData(Qt.UserRole, {'order': order})
+        item.setData(Qt.UserRole, {'order': order, 'content': item_text})
         self.LogicItemList__QListWidget.addItem(item)
 
     def _move_item_up(self):
@@ -289,7 +289,7 @@ class LogicDetailWidget(QFrame):
                     key_text = key_parts[0].replace("키 입력: ", "").strip()
                     action = key_parts[1]  # "누르기" 또는 "떼기"
                     
-                    # 수정자 키가 있는 경우 처리
+                    # 수정자 키가 있는지 확인
                     if "+" in key_text:
                         modifiers_text, key = key_text.rsplit("+", 1)
                         modifiers = modifiers_text.strip()
@@ -420,6 +420,10 @@ class LogicDetailWidget(QFrame):
             self.TriggerKeyInfoLabel__QLabel.clear()
             return
             
+        # modifiers가 이미 정수값인지 확인하고, 아니라면 int() 변환을 건너뜁니다
+        if not isinstance(key_info['modifiers'], int):
+            key_info['modifiers'] = key_info['modifiers'].value
+            
         self.TriggerKeyInfoLabel__QLabel.setText(format_key_info(key_info))
         self.trigger_key_info = key_info  # 트리거 키 정보 저장
 
@@ -448,39 +452,56 @@ class LogicDetailWidget(QFrame):
                 item = self.LogicItemList__QListWidget.item(i)
                 if item:
                     item_data = item.data(Qt.UserRole) or {}
-                    display_text = item.text()
                     
-                    # 아이템 정보를 그대로 유지하되 order만 업데이트
-                    item_info = item_data.copy()
-                    item_info['order'] = i + 1
-                    
-                    # 필요한 경우 display_text 업데이트
-                    if 'display_text' in item_info:
-                        item_info['display_text'] = display_text
-                    
-                    items.append(item_info)
-            
-            # order 값으로 정렬
-            items = sorted(items, key=lambda x: x.get('order', float('inf')))
+                    # 키 입력 아이템인 경우
+                    if item_data.get('type') == 'key_input':
+                        items.append({
+                            'action': item_data.get('action', ''),
+                            'display_text': item_data.get('display_text', ''),
+                            'key_code': item_data.get('key_code', ''),
+                            'modifiers': item_data.get('modifiers', 0),
+                            'order': i + 1,
+                            'scan_code': item_data.get('scan_code', 0),
+                            'type': 'key_input',
+                            'virtual_key': item_data.get('virtual_key', 0)
+                        })
+                    # 딜레이 아이템인 경우
+                    elif item_data.get('type') == 'delay':
+                        items.append({
+                            'display_text': item_data.get('display_text', ''),
+                            'duration': item_data.get('duration', 0),
+                            'order': i + 1,
+                            'type': 'delay'
+                        })
 
             # 현재 로직 정보 구성 (필드 순서 지정)
             logic_info = {
                 'name': name,
                 'order': self.current_logic.get('order', 0) if self.current_logic else 0,
-                'created_at': self.current_logic.get('created_at', datetime.now().isoformat()),
+                'created_at': datetime.now().isoformat() if not self.current_logic else self.current_logic.get('created_at'),
                 'updated_at': datetime.now().isoformat(),
-                'trigger_key': self.trigger_key_info,
+                'trigger_key': {
+                    'display_text': self.trigger_key_info.get('display_text', ''),
+                    'key_code': self.trigger_key_info.get('key_code', ''),
+                    'modifiers': self.trigger_key_info.get('modifiers', 0),
+                    'scan_code': self.trigger_key_info.get('scan_code', 0),
+                    'virtual_key': self.trigger_key_info.get('virtual_key', 0)
+                },
                 'repeat_count': self.RepeatCountInput__QSpinBox.value(),
                 'items': items
             }
 
-            # 로직 저장 이벤트 발생
+            # 수정 모드인 경우 업데이트 시그널 발생
             if self.edit_mode and self.original_name:
                 self.logic_updated.emit(self.original_name, logic_info)
+                self.log_message.emit(f"로직 '{name}'이(가) 업데이트되었습니다.")
             else:
+                # 새 로직인 경우 저장 시그널 발생
                 self.logic_saved.emit(logic_info)
+                self.log_message.emit(f"새 로직 '{name}'이(가) 저장되었습니다.")
 
             return True
+
         except Exception as e:
             self.log_message.emit(f"로직 저장 중 오류 발생: {str(e)}")
             return False
@@ -540,18 +561,67 @@ class LogicDetailWidget(QFrame):
         if not isinstance(item_info, dict):
             return
             
-        # 아이템 타입에 따라 표시 텍스트 결정
+        # content 필드가 있는 경우 (이전 형식) 새 형식으로 변환
+        if 'content' in item_info:
+            content = item_info['content']
+            if "키 입력:" in content:
+                # 키 입력 아이템으로 변환
+                parts = content.split(" --- ")
+                key_part = parts[0].replace("키 입력: ", "")
+                action = parts[1]
+                
+                # Shift 키가 있는지 확인
+                if "Shift+" in key_part:
+                    key_code = key_part.replace("Shift+", "")
+                    modifiers = 33554432  # Shift modifier
+                else:
+                    key_code = key_part
+                    modifiers = 0
+                    
+                item_info = {
+                    'type': 'key_input',
+                    'key_code': key_code,
+                    'action': action,
+                    'modifiers': modifiers,
+                    'display_text': content,
+                    'order': item_info.get('order', 1)
+                }
+        
+        # 아이템의 순서를 현재 리스트의 아이템 개수 + 1로 설정
+        current_count = self.LogicItemList__QListWidget.count()
+        item_info['order'] = current_count + 1
+        
+        # 새 QListWidgetItem 생성
+        list_item = QListWidgetItem()
+        
+        # 아이템 타입에 따라 표시 텍스트와 데이터 설정
         if item_info.get('type') == 'delay':
             display_text = item_info.get('display_text', f"지연시간 : {item_info.get('duration', 0)}초")
-        else:
-            display_text = item_info.get('content', '')
+            list_item.setData(Qt.UserRole, item_info)
+        elif item_info.get('type') == 'key_input':
+            # 기존 키 입력 정보 유지
+            key_info = {
+                'type': 'key_input',
+                'key_code': item_info.get('key_code', ''),
+                'action': item_info.get('action', ''),
+                'modifiers': item_info.get('modifiers', 0),
+                'scan_code': item_info.get('scan_code', 0),
+                'virtual_key': item_info.get('virtual_key', 0),
+                'display_text': item_info.get('display_text', ''),
+                'order': item_info.get('order', current_count + 1)
+            }
             
-        if not display_text:
+            # display_text가 없는 경우 생성
+            if not key_info['display_text']:
+                modifier_text = "Shift+" if key_info['modifiers'] else ""
+                key_info['display_text'] = f"키 입력: {modifier_text}{key_info['key_code']} --- {key_info['action']}"
+            
+            list_item.setData(Qt.UserRole, key_info)
+            display_text = key_info['display_text']
+        else:
             return
             
-        # 리스트 위젯에 아이템 추가
-        list_item = QListWidgetItem(display_text)
-        list_item.setData(Qt.UserRole, item_info)  # 아이템 정보 저장
+        list_item.setText(display_text)
         self.LogicItemList__QListWidget.addItem(list_item)
 
     def has_items(self):
@@ -699,8 +769,9 @@ class LogicDetailWidget(QFrame):
                         delay = dialog.doubleValue()
                         delay_text = f"지연시간 : {delay:.3f}초"
                         current_item.setText(delay_text)
-                        # 순서 값 유지
+                        # 순서 값과 content 유지
                         current_data = current_item.data(Qt.UserRole) or {}
+                        current_data['content'] = delay_text  # content 필드 업데이트
                         current_item.setData(Qt.UserRole, current_data)
                         self.item_edited.emit(delay_text)
                         self.log_message.emit(f"지연시간이 {delay:.3f}초로 수정되었습니다")
@@ -738,11 +809,12 @@ class LogicDetailWidget(QFrame):
                         if new_action != current_action:
                             new_text = f"{key_text} --- {new_action}"
                             current_item.setText(new_text)
-                            # 순서 값 유지
+                            # 순서 값과 content 유지
                             current_data = current_item.data(Qt.UserRole) or {}
+                            current_data['content'] = new_text  # content 필드 업데이트
                             current_item.setData(Qt.UserRole, current_data)
                             self.item_edited.emit(new_text)
-                            self.log_message.emit(f"키 입력 액션이 {new_action}로 변경되었습니다")
+                            self.log_message.emit(f"키 입력 액션이 '{new_action}'으로 변경되었습니다")
             else:
                 self.item_edited.emit(item_text)
 

@@ -6,6 +6,7 @@ from PySide6.QtGui import QFont
 import json
 import os
 import uuid
+from datetime import datetime
 
 from ...constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
@@ -178,11 +179,18 @@ class LogicListWidget(QFrame):
     def on_logic_saved(self, logic_info):
         """로직이 저장되었을 때 호출되는 메서드"""
         try:
+            # 새 UUID 생성
+            logic_id = str(uuid.uuid4())
+            
+            # order 값을 현재 리스트의 마지막 순서 + 1로 설정
+            current_count = self.SavedLogicList__QListWidget.count()
+            logic_info['order'] = current_count + 1
+            
             # settings_manager를 통해 로직 저장
-            ordered_logic = self.settings_manager.save_logic(logic_info)
+            updated_logic = self.settings_manager.save_logic(logic_id, logic_info)
             
             # 로직 목록에 추가
-            self._add_logic_to_list(ordered_logic)
+            self._add_logic_to_list(updated_logic, logic_id)
             
             self.log_message.emit(f"새 로직 '{logic_info.get('name', '')}'이(가) 저장되었습니다.")
             
@@ -201,10 +209,10 @@ class LogicListWidget(QFrame):
             
             if logic_id:
                 # settings_manager를 통해 로직 업데이트
-                ordered_logic = self.settings_manager.save_logic(logic_id, logic_info)
+                updated_logic = self.settings_manager.save_logic(logic_id, logic_info)
                 
                 # 목록 아이템 업데이트
-                self._update_logic_in_list(ordered_logic)
+                self._update_logic_in_list(updated_logic)
                 
                 self.log_message.emit(f"로직 '{logic_info.get('name', '')}'이(가) 업데이트되었습니다.")
             else:
@@ -216,26 +224,64 @@ class LogicListWidget(QFrame):
     def load_saved_logics(self):
         """저장된 로직 정보 불러오기"""
         try:
-            # settings_manager를 통해 로직 정보 불러오기
-            self.saved_logics = self.settings_manager.load_logics()
-            
-            # 리스트 위젯에 로직 추가 (order 기준으로 정렬)
+            # 기존 목록 초기화
             self.SavedLogicList__QListWidget.clear()
+            self.saved_logics.clear()  # saved_logics 딕셔너리도 초기화
             
-            # logic_id와 함께 정렬
-            logic_items = [(logic_id, logic) for logic_id, logic in self.saved_logics.items()]
-            sorted_logic_items = sorted(logic_items, key=lambda x: x[1].get('order', float('inf')))
+            # 설정 다시 로드
+            self.settings_manager.reload_settings()
             
-            for logic_id, logic in sorted_logic_items:
-                display_text = self._format_logic_item_text(logic)
-                item = QListWidgetItem(display_text)
-                item.setData(Qt.UserRole, {'logic_id': logic_id})  # 로직 ID 저장
-                self.SavedLogicList__QListWidget.addItem(item)
+            # 로직 정보 가져오기
+            logics = self.settings_manager.settings.get('logics', {})
+            
+            # order 값으로 정렬
+            sorted_logics = sorted(logics.items(), key=lambda x: x[1].get('order', 0))
+            
+            # 순서대로 리스트에 추가만 하고 order는 변경하지 않음
+            for logic_id, logic_info in sorted_logics:
+                self._add_logic_to_list(logic_info, logic_id)
                 
-            self.log_message.emit(f"{len(sorted_logic_items)}개의 로직을 불러왔습니다.")
+            self.log_message.emit("로직 목록을 불러왔습니다.")
+            
         except Exception as e:
-            self.log_message.emit(f"로직 정보를 불러오는 중 오류 발생: {e}")
-
+            self.log_message.emit(f"로직 목록 불러오기 중 오류 발생: {str(e)}")
+            # 오류 발생 시 초기화
+            self.SavedLogicList__QListWidget.clear()
+            self.saved_logics.clear()
+            
+    def save_logics_to_settings(self):
+        """현재 로직 목록을 설정에 저장"""
+        try:
+            # 현재 설정을 다시 로드하여 최신 상태 유지
+            self.settings_manager.reload_settings()
+            
+            # 로직 목록을 순회하면서 order 값 업데이트
+            updated_logics = {}
+            for i in range(self.SavedLogicList__QListWidget.count()):
+                item = self.SavedLogicList__QListWidget.item(i)
+                if item:
+                    logic_id = item.data(Qt.UserRole)
+                    if logic_id in self.settings_manager.settings.get('logics', {}):
+                        logic_info = self.settings_manager.settings['logics'][logic_id]
+                        
+                        # 첫 번째 아이템의 order는 1로 설정하고, 나머지는 2부터 순차적으로 증가
+                        logic_info['order'] = 1 if i == 0 else i + 1
+                        logic_info['updated_at'] = datetime.now().isoformat()
+                        
+                        # settings_manager를 통해 로직 저장 (필드 순서 정리)
+                        updated_logic = self.settings_manager.save_logic(logic_id, logic_info)
+                        updated_logics[logic_id] = updated_logic
+            
+            # 모든 로직이 성공적으로 저장되면 saved_logics 업데이트
+            self.saved_logics = updated_logics
+            
+            self.log_message.emit("로직이 성공적으로 저장되었습니다.")
+            
+        except Exception as e:
+            self.log_message.emit(f"로직 저장 중 오류 발생: {str(e)}")
+            # 오류 발생 시 저장된 로직 다시 불러오기
+            self.load_saved_logics()
+            
     def _format_logic_item_text(self, logic_info):
         """로직 아이템의 표시 텍스트를 생성하는 메서드"""
         if not logic_info:  # logic_info가 None인 경우 처리
@@ -271,38 +317,15 @@ class LogicListWidget(QFrame):
         except (AttributeError, IndexError):
             return text
 
-    def save_logics_to_settings(self):
-        """현재 로직 정보를 settings.json에 저장"""
-        try:
-            # 현재 리스트 위젯의 순서대로 order 값 업데이트 (1부터 시작)
-            for i in range(self.SavedLogicList__QListWidget.count()):
-                item = self.SavedLogicList__QListWidget.item(i)
-                if not item:
-                    continue
-                    
-                item_data = item.data(Qt.UserRole)
-                if not item_data or 'logic_id' not in item_data:
-                    continue
-                    
-                logic_id = item_data['logic_id']
-                if logic_id in self.saved_logics:
-                    self.saved_logics[logic_id]['order'] = i + 1  # order를 1부터 시작하도록 수정
-            
-            # settings_manager를 통해 로직 정보 저장
-            self.settings_manager.save_logics(self.saved_logics)
-        except Exception as e:
-            self.log_message.emit(f"설정 저장 중 오류 발생: {e}")
-        
     def _item_double_clicked(self, item):
         """로직 불러오기 방법 - 더블클릭으로 호출"""
         if not item:  # item이 None인 경우 처리
             return
         
-        item_data = item.data(Qt.UserRole)
-        if not item_data or 'logic_id' not in item_data:
+        logic_id = item.data(Qt.UserRole)
+        if not logic_id:
             return
             
-        logic_id = item_data['logic_id']
         if logic_id in self.saved_logics:
             logic_info = self.saved_logics[logic_id]
             name = logic_info['name']
@@ -316,11 +339,10 @@ class LogicListWidget(QFrame):
         if not current_item:
             return
             
-        item_data = current_item.data(Qt.UserRole)
-        if not item_data or 'logic_id' not in item_data:
+        logic_id = current_item.data(Qt.UserRole)
+        if not logic_id:
             return
             
-        logic_id = item_data['logic_id']
         if logic_id in self.saved_logics:
             logic_info = self.saved_logics[logic_id]
             self.log_message.emit(f"로직 데이터: {logic_info}")
@@ -332,11 +354,10 @@ class LogicListWidget(QFrame):
         if not current_item:
             return
             
-        item_data = current_item.data(Qt.UserRole)
-        if not item_data or 'logic_id' not in item_data:
+        logic_id = current_item.data(Qt.UserRole)
+        if not logic_id:
             return
             
-        logic_id = item_data['logic_id']
         if logic_id in self.saved_logics:
             logic_info = self.saved_logics[logic_id]
             name = logic_info['name']
@@ -370,12 +391,16 @@ class LogicListWidget(QFrame):
         # 리스트에서 해당 로직 찾기
         for i in range(self.SavedLogicList__QListWidget.count()):
             item = self.SavedLogicList__QListWidget.item(i)
-            if item and item.data(Qt.UserRole) == logic_info.get('id'):
-                # 아이템 텍스트 업데이트
-                item.setText(self._format_logic_item_text(logic_info))
-                break
+            if item:
+                logic_id = item.data(Qt.UserRole)
+                if logic_id in self.saved_logics and self.saved_logics[logic_id]['name'] == name:
+                    # 로직 정보 업데이트
+                    self.saved_logics[logic_id] = logic_info
+                    # 아이템 텍스트 업데이트
+                    item.setText(self._format_logic_item_text(logic_info))
+                    break
 
-    def _add_logic_to_list(self, logic_info):
+    def _add_logic_to_list(self, logic_info, logic_id):
         """로직 목록에 아이템 추가"""
         if not logic_info or not isinstance(logic_info, dict):
             return
@@ -387,9 +412,12 @@ class LogicListWidget(QFrame):
         # 로직 아이템 텍스트 생성
         display_text = self._format_logic_item_text(logic_info)
         
-        # 아이템 생성
+        # QListWidgetItem 생성
         item = QListWidgetItem(display_text)
-        item.setData(Qt.UserRole, {'logic_id': logic_info.get('id')})  # 로직 ID 저장
+        item.setData(Qt.UserRole, logic_id)  # 로직 ID를 아이템 데이터로 저장
         
-        # 아이템 추가
+        # 리스트에 아이템 추가
         self.SavedLogicList__QListWidget.addItem(item)
+        
+        # 저장된 로직 딕셔너리에 추가
+        self.saved_logics[logic_id] = logic_info

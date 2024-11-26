@@ -34,16 +34,20 @@ class SettingsManager:
                     # items 리스트 내부의 아이템들도 필드 순서 정렬
                     ordered_items = []
                     for item in logic_data.get('items', []):
-                        if 'type' in item and item['type'] == 'delay':
-                            # 딜레이 아이템의 경우
-                            ordered_item = {
-                                'type': 'delay',
-                                'display_text': item.get('display_text', f"지연시간 : {item.get('duration', 0)}초"),
-                                'duration': item.get('duration', 0),
-                                'order': item.get('order', 0)
-                            }
+                        if 'type' in item:
+                            if item['type'] == 'delay':
+                                # 딜레이 아이템의 경우
+                                ordered_item = {
+                                    'type': 'delay',
+                                    'display_text': item.get('display_text', f"지연시간 : {item.get('duration', 0)}초"),
+                                    'duration': item.get('duration', 0),
+                                    'order': item.get('order', 0)
+                                }
+                            elif item['type'] == 'key_input':
+                                # 키 입력 아이템의 경우
+                                ordered_item = self._create_ordered_key_input_item(item)
                         else:
-                            # 일반 아이템의 경우
+                            # 이전 형식의 아이템의 경우
                             ordered_item = {
                                 'content': item.get('content', ''),
                                 'order': item.get('order', 0)
@@ -63,9 +67,12 @@ class SettingsManager:
                     ordered_logics[logic_id] = ordered_logic
                 self.settings['logics'] = ordered_logics
 
-            # 설정 파일 저장
+            # 설정 파일 저장 (파일을 직접 열고 닫음)
             with open(self.settings_file, 'w', encoding='utf-8') as f:
                 json.dump(self.settings, f, ensure_ascii=False, indent=4)
+                f.flush()  # 버퍼 내용을 즉시 디스크에 쓰기
+                os.fsync(f.fileno())  # 파일 디스크립터를 동기화
+                
         except Exception as e:
             print(f"설정 저장 중 오류 발생: {str(e)}")
     
@@ -143,6 +150,38 @@ class SettingsManager:
             print(f"마이그레이션 중 오류 발생: {str(e)}")
             return self._get_default_settings()
     
+    def _create_ordered_key_input_item(self, item):
+        """키 입력 아이템의 필드를 정해진 순서로 정렬합니다."""
+        return {
+            'order': item.get('order', 0),
+            'display_text': item.get('display_text', ''),
+            'action': item.get('action', ''),
+            'type': 'key_input',
+            'key_code': item.get('key_code', ''),
+            'scan_code': item.get('scan_code', 0),
+            'virtual_key': item.get('virtual_key', 0),
+            'modifiers': item.get('modifiers', 0)
+        }
+
+    def _create_ordered_delay_item(self, item):
+        """딜레이 아이템의 필드를 정해진 순서로 정렬합니다."""
+        return {
+            'type': 'delay',
+            'display_text': item.get('display_text', ''),
+            'duration': item.get('duration', 0),
+            'order': item.get('order', 0)
+        }
+
+    def _create_ordered_trigger_key(self, trigger_key):
+        """트리거 키의 필드를 정해진 순서로 정렬합니다."""
+        return {
+            'display_text': trigger_key.get('display_text', ''),
+            'key_code': trigger_key.get('key_code', ''),
+            'modifiers': trigger_key.get('modifiers', 0),
+            'scan_code': trigger_key.get('scan_code', 0),
+            'virtual_key': trigger_key.get('virtual_key', 0)
+        }
+
     def get_window_settings(self):
         """윈도우 설정 반환"""
         return self.settings.get("window", self._get_default_settings()["window"])
@@ -171,44 +210,63 @@ class SettingsManager:
         # 업데이트된 설정 저장
         self._save_settings()
 
-    def save_logic(self, logic_id, logic_data):
-        """로직을 저장합니다."""
-        # 아이템 순서 정렬
-        ordered_items = []
-        for item in logic_data.get('items', []):
-            if 'type' in item and item['type'] == 'delay':
-                # 딜레이 아이템의 경우
-                ordered_item = {
-                    'type': 'delay',
-                    'display_text': item.get('display_text', f"지연시간 : {item.get('duration', 0)}초"),
-                    'duration': item.get('duration', 0),
-                    'order': item.get('order', 0)
-                }
-            else:
-                # 일반 아이템의 경우
-                ordered_item = {
-                    'content': item.get('content', ''),
-                    'order': item.get('order', 0)
-                }
-            ordered_items.append(ordered_item)
-            
-        # 필드 순서 정렬
-        ordered_logic = {
-            'name': logic_data.get('name', ''),
-            'order': logic_data.get('order', 0),
-            'created_at': logic_data.get('created_at', ''),
-            'updated_at': logic_data.get('updated_at', ''),
-            'trigger_key': logic_data.get('trigger_key', {}),
-            'repeat_count': logic_data.get('repeat_count', 1),
-            'items': ordered_items
-        }
+    def reload_settings(self):
+        """설정을 다시 로드합니다."""
+        self.settings = self._load_settings()
         
-        # 로직 저장
-        if 'logics' not in self.settings:
-            self.settings['logics'] = {}
-        self.settings['logics'][logic_id] = ordered_logic
-        self._save_settings()
-        return ordered_logic
+    def save_logic(self, logic_id, logic_info):
+        """로직 정보를 저장합니다."""
+        try:
+            # 현재 설정을 다시 로드
+            self.reload_settings()
+            
+            if 'logics' not in self.settings:
+                self.settings['logics'] = {}
+            
+            # items 필드의 순서 정리
+            ordered_items = []
+            if 'items' in logic_info:
+                for item in logic_info['items']:
+                    if item.get('type') == 'key_input':
+                        ordered_item = self._create_ordered_key_input_item(item)
+                    elif item.get('type') == 'delay':
+                        ordered_item = self._create_ordered_delay_item(item)
+                    else:
+                        # 이전 형식의 아이템이나 알 수 없는 타입의 경우
+                        ordered_item = {
+                            'content': item.get('content', ''),
+                            'order': item.get('order', 0)
+                        }
+                    ordered_items.append(ordered_item)
+            
+            # 트리거 키 정리
+            trigger_key = self._create_ordered_trigger_key(logic_info.get('trigger_key', {}))
+            
+            # 로직 정보의 필드 순서 정리
+            ordered_logic = {
+                'name': logic_info.get('name', ''),
+                'order': logic_info.get('order', 1),  # order 값을 그대로 사용
+                'created_at': logic_info.get('created_at', ''),
+                'updated_at': logic_info.get('updated_at', ''),
+                'trigger_key': trigger_key,
+                'repeat_count': logic_info.get('repeat_count', 1),
+                'items': ordered_items
+            }
+            
+            # 설정에 저장
+            self.settings['logics'][logic_id] = ordered_logic
+            
+            # 설정 파일에 저장
+            self._save_settings()
+            
+            # 설정을 다시 로드하여 최신 상태 유지
+            self.reload_settings()
+            
+            return ordered_logic
+            
+        except Exception as e:
+            print(f"로직 저장 중 오류 발생: {str(e)}")
+            return None
 
     def load_logics(self):
         """저장된 모든 로직을 불러옵니다."""
@@ -221,16 +279,20 @@ class SettingsManager:
             # 아이템 순서 정렬
             ordered_items = []
             for item in logic_data.get('items', []):
-                if 'type' in item and item['type'] == 'delay':
-                    # 딜레이 아이템의 경우
-                    ordered_item = {
-                        'type': 'delay',
-                        'display_text': item.get('display_text', f"지연시간 : {item.get('duration', 0)}초"),
-                        'duration': item.get('duration', 0),
-                        'order': item.get('order', 0)
-                    }
+                if 'type' in item:
+                    if item['type'] == 'delay':
+                        # 딜레이 아이템의 경우
+                        ordered_item = {
+                            'type': 'delay',
+                            'display_text': item.get('display_text', f"지연시간 : {item.get('duration', 0)}초"),
+                            'duration': item.get('duration', 0),
+                            'order': item.get('order', 0)
+                        }
+                    elif item['type'] == 'key_input':
+                        # 키 입력 아이템의 경우
+                        ordered_item = self._create_ordered_key_input_item(item)
                 else:
-                    # 일반 아이템의 경우
+                    # 이전 형식의 아이템의 경우
                     ordered_item = {
                         'content': item.get('content', ''),
                         'order': item.get('order', 0)
