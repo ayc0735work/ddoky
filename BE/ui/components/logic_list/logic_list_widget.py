@@ -274,7 +274,7 @@ class LogicListWidget(QFrame):
     def save_logics_to_settings(self):
         """현재 로직 정보를 settings.json에 저장"""
         try:
-            # 현재 리스트 위젯의 순서대로 order 값 업데이트
+            # 현재 리스트 위젯의 순서대로 order 값 업데이트 (1부터 시작)
             for i in range(self.SavedLogicList__QListWidget.count()):
                 item = self.SavedLogicList__QListWidget.item(i)
                 if not item:
@@ -286,7 +286,7 @@ class LogicListWidget(QFrame):
                     
                 logic_id = item_data['logic_id']
                 if logic_id in self.saved_logics:
-                    self.saved_logics[logic_id]['order'] = i
+                    self.saved_logics[logic_id]['order'] = i + 1  # order를 1부터 시작하도록 수정
             
             # settings_manager를 통해 로직 정보 저장
             self.settings_manager.save_logics(self.saved_logics)
@@ -374,3 +374,22 @@ class LogicListWidget(QFrame):
                 # 아이템 텍스트 업데이트
                 item.setText(self._format_logic_item_text(logic_info))
                 break
+
+    def _add_logic_to_list(self, logic_info):
+        """로직 목록에 아이템 추가"""
+        if not logic_info or not isinstance(logic_info, dict):
+            return
+            
+        name = logic_info.get('name')
+        if not name:
+            return
+            
+        # 로직 아이템 텍스트 생성
+        display_text = self._format_logic_item_text(logic_info)
+        
+        # 아이템 생성
+        item = QListWidgetItem(display_text)
+        item.setData(Qt.UserRole, {'logic_id': logic_info.get('id')})  # 로직 ID 저장
+        
+        # 아이템 추가
+        self.SavedLogicList__QListWidget.addItem(item)

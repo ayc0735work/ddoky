@@ -450,33 +450,13 @@ class LogicDetailWidget(QFrame):
                     item_data = item.data(Qt.UserRole) or {}
                     display_text = item.text()
                     
-                    if item_data.get('type') == 'key_input':
-                        # 키 입력 아이템인 경우
-                        item_info = {
-                            'type': 'key_input',
-                            'action': item_data.get('action', '누르기'),
-                            'key_code': item_data.get('key_code', ''),
-                            'scan_code': item_data.get('scan_code', 0),
-                            'virtual_key': item_data.get('virtual_key', 0),
-                            'modifiers': item_data.get('modifiers', 0),
-                            'display_text': display_text,
-                            'order': item_data.get('order', i + 1)
-                        }
-                    elif item_data.get('type') == 'delay':
-                        # 딜레이 아이템인 경우
-                        duration = float(item_data.get('duration', 0.0))
-                        item_info = {
-                            'type': 'delay',
-                            'duration': duration,
-                            'display_text': f"지연시간 : {duration}초",
-                            'order': item_data.get('order', i + 1)
-                        }
-                    else:
-                        # 일반 아이템인 경우
-                        item_info = {
-                            'content': display_text,
-                            'order': item_data.get('order', i + 1)
-                        }
+                    # 아이템 정보를 그대로 유지하되 order만 업데이트
+                    item_info = item_data.copy()
+                    item_info['order'] = i + 1
+                    
+                    # 필요한 경우 display_text 업데이트
+                    if 'display_text' in item_info:
+                        item_info['display_text'] = display_text
                     
                     items.append(item_info)
             
@@ -555,41 +535,23 @@ class LogicDetailWidget(QFrame):
             self.log_message.emit(f"로직 로드 중 오류 발생: {str(e)}")
             self.clear_all()
 
-    def _add_logic_item(self, item):
+    def _add_logic_item(self, item_info):
         """로직 아이템을 리스트에 추가"""
-        if isinstance(item, dict):
-            # 아이템 타입에 따른 처리
-            if item.get('type') == 'key_input':
-                list_item = QListWidgetItem(item['display_text'])
-                # 키 입력 관련 모든 속성 저장
-                item_data = {
-                    'type': 'key_input',
-                    'order': item.get('order', self.LogicItemList__QListWidget.count() + 1),
-                    'action': item.get('action'),
-                    'key_code': item.get('key_code'),
-                    'scan_code': item.get('scan_code'),
-                    'virtual_key': item.get('virtual_key'),
-                    'modifiers': item.get('modifiers')
-                }
-            elif item.get('type') == 'delay':
-                list_item = QListWidgetItem(item.get('display_text', ''))
-                item_data = {
-                    'type': 'delay',
-                    'order': item.get('order', self.LogicItemList__QListWidget.count() + 1),
-                    'duration': item.get('duration')
-                }
-            else:
-                list_item = QListWidgetItem(item.get('content', ''))
-                item_data = {
-                    'order': item.get('order', self.LogicItemList__QListWidget.count() + 1)
-                }
-            list_item.setData(Qt.UserRole, item_data)
+        if not isinstance(item_info, dict):
+            return
+            
+        # 아이템 타입에 따라 표시 텍스트 결정
+        if item_info.get('type') == 'delay':
+            display_text = item_info.get('display_text', f"지연시간 : {item_info.get('duration', 0)}초")
         else:
-            list_item = QListWidgetItem(str(item))
-            list_item.setData(Qt.UserRole, {
-                'order': self.LogicItemList__QListWidget.count() + 1
-            })
-        
+            display_text = item_info.get('content', '')
+            
+        if not display_text:
+            return
+            
+        # 리스트 위젯에 아이템 추가
+        list_item = QListWidgetItem(display_text)
+        list_item.setData(Qt.UserRole, item_info)  # 아이템 정보 저장
         self.LogicItemList__QListWidget.addItem(list_item)
 
     def has_items(self):

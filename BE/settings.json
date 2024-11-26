@@ -12,9 +12,9 @@
     "logics": {
         "0dfa1418-cab1-4439-ae8a-b0c971471c99": {
             "name": "체력 회복",
-            "order": 0,
+            "order": 1,
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-11-26T07:25:42.619292",
+            "updated_at": "2024-11-26T09:09:05.562255",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 /",
@@ -128,7 +128,7 @@
         },
         "3ff3f938-cfb5-4d2e-b969-bec2bba1c02e": {
             "name": "첨 마법 반복",
-            "order": 1,
+            "order": 2,
             "created_at": "2024-11-26T07:25:46.017841",
             "updated_at": "2024-11-26T07:25:46.017841",
             "trigger_key": {
@@ -204,7 +204,7 @@
         },
         "b48b919b-41fd-4720-85be-1b3eb85221d6": {
             "name": "보호 무장",
-            "order": 2,
+            "order": 3,
             "created_at": "2024-11-26T07:26:02.584464",
             "updated_at": "2024-11-26T07:33:38.136401",
             "trigger_key": {
@@ -420,7 +420,7 @@
         },
         "ab3011c1-85da-4a7f-ad4a-83a81eeb4fdd": {
             "name": "모두 줍기",
-            "order": 3,
+            "order": 4,
             "created_at": "2024-11-26T07:26:14.878748",
             "updated_at": "2024-11-26T08:04:51.686619",
             "trigger_key": {

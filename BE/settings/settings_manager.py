@@ -173,6 +173,25 @@ class SettingsManager:
 
     def save_logic(self, logic_id, logic_data):
         """로직을 저장합니다."""
+        # 아이템 순서 정렬
+        ordered_items = []
+        for item in logic_data.get('items', []):
+            if 'type' in item and item['type'] == 'delay':
+                # 딜레이 아이템의 경우
+                ordered_item = {
+                    'type': 'delay',
+                    'display_text': item.get('display_text', f"지연시간 : {item.get('duration', 0)}초"),
+                    'duration': item.get('duration', 0),
+                    'order': item.get('order', 0)
+                }
+            else:
+                # 일반 아이템의 경우
+                ordered_item = {
+                    'content': item.get('content', ''),
+                    'order': item.get('order', 0)
+                }
+            ordered_items.append(ordered_item)
+            
         # 필드 순서 정렬
         ordered_logic = {
             'name': logic_data.get('name', ''),
@@ -181,7 +200,7 @@ class SettingsManager:
             'updated_at': logic_data.get('updated_at', ''),
             'trigger_key': logic_data.get('trigger_key', {}),
             'repeat_count': logic_data.get('repeat_count', 1),
-            'items': logic_data.get('items', [])
+            'items': ordered_items
         }
         
         # 로직 저장
@@ -199,6 +218,25 @@ class SettingsManager:
         """모든 로직을 저장합니다."""
         ordered_logics = {}
         for logic_id, logic_data in logics.items():
+            # 아이템 순서 정렬
+            ordered_items = []
+            for item in logic_data.get('items', []):
+                if 'type' in item and item['type'] == 'delay':
+                    # 딜레이 아이템의 경우
+                    ordered_item = {
+                        'type': 'delay',
+                        'display_text': item.get('display_text', f"지연시간 : {item.get('duration', 0)}초"),
+                        'duration': item.get('duration', 0),
+                        'order': item.get('order', 0)
+                    }
+                else:
+                    # 일반 아이템의 경우
+                    ordered_item = {
+                        'content': item.get('content', ''),
+                        'order': item.get('order', 0)
+                    }
+                ordered_items.append(ordered_item)
+                
             ordered_logic = {
                 'name': logic_data.get('name', ''),
                 'order': logic_data.get('order', 0),
@@ -206,7 +244,7 @@ class SettingsManager:
                 'updated_at': logic_data.get('updated_at', ''),
                 'trigger_key': logic_data.get('trigger_key', {}),
                 'repeat_count': logic_data.get('repeat_count', 1),
-                'items': logic_data.get('items', [])
+                'items': ordered_items
             }
             ordered_logics[logic_id] = ordered_logic
         
