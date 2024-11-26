@@ -254,6 +254,12 @@ class LogicDetailWidget(QFrame):
         
         # 새 아이템의 order 설정
         item.setData(Qt.UserRole, {'order': insert_position + 1, 'content': item_text})
+        
+        # 기존 선택 해제
+        for i in range(self.LogicItemList__QListWidget.count()):
+            self.LogicItemList__QListWidget.item(i).setSelected(False)
+            
+        # 새 아이템 추가 및 선택
         self.LogicItemList__QListWidget.insertItem(insert_position, item)
         self.LogicItemList__QListWidget.setCurrentItem(item)
 
