@@ -1,7 +1,7 @@
 import time
 import win32api
 import win32con
-from PySide6.QtCore import QObject, Signal, QTimer
+from PySide6.QtCore import QObject, Signal
 from ..utils.key_handler import KeyboardHook
 import threading
 
@@ -34,10 +34,12 @@ class LogicExecutor(QObject):
             'current_repeat': 1
         }
         
+        # 키 입력 지연 시간 (초)
+        self.KEY_INPUT_DELAY = 0.02
+        
         # 리소스 관리
         self.keyboard_hook = None
         self.selected_logic = None
-        self.timer = QTimer()
         
         # 동기화를 위한 락
         self._hook_lock = threading.Lock()
@@ -87,9 +89,6 @@ class LogicExecutor(QObject):
         """안전한 정리 작업"""
         with self._cleanup_lock:
             try:
-                if self.timer and self.timer.isActive():
-                    self.timer.stop()
-                    
                 with self._hook_lock:
                     if self.keyboard_hook:
                         self.keyboard_hook.stop()
@@ -139,7 +138,7 @@ class LogicExecutor(QObject):
                     self.execution_started.emit()
                     
                     # 비동기적으로 첫 번째 스텝 실행
-                    self.timer.singleShot(0, self._execute_next_step)
+                    self._execute_next_step()
                     return
                     
                 except Exception as e:
@@ -170,7 +169,7 @@ class LogicExecutor(QObject):
                         current_step=0,
                         current_repeat=current_repeat + 1
                     )
-                    self.timer.singleShot(100, self._execute_next_step)
+                    self._execute_next_step()
                 else:
                     # 현재 로직 완료
                     self._log_with_time(f"로직 '{self.selected_logic.get('name')}' 실행 완료")
@@ -180,7 +179,7 @@ class LogicExecutor(QObject):
                         prev_logic, prev_state = self._logic_stack.pop()
                         self.selected_logic = prev_logic
                         self._update_state(**prev_state)
-                        self.timer.singleShot(100, self._execute_next_step)
+                        self._execute_next_step()
                     else:
                         # 모든 로직 실행 완료
                         self._safe_cleanup()
@@ -208,14 +207,16 @@ class LogicExecutor(QObject):
             if step['type'] == 'key_input':
                 self._execute_key_input(step)
                 # 키 입력의 경우 키를 누르고 떼는 동작 사이에 약간의 지연 필요
-                self.timer.singleShot(20, self._execute_next_step)  # 키 입력 누르기 떼기 모두 지연시간 거친 후 다음 스텝
+                time.sleep(self.KEY_INPUT_DELAY)
+                self._execute_next_step()
             elif step['type'] == 'delay':
                 self._execute_delay(step)
                 # delay 타입은 _execute_delay에서 다음 스텝을 예약함
             elif step['type'] == 'logic':
                 self._execute_nested_logic(step)
-                # 중첩 로직 실행 후에도 20ms 지연
-                self.timer.singleShot(20, self._execute_next_step)
+                # 중첩 로직 실행 후에도 지연
+                time.sleep(self.KEY_INPUT_DELAY)
+                self._execute_next_step()
                 
         except Exception as e:
             self._log_with_time(f"스텝 실행 중 오류 발생: {str(e)}")
@@ -246,7 +247,8 @@ class LogicExecutor(QObject):
             duration = float(step['duration'])
             self._log_with_time(f"{duration}초 대기 시작")
             # 지연시간 후에 다음 스텝 실행
-            self.timer.singleShot(int(duration * 1000), self._execute_next_step)
+            time.sleep(duration)
+            self._execute_next_step()
         except Exception as e:
             raise Exception(f"지연 시간 실행 실패: {str(e)}")
     
