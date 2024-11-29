@@ -1,7 +1,7 @@
 import time
 import win32api
 import win32con
-from PySide6.QtCore import QObject, Signal
+from PySide6.QtCore import QObject, Signal, QTimer
 from ..utils.key_handler import KeyboardHook
 import threading
 
@@ -35,7 +35,7 @@ class LogicExecutor(QObject):
         }
         
         # 키 입력 지연 시간 (초)
-        self.KEY_INPUT_DELAY = 0.02
+        self.KEY_INPUT_DELAY = 0.022
         
         # 리소스 관리
         self.keyboard_hook = None
@@ -138,7 +138,7 @@ class LogicExecutor(QObject):
                     self.execution_started.emit()
                     
                     # 비동기적으로 첫 번째 스텝 실행
-                    self._execute_next_step()
+                    QTimer.singleShot(0, self._execute_next_step)
                     return
                     
                 except Exception as e:
@@ -169,7 +169,7 @@ class LogicExecutor(QObject):
                         current_step=0,
                         current_repeat=current_repeat + 1
                     )
-                    self._execute_next_step()
+                    QTimer.singleShot(0, self._execute_next_step)
                 else:
                     # 현재 로직 완료
                     self._log_with_time(f"로직 '{self.selected_logic.get('name')}' 실행 완료")
@@ -179,7 +179,7 @@ class LogicExecutor(QObject):
                         prev_logic, prev_state = self._logic_stack.pop()
                         self.selected_logic = prev_logic
                         self._update_state(**prev_state)
-                        self._execute_next_step()
+                        QTimer.singleShot(0, self._execute_next_step)
                     else:
                         # 모든 로직 실행 완료
                         self._safe_cleanup()
@@ -206,21 +206,24 @@ class LogicExecutor(QObject):
             
             if step['type'] == 'key_input':
                 self._execute_key_input(step)
-                # 키 입력의 경우 키를 누르고 떼는 동작 사이에 약간의 지연 필요
-                time.sleep(self.KEY_INPUT_DELAY)
-                self._execute_next_step()
+                # 키 입력 후 지연
+                QTimer.singleShot(int(self.KEY_INPUT_DELAY * 1000), lambda: self._schedule_next_step())
             elif step['type'] == 'delay':
-                self._execute_delay(step)
-                # delay 타입은 _execute_delay에서 다음 스텝을 예약함
+                duration = float(step['duration'])
+                self._log_with_time(f"{duration}초 대기 시작")
+                QTimer.singleShot(int(duration * 1000), lambda: self._schedule_next_step())
             elif step['type'] == 'logic':
                 self._execute_nested_logic(step)
-                # 중첩 로직 실행 후에도 지연
-                time.sleep(self.KEY_INPUT_DELAY)
-                self._execute_next_step()
+                # 중첩 로직은 자체적으로 다음 스텝을 예약
                 
         except Exception as e:
             self._log_with_time(f"스텝 실행 중 오류 발생: {str(e)}")
             self._safe_cleanup()
+
+    def _schedule_next_step(self):
+        """다음 스텝 실행을 예약"""
+        if not self.execution_state['is_stopping']:
+            QTimer.singleShot(0, self._execute_next_step)
     
     def _execute_key_input(self, step):
         """키 입력 실행"""
@@ -240,18 +243,50 @@ class LogicExecutor(QObject):
                 
         except Exception as e:
             raise Exception(f"키 입력 실행 실패: {str(e)}")
-    
-    def _execute_delay(self, step):
-        """지연 시간 실행"""
-        try:
-            duration = float(step['duration'])
-            self._log_with_time(f"{duration}초 대기 시작")
-            # 지연시간 후에 다음 스텝 실행
-            time.sleep(duration)
-            self._execute_next_step()
-        except Exception as e:
-            raise Exception(f"지연 시간 실행 실패: {str(e)}")
-    
+
+    def _execute_nested_logic(self, step):
+        """중첩 로직 실행"""
+        logic_id = step.get('logic_id')
+        if not logic_id:
+            self._log_with_time("로직 ID가 지정되지 않았습니다.")
+            return
+
+        nested_logic = self.logic_manager.get_all_logics().get(logic_id)
+        if not nested_logic:
+            self._log_with_time(f"로직 ID '{logic_id}'를 찾을 수 없습니다.")
+            return
+
+        # 중첩 로직 순환 참조 검사
+        if any(logic.get('id') == logic_id for logic, _ in self._logic_stack):
+            self._log_with_time(f"로직 ID '{logic_id}'가 이미 실행 중입니다. 중첩 실행을 방지합니다.")
+            self.execution_error.emit(f"로직 ID '{logic_id}'의 중첩 실행이 감지되었습니다.")
+            return
+
+        # 현재 실행 상태 저장
+        current_state = {
+            'current_step': self.execution_state['current_step'],
+            'current_repeat': self.execution_state['current_repeat'],
+            'is_stopping': self.execution_state['is_stopping']
+        }
+        self._logic_stack.append((self.selected_logic, current_state))
+
+        # 중첩 로직 설정
+        nested_logic = dict(nested_logic)
+        self.selected_logic = nested_logic
+
+        # 새로운 상태로 시작
+        self._update_state(
+            current_step=0,
+            current_repeat=1,
+            is_executing=True,
+            is_stopping=False
+        )
+
+        self._log_with_time(f"중첩 로직 '{nested_logic.get('name')}' 실행 시작 (총 {nested_logic.get('repeat_count', 1)}회 반복)")
+        
+        # 중첩 로직의 첫 스텝을 비동기적으로 실행
+        QTimer.singleShot(0, self._execute_next_step)
+
     def stop_all_logic(self):
         """모든 실행 중인 로직을 강제로 중지"""
         self._update_state(is_stopping=True)
@@ -296,43 +331,6 @@ class LogicExecutor(QObject):
         # 가상 키와 스캔 코드만 비교
         return (trigger_key.get('virtual_key') == key_info.get('virtual_key') and
                 trigger_key.get('scan_code') == key_info.get('scan_code'))
-
-    def _execute_nested_logic(self, step):
-        """중첩 로직 실행"""
-        logic_id = step.get('logic_id')
-        if not logic_id:
-            self._log_with_time("로직 ID가 지정되지 않았습니다.")
-            return
-            
-        nested_logic = self.logic_manager.get_all_logics().get(logic_id)
-        if not nested_logic:
-            self._log_with_time(f"로직 ID '{logic_id}'를 찾을 수 없습니다.")
-            return
-            
-        # 현재 실행 상태 저장
-        current_state = {
-            'current_step': self.execution_state['current_step'],
-            'current_repeat': self.execution_state['current_repeat'],
-            'is_executing': self.execution_state['is_executing'],
-            'is_stopping': self.execution_state['is_stopping']
-        }
-        self._logic_stack.append((self.selected_logic, current_state))
-        
-        # 중첩 로직 설정 (깊은 복사로 새로운 인스턴스 생성)
-        nested_logic = dict(nested_logic)  # 원본 로직을 변경하지 않도록 복사
-        self.selected_logic = nested_logic
-        
-        # 새로운 상태로 시작
-        self._update_state(
-            current_step=0,
-            current_repeat=1,
-            is_executing=True,
-            is_stopping=False
-        )
-        
-        self._log_with_time(f"중첩 로직 '{nested_logic.get('name')}' 실행 시작 (총 {nested_logic.get('repeat_count', 1)}회 반복)")
-        # 중첩 로직은 즉시 시작 (지연은 각 스텝에서 처리)
-        self._execute_next_step()
 
     def _log_with_time(self, message):
         """시간 정보가 포함된 로그 메시지 출력"""
