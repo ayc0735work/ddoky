@@ -742,7 +742,7 @@ class LogicDetailWidget(QFrame):
         if selected_items:
             self.copied_items = [item.text() for item in selected_items]
             items_count = len(self.copied_items)
-            self.log_message.emit(f"{items_count}개의 아이템이 복사되었습니다")
+            self.log_message.emit(f"{items_count}개의 로직 구성 아이템이 복사되었습니다")
             
     def _paste_item(self):
         """복사된 아이템들을 현재 선택된 아이템 아래에 붙여넣기"""
@@ -779,7 +779,7 @@ class LogicDetailWidget(QFrame):
             self.LogicItemList__QListWidget.setCurrentItem(last_inserted_item)
             
         items_count = len(self.copied_items)
-        self.log_message.emit(f"{items_count}개의 아이템이 붙여넣기되었습니다")
+        self.log_message.emit(f"{items_count}개의 로직 구성 아이템이 붙여넣기되었습니다")
 
     def eventFilter(self, obj, event):
         """이벤트 필터"""
@@ -923,7 +923,7 @@ class LogicDetailWidget(QFrame):
                 item_data = item.data(Qt.UserRole) or {}
                 item_data['order'] = i + 1
                 item.setData(Qt.UserRole, item_data)
-            self.log_message.emit(f"{len(selected_items)}개의 항목이 삭제되었습니다")
+            self.log_message.emit(f"{len(selected_items)}개의 로직 구성 아이템이 삭제되었습니다")
 
     def _on_nested_checkbox_changed(self, state):
         """중첩로직용 체크박스 상태 변경 시 호출"""

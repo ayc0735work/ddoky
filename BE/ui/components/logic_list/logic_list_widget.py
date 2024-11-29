@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout, 
                              QPushButton, QLabel, QListWidget, QListWidgetItem,
                              QSizePolicy, QMessageBox)
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt, Signal, QEvent
 from PySide6.QtGui import QFont
 import json
 import os
@@ -22,7 +22,7 @@ class LogicListWidget(QFrame):
     item_deleted = Signal(str)  # 아이템이 삭제되었을 때
     logic_selected = Signal(str)  # 로직이 선택되었을 때
     edit_logic = Signal(dict)  # 로직 불러오기 시그널 (로직 정보)
-    log_message = Signal(str)  # 로그 메시�� 시그널
+    log_message = Signal(str)  # 로그 메시지 시그널
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -30,6 +30,10 @@ class LogicListWidget(QFrame):
         self.saved_logics = {}  # 저장된 로직들을 관리하는 딕셔너리: {uuid: 로직 정보}
         self.settings_manager = SettingsManager()
         self.load_saved_logics()  # 저장된 로직 정보 불러오기
+        
+        # 이벤트 필터 설치
+        self.SavedLogicList__QListWidget.installEventFilter(self)
+        self.copied_logic = None  # 복사된 로직 정보 저장용
         
     def init_ui(self):
         """UI 초기화"""
@@ -131,7 +135,7 @@ class LogicListWidget(QFrame):
             return
 
         try:
-            # 아이템 이���
+            # 아이템 이동
             item = self.SavedLogicList__QListWidget.takeItem(current_row)
             if not item:  # takeItem이 실패한 경우
                 return
@@ -304,7 +308,7 @@ class LogicListWidget(QFrame):
         """로직 아이템의 표시 텍스트를 생성하는 메서드"""
         if not logic_info:  # logic_info가 None인 경우 처리
             return ""
-        name = logic_info.get('name', '')  # name이 없는 ��우 빈 문자열 반환
+        name = logic_info.get('name', '')  # name이 없는 경우 빈 문자열 반환
         trigger_key = logic_info.get('trigger_key', {})
         if trigger_key and 'key_code' in trigger_key:
             key_text = trigger_key['key_code']
@@ -331,7 +335,7 @@ class LogicListWidget(QFrame):
     def _get_logic_name_from_text(self, text):
         """표시 텍스트에서 로직 이름을 추출하는 메서드"""
         try:
-            # 대괄호 안의 내용을 추출
+            # ��괄호 안의 내용을 추출
             start = text.find('[') + 1
             end = text.find(']')
             if start > 0 and end > start:
@@ -403,7 +407,7 @@ class LogicListWidget(QFrame):
                 self.SavedLogicList__QListWidget.takeItem(self.SavedLogicList__QListWidget.row(current_item))
                 self.save_logics_to_settings()
                 self.item_deleted.emit(name)  # 아이템 삭제 시그널 발생
-                self.log_message.emit(f'로직 "{name}"이(가) ��제되었습니다')
+                self.log_message.emit(f'로직 "{name}"이(가) 제거되었습니다')
 
     def _update_logic_in_list(self, logic_info):
         """리스트에서 로직 정보를 업데이트"""
@@ -414,7 +418,7 @@ class LogicListWidget(QFrame):
         if not name:
             return
             
-        # 리스트에서 해당 로직 찾기
+        # ���스트에서 해당 로직 찾기
         for i in range(self.SavedLogicList__QListWidget.count()):
             item = self.SavedLogicList__QListWidget.item(i)
             if item:
@@ -461,3 +465,74 @@ class LogicListWidget(QFrame):
             display_text = f"[ {name} ] --- {key_code}"
             
         item.setText(display_text)
+
+    def eventFilter(self, obj, event):
+        """이벤트 필터"""
+        if obj == self.SavedLogicList__QListWidget and event.type() == QEvent.KeyPress:
+            modifiers = event.modifiers()
+            key = event.key()
+            
+            # Ctrl+C: 복사
+            if modifiers == Qt.ControlModifier and key == Qt.Key_C:
+                self._copy_logic()
+                return True
+                
+            # Ctrl+V: 붙여넣기
+            elif modifiers == Qt.ControlModifier and key == Qt.Key_V:
+                self._paste_logic()
+                return True
+                
+        return super().eventFilter(obj, event)
+
+    def _copy_logic(self):
+        """선택된 로직 복사"""
+        current_item = self.SavedLogicList__QListWidget.currentItem()
+        if not current_item:
+            return
+
+        try:
+            # 원본 로직 정보 가져오기
+            logic_id = current_item.data(Qt.UserRole)
+            if not logic_id or logic_id not in self.saved_logics:
+                return
+
+            # 로직 정보 복사
+            self.copied_logic = self.saved_logics[logic_id].copy()
+            self.log_message.emit(f"로직 '{self.copied_logic['name']}'이(가) 복사되었습니다.")
+            
+        except Exception as e:
+            self.log_message.emit(f"로직 복사 중 오류 발생: {str(e)}")
+
+    def _paste_logic(self):
+        """복사된 로직 붙여넣기"""
+        if not self.copied_logic:
+            self.log_message.emit("복사된 로직이 없습니다.")
+            return
+
+        try:
+            # 새 로직 정보 생성
+            new_logic = self.copied_logic.copy()
+            new_logic_id = str(uuid.uuid4())
+            
+            # 이름 뒤에 "- 복제" 추가
+            original_name = new_logic['name']
+            new_logic['name'] = f"{original_name} - 복제"
+            
+            # 생성/수정 시간 업데이트
+            current_time = datetime.now().isoformat()
+            new_logic['created_at'] = current_time
+            new_logic['updated_at'] = current_time
+            
+            # order 값을 현재 리스트의 마지막 순서 + 1로 설정
+            new_logic['order'] = self.SavedLogicList__QListWidget.count() + 1
+            
+            # 새 로직 저장
+            self.settings_manager.save_logic(new_logic_id, new_logic)
+            
+            # 리스트에 추가
+            self._add_logic_to_list(new_logic, new_logic_id)
+            
+            self.log_message.emit(f"로직 '{original_name}'이(가) 붙여넣기되었습니다.")
+            
+        except Exception as e:
+            self.log_message.emit(f"로직 붙여넣기 중 오류 발생: {str(e)}")
