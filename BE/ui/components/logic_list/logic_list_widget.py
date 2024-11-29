@@ -309,6 +309,12 @@ class LogicListWidget(QFrame):
         if not logic_info:  # logic_info가 None인 경우 처리
             return ""
         name = logic_info.get('name', '')  # name이 없는 경우 빈 문자열 반환
+        
+        # 중첩로직용인 경우
+        if logic_info.get('is_nested', False):
+            return f"[ {name} ] --- 중첩로직용"
+        
+        # 일반 로직인 경우 기존 로직대로 처리
         trigger_key = logic_info.get('trigger_key', {})
         if trigger_key and 'key_code' in trigger_key:
             key_text = trigger_key['key_code']
@@ -335,7 +341,7 @@ class LogicListWidget(QFrame):
     def _get_logic_name_from_text(self, text):
         """표시 텍스트에서 로직 이름을 추출하는 메서드"""
         try:
-            # �� 안의 내을 추출
+            #  안의 내을 추출
             start = text.find('[') + 1
             end = text.find(']')
             if start > 0 and end > start:
@@ -377,7 +383,7 @@ class LogicListWidget(QFrame):
             self.edit_logic.emit(logic_info)
 
     def _delete_item(self):
-        """선택된 아이템 삭제"""
+        """���택된 아이템 삭제"""
         selected_items = self.SavedLogicList__QListWidget.selectedItems()
         if not selected_items:
             return
@@ -468,7 +474,7 @@ class LogicListWidget(QFrame):
         # 리스트에 아이템 추가
         self.SavedLogicList__QListWidget.addItem(item)
         
-        # 저장된 로직 딕셔너리��� 추가
+        # 저장된 로직 딕셔너리 추가
         self.saved_logics[logic_id] = logic_info
 
     def _update_logic_item_text(self, item, logic_data):
@@ -503,7 +509,7 @@ class LogicListWidget(QFrame):
                 
             # Delete: 삭제
             elif key == Qt.Key_Delete:
-                self._delete_item()  # 기존의 삭제 버튼과 동일한 메서드 호출
+                self._delete_item()  # 기존의 삭제 �����과 동일한 메서드 호출
                 return True
                 
         return super().eventFilter(obj, event)

@@ -79,7 +79,7 @@ class LogicDetailWidget(QFrame):
         self.LogicNameInput__QLineEdit = QLineEdit()
         self.LogicNameInput__QLineEdit.setPlaceholderText("로직의 이름을 입력하세요")
         self.LogicNameInput__QLineEdit.textChanged.connect(self._check_data_entered)  # 텍스트 변경 시그널 연결
-        LogicNameSection__QHBoxLayout.addWidget(self.LogicNameInput__QLineEdit, 1)  # stretch factor 1을 추가하여 남은 공간을 모��� 사용
+        LogicNameSection__QHBoxLayout.addWidget(self.LogicNameInput__QLineEdit, 1)  # stretch factor 1을 추가하여 남은 공간을 모 사용
         
         LogicConfigurationLayout__QVBoxLayout.addLayout(LogicNameSection__QHBoxLayout)
         
@@ -484,7 +484,7 @@ class LogicDetailWidget(QFrame):
         self.edit_mode = False            # 수정 모드 해제
         self.original_name = None         # 원래 이름 초기화
         self.current_logic_id = None     # UUID도 초기화
-        self.RepeatCountInput__QSpinBox.setValue(1)    # 반복 횟수를 기본값(1)으로 초기화
+        self.RepeatCountInput__QSpinBox.setValue(1)    # 반복 횟수를 기본값(1)으로 ���기화
         self.current_logic = None         # 현재 로직 정보 초기화
         self.copied_items = []            # 복사된 아이템 초기화
 
@@ -510,8 +510,10 @@ class LogicDetailWidget(QFrame):
                 self.log_message.emit("오류: 로직 이름을 입력해주세요.")
                 return False
 
-            # 중첩로직용이 아닐 경우에만 트리거 키 검사
+            # 중첩로직용 여부 확인
             is_nested = self.is_nested_checkbox.isChecked()
+
+            # 중첩로직용이 아닐 경우에만 트리거 키 검사
             if not is_nested and not self.trigger_key_info:
                 self.log_message.emit("오류: 트리거 키를 설정해주세요.")
                 return False
@@ -532,10 +534,17 @@ class LogicDetailWidget(QFrame):
                 'updated_at': datetime.now().isoformat(),
                 'repeat_count': self.RepeatCountInput__QSpinBox.value(),
                 'items': items,
-                'is_nested': is_nested  # 중첩로직 여부 저장
+                'is_nested': is_nested,  # 중첩로직용 여부 저장
+                'trigger_key': {         # 중첩로직용일 때는 빈 트리거 키 정보 저장
+                    'display_text': '',
+                    'key_code': '',
+                    'modifiers': 0,
+                    'scan_code': 0,
+                    'virtual_key': 0
+                }
             }
 
-            # 중첩로직용이 아닐 경우에만 트리거 키 정보 추가
+            # 중첩로직용이 아닐 경우에만 실제 트리거 키 정보로 업데이트
             if not is_nested and self.trigger_key_info:
                 logic_info['trigger_key'] = {
                     'display_text': self.trigger_key_info.get('display_text', ''),
@@ -585,16 +594,17 @@ class LogicDetailWidget(QFrame):
             # UUID 저장 (logic_info에서 직접 가져옴)
             self.current_logic_id = logic_info.get('id')
             
-            # 중첩로직 여부 설정
+            # 중첩로직 여부 설정 (먼저 설정하여 트리거 키 UI 상태 제어)
             is_nested = logic_info.get('is_nested', False)
             self.is_nested_checkbox.setChecked(is_nested)
             
-            # 트리거 키 설정
-            trigger_key = logic_info.get('trigger_key', {})
-            if isinstance(trigger_key, dict) and trigger_key:
-                self.trigger_key_info = trigger_key.copy()
-                self.TriggerKeyInfoLabel__QLabel.setText(format_key_info(trigger_key))
-                self.TriggerKeyInputWidget__KeyInputWidget.set_key_info(trigger_key)
+            # 중첩로직용이 아닐 경우에만 트리거 키 설정
+            if not is_nested:
+                trigger_key = logic_info.get('trigger_key', {})
+                if isinstance(trigger_key, dict) and trigger_key:
+                    self.trigger_key_info = trigger_key.copy()
+                    self.TriggerKeyInfoLabel__QLabel.setText(format_key_info(trigger_key))
+                    self.TriggerKeyInputWidget__KeyInputWidget.set_key_info(trigger_key)
             
             # 반복 횟수 설정
             repeat_count = logic_info.get('repeat_count', 1)
@@ -794,7 +804,7 @@ class LogicDetailWidget(QFrame):
     def _check_data_entered(self, *args):
         """입력된 데이터가 있는지 확인하고 새 로직 버튼 상태를 업데이트"""
         # 새 로직 버튼 활성화 조건:
-        # 1. ���직 이름이 입력되어 있는 경우
+        # 1. 직 이름이 입력되어 있는 경우
         # 2. 트리거 키가 설정되어 있는 경우
         # 3. 아이템 목록에 하나 이상의 아이템이 있는 경우
         # 4. 반복 횟수가 1이 아닌 경우
@@ -915,12 +925,16 @@ class LogicDetailWidget(QFrame):
     def _on_nested_checkbox_changed(self, state):
         """중첩로직용 체크박스 상태 변경 시 호출"""
         is_nested = state == Qt.CheckState.Checked.value
+        
         # 트리거 키 입력 UI 비활성화/활성화
         self.TriggerKeyInputWidget__KeyInputWidget.setEnabled(not is_nested)
+        
         if is_nested:
-            # 중첩로직용일 경우 트리거 키 정보 초기화
+            # 중첩로직용일 경우 트리거 키 보 초기화
             self.trigger_key_info = None
             self.TriggerKeyInfoLabel__QLabel.clear()
+            # 트리거 키 입력 위젯 초기화
+            self.TriggerKeyInputWidget__KeyInputWidget.clear_key()
 
     def get_logic_data(self):
         """기존 메서드 수정"""
