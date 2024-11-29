@@ -14,6 +14,7 @@ class LogicOperationWidget(QFrame):
     process_selected = Signal(dict)  # 프로세스가 선택되었을 때
     process_reset = Signal()  # 프로세스가 초기화되었을 때
     operation_toggled = Signal(bool)  # 로직 동작이 토글되었을 때
+    force_stop = Signal()  # 강제 중지 시그널 추가
     log_message = Signal(str)  # 로그 메시지 시그널
     
     def __init__(self, parent=None):
@@ -64,6 +65,12 @@ class LogicOperationWidget(QFrame):
         self.reset_process_btn.setStyleSheet(BUTTON_STYLE)
         self.reset_process_btn.clicked.connect(self._on_reset_process)
         button_group.addWidget(self.reset_process_btn)
+        
+        # 강제 중지 버튼 추가
+        self.force_stop_btn = QPushButton("강제 중지")
+        self.force_stop_btn.setStyleSheet(BUTTON_STYLE)
+        self.force_stop_btn.clicked.connect(self._on_force_stop)
+        button_group.addWidget(self.force_stop_btn)
         
         first_row.addLayout(button_group)
         first_row.addStretch()  # 나머지 공간을 채움
@@ -130,6 +137,10 @@ class LogicOperationWidget(QFrame):
         self.selected_process = None
         self.selected_process_label.setText("선택된 프로세스: 없음")
         self.operation_checkbox.setChecked(False)
+        
+    def _on_force_stop(self):
+        """강제 중지 버튼 클릭 시 호출"""
+        self.force_stop.emit()
         
     def update_selected_process(self, process_name):
         """선택된 프로세스 업데이트"""
