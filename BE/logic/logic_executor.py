@@ -27,6 +27,9 @@ class LogicExecutor(QObject):
         self.process_manager = process_manager
         self.logic_manager = logic_manager
         
+        # 로직 활성화 상태 추가
+        self.is_logic_enabled = True
+        
         # 상태 관리
         self.execution_state = {
             'is_executing': False,
@@ -178,7 +181,7 @@ class LogicExecutor(QObject):
                 self._log_with_time("[로그] 현재 {}/{} 반복 완료".format(current_repeat, repeat_count))
                 
                 if current_repeat < repeat_count:
-                    # 아직 반복 횟수가 남았으면 처음부터 다시 시작
+                    # 아직 반복 횟수 남았으면 처음부터 다시 시작
                     self._update_state(
                         current_step=0,
                         current_repeat=current_repeat + 1
@@ -381,6 +384,11 @@ class LogicExecutor(QObject):
         self._update_state(is_stopping=True)
         self.stop_all_logic()
         self._log_with_time("[로그] 강제 중지 완료")
+        
+        # 키 입력 모니터링 다시 시작
+        if self.is_logic_enabled:
+            self.start_monitoring()
+            self._log_with_time("[로그] 키 입력 모니터링 다시 시작")
 
     def _should_execute_logic(self):
         """로직 실행 조건 확인
