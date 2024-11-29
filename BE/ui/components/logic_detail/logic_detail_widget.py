@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
                              QPushButton, QLabel, QListWidget, QListWidgetItem,
-                             QSizePolicy, QLineEdit, QInputDialog, QMessageBox, QSpinBox)
+                             QSizePolicy, QLineEdit, QInputDialog, QMessageBox, QSpinBox, QCheckBox)
 from PySide6.QtCore import Qt, Signal, QObject, QEvent
 from PySide6.QtGui import QFont, QGuiApplication, QIntValidator
 from datetime import datetime
@@ -147,20 +147,24 @@ class LogicDetailWidget(QFrame):
         self.RepeatCountInput__QSpinBox = QSpinBox()
         self.RepeatCountInput__QSpinBox.setFixedWidth(70)
         self.RepeatCountInput__QSpinBox.setAlignment(Qt.AlignRight)
-        # 숫자만 입력 가능하도록 설정
         self.RepeatCountInput__QSpinBox.setRange(1, 9999)
-        self.RepeatCountInput__QSpinBox.setValue(1)  # 기본값 설정
-        self.RepeatCountInput__QSpinBox.valueChanged.connect(self._check_data_entered)  # 값 변경 시그널 연결
+        self.RepeatCountInput__QSpinBox.setValue(1)
+        self.RepeatCountInput__QSpinBox.valueChanged.connect(self._check_data_entered)
         RepeatCountRow__QHBoxLayout.addWidget(self.RepeatCountInput__QSpinBox)
         
         # 반복 횟수 라벨
         RepeatCountLabel__QLabel = QLabel("회 반복")
         RepeatCountRow__QHBoxLayout.addWidget(RepeatCountLabel__QLabel)
         
-        RepeatCountRow__QHBoxLayout.addStretch()  # 나머지 공간을 채움
+        # 중첩로직용 체크박스 추가
+        self.is_nested_checkbox = QCheckBox("중첩로직용")
+        self.is_nested_checkbox.stateChanged.connect(self._on_nested_checkbox_changed)
+        RepeatCountRow__QHBoxLayout.addWidget(self.is_nested_checkbox)
+        
+        RepeatCountRow__QHBoxLayout.addStretch()
         
         LogicOptionsSection__QHBoxLayout.addLayout(RepeatCountRow__QHBoxLayout)
-        LogicOptionsSection__QHBoxLayout.addStretch()  # 나머지 공간을 채움
+        LogicOptionsSection__QHBoxLayout.addStretch()
         
         LogicConfigurationLayout__QVBoxLayout.addLayout(LogicOptionsSection__QHBoxLayout)
         
@@ -384,7 +388,7 @@ class LogicDetailWidget(QFrame):
                         '방향키 왼쪽 ←': win32con.VK_LEFT,
                         '방향키 오른쪽 →': win32con.VK_RIGHT,
                         '방향키 위쪽 ↑': win32con.VK_UP,
-                        '방향키 아래쪽 ↓': win32con.VK_DOWN,
+                        '방키 아래쪽 ↓': win32con.VK_DOWN,
                         '숫자패드 0': win32con.VK_NUMPAD0,
                         '숫자패드 1': win32con.VK_NUMPAD1,
                         '숫자패드 2': win32con.VK_NUMPAD2,
@@ -504,8 +508,9 @@ class LogicDetailWidget(QFrame):
                 self.log_message.emit("오류: 로직 이름을 입력해주세요.")
                 return False
 
-            # 트리거 키 확인
-            if not self.trigger_key_info:
+            # 중첩로직용이 아닐 경우에만 트리거 키 검사
+            is_nested = self.is_nested_checkbox.isChecked()
+            if not is_nested and not self.trigger_key_info:
                 self.log_message.emit("오류: 트리거 키를 설정해주세요.")
                 return False
 
@@ -517,22 +522,26 @@ class LogicDetailWidget(QFrame):
             # get_items 메서드를 사용하여 아이템 정보 가져오기
             items = self.get_items()
 
-            # 현재 로직 정보 구성 (필드 순서 지정)
+            # 현재 로직 정보 구성
             logic_info = {
                 'name': name,
                 'order': self.current_logic.get('order', 0) if self.current_logic else 0,
                 'created_at': datetime.now().isoformat() if not self.current_logic else self.current_logic.get('created_at'),
                 'updated_at': datetime.now().isoformat(),
-                'trigger_key': {
+                'repeat_count': self.RepeatCountInput__QSpinBox.value(),
+                'items': items,
+                'is_nested': is_nested  # 중첩로직 여부 저장
+            }
+
+            # 중첩로직용이 아닐 경우에만 트리거 키 정보 추가
+            if not is_nested and self.trigger_key_info:
+                logic_info['trigger_key'] = {
                     'display_text': self.trigger_key_info.get('display_text', ''),
                     'key_code': self.trigger_key_info.get('key_code', ''),
                     'modifiers': self.trigger_key_info.get('modifiers', 0),
                     'scan_code': self.trigger_key_info.get('scan_code', 0),
                     'virtual_key': self.trigger_key_info.get('virtual_key', 0)
-                },
-                'repeat_count': self.RepeatCountInput__QSpinBox.value(),
-                'items': items
-            }
+                }
 
             # 수정 모드인 경우 업데이트
             if self.edit_mode and self.original_name:
@@ -859,7 +868,7 @@ class LogicDetailWidget(QFrame):
                         self.log_message.emit(f"지연시간이 {delay:.3f}초로 수정되었습니다")
                 except ValueError:
                     self.log_message.emit("지연시간 형식이 올바르지 않습니다")
-            # 키 입력 아이템인 경우
+            # 키 입 아이템인 경우
             elif item_text.startswith("키 입력:"):
                 key_parts = item_text.split(" --- ")
                 if len(key_parts) == 2:
@@ -915,3 +924,44 @@ class LogicDetailWidget(QFrame):
                 item_data['order'] = i + 1
                 item.setData(Qt.UserRole, item_data)
             self.log_message.emit(f"{len(selected_items)}개의 항목이 삭제되었습니다")
+
+    def _on_nested_checkbox_changed(self, state):
+        """중첩로직용 체크박스 상태 변경 시 호출"""
+        is_nested = state == Qt.CheckState.Checked.value
+        # 트리거 키 입력 UI 비활성화/활성화
+        self.TriggerKeyInputWidget__KeyInputWidget.setEnabled(not is_nested)
+        if is_nested:
+            # 중첩로직용일 경우 트리거 키 정보 초기화
+            self.trigger_key_info = None
+            self.TriggerKeyInfoLabel__QLabel.clear()
+
+    def get_logic_data(self):
+        """기존 메서드 수정"""
+        data = {
+            'name': self.name_input.text(),
+            'repeat_count': self.repeat_input.value(),
+            'items': self.item_list.get_items(),
+            'is_nested': self.is_nested_checkbox.isChecked()
+        }
+        
+        # 중첩로직용이 아닐 경우에만 트리거 키 추가
+        if not data['is_nested']:
+            data['trigger_key'] = self.trigger_key
+            
+        return data
+
+    def set_logic_data(self, logic_data):
+        """기존 메서드 수정"""
+        self.name_input.setText(logic_data.get('name', ''))
+        self.repeat_input.setValue(logic_data.get('repeat_count', 1))
+        self.item_list.set_items(logic_data.get('items', []))
+        
+        # 중첩로직 여부 설정
+        is_nested = logic_data.get('is_nested', False)
+        self.is_nested_checkbox.setChecked(is_nested)
+        
+        # 중첩로직이 아닐 경우에만 트리거 키 설정
+        if not is_nested:
+            self.trigger_key = logic_data.get('trigger_key')
+            if self.trigger_key:
+                self.trigger_key_button.setText(self.trigger_key.get('key_code', '트리거 키'))

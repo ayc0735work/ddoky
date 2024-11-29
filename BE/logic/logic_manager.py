@@ -80,3 +80,28 @@ class LogicManager(QObject):
         if self.current_logic_name == logic_name:
             self.current_logic = None
             self.current_logic_name = None
+    
+    def validate_logic(self, logic_data):
+        """로직 데이터 유효성 검사"""
+        if not logic_data.get('name'):
+            raise ValueError("로직 이름은 필수입니다.")
+            
+        # 중첩로직용이 아닐 경우에만 트리거 키 검사
+        if not logic_data.get('is_nested', False):
+            if not logic_data.get('trigger_key'):
+                raise ValueError("트리거 키는 필수입니다.")
+        
+        if not logic_data.get('items'):
+            raise ValueError("최소 하나의 동작이 필요합니다.")
+            
+        return True
+    
+    def save_logic(self, logic_id, logic_data):
+        """로직 저장"""
+        try:
+            self.validate_logic(logic_data)
+            self.logics[logic_id] = logic_data
+            self._save_to_file()
+            return True
+        except ValueError as e:
+            return False, str(e)

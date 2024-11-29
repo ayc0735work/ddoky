@@ -14,7 +14,7 @@
             "order": 1,
             "name": "체력 회복 - 4회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-11-29T18:25:55.795194",
+            "updated_at": "2024-11-30T06:44:34.358450",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 /",
@@ -130,7 +130,7 @@
             "order": 2,
             "name": "체력 회복 - 1회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-11-29T18:25:55.802223",
+            "updated_at": "2024-11-30T06:44:34.365996",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "키 코드 192",
@@ -246,7 +246,7 @@
             "order": 3,
             "name": "보호 무장 힘",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-11-29T18:25:55.807733",
+            "updated_at": "2024-11-30T06:44:34.375252",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 .",
@@ -562,7 +562,7 @@
             "order": 4,
             "name": "모두 줍기",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-11-30T04:45:36.400526",
+            "updated_at": "2024-11-30T06:44:34.383998",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "오른쪽 쉬프트",
@@ -690,7 +690,7 @@
             "order": 5,
             "name": "공력증강",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-11-29T18:31:42.336328",
+            "updated_at": "2024-11-30T06:44:34.394002",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 6",
@@ -702,54 +702,6 @@
             "items": [
                 {
                     "order": 1,
-                    "type": "logic",
-                    "display_text": "체력 회복 - 1회",
-                    "logic_id": "ed0d7b48-c7ac-4397-8ce5-360143efa401",
-                    "logic_name": "체력 회복 - 1회",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 2,
-                    "display_text": "키 입력: 숫자패드 6 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 6",
-                    "scan_code": 77,
-                    "virtual_key": 102,
-                    "modifiers": 0
-                },
-                {
-                    "order": 3,
-                    "display_text": "키 입력: 숫자패드 6 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 6",
-                    "scan_code": 77,
-                    "virtual_key": 102,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.05초",
-                    "duration": 0.05,
-                    "order": 4
-                },
-                {
-                    "order": 5,
-                    "type": "logic",
-                    "display_text": "체력 회복 - 4회",
-                    "logic_id": "0dfa1418-cab1-4439-ae8a-b0c971471c99",
-                    "logic_name": "체력 회복 - 4회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.05초",
-                    "duration": 0.05,
-                    "order": 6
-                },
-                {
-                    "order": 7,
                     "display_text": "키 입력: 왼쪽 컨트롤 --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -762,10 +714,10 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.02초",
                     "duration": 0.02,
-                    "order": 8
+                    "order": 2
                 },
                 {
-                    "order": 9,
+                    "order": 3,
                     "display_text": "키 입력: F --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -775,7 +727,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 10,
+                    "order": 4,
                     "display_text": "키 입력: F --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -788,10 +740,10 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.02초",
                     "duration": 0.02,
-                    "order": 11
+                    "order": 5
                 },
                 {
-                    "order": 12,
+                    "order": 6,
                     "display_text": "키 입력: 왼쪽 컨트롤 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -804,7 +756,113 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.02초",
                     "duration": 0.02,
+                    "order": 7
+                },
+                {
+                    "order": 8,
+                    "type": "logic",
+                    "display_text": "체력 회복 - 1회",
+                    "logic_id": "ed0d7b48-c7ac-4397-8ce5-360143efa401",
+                    "logic_name": "체력 회복 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 9,
+                    "display_text": "키 입력: 숫자패드 6 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 6",
+                    "scan_code": 77,
+                    "virtual_key": 102,
+                    "modifiers": 0
+                },
+                {
+                    "order": 10,
+                    "display_text": "키 입력: 숫자패드 6 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 6",
+                    "scan_code": 77,
+                    "virtual_key": 102,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.05초",
+                    "duration": 0.05,
+                    "order": 11
+                },
+                {
+                    "order": 12,
+                    "type": "logic",
+                    "display_text": "체력 회복 - 4회",
+                    "logic_id": "0dfa1418-cab1-4439-ae8a-b0c971471c99",
+                    "logic_name": "체력 회복 - 4회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.05초",
+                    "duration": 0.05,
                     "order": 13
+                },
+                {
+                    "order": 14,
+                    "display_text": "키 입력: 왼쪽 컨트롤 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "왼쪽 컨트롤",
+                    "scan_code": 29,
+                    "virtual_key": 162,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 15
+                },
+                {
+                    "order": 16,
+                    "display_text": "키 입력: F --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "F",
+                    "scan_code": 33,
+                    "virtual_key": 70,
+                    "modifiers": 0
+                },
+                {
+                    "order": 17,
+                    "display_text": "키 입력: F --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "F",
+                    "scan_code": 33,
+                    "virtual_key": 70,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 18
+                },
+                {
+                    "order": 19,
+                    "display_text": "키 입력: 왼쪽 컨트롤 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "왼쪽 컨트롤",
+                    "scan_code": 29,
+                    "virtual_key": 162,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 20
                 }
             ]
         },
@@ -812,7 +870,7 @@
             "order": 6,
             "name": "자사 - 신수 공격",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-11-29T18:25:55.825389",
+            "updated_at": "2024-11-30T06:44:34.401223",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 *",
@@ -1400,7 +1458,7 @@
             "order": 7,
             "name": "자사 - 첨 공격",
             "created_at": "2024-11-29T16:54:14.545504",
-            "updated_at": "2024-11-29T18:25:55.830409",
+            "updated_at": "2024-11-30T06:44:34.408239",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 -",
@@ -1461,13 +1519,21 @@
                     "modifiers": 0
                 },
                 {
+                    "order": 7,
+                    "type": "logic",
+                    "display_text": "체력 회복 - 1회",
+                    "logic_id": "ed0d7b48-c7ac-4397-8ce5-360143efa401",
+                    "logic_name": "체력 회복 - 1회",
+                    "repeat_count": 1
+                },
+                {
                     "type": "delay",
                     "display_text": "지연시간 : 0.8초",
                     "duration": 0.8,
-                    "order": 7
+                    "order": 8
                 },
                 {
-                    "order": 8,
+                    "order": 9,
                     "display_text": "키 입력: 숫자패드 9 --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -1477,7 +1543,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 9,
+                    "order": 10,
                     "display_text": "키 입력: 숫자패드 9 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -1487,10 +1553,90 @@
                     "modifiers": 0
                 },
                 {
+                    "order": 11,
+                    "type": "logic",
+                    "display_text": "체력 회복 - 1회",
+                    "logic_id": "ed0d7b48-c7ac-4397-8ce5-360143efa401",
+                    "logic_name": "체력 회복 - 1회",
+                    "repeat_count": 1
+                },
+                {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.05초",
-                    "duration": 0.05,
-                    "order": 10
+                    "display_text": "지연시간 : 0.8초",
+                    "duration": 0.8,
+                    "order": 12
+                }
+            ]
+        },
+        "781e3dd9-5bc3-4ebe-91e9-b35857d3f198": {
+            "order": 0,
+            "name": "첨 공격",
+            "created_at": "2024-11-30T06:48:18.311236",
+            "updated_at": "2024-11-30T06:48:18.311236",
+            "trigger_key": {
+                "display_text": "",
+                "key_code": "",
+                "modifiers": 0,
+                "scan_code": 0,
+                "virtual_key": 0
+            },
+            "repeat_count": 1,
+            "items": [
+                {
+                    "order": 1,
+                    "display_text": "키 입력: C --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "C",
+                    "scan_code": 46,
+                    "virtual_key": 67,
+                    "modifiers": 0
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: C --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "C",
+                    "scan_code": 46,
+                    "virtual_key": 67,
+                    "modifiers": 0
+                }
+            ]
+        },
+        "87e329aa-ade0-44c9-a60c-69e01ec99374": {
+            "order": 8,
+            "name": "첨 공격",
+            "created_at": "2024-11-30T06:48:18.311236",
+            "updated_at": "2024-11-30T06:48:18.311236",
+            "trigger_key": {
+                "display_text": "",
+                "key_code": "",
+                "modifiers": 0,
+                "scan_code": 0,
+                "virtual_key": 0
+            },
+            "repeat_count": 1,
+            "items": [
+                {
+                    "order": 1,
+                    "display_text": "키 입력: C --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "C",
+                    "scan_code": 46,
+                    "virtual_key": 67,
+                    "modifiers": 0
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: C --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "C",
+                    "scan_code": 46,
+                    "virtual_key": 67,
+                    "modifiers": 0
                 }
             ]
         }

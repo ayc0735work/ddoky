@@ -22,7 +22,7 @@ class LogicListWidget(QFrame):
     item_deleted = Signal(str)  # 아이템이 삭제되었을 때
     logic_selected = Signal(str)  # 로직이 선택되었을 때
     edit_logic = Signal(dict)  # 로직 불러오기 시그널 (로직 정보)
-    log_message = Signal(str)  # 로그 메시지 시그널
+    log_message = Signal(str)  # 로그 메시�� 시그널
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -131,7 +131,7 @@ class LogicListWidget(QFrame):
             return
 
         try:
-            # 아이템 이동
+            # 아이템 이���
             item = self.SavedLogicList__QListWidget.takeItem(current_row)
             if not item:  # takeItem이 실패한 경우
                 return
@@ -304,7 +304,7 @@ class LogicListWidget(QFrame):
         """로직 아이템의 표시 텍스트를 생성하는 메서드"""
         if not logic_info:  # logic_info가 None인 경우 처리
             return ""
-        name = logic_info.get('name', '')  # name이 없는 경우 빈 문자열 반환
+        name = logic_info.get('name', '')  # name이 없는 ��우 빈 문자열 반환
         trigger_key = logic_info.get('trigger_key', {})
         if trigger_key and 'key_code' in trigger_key:
             key_text = trigger_key['key_code']
@@ -403,7 +403,7 @@ class LogicListWidget(QFrame):
                 self.SavedLogicList__QListWidget.takeItem(self.SavedLogicList__QListWidget.row(current_item))
                 self.save_logics_to_settings()
                 self.item_deleted.emit(name)  # 아이템 삭제 시그널 발생
-                self.log_message.emit(f'로직 "{name}"이(가) 삭제되었습니다')
+                self.log_message.emit(f'로직 "{name}"이(가) ��제되었습니다')
 
     def _update_logic_in_list(self, logic_info):
         """리스트에서 로직 정보를 업데이트"""
@@ -447,3 +447,17 @@ class LogicListWidget(QFrame):
         
         # 저장된 로직 딕셔너리에 추가
         self.saved_logics[logic_id] = logic_info
+
+    def _update_logic_item_text(self, item, logic_data):
+        """로직 아이템 텍스트 업데이트"""
+        name = logic_data.get('name', '무제')
+        
+        # 중첩로직용일 경우와 아닐 경우 표시 형식 구분
+        if logic_data.get('is_nested', False):
+            display_text = f"[ {name} ] --- 중첩로직용"
+        else:
+            trigger_key = logic_data.get('trigger_key', {})
+            key_code = trigger_key.get('key_code', '미설정')
+            display_text = f"[ {name} ] --- {key_code}"
+            
+        item.setText(display_text)
