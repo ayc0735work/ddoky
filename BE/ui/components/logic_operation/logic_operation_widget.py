@@ -140,7 +140,16 @@ class LogicOperationWidget(QFrame):
         
     def _on_force_stop(self):
         """강제 중지 버튼 클릭 시 호출"""
-        self.force_stop.emit()
+        try:
+            print("[디버그] 강제 중지 버튼 클릭 - 시작")
+            self.log_message.emit("[디버그] 강제 중지 버튼 클릭 - 시작")
+            self.force_stop.emit()
+            print("[디버그] 강제 중지 버튼 클릭 - 완료")
+            self.log_message.emit("[디버그] 강제 중지 버튼 클릭 - 완료")
+        except Exception as e:
+            error_msg = f"[오류] 강제 중지 버튼 클릭 중 오류 발생: {str(e)}"
+            print(error_msg)
+            self.log_message.emit(error_msg)
         
     def update_selected_process(self, process_name):
         """선택된 프로세스 업데이트"""
@@ -149,3 +158,7 @@ class LogicOperationWidget(QFrame):
     def update_active_process(self, process_name):
         """활성 프로세스 업데이트"""
         self.active_process_label.setText(f"활성 프로세스: {process_name}")
+        
+    def set_logic_executor(self, executor):
+        """LogicExecutor 인스턴스 설정"""
+        self.logic_executor = executor

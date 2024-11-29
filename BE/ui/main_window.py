@@ -103,7 +103,7 @@ class MainWindow(QMainWindow):
         
         # 로직 동작 온오프 위젯
         self.logic_operation_widget = LogicOperationWidget()
-        self.logic_operation_widget.logic_executor = self.logic_executor  # LogicExecutor 인스턴스 설정
+        self.logic_operation_widget.set_logic_executor(self.logic_executor)  # set_logic_executor 메서드 사용
         self.logic_operation_controller = LogicOperationController(self.logic_operation_widget)
         self.logic_operation_widget.log_message.connect(self._append_log)  # 로그 메시지 연결
         self.main_layout.addWidget(self.logic_operation_widget)
@@ -175,6 +175,7 @@ class MainWindow(QMainWindow):
         self.logic_list_widget.log_message.connect(self._append_log)
         self.logic_detail_widget.log_message.connect(self._append_log)
         self.logic_maker_widget.log_message.connect(self._append_log)
+        self.logic_operation_widget.log_message.connect(self._append_log)  # _append_log를 통해 로그 추가
         
         # 고급 기능과 로직 상세 정보 연결
         self.advanced_widget.advanced_action.connect(self.logic_detail_controller.on_advanced_action)
@@ -192,6 +193,8 @@ class MainWindow(QMainWindow):
         self.logic_executor.execution_started.connect(lambda: self._append_log("로직 실행이 시작되었습니다"))
         self.logic_executor.execution_finished.connect(lambda: self._append_log("로직 실행이 완료되었습니다"))
         self.logic_executor.execution_error.connect(lambda msg: self._append_log(f"로직 실행 중 오류 발생: {msg}"))
+        self.logic_executor.log_message.connect(self._append_log)  # LogicExecutor의 로그 메시지 연결
+        self.logic_executor.execution_state_changed.connect(lambda state: self._append_log(f"실행 상태 변경: {state}"))  # 상태 변경 로깅
         self.logic_executor.log_message.connect(self.log_widget.append)
     
     def _handle_record_mode(self):
@@ -200,6 +203,7 @@ class MainWindow(QMainWindow):
 
     def _append_log(self, message):
         """로그 메시지 추가"""
+        print(f"[로그] {message}")  # 터미널에도 출력
         self.log_widget.append(message)
         
     def _on_key_input(self, key_info):

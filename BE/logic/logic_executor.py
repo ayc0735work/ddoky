@@ -14,6 +14,7 @@ class LogicExecutor(QObject):
     execution_error = Signal(str)  # 실행 중 오류 발생
     log_message = Signal(str)  # 로그 메시지 시그널
     execution_state_changed = Signal(dict)  # 상태 변경 알림
+    cleanup_finished = Signal()  # 정리 완료 시그널
     
     def __init__(self, process_manager, logic_manager):
         """초기화
@@ -51,12 +52,19 @@ class LogicExecutor(QObject):
         
         # 시작 시간 저장
         self._start_time = time.time()
-    
+        
+        # 활성 타이머 추적
+        self._active_timers = []
+
     def _update_state(self, **kwargs):
         """상태 업데이트 및 알림"""
+        self._log_with_time(f"상태 업데이트 시작: {kwargs}")
         with self._state_lock:
+            self._log_with_time("상태 락 획득")
             self.execution_state.update(kwargs)
+            self._log_with_time(f"새로운 상태: {self.execution_state}")
             self.execution_state_changed.emit(self.execution_state.copy())
+            self._log_with_time("상태 변경 알림 완료")
     
     def start_monitoring(self):
         """트리거 키 모니터링 시작"""
@@ -87,20 +95,29 @@ class LogicExecutor(QObject):
     
     def _safe_cleanup(self):
         """안전한 정리 작업"""
-        with self._cleanup_lock:
-            try:
-                # 상태 초기화
-                self._update_state(
-                    is_executing=False,
-                    is_stopping=False,
-                    current_step=0,
-                    current_repeat=1
-                )
-                
-            except Exception as e:
-                self._log_with_time(f"정리 작업 중 오류 발생: {str(e)}")
-            finally:
-                self.selected_logic = None
+        self._log_with_time("안전한 정리 작업 시작")
+        try:
+            # 먼저 실행 상태를 False로 설정
+            self._log_with_time("실행 상태 False로 설정 시작")
+            self._update_state(is_executing=False)
+            self._log_with_time("실행 상태 False로 설정 완료")
+
+            # 중지 상태를 False로 설정
+            self._log_with_time("중지 상태 False로 설정 시작")
+            self._update_state(is_stopping=False)
+            self._log_with_time("중지 상태 False로 설정 완료")
+
+            # 현재 단계와 반복 횟수 초기화
+            self._log_with_time("단계와 반복 횟수 초기화 시작")
+            self._update_state(current_step=0, current_repeat=1)
+            self._log_with_time("단계와 반복 횟수 초기화 완료")
+
+            self._log_with_time("안전한 정리 작업 완료")
+            self.cleanup_finished.emit()
+            self._log_with_time("정리 완료 시그널 발생")
+        except Exception as e:
+            self._log_with_time(f"안전한 정리 작업 중 오류 발생: {str(e)}")
+            self.execution_error.emit(f"정리 작업 중 오류 발생: {str(e)}")
     
     def _on_key_released(self, key_info):
         """키를 뗄 때 호출
@@ -203,11 +220,19 @@ class LogicExecutor(QObject):
             if step['type'] == 'key_input':
                 self._execute_key_input(step)
                 # 키 입력 후 지연
-                QTimer.singleShot(int(self.KEY_INPUT_DELAY * 1000), lambda: self._schedule_next_step())
+                timer = QTimer()
+                timer.setSingleShot(True)
+                timer.timeout.connect(lambda: self._schedule_next_step())
+                timer.start(int(self.KEY_INPUT_DELAY * 1000))
+                self._active_timers.append(timer)
             elif step['type'] == 'delay':
                 duration = float(step['duration'])
                 self._log_with_time(f"{duration}초 대기 시작")
-                QTimer.singleShot(int(duration * 1000), lambda: self._schedule_next_step())
+                timer = QTimer()
+                timer.setSingleShot(True)
+                timer.timeout.connect(lambda: self._schedule_next_step())
+                timer.start(int(duration * 1000))
+                self._active_timers.append(timer)
             elif step['type'] == 'logic':
                 self._execute_nested_logic(step)
                 # 중첩 로직은 자체적으로 다음 스텝을 예약
@@ -291,19 +316,61 @@ class LogicExecutor(QObject):
 
     def stop_all_logic(self):
         """모든 실행 중인 로직을 강제로 중지"""
+        self._log_with_time("강제 중지 함수 시작")
+        
         with self._cleanup_lock:
             try:
                 self._update_state(is_stopping=True)
                 self._log_with_time("모든 로직 강제 중지")
                 
+                # 모든 활성 타이머 중지
+                self._log_with_time(f"활성 타이머 개수: {len(self._active_timers)}")
+                for timer in self._active_timers:
+                    try:
+                        timer.stop()
+                        self._log_with_time("타이머 중지 성공")
+                    except Exception as e:
+                        self._log_with_time(f"타이머 중지 실패: {str(e)}")
+                self._active_timers.clear()
+                self._log_with_time("모든 타이머 중지 완료")
+                
+                # 현재 실행 중인 로직의 키만 해제
+                if self.selected_logic and 'items' in self.selected_logic:
+                    self._log_with_time(f"선택된 로직: {self.selected_logic.get('name', '이름 없음')}")
+                    pressed_keys = set()
+                    for item in self.selected_logic['items']:
+                        if item.get('type') == 'key_input' and item.get('action') == '누르기':
+                            vk = item.get('virtual_key')
+                            if vk:
+                                pressed_keys.add(vk)
+                    
+                    self._log_with_time(f"해제할 키 개수: {len(pressed_keys)}")
+                    # 누르기 상태인 키들만 해제
+                    for vk in pressed_keys:
+                        try:
+                            win32api.keybd_event(vk, 0, win32con.KEYEVENTF_KEYUP, 0)
+                            self._log_with_time(f"키 해제 성공: {vk}")
+                        except Exception as e:
+                            self._log_with_time(f"키 해제 실패 (VK: {vk}): {str(e)}")
+                else:
+                    self._log_with_time("해제할 키가 없음")
+                
                 # 키보드 훅 정리
                 with self._hook_lock:
                     if self.keyboard_hook:
-                        self.keyboard_hook.stop()
-                        self.keyboard_hook.key_released.disconnect()
-                        self.keyboard_hook = None
+                        self._log_with_time("키보드 훅 정리 시작")
+                        try:
+                            self.keyboard_hook.stop()
+                            self.keyboard_hook.key_released.disconnect()
+                            self.keyboard_hook = None
+                            self._log_with_time("키보드 훅 정리 성공")
+                        except Exception as e:
+                            self._log_with_time(f"키보드 훅 정리 실패: {str(e)}")
+                    else:
+                        self._log_with_time("키보드 훅이 없음")
                 
                 self._safe_cleanup()
+                self._log_with_time("강제 중지 완료")
                 
             except Exception as e:
                 self._log_with_time(f"로직 중지 중 오류 발생: {str(e)}")
