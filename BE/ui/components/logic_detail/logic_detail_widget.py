@@ -35,6 +35,7 @@ class LogicDetailWidget(QFrame):
         self.keyboard_hook = None
         self.trigger_key_info = None  # 트리거 키 정보
         self.original_name = None  # 원래 이름
+        self.current_logic_id = None  # 현재 로직의 UUID 저장용 추가
         self.copied_items = []  # 복사된 아이템들 저장 (리스트로 변경)
         self.current_logic = None  # 현재 로직 정보
         self.settings_manager = SettingsManager()  # SettingsManager 인스턴스 생성
@@ -78,7 +79,7 @@ class LogicDetailWidget(QFrame):
         self.LogicNameInput__QLineEdit = QLineEdit()
         self.LogicNameInput__QLineEdit.setPlaceholderText("로직의 이름을 입력하세요")
         self.LogicNameInput__QLineEdit.textChanged.connect(self._check_data_entered)  # 텍스트 변경 시그널 연결
-        LogicNameSection__QHBoxLayout.addWidget(self.LogicNameInput__QLineEdit, 1)  # stretch factor 1을 추가하여 남은 공간을 모두 사용
+        LogicNameSection__QHBoxLayout.addWidget(self.LogicNameInput__QLineEdit, 1)  # stretch factor 1을 추가하여 남은 공간을 모��� 사용
         
         LogicConfigurationLayout__QVBoxLayout.addLayout(LogicNameSection__QHBoxLayout)
         
@@ -460,7 +461,7 @@ class LogicDetailWidget(QFrame):
                 })
             # 기타 아이템
             else:
-                # 일반 텍스트 아이템을 로직 타입으로 변환
+                # 반 텍스트 아이템을 로직 타입으로 변환
                 items.append({
                     'type': 'logic',
                     'logic_name': item_text,
@@ -482,6 +483,7 @@ class LogicDetailWidget(QFrame):
         self.trigger_key_info = None      # 트리거 키 정보 초기화
         self.edit_mode = False            # 수정 모드 해제
         self.original_name = None         # 원래 이름 초기화
+        self.current_logic_id = None     # UUID도 초기화
         self.RepeatCountInput__QSpinBox.setValue(1)    # 반복 횟수를 기본값(1)으로 초기화
         self.current_logic = None         # 현재 로직 정보 초기화
         self.copied_items = []            # 복사된 아이템 초기화
@@ -544,26 +546,11 @@ class LogicDetailWidget(QFrame):
                 }
 
             # 수정 모드인 경우 업데이트
-            if self.edit_mode and self.original_name:
-                # 기존 로직의 ID 찾기
-                logics = self.settings_manager.load_logics()
-                logic_id = None
-                for existing_id, existing_logic in logics.items():
-                    if existing_logic.get('name') == self.original_name:
-                        logic_id = existing_id
-                        break
-                
-                if logic_id:
-                    # 기존 로직 업데이트
-                    self.settings_manager.save_logic(logic_id, logic_info)
-                    self.logic_updated.emit(self.original_name, logic_info)
-                    self.log_message.emit(f"로직 '{name}'이(가) 업데이트되었습니다.")
-                else:
-                    # 기존 로직을 찾을 수 없는 경우 새로 저장
-                    new_logic_id = str(uuid.uuid4())
-                    self.settings_manager.save_logic(new_logic_id, logic_info)
-                    self.logic_saved.emit(logic_info)
-                    self.log_message.emit(f"로직 '{name}'이(가) 새로 저장되었습니다.")
+            if self.current_logic and self.current_logic_id:  # UUID가 있는 경우
+                # UUID로 저장
+                self.settings_manager.save_logic(self.current_logic_id, logic_info)
+                self.logic_updated.emit(self.original_name, logic_info)
+                self.log_message.emit(f"로직 '{name}'이(가) 업데이트되었습니다.")
             else:
                 # 새 로직 저장
                 new_logic_id = str(uuid.uuid4())
@@ -586,26 +573,28 @@ class LogicDetailWidget(QFrame):
                 self.log_message.emit("오류: 잘못된 로직 정보입니다.")
                 return
 
-            name = logic_info.get('name')
-            if not name:
-                self.log_message.emit("오류: 필수 로직 정보가 누락되었습니다.")
-                return
-
             # UI 초기화
             self.clear_all()
             
             # 기본 정보 설정
-            self.LogicNameInput__QLineEdit.setText(name)
+            self.LogicNameInput__QLineEdit.setText(logic_info.get('name', ''))
             self.current_logic = logic_info.copy()
             self.edit_mode = True
-            self.original_name = name
+            self.original_name = logic_info.get('name')
+            
+            # UUID 저장 (logic_info에서 직접 가져옴)
+            self.current_logic_id = logic_info.get('id')
+            
+            # 중첩로직 여부 설정
+            is_nested = logic_info.get('is_nested', False)
+            self.is_nested_checkbox.setChecked(is_nested)
             
             # 트리거 키 설정
             trigger_key = logic_info.get('trigger_key', {})
             if isinstance(trigger_key, dict) and trigger_key:
                 self.trigger_key_info = trigger_key.copy()
                 self.TriggerKeyInfoLabel__QLabel.setText(format_key_info(trigger_key))
-                self.TriggerKeyInputWidget__KeyInputWidget.set_key_info(trigger_key)  # 트리거 키 입력 위젯에도 설정
+                self.TriggerKeyInputWidget__KeyInputWidget.set_key_info(trigger_key)
             
             # 반복 횟수 설정
             repeat_count = logic_info.get('repeat_count', 1)
@@ -618,17 +607,15 @@ class LogicDetailWidget(QFrame):
                 for item in sorted_items:
                     if isinstance(item, dict):
                         if item.get('type') == 'delay':
-                            # 딜레이 아이템인 경우
                             display_text = f"지연시간 : {item.get('duration', 0.0)}초"
                             item['display_text'] = display_text
                         elif item.get('type') == 'logic':
-                            # 로직 아이템인 경우
                             logic_name = item.get('logic_name', '')
                             display_text = f"{logic_name}"
                             item['display_text'] = display_text
                         self._add_logic_item(item)
             
-            self.log_message.emit(f"로직 '{name}'이(가) 로드되었습니다.")
+            self.log_message.emit(f"로직 '{logic_info.get('name')}'이(가) 로드되었습니다.")
 
         except Exception as e:
             self.log_message.emit(f"로직 로드 중 오류 발생: {str(e)}")
@@ -807,7 +794,7 @@ class LogicDetailWidget(QFrame):
     def _check_data_entered(self, *args):
         """입력된 데이터가 있는지 확인하고 새 로직 버튼 상태를 업데이트"""
         # 새 로직 버튼 활성화 조건:
-        # 1. 로직 이름이 입력되어 있는 경우
+        # 1. ���직 이름이 입력되어 있는 경우
         # 2. 트리거 키가 설정되어 있는 경우
         # 3. 아이템 목록에 하나 이상의 아이템이 있는 경우
         # 4. 반복 횟수가 1이 아닌 경우
@@ -923,7 +910,7 @@ class LogicDetailWidget(QFrame):
                 item_data = item.data(Qt.UserRole) or {}
                 item_data['order'] = i + 1
                 item.setData(Qt.UserRole, item_data)
-            self.log_message.emit(f"{len(selected_items)}개의 로직 구성 아이템이 삭제되었습니다")
+            self.log_message.emit(f"{len(selected_items)}개의 로직 구성 아이템이 삭제되습니다")
 
     def _on_nested_checkbox_changed(self, state):
         """중첩로직용 체크박스 상태 변경 시 호출"""

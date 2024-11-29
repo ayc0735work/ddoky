@@ -335,7 +335,7 @@ class LogicListWidget(QFrame):
     def _get_logic_name_from_text(self, text):
         """표시 텍스트에서 로직 이름을 추출하는 메서드"""
         try:
-            # 호 안의 내을 추출
+            # �� 안의 내을 추출
             start = text.find('[') + 1
             end = text.find(']')
             if start > 0 and end > start:
@@ -346,32 +346,33 @@ class LogicListWidget(QFrame):
 
     def _item_double_clicked(self, item):
         """로직 불러오기 방법 - 더블클릭으로 호출"""
-        if not item:  # item이 None인 경우 처리
+        if not item:
             return
         
         logic_id = item.data(Qt.UserRole)
         if not logic_id:
             return
-            
+        
         if logic_id in self.saved_logics:
             logic_info = self.saved_logics[logic_id]
-            name = logic_info['name']
-            self.logic_selected.emit(name)  # 로직 선택 시그널 발생
+            logic_info['id'] = logic_id  # UUID를 logic_info에 포함
+            self.logic_selected.emit(logic_info['name'])
             self.log_message.emit(f"로직 데이터: {logic_info}")
             self.edit_logic.emit(logic_info)
-            
+
     def _edit_item(self):
         """선택된 로직 불러오기"""
         current_item = self.SavedLogicList__QListWidget.currentItem()
         if not current_item:
             return
-            
+        
         logic_id = current_item.data(Qt.UserRole)
         if not logic_id:
             return
-            
+        
         if logic_id in self.saved_logics:
             logic_info = self.saved_logics[logic_id]
+            logic_info['id'] = logic_id  # UUID를 logic_info에 포함
             self.log_message.emit(f"로직 데이터: {logic_info}")
             self.edit_logic.emit(logic_info)
 
@@ -467,7 +468,7 @@ class LogicListWidget(QFrame):
         # 리스트에 아이템 추가
         self.SavedLogicList__QListWidget.addItem(item)
         
-        # 저장된 로직 딕셔너리에 추가
+        # 저장된 로직 딕셔너리��� 추가
         self.saved_logics[logic_id] = logic_info
 
     def _update_logic_item_text(self, item, logic_data):
