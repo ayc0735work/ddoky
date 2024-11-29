@@ -89,12 +89,6 @@ class LogicExecutor(QObject):
         """안전한 정리 작업"""
         with self._cleanup_lock:
             try:
-                with self._hook_lock:
-                    if self.keyboard_hook:
-                        self.keyboard_hook.stop()
-                        self.keyboard_hook.key_released.disconnect()
-                        self.keyboard_hook = None
-                        
                 # 상태 초기화
                 self._update_state(
                     is_executing=False,
@@ -123,6 +117,10 @@ class LogicExecutor(QObject):
         # 로직 찾기 및 실행
         for logic_name, logic in self.logic_manager.get_all_logics().items():
             if self._is_trigger_key_matched(logic, key_info):
+                if self.execution_state['is_executing']:
+                    self._log_with_time(f"현재 다른 로직이 실행 중이므로 '{logic_name}' 로직을 실행할 수 없습니다.")
+                    return
+                    
                 try:
                     self.selected_logic = logic
                     self._update_state(
@@ -134,7 +132,6 @@ class LogicExecutor(QObject):
                     self._start_time = time.time()
                     self._log_with_time(f"로직 '{logic_name}' 실행 시작")
                     
-                    self.stop_monitoring()
                     self.execution_started.emit()
                     
                     # 비동기적으로 첫 번째 스텝 실행
@@ -184,7 +181,6 @@ class LogicExecutor(QObject):
                         # 모든 로직 실행 완료
                         self._safe_cleanup()
                         self.execution_finished.emit()
-                        self.start_monitoring()
                 return
                 
             # 현재 스텝 실행
@@ -295,15 +291,23 @@ class LogicExecutor(QObject):
 
     def stop_all_logic(self):
         """모든 실행 중인 로직을 강제로 중지"""
-        self._update_state(is_stopping=True)
-        self._log_with_time("모든 실행 중인 로직을 강제로 중지합니다")
-        self._safe_cleanup()
-        self.start_monitoring()
-    
-    def __del__(self):
-        """소멸자"""
-        self._safe_cleanup()
-
+        with self._cleanup_lock:
+            try:
+                self._update_state(is_stopping=True)
+                self._log_with_time("모든 로직 강제 중지")
+                
+                # 키보드 훅 정리
+                with self._hook_lock:
+                    if self.keyboard_hook:
+                        self.keyboard_hook.stop()
+                        self.keyboard_hook.key_released.disconnect()
+                        self.keyboard_hook = None
+                
+                self._safe_cleanup()
+                
+            except Exception as e:
+                self._log_with_time(f"로직 중지 중 오류 발생: {str(e)}")
+                
     def _should_execute_logic(self):
         """로직 실행 조건 확인
         

@@ -52,24 +52,24 @@ class LogicOperationController(QObject):
         
     def _handle_force_stop(self):
         """강제 중지 처리"""
-        # 모든 로직 중지
+        # 모든 로직 강제 중지
         if self.widget.logic_executor:
             self.widget.logic_executor.stop_all_logic()
-            self.widget.log_message.emit("모든 로직이 중지되었습니다")
+            self.widget.log_message.emit("모든 로직이 강제 중지되었습니다")
         
-        # 0.5초 대기 후 ESC 키 입력
-        time.sleep(0.5)
-        win32api.keybd_event(27, 0x01, 0, 0)  # ESC press (virtual_key: 27)
-        time.sleep(0.2)  # 키 입력 딜레이
-        win32api.keybd_event(27, 0x01, win32con.KEYEVENTF_KEYUP, 0)  # ESC release
-        self.widget.log_message.emit("ESC 키 입력 완료")
+        # # 0.5초 대기 후 ESC 키 입력
+        # time.sleep(0.5)
+        # win32api.keybd_event(27, 0x01, 0, 0)  # ESC press (virtual_key: 27)
+        # time.sleep(0.2)  # 키 입력 딜레이
+        # win32api.keybd_event(27, 0x01, win32con.KEYEVENTF_KEYUP, 0)  # ESC release
+        # self.widget.log_message.emit("ESC 키 입력 완료")
         
-        # 0.5초 대기 후 왼쪽 쉬프트 키 입력
-        time.sleep(0.5)
-        win32api.keybd_event(160, 0x2A, 0, 0)  # 왼쪽 쉬프트 press (virtual_key: 160)
-        time.sleep(0.2)  # 키 입력 딜레이
-        win32api.keybd_event(160, 0x2A, win32con.KEYEVENTF_KEYUP, 0)  # 왼쪽 쉬프트 release
-        self.widget.log_message.emit("왼쪽 쉬프트 키 입력 완료")
+        # # 0.5초 대기 후 왼쪽 쉬프트 키 입력
+        # time.sleep(0.5)
+        # win32api.keybd_event(160, 0x2A, 0, 0)  # 왼쪽 쉬프트 press (virtual_key: 160)
+        # time.sleep(0.2)  # 키 입력 딜레이
+        # win32api.keybd_event(160, 0x2A, win32con.KEYEVENTF_KEYUP, 0)  # 왼쪽 쉬프트 release
+        # self.widget.log_message.emit("왼쪽 쉬프트 키 입력 완료")
         
         self.widget.log_message.emit("강제 중지 처리가 완료되었습니다")
         

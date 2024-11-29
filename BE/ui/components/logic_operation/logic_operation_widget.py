@@ -67,7 +67,7 @@ class LogicOperationWidget(QFrame):
         button_group.addWidget(self.reset_process_btn)
         
         # 강제 중지 버튼 추가
-        self.force_stop_btn = QPushButton("강제 중지")
+        self.force_stop_btn = QPushButton("로직 강제 중지")
         self.force_stop_btn.setStyleSheet(BUTTON_STYLE)
         self.force_stop_btn.clicked.connect(self._on_force_stop)
         button_group.addWidget(self.force_stop_btn)
