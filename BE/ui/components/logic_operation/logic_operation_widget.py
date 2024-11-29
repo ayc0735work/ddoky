@@ -141,14 +141,11 @@ class LogicOperationWidget(QFrame):
     def _on_force_stop(self):
         """강제 중지 버튼 클릭 시 호출"""
         try:
-            print("[디버그] 강제 중지 버튼 클릭 - 시작")
             self.log_message.emit("[디버그] 강제 중지 버튼 클릭 - 시작")
             self.force_stop.emit()
-            print("[디버그] 강제 중지 버튼 클릭 - 완료")
             self.log_message.emit("[디버그] 강제 중지 버튼 클릭 - 완료")
         except Exception as e:
             error_msg = f"[오류] 강제 중지 버튼 클릭 중 오류 발생: {str(e)}"
-            print(error_msg)
             self.log_message.emit(error_msg)
         
     def update_selected_process(self, process_name):

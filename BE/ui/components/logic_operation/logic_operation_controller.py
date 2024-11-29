@@ -61,45 +61,25 @@ class LogicOperationController(QObject):
         
     def _handle_force_stop(self):
         """강제 중지 처리"""
-        try:
-            print("[디버그] 컨트롤러 강제 중지 핸들러 - 시작")
-            self.widget.log_message.emit("[디버그] 컨트롤러 강제 중지 핸들러 - 시작")
-            
-            # logic_executor 존재 여부 자세히 로깅
-            if hasattr(self.widget, 'logic_executor'):
-                if self.widget.logic_executor is not None:
-                    print("[디버그] logic_executor 존재함")
-                    self.widget.log_message.emit("[디버그] logic_executor 존재함")
-                    print(f"[디버그] logic_executor 타입: {type(self.widget.logic_executor)}")
-                    self.widget.log_message.emit(f"[디버그] logic_executor 타입: {type(self.widget.logic_executor)}")
-                    self.widget.logic_executor.force_stop()
-                    self.widget.logic_executor.cleanup_finished.connect(self._on_force_stop_cleanup_finished)
-                    print("[디버그] 모든 로직이 강제 중지되었습니다")
-                    self.widget.log_message.emit("[디버그] 모든 로직이 강제 중지되었습니다")
-                else:
-                    print("[디버그] logic_executor가 None임")
-                    self.widget.log_message.emit("[디버그] logic_executor가 None임")
+        if hasattr(self.widget, 'logic_executor'):
+            if self.widget.logic_executor is not None:
+                self.widget.logic_executor.force_stop()
+                self.widget.logic_executor.cleanup_finished.connect(self._on_force_stop_cleanup_finished)
             else:
-                print("[디버그] widget에 logic_executor 속성이 없음")
-                self.widget.log_message.emit("[디버그] widget에 logic_executor 속성이 없음")
-            
-            print("[디버그] 컨트롤러 강제 중지 핸들러 - 완료")
-            self.widget.log_message.emit("[디버그] 컨트롤러 강제 중지 핸들러 - 완료")
-        except Exception as e:
-            error_msg = f"[오류] 강제 중지 처리 중 오류 발생: {str(e)}"
-            print(error_msg)
-            self.widget.log_message.emit(error_msg)
-        
-        self.widget.log_message.emit("강제 중지 처리가 완료되었습니다")
+                self.widget.log_message.emit("[디버그] logic_executor가 None입니다")
+        else:
+            self.widget.log_message.emit("[디버그] logic_executor가 존재하지 않습니다")
         
     def _on_force_stop_cleanup_finished(self):
         """강제 중지 정리 작업 완료 후 처리"""
-        print("[디버그] 강제 중지 정리 작업 완료 - 키 감지 다시 시작")
-        self.widget.log_message.emit("[디버그] 강제 중지 정리 작업 완료 - 키 감지 다시 시작")
         if hasattr(self.widget, 'logic_executor'):
             if self.widget.logic_executor is not None:
                 self.widget.logic_executor.cleanup_finished.disconnect(self._on_force_stop_cleanup_finished)
                 self.widget.logic_executor.start_monitoring()  # 키 감지 다시 시작
+
+    def _log_with_time(self, message):
+        """로그 출력"""
+        self.widget.log_message.emit(message)
         
     def _update_active_process(self):
         """활성 프로세스 정보 업데이트"""
