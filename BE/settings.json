@@ -10,11 +10,47 @@
         }
     },
     "logics": {
-        "0dfa1418-cab1-4439-ae8a-b0c971471c99": {
+        "781e3dd9-5bc3-4ebe-91e9-b35857d3f198": {
             "order": 1,
+            "name": "첨 공격",
+            "created_at": "2024-11-30T06:48:18.311236",
+            "updated_at": "2024-11-30T07:01:10.865884",
+            "trigger_key": {
+                "display_text": "",
+                "key_code": "",
+                "modifiers": 0,
+                "scan_code": 0,
+                "virtual_key": 0
+            },
+            "repeat_count": 1,
+            "items": [
+                {
+                    "order": 1,
+                    "display_text": "키 입력: C --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "C",
+                    "scan_code": 46,
+                    "virtual_key": 67,
+                    "modifiers": 0
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: C --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "C",
+                    "scan_code": 46,
+                    "virtual_key": 67,
+                    "modifiers": 0
+                }
+            ]
+        },
+        "0dfa1418-cab1-4439-ae8a-b0c971471c99": {
+            "order": 2,
             "name": "체력 회복 - 4회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-11-30T06:44:34.358450",
+            "updated_at": "2024-11-30T07:01:10.872506",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 /",
@@ -127,10 +163,10 @@
             ]
         },
         "ed0d7b48-c7ac-4397-8ce5-360143efa401": {
-            "order": 2,
+            "order": 3,
             "name": "체력 회복 - 1회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-11-30T06:44:34.365996",
+            "updated_at": "2024-11-30T07:01:10.879532",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "키 코드 192",
@@ -243,10 +279,10 @@
             ]
         },
         "b8796333-e8d6-4ae2-9fec-801a713517d8": {
-            "order": 3,
+            "order": 4,
             "name": "보호 무장 힘",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-11-30T06:44:34.375252",
+            "updated_at": "2024-11-30T07:01:10.887175",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 .",
@@ -559,10 +595,10 @@
             ]
         },
         "9ed591e4-b227-448b-9d0f-b90c76d1f662": {
-            "order": 4,
+            "order": 5,
             "name": "모두 줍기",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-11-30T06:44:34.383998",
+            "updated_at": "2024-11-30T07:01:10.896864",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "오른쪽 쉬프트",
@@ -687,10 +723,10 @@
             ]
         },
         "e058193f-99b3-434c-be33-bb6222114c09": {
-            "order": 5,
+            "order": 6,
             "name": "공력증강",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-11-30T06:44:34.394002",
+            "updated_at": "2024-11-30T07:01:10.905446",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 6",
@@ -867,10 +903,10 @@
             ]
         },
         "a13e1283-eec8-4529-b6bc-f3e0dedc03ba": {
-            "order": 6,
+            "order": 7,
             "name": "자사 - 신수 공격",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-11-30T06:44:34.401223",
+            "updated_at": "2024-11-30T07:01:10.914184",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 *",
@@ -1454,197 +1490,11 @@
                 }
             ]
         },
-        "45ca8ee3-89fe-425d-878d-1528131ab96b": {
-            "order": 7,
-            "name": "자사 - 첨 공격",
-            "created_at": "2024-11-29T16:54:14.545504",
-            "updated_at": "2024-11-30T06:44:34.408239",
-            "trigger_key": {
-                "display_text": "",
-                "key_code": "숫자패드 -",
-                "modifiers": 0,
-                "scan_code": 74,
-                "virtual_key": 109
-            },
-            "repeat_count": 9999,
-            "items": [
-                {
-                    "order": 1,
-                    "type": "logic",
-                    "display_text": "공력증강",
-                    "logic_id": "e058193f-99b3-434c-be33-bb6222114c09",
-                    "logic_name": "공력증강",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 2,
-                    "type": "logic",
-                    "display_text": "공력증강",
-                    "logic_id": "e058193f-99b3-434c-be33-bb6222114c09",
-                    "logic_name": "공력증강",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 3,
-                    "type": "logic",
-                    "display_text": "보호 무장 힘",
-                    "logic_id": "b8796333-e8d6-4ae2-9fec-801a713517d8",
-                    "logic_name": "보호 무장 힘",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.05초",
-                    "duration": 0.05,
-                    "order": 4
-                },
-                {
-                    "order": 5,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 6,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 7,
-                    "type": "logic",
-                    "display_text": "체력 회복 - 1회",
-                    "logic_id": "ed0d7b48-c7ac-4397-8ce5-360143efa401",
-                    "logic_name": "체력 회복 - 1회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.8초",
-                    "duration": 0.8,
-                    "order": 8
-                },
-                {
-                    "order": 9,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 10,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 11,
-                    "type": "logic",
-                    "display_text": "체력 회복 - 1회",
-                    "logic_id": "ed0d7b48-c7ac-4397-8ce5-360143efa401",
-                    "logic_name": "체력 회복 - 1회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.8초",
-                    "duration": 0.8,
-                    "order": 12
-                }
-            ]
-        },
-        "781e3dd9-5bc3-4ebe-91e9-b35857d3f198": {
-            "order": 0,
-            "name": "첨 공격",
-            "created_at": "2024-11-30T06:48:18.311236",
-            "updated_at": "2024-11-30T06:48:18.311236",
-            "trigger_key": {
-                "display_text": "",
-                "key_code": "",
-                "modifiers": 0,
-                "scan_code": 0,
-                "virtual_key": 0
-            },
-            "repeat_count": 1,
-            "items": [
-                {
-                    "order": 1,
-                    "display_text": "키 입력: C --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "C",
-                    "scan_code": 46,
-                    "virtual_key": 67,
-                    "modifiers": 0
-                },
-                {
-                    "order": 2,
-                    "display_text": "키 입력: C --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "C",
-                    "scan_code": 46,
-                    "virtual_key": 67,
-                    "modifiers": 0
-                }
-            ]
-        },
-        "87e329aa-ade0-44c9-a60c-69e01ec99374": {
+        "83f0130c-d1b4-4de1-b5bc-a33ef95e8bb7": {
             "order": 8,
-            "name": "첨 공격",
-            "created_at": "2024-11-30T06:48:18.311236",
-            "updated_at": "2024-11-30T06:48:18.311236",
-            "trigger_key": {
-                "display_text": "",
-                "key_code": "",
-                "modifiers": 0,
-                "scan_code": 0,
-                "virtual_key": 0
-            },
-            "repeat_count": 1,
-            "items": [
-                {
-                    "order": 1,
-                    "display_text": "키 입력: C --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "C",
-                    "scan_code": 46,
-                    "virtual_key": 67,
-                    "modifiers": 0
-                },
-                {
-                    "order": 2,
-                    "display_text": "키 입력: C --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "C",
-                    "scan_code": 46,
-                    "virtual_key": 67,
-                    "modifiers": 0
-                }
-            ]
-        },
-        "3e6da396-46b1-4c80-83a6-fafdec5517a9": {
-            "order": 10,
             "name": "자사 - 첨 공격 - 복제",
-            "created_at": "2024-11-30T06:55:31.819592",
-            "updated_at": "2024-11-30T06:55:31.819592",
+            "created_at": "2024-11-30T07:01:08.707196",
+            "updated_at": "2024-11-30T07:01:10.921209",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 -",
@@ -1754,11 +1604,55 @@
                 }
             ]
         },
-        "096d5679-b9b6-49cc-818d-bbf73d640e27": {
-            "order": 11,
-            "name": "자사 - 첨 공격 - 복제 - 복제",
-            "created_at": "2024-11-30T06:57:19.191508",
-            "updated_at": "2024-11-30T06:57:19.191508",
+        "c5d1a59d-edb9-4187-a2db-9583a9a800f4": {
+            "order": 9,
+            "name": "첨 공격 마법 - 1회",
+            "created_at": "2024-11-30T06:58:26.113983",
+            "updated_at": "2024-11-30T07:01:10.929647",
+            "trigger_key": {
+                "display_text": "",
+                "key_code": "숫자패드 -",
+                "modifiers": 0,
+                "scan_code": 74,
+                "virtual_key": 109
+            },
+            "repeat_count": 9999,
+            "items": [
+                {
+                    "order": 1,
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 3,
+                    "type": "logic",
+                    "display_text": "체력 회복 - 1회",
+                    "logic_id": "ed0d7b48-c7ac-4397-8ce5-360143efa401",
+                    "logic_name": "체력 회복 - 1회",
+                    "repeat_count": 1
+                }
+            ]
+        },
+        "61df8249-1b92-42fc-b6b4-72126b4c08d9": {
+            "order": 10,
+            "name": "자사 - 첨 공격11",
+            "created_at": "2024-11-30T07:01:08.707196",
+            "updated_at": "2024-11-30T07:01:23.821930",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 -",
@@ -1868,11 +1762,11 @@
                 }
             ]
         },
-        "b4b9c18e-18d9-4b48-bb1c-cb297a10d613": {
-            "order": 12,
-            "name": "자사 - 첨 공격 - 복제 - 복제 - 복제",
-            "created_at": "2024-11-30T06:57:24.049479",
-            "updated_at": "2024-11-30T06:57:24.049479",
+        "366dc0eb-35e0-499b-a3ab-92303bce41bd": {
+            "order": 10,
+            "name": "자사 - 첨 공격",
+            "created_at": "2024-11-30T07:01:08.707196",
+            "updated_at": "2024-11-30T07:01:49.445936",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 -",
@@ -1901,6 +1795,14 @@
                 {
                     "order": 3,
                     "type": "logic",
+                    "display_text": "공력증강",
+                    "logic_id": "e058193f-99b3-434c-be33-bb6222114c09",
+                    "logic_name": "공력증강",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 4,
+                    "type": "logic",
                     "display_text": "보호 무장 힘",
                     "logic_id": "b8796333-e8d6-4ae2-9fec-801a713517d8",
                     "logic_name": "보호 무장 힘",
@@ -1910,22 +1812,12 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.05초",
                     "duration": 0.05,
-                    "order": 4
-                },
-                {
-                    "order": 5,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
+                    "order": 5
                 },
                 {
                     "order": 6,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1934,30 +1826,6 @@
                 },
                 {
                     "order": 7,
-                    "type": "logic",
-                    "display_text": "체력 회복 - 1회",
-                    "logic_id": "ed0d7b48-c7ac-4397-8ce5-360143efa401",
-                    "logic_name": "체력 회복 - 1회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.8초",
-                    "duration": 0.8,
-                    "order": 8
-                },
-                {
-                    "order": 9,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 10,
                     "display_text": "키 입력: 숫자패드 9 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -1967,7 +1835,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 11,
+                    "order": 8,
                     "type": "logic",
                     "display_text": "체력 회복 - 1회",
                     "logic_id": "ed0d7b48-c7ac-4397-8ce5-360143efa401",
@@ -1978,7 +1846,41 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.8초",
                     "duration": 0.8,
-                    "order": 12
+                    "order": 9
+                },
+                {
+                    "order": 10,
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 11,
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 12,
+                    "type": "logic",
+                    "display_text": "체력 회복 - 1회",
+                    "logic_id": "ed0d7b48-c7ac-4397-8ce5-360143efa401",
+                    "logic_name": "체력 회복 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.8초",
+                    "duration": 0.8,
+                    "order": 13
                 }
             ]
         }

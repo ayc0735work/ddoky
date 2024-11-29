@@ -335,7 +335,7 @@ class LogicListWidget(QFrame):
     def _get_logic_name_from_text(self, text):
         """표시 텍스트에서 로직 이름을 추출하는 메서드"""
         try:
-            # ��괄호 안의 내용을 추출
+            # 호 안의 내을 추출
             start = text.find('[') + 1
             end = text.find(']')
             if start > 0 and end > start:
@@ -377,37 +377,55 @@ class LogicListWidget(QFrame):
 
     def _delete_item(self):
         """선택된 아이템 삭제"""
-        current_item = self.SavedLogicList__QListWidget.currentItem()
-        if not current_item:
+        selected_items = self.SavedLogicList__QListWidget.selectedItems()
+        if not selected_items:
             return
-            
-        logic_id = current_item.data(Qt.UserRole)
-        if not logic_id:
-            return
-            
-        if logic_id in self.saved_logics:
-            logic_info = self.saved_logics[logic_id]
-            name = logic_info['name']
-            
-            reply = QMessageBox.question(
-                self, 
-                '로직 삭제', 
-                f'로직 "{name}"을(를) 삭제하시겠습니까?',
-                QMessageBox.Yes | QMessageBox.No, 
-                QMessageBox.No
-            )
-            
-            if reply == QMessageBox.Yes:
-                # 로직 삭제
-                del self.saved_logics[logic_id]
-                # settings에서도 로직 삭제
-                if logic_id in self.settings_manager.settings.get('logics', {}):
-                    del self.settings_manager.settings['logics'][logic_id]
-                # 리스트에서 아이템 제거
-                self.SavedLogicList__QListWidget.takeItem(self.SavedLogicList__QListWidget.row(current_item))
+        
+        # 삭제 확인 메시지 표시
+        if len(selected_items) == 1:
+            logic_name = self._get_logic_name_from_text(selected_items[0].text())
+            message = f'로직 "{logic_name}"을(를) 삭제하시겠습니까?'
+        else:
+            message = f'선택된 {len(selected_items)}개의 로직을 삭제하시겠습니까?'
+        
+        reply = QMessageBox.question(
+            self, 
+            '로직 삭제', 
+            message,
+            QMessageBox.Yes | QMessageBox.No, 
+            QMessageBox.No
+        )
+        
+        if reply == QMessageBox.Yes:
+            try:
+                # 선택된 모든 아이템 삭제
+                for item in selected_items:
+                    logic_id = item.data(Qt.UserRole)
+                    if logic_id in self.saved_logics:
+                        # saved_logics에서 삭제
+                        del self.saved_logics[logic_id]
+                        # settings에서도 삭제
+                        if logic_id in self.settings_manager.settings.get('logics', {}):
+                            del self.settings_manager.settings['logics'][logic_id]
+                        # 리스트에서 아이템 제거
+                        self.SavedLogicList__QListWidget.takeItem(
+                            self.SavedLogicList__QListWidget.row(item)
+                        )
+                        # 삭제 시그널 발생
+                        logic_name = self._get_logic_name_from_text(item.text())
+                        self.item_deleted.emit(logic_name)
+                
+                # 변경사항 저장
                 self.save_logics_to_settings()
-                self.item_deleted.emit(name)  # 아이템 삭제 시그널 발생
-                self.log_message.emit(f'로직 "{name}"이(가) 제거되었습니다')
+                
+                # 로그 메시지
+                if len(selected_items) == 1:
+                    self.log_message.emit(f'로직 "{logic_name}"이(가) 삭제되었습니다')
+                else:
+                    self.log_message.emit(f'{len(selected_items)}개의 로직이 삭제되었습니다')
+                
+            except Exception as e:
+                self.log_message.emit(f"로직 삭제 중 오류 발생: {str(e)}")
 
     def _update_logic_in_list(self, logic_info):
         """리스트에서 로직 정보를 업데이트"""
@@ -418,7 +436,7 @@ class LogicListWidget(QFrame):
         if not name:
             return
             
-        # ���스트에서 해당 로직 찾기
+        # 스트에서 해당 로직 찾기
         for i in range(self.SavedLogicList__QListWidget.count()):
             item = self.SavedLogicList__QListWidget.item(i)
             if item:
@@ -482,6 +500,11 @@ class LogicListWidget(QFrame):
                 self._paste_logic()
                 return True
                 
+            # Delete: 삭제
+            elif key == Qt.Key_Delete:
+                self._delete_item()  # 기존의 삭제 버튼과 동일한 메서드 호출
+                return True
+                
         return super().eventFilter(obj, event)
 
     def _copy_logic(self):
@@ -510,6 +533,13 @@ class LogicListWidget(QFrame):
             return
 
         try:
+            # 현재 선택된 아이템의 위치 확인
+            current_item = self.SavedLogicList__QListWidget.currentItem()
+            if current_item:
+                insert_position = self.SavedLogicList__QListWidget.row(current_item) + 1
+            else:
+                insert_position = self.SavedLogicList__QListWidget.count()
+
             # 새 로직 정보 생성
             new_logic = self.copied_logic.copy()
             new_logic_id = str(uuid.uuid4())
@@ -523,14 +553,32 @@ class LogicListWidget(QFrame):
             new_logic['created_at'] = current_time
             new_logic['updated_at'] = current_time
             
-            # order 값을 현재 리스트의 마지막 순서 + 1로 설정
-            new_logic['order'] = self.SavedLogicList__QListWidget.count() + 1
+            # 선택된 아이템 이후의 모든 아이템의 order 값을 1씩 증가
+            for i in range(insert_position, self.SavedLogicList__QListWidget.count()):
+                item = self.SavedLogicList__QListWidget.item(i)
+                if item:
+                    logic_id = item.data(Qt.UserRole)
+                    if logic_id in self.saved_logics:
+                        self.saved_logics[logic_id]['order'] = i + 2
+
+            # 새 로직의 order 값 설정
+            new_logic['order'] = insert_position + 1
             
             # 새 로직 저장
             self.settings_manager.save_logic(new_logic_id, new_logic)
             
-            # 리스트에 추가
+            # 리스트의 특정 위치에 추가
             self._add_logic_to_list(new_logic, new_logic_id)
+            
+            # 새로 추가된 아이템을 올바른 위치로 이동
+            last_item = self.SavedLogicList__QListWidget.item(self.SavedLogicList__QListWidget.count() - 1)
+            if last_item:
+                self.SavedLogicList__QListWidget.takeItem(self.SavedLogicList__QListWidget.count() - 1)
+                self.SavedLogicList__QListWidget.insertItem(insert_position, last_item)
+                self.SavedLogicList__QListWidget.setCurrentItem(last_item)
+            
+            # 변경사항 저장
+            self.save_logics_to_settings()
             
             self.log_message.emit(f"로직 '{original_name}'이(가) 붙여넣기되었습니다.")
             
