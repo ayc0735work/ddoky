@@ -236,6 +236,12 @@ class LogicExecutor(QObject):
             if step['key_code'] == '숫자패드 엔터' or scan_code > 0xFF:
                 flags |= win32con.KEYEVENTF_EXTENDEDKEY
             
+            # 쉼표 키 특별 처리
+            if step['key_code'] == ',':
+                virtual_key = win32api.VkKeyScan(',') & 0xFF
+                
+            self._log_with_time(f"키 입력 시도 - 키: {step['key_code']}, 가상키: {virtual_key}, 스캔코드: {scan_code}, 플래그: {flags}")
+            
             if step['action'] == '누르기':
                 win32api.keybd_event(virtual_key, scan_code, flags, 0)
             else:  # 떼기
