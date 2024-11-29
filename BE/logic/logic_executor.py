@@ -130,6 +130,12 @@ class LogicExecutor(QObject):
         """
         self._log_with_time("[로그] 키 입력 감지: {}".format(key_info))
         
+        # ESC 키 감지 (virtual_key = 27)
+        if key_info.get('virtual_key') == 27:
+            self._log_with_time("[로그] ESC 키 감지 - 로직 강제 중지 실행")
+            self.force_stop()
+            return
+        
         if not self._should_execute_logic():
             self._log_with_time("[로그] 로직 실행 조건이 맞지 않습니다.")
             return
