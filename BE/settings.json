@@ -874,7 +874,7 @@
                     "order": 15,
                     "type": "logic",
                     "display_text": "공격 - 일반 신수 - 1회",
-                    "logic_id": "b2194fc4-6b9e-4052-9a5b-16b88d7e05fe",
+                    "logic_id": "f7c64ad9-fb3a-44bc-a1f1-6c92293e5ba7",
                     "logic_name": "공격 - 일반 신수 - 1회",
                     "repeat_count": 1
                 },
@@ -882,7 +882,7 @@
                     "order": 16,
                     "type": "logic",
                     "display_text": "공격 - 일반 신수 - 1회",
-                    "logic_id": "a4f64c5c-1787-4b0c-824d-b415569a7188",
+                    "logic_id": "f7c64ad9-fb3a-44bc-a1f1-6c92293e5ba7",
                     "logic_name": "공격 - 일반 신수 - 1회",
                     "repeat_count": 1
                 },
@@ -890,7 +890,7 @@
                     "order": 17,
                     "type": "logic",
                     "display_text": "공격 - 일반 신수 - 1회",
-                    "logic_id": "3cb9c475-7fdb-4125-9b9a-e5e6acf6c615",
+                    "logic_id": "f7c64ad9-fb3a-44bc-a1f1-6c92293e5ba7",
                     "logic_name": "공격 - 일반 신수 - 1회",
                     "repeat_count": 1
                 }
