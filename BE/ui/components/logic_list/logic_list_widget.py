@@ -280,22 +280,22 @@ class LogicListWidget(QFrame):
                 if item:
                     logic_id = item.data(Qt.UserRole)
                     if logic_id in self.settings_manager.settings.get('logics', {}):
-                        logic_info = self.settings_manager.settings['logics'][logic_id]
+                        logic_info = self.settings_manager.settings['logics'][logic_id].copy()
                         
                         # 첫 번째 아이템의 order는 1로 설정하고, 나머지는 2부터 순차적으로 증가
                         logic_info['order'] = 1 if i == 0 else i + 1
                         logic_info['updated_at'] = datetime.now().isoformat()
-                        
-                        # settings_manager를 통해 로직 저장 (필드 순서 정리)
-                        updated_logic = self.settings_manager.save_logic(logic_id, logic_info)
-                        updated_logics[logic_id] = updated_logic
+                        updated_logics[logic_id] = logic_info
             
-            # 모든 로직이 성공적으로 저장되면 saved_logics 업데이트
+            # settings_manager의 settings 업데이트
+            settings = self.settings_manager.settings.copy()
+            settings['logics'] = updated_logics
+            
+            # 설정 저장
+            self.settings_manager._save_settings(settings)  # 직접 settings 전달
+            
+            # saved_logics 업데이트
             self.saved_logics = updated_logics
-            
-            # settings_manager의 settings도 업데이트
-            self.settings_manager.settings['logics'] = updated_logics
-            self.settings_manager._save_settings()
             
             self.log_message.emit("로직이 성공적으로 저장되었습니다.")
             
@@ -339,7 +339,7 @@ class LogicListWidget(QFrame):
         return f"[ {name} ]"
 
     def _get_logic_name_from_text(self, text):
-        """표시 텍스트에서 로직 이름을 추출하는 메서드"""
+        """표시 텍스트��서 로직 이름을 추출하는 메서드"""
         try:
             #  안의 내을 추출
             start = text.find('[') + 1
@@ -383,7 +383,7 @@ class LogicListWidget(QFrame):
             self.edit_logic.emit(logic_info)
 
     def _delete_item(self):
-        """택된 아이템 삭제"""
+        """선택된 아이템 삭제"""
         selected_items = self.SavedLogicList__QListWidget.selectedItems()
         if not selected_items:
             return
@@ -423,7 +423,8 @@ class LogicListWidget(QFrame):
                         self.item_deleted.emit(logic_name)
                 
                 # 변경사항 저장
-                self.save_logics_to_settings()
+                settings = self.settings_manager.settings.copy()
+                self.settings_manager._save_settings(settings)
                 
                 # 로그 메시지
                 if len(selected_items) == 1:
@@ -587,7 +588,7 @@ class LogicListWidget(QFrame):
             # 변경사항 저장
             self.save_logics_to_settings()
             
-            self.log_message.emit(f"로직 '{original_name}'이(가) 붙여넣기되었습니다.")
+            self.log_message.emit(f"로직 '{original_name}'이(가) 붙여넣기되었습니.")
             
         except Exception as e:
             self.log_message.emit(f"로직 붙여넣기 중 오류 발생: {str(e)}")

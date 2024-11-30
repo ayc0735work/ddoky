@@ -487,3 +487,41 @@ class LogicExecutor(QObject):
                 
         self._active_timers.clear()
         logger.info("모든 타이머 정리 완료")
+
+    def save_logics_to_settings(self):
+        """현재 로직 목록을 설정에 저장"""
+        try:
+            # 현재 설정을 다시 로드하여 최신 상태 유지
+            self.settings_manager.reload_settings()
+            
+            # 로직 목록을 순회하면서 order 값 업데이트
+            updated_logics = {}
+            for i in range(self.SavedLogicList__QListWidget.count()):
+                item = self.SavedLogicList__QListWidget.item(i)
+                if item:
+                    logic_id = item.data(Qt.UserRole)
+                    if logic_id in self.settings_manager.settings.get('logics', {}):
+                        logic_info = self.settings_manager.settings['logics'][logic_id]
+                        
+                        # 첫 번째 아이템의 order는 1로 설정하고, 나머지는 2부터 순차적으로 증가
+                        logic_info['order'] = 1 if i == 0 else i + 1
+                        logic_info['updated_at'] = datetime.now().isoformat()
+                        
+                        # settings_manager를 통해 로직 저장 (필드 순서 정리)
+                        updated_logic = self.settings_manager.save_logic(logic_id, logic_info)
+                        updated_logics[logic_id] = updated_logic
+            
+            # 모든 로직이 성공적으로 저장되면 saved_logics 업데이트
+            self.saved_logics = updated_logics
+            
+            # settings_manager의 settings 업데이트 및 저장
+            settings = self.settings_manager.settings.copy()
+            settings['logics'] = updated_logics
+            self.settings_manager._save_settings(settings)  # settings 인자 추가
+            
+            self.log_message.emit("로직이 성공적으로 저장되었습니다.")
+            
+        except Exception as e:
+            self.log_message.emit(f"로직 저장 중 오류 발생: {str(e)}")
+            # 오류 발생 시 저장된 로직 다시 불러오기
+            self.load_saved_logics()
