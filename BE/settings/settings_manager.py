@@ -28,7 +28,7 @@ class SettingsManager:
     def _save_settings(self, settings):
         """설정 파일에 현재 설정을 저장합니다."""
         try:
-            # 로직 데이터에서 uuid 필드 ��거 및 필드 순서 정리
+            # 로직 데이터에서 uuid 필드 제거 및 필드 순서 정리
             if 'logics' in settings:
                 ordered_logics = {}
                 for logic_id, logic_data in settings['logics'].items():
@@ -260,8 +260,29 @@ class SettingsManager:
                 'trigger_key': logic_data.get('trigger_key', {}),
                 'repeat_count': logic_data['repeat_count'],
                 'items': logic_data['items'],
-                'is_nested': is_nested  # 중첩로직용 여부 저장
+                'is_nested': is_nested
             }
+
+            # 기존 로직의 이름과 ID를 가져옴
+            old_logic = settings['logics'].get(logic_id, {})
+            old_name = old_logic.get('name')
+            
+            # 이름이나 UUID가 변경되었는지 확인
+            name_changed = old_name and old_name != logic_info['name']
+            
+            # 모든 로직을 순회하면서 중첩된 로직의 UUID와 이름을 업데이트
+            if name_changed or logic_id:
+                for existing_logic_id, existing_logic in settings['logics'].items():
+                    if 'items' in existing_logic:
+                        updated_items = []
+                        for item in existing_logic['items']:
+                            if item.get('type') == 'logic' and item.get('logic_id') == logic_id:
+                                # UUID가 일치하는 경우 이름도 업데이트
+                                item = item.copy()
+                                item['logic_name'] = logic_info['name']
+                                item['display_text'] = logic_info['name']
+                            updated_items.append(item)
+                        existing_logic['items'] = updated_items
             
             # 로직 저장
             settings['logics'][logic_id] = logic_info

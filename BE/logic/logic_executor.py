@@ -40,9 +40,9 @@ class LogicExecutor(QObject):
         
         # 키 입력 딜레이 세분화
         self.KEY_DELAYS = {
-            '누르기': 0.015,  # 키를 누를 때의 딜레이
-            '떼기': 0.02,    # 키를 뗄 때의 딜레이
-            '기본': 0.02     # 기타 동작의 기본 딜레이
+            '누르기': 0.028,  # 키를 누를 때의 딜레이
+            '떼기': 0.028,    # 키를 뗄 때의 딜레이
+            '기본': 0.028     # 기타 동작의 기본 딜레이
         }
         
         # 리소스 관리
@@ -145,8 +145,10 @@ class LogicExecutor(QObject):
             return
             
         # 로직 찾기 및 실행
+        found_matching_logic = False
         for logic_name, logic in self.logic_manager.get_all_logics().items():
             if self._is_trigger_key_matched(logic, key_info):
+                found_matching_logic = True
                 if self.execution_state['is_executing']:
                     self._log_with_time("[로그] 현재 다른 로직이 실행 중이므로 '{}' 로직을 실행할 수 없습니다.".format(logic_name))
                     return
@@ -172,7 +174,8 @@ class LogicExecutor(QObject):
                     self._log_with_time("[오류] 로직 시작 중 오류 발생: {}".format(str(e)))
                     self._safe_cleanup()
                     
-        self._log_with_time("[로그] 일치하는 트리거 키를 찾을 수 없습니다.")
+        if not found_matching_logic:
+            self._log_with_time("[로그] 일치하는 트리거 키를 찾을 수 없습니다.")
     
     def _execute_next_step(self):
         """현재 실행할 스텝이 무엇인지 결정하는 관리자 함수"""
@@ -188,18 +191,19 @@ class LogicExecutor(QObject):
                 repeat_count = self.selected_logic.get('repeat_count', 1)
                 current_repeat = self.execution_state['current_repeat']
                 
-                self._log_with_time("[로그] 현재 {}/{} 반복 완료".format(current_repeat, repeat_count))
+                self._log_with_time(f"[로그] 현재 {current_repeat}/{repeat_count} 반복 완료")
                 
                 if current_repeat < repeat_count:
                     # 아직 반복 횟수 남았으면 처음부터 다시 시작
                     self._update_state(
-                        current_step=0,
-                        current_repeat=current_repeat + 1
+                        current_step=0,  # 스텝을 0으로 초기화
+                        current_repeat=current_repeat + 1  # 반복 횟수 증가
                     )
+                    # 다음 반복 실행을 위해 비동기 호출
                     QTimer.singleShot(0, self._execute_next_step)
                 else:
-                    # 현재 로직 완료
-                    self._log_with_time("[로그] 로직 '{}' 실행 완료".format(self.selected_logic.get('name')))
+                    # 모든 반복이 완료된 경우
+                    self._log_with_time(f"[로그] 로직 '{self.selected_logic.get('name')}' 실행 완료")
                     
                     # 스택에 이전 로직이 있으면 복원
                     if self._logic_stack:
@@ -219,7 +223,7 @@ class LogicExecutor(QObject):
             self._execute_step(step)
             
         except Exception as e:
-            self._log_with_time("[오류] 다음 스텝 실행 중 오류 발생: {}".format(str(e)))
+            self._log_with_time(f"[오류] 다음 스텝 실행 중 오류 발생: {str(e)}")
             self._safe_cleanup()
     
     def _execute_step(self, step):
@@ -286,46 +290,50 @@ class LogicExecutor(QObject):
 
     def _execute_nested_logic(self, step):
         """중첩 로직 실행"""
-        logic_id = step.get('logic_id')
-        if not logic_id:
-            self._log_with_time("[로그] 로직 ID가 지정되지 않았습니다.")
-            return
+        try:
+            logic_id = step.get('logic_id')
+            logic_name = step.get('logic_name')
+            
+            # UUID로 로직 찾기
+            nested_logic = self.logic_manager.get_all_logics().get(logic_id)
+            
+            # 로직을 찾지 못한 경우
+            if not nested_logic:
+                self._log_with_time(f"[로그] 실행할 수 있는 로직을 찾을 수 없습니다: {logic_name}")
+                # 다음 스텝으로 진행
+                self._schedule_next_step()
+                return
 
-        nested_logic = self.logic_manager.get_all_logics().get(logic_id)
-        if not nested_logic:
-            self._log_with_time("[로그] 로직 ID '{}'를 찾을 수 없습니다.".format(logic_id))
-            return
+            # 순환 참조 검사
+            if any(logic.get('id') == logic_id for logic, _ in self._logic_stack):
+                self._log_with_time(f"[로그] 로직 '{logic_name}'의 순환 참조가 감지되었습니다.")
+                self._schedule_next_step()
+                return
 
-        # 중첩 로직 순환 참조 검사
-        if any(logic.get('id') == logic_id for logic, _ in self._logic_stack):
-            self._log_with_time("[로그] 로직 ID '{}'가 이미 실행 중입니다. 중첩 실행을 방지합니다.".format(logic_id))
-            self.execution_error.emit("로직 ID '{}'의 중첩 실행이 감지되었습니다.".format(logic_id))
-            return
+            # 로직 실행
+            current_state = {
+                'current_step': self.execution_state['current_step'],
+                'current_repeat': self.execution_state['current_repeat'],
+                'is_stopping': self.execution_state['is_stopping']
+            }
+            self._logic_stack.append((self.selected_logic, current_state))
 
-        # 현재 실행 상태 저장
-        current_state = {
-            'current_step': self.execution_state['current_step'],
-            'current_repeat': self.execution_state['current_repeat'],
-            'is_stopping': self.execution_state['is_stopping']
-        }
-        self._logic_stack.append((self.selected_logic, current_state))
+            nested_logic = dict(nested_logic)
+            self.selected_logic = nested_logic
 
-        # 중첩 로직 설정
-        nested_logic = dict(nested_logic)
-        self.selected_logic = nested_logic
+            self._update_state(
+                current_step=0,
+                current_repeat=1,
+                is_executing=True,
+                is_stopping=False
+            )
 
-        # 새로운 상태로 시작
-        self._update_state(
-            current_step=0,
-            current_repeat=1,
-            is_executing=True,
-            is_stopping=False
-        )
-
-        self._log_with_time("[로그] 중첩 로직 '{}' 실행 시작 (총 {}회 반복)".format(nested_logic.get('name'), nested_logic.get('repeat_count', 1)))
-        
-        # 중첩 로직의 첫 스텝을 비동기적으로 실행
-        QTimer.singleShot(0, self._execute_next_step)
+            self._log_with_time(f"[로그] 중첩 로직 '{logic_name}' 실행 시작 (총 {nested_logic.get('repeat_count', 1)}회 반복)")
+            QTimer.singleShot(0, self._execute_next_step)
+            
+        except Exception as e:
+            self._log_with_time(f"[오류] 중첩 로직 실행 중 오류 발생: {str(e)}")
+            self._schedule_next_step()
 
     def stop_all_logic(self):
         """모든 실행 중인 로직을 강제로 중지"""
@@ -408,7 +416,7 @@ class LogicExecutor(QObject):
             # 키 입력 모니터링 다시 시작
             if self.is_logic_enabled:
                 self.start_monitoring()
-                self._log_with_time("[로그] 키 입력 모니터링 다시 시작")
+                self._log_with_time("[로그] 키 입력 모니터링 다시 작")
             
             self._log_with_time("[로그] 강제 중지 완료")
             
@@ -451,12 +459,39 @@ class LogicExecutor(QObject):
 
     def _log_with_time(self, message):
         """시간 정보가 포함된 로그 메시지 출력"""
-        # 로직 실행과 관련된 로그인 경우에만 시간 정보 추가
-        if any(keyword in message for keyword in [
-            "스텝", "로직", "대기", "키 입력", "타이머",
-            "상태 업데이트", "정리 작업"
-        ]):
-            elapsed = int((time.time() - self._start_time) * 1000)  # 밀리초 단위
+        
+        # 무시할 로그 메시지 패턴
+        ignore_patterns = [
+            "키 입력 시도",
+            "키 입력 감지",
+            "로직 실행 조건이 맞지 않습니다",
+            "상태 업데이트 시작",
+            "상태 락 획득",
+            "새로운 상태",
+            "실행 상태 변경",
+            "상태 변경 알림 완료"
+        ]
+
+        # 무시할 패턴이 포함된 메시지는 로깅하지 않음
+        if any(pattern in message for pattern in ignore_patterns):
+            return
+
+        # 시간 정보를 포함할 로그 패턴
+        time_patterns = [
+            "로직 실행 시작",
+            "로직 실행 완료",
+            "중첩 로직",
+            "반복 완료",
+            "강제 중지",
+            "타이머 정리",
+            "키 상태 정리",
+            "스텝",  # 스텝 실행 로그 추가
+            "지연시간"  # 지연시간 로그 추가
+        ]
+
+        # 시간 정보 포함할 패턴이 있는 경우 시간 정보 추가
+        if any(pattern in message for pattern in time_patterns):
+            elapsed = int((time.time() - self._start_time) * 1000)
             formatted_message = f"[{elapsed}ms] {message}"
         else:
             formatted_message = message

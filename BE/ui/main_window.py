@@ -193,7 +193,7 @@ class MainWindow(QMainWindow):
         self.logic_executor.execution_started.connect(lambda: self._append_log("로직 실행이 시작되었습니다"))
         self.logic_executor.execution_finished.connect(lambda: self._append_log("로직 실행이 완료되었습니다"))
         self.logic_executor.execution_error.connect(lambda msg: self._append_log(f"로직 실행 중 오류 발생: {msg}"))
-        self.logic_executor.execution_state_changed.connect(lambda state: self._append_log(f"실행 상태 변경: {state}"))  # 상태 변경 로깅
+        #self.logic_executor.execution_state_changed.connect(lambda state: self._append_log(f"실행 상태 변경: {state}"))  # 상태 변경 로깅
         self.logic_executor.log_message.connect(self.log_widget.append)
     
     def _handle_record_mode(self):

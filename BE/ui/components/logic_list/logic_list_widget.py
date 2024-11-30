@@ -183,38 +183,83 @@ class LogicListWidget(QFrame):
     def on_logic_saved(self, logic_info):
         """로직이 저장되었을 때 호출되는 메서드"""
         try:
-            # 새 UUID 생성
-            logic_id = str(uuid.uuid4())
-            
-            # order 값을 현재 리스트의 마지막 순서 + 1로 설정
-            current_count = self.SavedLogicList__QListWidget.count()
-            
-            # 원본 로직의 아이템 정보가 있다면 복사
-            original_logic_name = logic_info.get('name')
-            if original_logic_name:
+            # 기존 로직 ID가 있는지 확인
+            logic_id = logic_info.get('id')
+            is_update = bool(logic_id)  # 기존 로직 수정인지 여부
+            logic_name = logic_info.get('name', '')
+
+            # 이름 중복 체크
+            existing_logics = self.settings_manager.load_logics()
+            for existing_id, existing_logic in existing_logics.items():
+                if existing_logic.get('name') == logic_name and existing_id != logic_id:
+                    self.log_message.emit(f"오류: 이미 존재하는 로직 이름입니다: {logic_name}")
+                    return
+
+            # UUID 처리
+            if not is_update:  # 새 로직인 경우
+                logic_id = str(uuid.uuid4())
+            else:  # 기존 로직 수정인 경우
+                # UUID가 존재하지 않는 경우 이름으로 찾기
+                if logic_id not in existing_logics:
+                    for existing_id, existing_logic in existing_logics.items():
+                        if existing_logic.get('name') == logic_name:
+                            logic_id = existing_id
+                            break
+                    if logic_id not in existing_logics:  # 여전히 찾지 못한 경우
+                        logic_id = str(uuid.uuid4())
+
+            # 중첩 로직의 UUID 처리
+            if 'items' in logic_info:
+                for item in logic_info['items']:
+                    if item.get('type') == 'logic':
+                        nested_logic_name = item.get('logic_name')
+                        nested_logic_id = item.get('logic_id')
+                        
+                        # UUID가 존재하지 않거나 유효하지 않은 경우
+                        if not nested_logic_id or nested_logic_id not in existing_logics:
+                            # 이름으로 찾기
+                            for existing_id, existing_logic in existing_logics.items():
+                                if existing_logic.get('name') == nested_logic_name:
+                                    # UUID 업데이트
+                                    item['logic_id'] = existing_id
+                                    if 'logic_data' in item:
+                                        item['logic_data']['logic_id'] = existing_id
+                                    break
+
+            # order 값 설정
+            if is_update:
                 for saved_logic_id, saved_logic in self.saved_logics.items():
-                    if saved_logic.get('name') == original_logic_name:
-                        # 기존 로직의 아이템 정보를 복사
-                        logic_info['items'] = saved_logic.get('items', [])
+                    if saved_logic_id == logic_id:
+                        logic_info['order'] = saved_logic.get('order', 0)
                         break
-            
-            logic_info['order'] = current_count + 1
-            
+            else:
+                current_count = self.SavedLogicList__QListWidget.count()
+                logic_info['order'] = current_count + 1
+
             # settings_manager를 통해 로직 저장
             updated_logic = self.settings_manager.save_logic(logic_id, logic_info)
-            
-            # 로직 목록에 추가
-            self._add_logic_to_list(updated_logic, logic_id)
-            
-            self.log_message.emit(f"새 로직 '{logic_info.get('name', '')}'이(가) 저장되었습니다.")
-            
+
+            if is_update:
+                # 기존 로직 업데이트
+                self._update_logic_in_list(updated_logic)
+                self.log_message.emit(f"로직 '{logic_info.get('name', '')}'이(가) 업데이트되었습니다.")
+            else:
+                # 새 로직 추가
+                self._add_logic_to_list(updated_logic, logic_id)
+                self.log_message.emit(f"새 로직 '{logic_info.get('name', '')}'이(가) 저장되었습니다.")
+
+            # 변경사항 저장
+            settings = self.settings_manager.settings.copy()
+            settings['logics'] = self.saved_logics
+            self.settings_manager._save_settings(settings)
+
         except Exception as e:
             self.log_message.emit(f"로직 저장 중 오류 발생: {str(e)}")
 
     def on_logic_updated(self, original_name, logic_info):
         """로직이 수정되었을 때 호출되는 메서드"""
         try:
-            # 기존 로직 ID 찾기
+            # 기��� 로직 ID 찾기
             logics = self.settings_manager.load_logics()
             logic_id = None
             for id, logic in logics.items():
@@ -273,32 +318,48 @@ class LogicListWidget(QFrame):
             # 현재 설정을 다시 로드하여 최신 상태 유지
             self.settings_manager.reload_settings()
             
-            # 로직 목록을 순회하면서 order 값 업데이트
-            updated_logics = {}
-            for i in range(self.SavedLogicList__QListWidget.count()):
-                item = self.SavedLogicList__QListWidget.item(i)
-                if item:
-                    logic_id = item.data(Qt.UserRole)
-                    if logic_id in self.settings_manager.settings.get('logics', {}):
-                        logic_info = self.settings_manager.settings['logics'][logic_id].copy()
+            # 백업 생성
+            settings_backup = self.settings_manager.settings.copy()
+            saved_logics_backup = self.saved_logics.copy()
+            
+            try:
+                # 로직 목록을 순회하면서 order 값 업데이트
+                updated_logics = {}
+                for i in range(self.SavedLogicList__QListWidget.count()):
+                    item = self.SavedLogicList__QListWidget.item(i)
+                    if item:
+                        logic_id = item.data(Qt.UserRole)
+                        if not logic_id:
+                            raise Exception(f"아이템 {i}의 logic_id가 없습니다.")
                         
-                        # 첫 번째 아이템의 order는 1로 설정하고, 나머지는 2부터 순차적으로 증가
-                        logic_info['order'] = 1 if i == 0 else i + 1
-                        logic_info['updated_at'] = datetime.now().isoformat()
-                        updated_logics[logic_id] = logic_info
-            
-            # settings_manager의 settings 업데이트
-            settings = self.settings_manager.settings.copy()
-            settings['logics'] = updated_logics
-            
-            # 설정 저장
-            self.settings_manager._save_settings(settings)  # 직접 settings 전달
-            
-            # saved_logics 업데이트
-            self.saved_logics = updated_logics
-            
-            self.log_message.emit("로직이 성공적으로 저장되었습니다.")
-            
+                        if logic_id in self.settings_manager.settings.get('logics', {}):
+                            logic_info = self.settings_manager.settings['logics'][logic_id].copy()
+                            
+                            # 첫 번째 아이템의 order는 1로 설정하고, 나머지는 2부터 순적으로 증가
+                            logic_info['order'] = 1 if i == 0 else i + 1
+                            logic_info['updated_at'] = datetime.now().isoformat()
+                            updated_logics[logic_id] = logic_info
+                        else:
+                            raise Exception(f"logic_id {logic_id}를 찾을 수 없습니다.")
+                
+                # settings_manager의 settings 업데이트
+                settings = self.settings_manager.settings.copy()
+                settings['logics'] = updated_logics
+                
+                # 설정 저장
+                self.settings_manager._save_settings(settings)
+                
+                # saved_logics 업데이트
+                self.saved_logics = updated_logics
+                
+                self.log_message.emit("로직이 성공적으로 저장되었습니다.")
+                
+            except Exception as update_error:
+                # 업데이트 실패 시 백업에서 복원
+                self.settings_manager.settings = settings_backup
+                self.saved_logics = saved_logics_backup
+                raise Exception(f"로직 업데이트 실패: {str(update_error)}")
+                
         except Exception as e:
             self.log_message.emit(f"로직 저장 중 오류 발생: {str(e)}")
             # 오류 발생 시 저장된 로직 다시 불러오기
@@ -339,7 +400,7 @@ class LogicListWidget(QFrame):
         return f"[ {name} ]"
 
     def _get_logic_name_from_text(self, text):
-        """표시 텍스트��서 로직 이름을 추출하는 메서드"""
+        """표시 텍스트서 로직 이름을 추출하는 메서드"""
         try:
             #  안의 내을 추출
             start = text.find('[') + 1
@@ -388,52 +449,85 @@ class LogicListWidget(QFrame):
         if not selected_items:
             return
         
-        # 삭제 확인 메시지 표시
-        if len(selected_items) == 1:
-            logic_name = self._get_logic_name_from_text(selected_items[0].text())
-            message = f'로직 "{logic_name}"을(를) 삭제하시겠습니까?'
-        else:
-            message = f'선택된 {len(selected_items)}개의 로직을 삭제하시겠습니까?'
-        
-        reply = QMessageBox.question(
-            self, 
-            '로직 삭제', 
-            message,
-            QMessageBox.Yes | QMessageBox.No, 
-            QMessageBox.No
-        )
-        
-        if reply == QMessageBox.Yes:
-            try:
-                # 선택된 모든 아이템 삭제
+        try:
+            # 삭제 확인 메시지 표시
+            if len(selected_items) == 1:
+                logic_name = self._get_logic_name_from_text(selected_items[0].text())
+                message = f'로직 "{logic_name}"을(를) 삭제하시겠습니까?'
+            else:
+                message = f'선택된 {len(selected_items)}개의 로직을 삭제하시겠습니까?'
+            
+            reply = QMessageBox.question(
+                self, 
+                '로직 삭제', 
+                message,
+                QMessageBox.Yes | QMessageBox.No, 
+                QMessageBox.No
+            )
+            
+            if reply == QMessageBox.Yes:
+                # 삭제할 아이템들의 정보를 미리 저장
+                items_to_delete = []
                 for item in selected_items:
                     logic_id = item.data(Qt.UserRole)
-                    if logic_id in self.saved_logics:
+                    if logic_id and logic_id in self.saved_logics:
+                        items_to_delete.append({
+                            'item': item,
+                            'logic_id': logic_id,
+                            'logic_name': self._get_logic_name_from_text(item.text())
+                        })
+                
+                if not items_to_delete:
+                    self.log_message.emit("삭제할 로직이 없습니다.")
+                    return
+                
+                # settings 백업
+                settings_backup = self.settings_manager.settings.copy()
+                saved_logics_backup = self.saved_logics.copy()
+                
+                try:
+                    # 선택된 모든 아이템 삭제
+                    for item_info in items_to_delete:
                         # saved_logics에서 삭제
-                        del self.saved_logics[logic_id]
+                        del self.saved_logics[item_info['logic_id']]
                         # settings에서도 삭제
-                        if logic_id in self.settings_manager.settings.get('logics', {}):
-                            del self.settings_manager.settings['logics'][logic_id]
+                        if item_info['logic_id'] in self.settings_manager.settings.get('logics', {}):
+                            del self.settings_manager.settings['logics'][item_info['logic_id']]
                         # 리스트에서 아이템 제거
                         self.SavedLogicList__QListWidget.takeItem(
-                            self.SavedLogicList__QListWidget.row(item)
+                            self.SavedLogicList__QListWidget.row(item_info['item'])
                         )
                         # 삭제 시그널 발생
-                        logic_name = self._get_logic_name_from_text(item.text())
-                        self.item_deleted.emit(logic_name)
+                        self.item_deleted.emit(item_info['logic_name'])
                 
-                # 변경사항 저장
-                settings = self.settings_manager.settings.copy()
-                self.settings_manager._save_settings(settings)
+                    # 변경사항 저장
+                    try:
+                        settings = self.settings_manager.settings.copy()
+                        self.settings_manager._save_settings(settings)
+                        
+                        # 로그 메시지
+                        if len(items_to_delete) == 1:
+                            self.log_message.emit(f'로직 "{items_to_delete[0]["logic_name"]}"이(가) 삭제되었습니다')
+                        else:
+                            self.log_message.emit(f'{len(items_to_delete)}개의 로직이 삭제되었습니다')
+                            
+                    except Exception as save_error:
+                        # 설정 저장 실패 시 백업에서 복원
+                        self.settings_manager.settings = settings_backup
+                        self.saved_logics = saved_logics_backup
+                        raise Exception(f"설정 저장 실패: {str(save_error)}")
+                        
+                except Exception as delete_error:
+                    # 삭제 작업 실패 시 백업에서 복원
+                    self.settings_manager.settings = settings_backup
+                    self.saved_logics = saved_logics_backup
+                    self.load_saved_logics()  # UI 목록 다시 로드
+                    raise Exception(f"삭제 작업 실패: {str(delete_error)}")
                 
-                # 로그 메시지
-                if len(selected_items) == 1:
-                    self.log_message.emit(f'로직 "{logic_name}"이(가) 삭제되었습니다')
-                else:
-                    self.log_message.emit(f'{len(selected_items)}개의 로직이 삭제되었습니다')
-                
-            except Exception as e:
-                self.log_message.emit(f"로직 삭제 중 오류 발생: {str(e)}")
+        except Exception as e:
+            self.log_message.emit(f"로직 삭제 중 오류 발생: {str(e)}")
+            # 오류 발생 시 저장된 로직 다시 불러오기
+            self.load_saved_logics()
 
     def _update_logic_in_list(self, logic_info):
         """리스트에서 로직 정보를 업데이트"""
@@ -510,7 +604,7 @@ class LogicListWidget(QFrame):
                 
             # Delete: 삭제
             elif key == Qt.Key_Delete:
-                self._delete_item()  # 기존의 삭제 과 동일한 메서드 호출
+                self._delete_item()  # 기존의 삭제 과 일한 메서드 호출
                 return True
                 
         return super().eventFilter(obj, event)
@@ -552,6 +646,19 @@ class LogicListWidget(QFrame):
             new_logic = self.copied_logic.copy()
             new_logic_id = str(uuid.uuid4())
             
+            # 중첩 로직 참조 정보 처리
+            if 'items' in new_logic:
+                for item in new_logic['items']:
+                    if item.get('type') == 'logic':
+                        # 중첩 로직의 원본 참조 정보 유지
+                        original_logic_id = item.get('logic_id')
+                        if original_logic_id:
+                            # 원본 로직의 UUID를 그대로 유지
+                            item['logic_id'] = original_logic_id
+                            # logic_data도 있다면 그 안의 logic_id도 유지
+                            if 'logic_data' in item:
+                                item['logic_data']['logic_id'] = original_logic_id
+            
             # 이름 뒤에 "- 복제" 추가
             original_name = new_logic['name']
             new_logic['name'] = f"{original_name} - 복제"
@@ -588,12 +695,13 @@ class LogicListWidget(QFrame):
             # 변경사항 저장
             self.save_logics_to_settings()
             
-            self.log_message.emit(f"로직 '{original_name}'이(가) 붙여넣기되었습니.")
+            self.log_message.emit(f"로직 '{original_name}'이(가) 붙여넣기되었습니다.")
             
         except Exception as e:
             self.log_message.emit(f"로직 붙여넣기 중 오류 발생: {str(e)}")
 
     def _on_stop_button_clicked(self):
+        """로직 중지 버튼 클릭 시 호출"""
         try:
             # 실행 중인 로직 강제 중지
             self._logic_executor.force_stop()
@@ -601,8 +709,69 @@ class LogicListWidget(QFrame):
             # UI 상태도 초기화
             self._update_ui_state(is_executing=False)
             
-            # 선택된 로직 초기화 (옵션)
+            # 선택된 로직 초기화
             self._selected_logic = None
             
         except Exception as e:
-            logger.error(f"로직 중지 중 오류 발생: {e}")
+            self.log_message.emit(f"로직 중지 중 오류 발생: {e}")
+
+    def _update_ui_state(self, is_executing=False):
+        """UI 상태 업데이트
+        
+        Args:
+            is_executing (bool): 실행 중 여부
+        """
+        # 버튼 상태 업데이트
+        self.MoveUpButton__QPushButton.setEnabled(not is_executing)
+        self.MoveDownButton__QPushButton.setEnabled(not is_executing)
+        self.LoadLogicButton__QPushButton.setEnabled(not is_executing)
+        self.DeleteLogicButton__QPushButton.setEnabled(not is_executing)
+
+    def _on_nested_checkbox_changed(self, state):
+        """중첩로직용 체크박스 상태 변경 시 호출"""
+        is_nested = state == Qt.CheckState.Checked.value
+        
+        # 트리거 키 입력 UI 비활성화/활성화
+        self.TriggerKeyInputWidget__KeyInputWidget.setEnabled(not is_nested)
+        
+        if is_nested:
+            # 중첩로직용일 경우 트리거 키 정보 초기화
+            self.trigger_key_info = None
+            self.TriggerKeyInfoLabel__QLabel.clear()
+            # 트리거 키 입력 위젯 초기화
+            self.TriggerKeyInputWidget__KeyInputWidget.clear_key()
+
+    def get_logic_data(self):
+        """현재 로직 데이터 반환"""
+        data = {
+            'name': self.LogicNameInput__QLineEdit.text(),
+            'repeat_count': self.RepeatCountInput__QSpinBox.value(),
+            'items': self.get_items(),
+            'is_nested': self.is_nested_checkbox.isChecked()
+        }
+        
+        # 중첩로직용이 아닐 경우에만 트리거 키 추가
+        if not data['is_nested']:
+            data['trigger_key'] = self.trigger_key_info
+            
+        return data
+
+    def set_logic_data(self, logic_data):
+        """로직 데이터 설정"""
+        self.LogicNameInput__QLineEdit.setText(logic_data.get('name', ''))
+        self.RepeatCountInput__QSpinBox.setValue(logic_data.get('repeat_count', 1))
+        
+        # 중첩로직 여부 설정
+        is_nested = logic_data.get('is_nested', False)
+        self.is_nested_checkbox.setChecked(is_nested)
+        
+        # 중첩로직이 아닐 경우에만 트리거 키 설정
+        if not is_nested:
+            self.trigger_key_info = logic_data.get('trigger_key')
+            if self.trigger_key_info:
+                self.TriggerKeyInfoLabel__QLabel.setText(format_key_info(self.trigger_key_info))
+
+        # 아이템 목록 설정
+        items = logic_data.get('items', [])
+        for item in items:
+            self._add_logic_item(item)
