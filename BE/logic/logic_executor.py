@@ -38,8 +38,12 @@ class LogicExecutor(QObject):
             'current_repeat': 1
         }
         
-        # 키 입력 지연 시간 (초)
-        self.KEY_INPUT_DELAY = 0.022
+        # 키 입력 딜레이 세분화
+        self.KEY_DELAYS = {
+            '누르기': 0.015,  # 키를 누를 때의 딜레이
+            '떼기': 0.02,    # 키를 뗄 때의 딜레이
+            '기본': 0.02     # 기타 동작의 기본 딜레이
+        }
         
         # 리소스 관리
         self.keyboard_hook = None
@@ -228,11 +232,12 @@ class LogicExecutor(QObject):
             
             if step['type'] == 'key_input':
                 self._execute_key_input(step)
-                # 키 입력 후 지연
+                # 키 입력 동작에 따른 딜레이 적용
+                delay = self.KEY_DELAYS.get(step['action'], self.KEY_DELAYS['기본'])
                 timer = QTimer()
                 timer.setSingleShot(True)
                 timer.timeout.connect(lambda: self._schedule_next_step())
-                timer.start(int(self.KEY_INPUT_DELAY * 1000))
+                timer.start(int(delay * 1000))
                 self._active_timers.append(timer)
             elif step['type'] == 'delay':
                 duration = float(step['duration'])
@@ -244,7 +249,6 @@ class LogicExecutor(QObject):
                 self._active_timers.append(timer)
             elif step['type'] == 'logic':
                 self._execute_nested_logic(step)
-                # 중첩 로직은 자체적으로 다음 스텝을 예약
                 
         except Exception as e:
             self._log_with_time("[오류] 스텝 실행 중 오류 발생: {}".format(str(e)))
