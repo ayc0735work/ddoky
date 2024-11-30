@@ -329,60 +329,66 @@ class LogicExecutor(QObject):
         
         with self._cleanup_lock:
             try:
-                # 모든 활성 타이머 중지
-                self._log_with_time("[로그] 활성 타이머 개수: {}".format(len(self._active_timers)))
-                for timer in self._active_timers:
-                    try:
-                        timer.stop()
-                        timer.deleteLater()
-                        self._log_with_time("[로그] 타이머 중지 성공")
-                    except Exception as e:
-                        self._log_with_time("[오류] 타이머 중지 실패: {}".format(str(e)))
-                self._active_timers.clear()
-                self._log_with_time("[로그] 모든 타이머 중지 완료")
+                # 모저 실행 상태를 중지로 설정하여 새로운 타이머 생성 방지
+                self._update_state(is_stopping=True)
                 
-                # 현재 실행 중인 로직의 키만 해제
-                if self.selected_logic and 'items' in self.selected_logic:
-                    self._log_with_time("[로그] 선택된 로직: {}".format(self.selected_logic.get('name')))
-                    pressed_keys = set()
-                    for item in self.selected_logic['items']:
-                        if item.get('type') == 'key_input' and item.get('action') == '누르기':
-                            vk = item.get('virtual_key')
-                            if vk:
-                                pressed_keys.add(vk)
-                    
-                    self._log_with_time("[로그] 해제할 키 개수: {}".format(len(pressed_keys)))
-                    # 누르기 상태인 키들만 해제
-                    for vk in pressed_keys:
-                        try:
-                            win32api.keybd_event(vk, 0, win32con.KEYEVENTF_KEYUP, 0)
-                            self._log_with_time("[로그] 키 해제 성공: {}".format(vk))
-                        except Exception as e:
-                            self._log_with_time("[오류] 키 해제 실패 (VK: {}): {}".format(vk, str(e)))
-                else:
-                    self._log_with_time("[로그] 해제할 키가 없음")
+                # 타이머 정리를 비동기적으로 처리
+                self._clear_timers_async()
                 
-                # 키보드 훅 정리
-                with self._hook_lock:
-                    if self.keyboard_hook:
-                        self._log_with_time("[로그] 키보드 훅 정리 시작")
-                        try:
-                            self.keyboard_hook.stop()
-                            self.keyboard_hook.key_released.disconnect()
-                            self.keyboard_hook = None
-                            self._log_with_time("[로그] 키보드 훅 정리 성공")
-                        except Exception as e:
-                            self._log_with_time("[오류] 키보드 훅 정리 실패: {}".format(str(e)))
-                    else:
-                        self._log_with_time("[로그] 키보드 훅이 없음")
+                # 키보드 입력 상태 정리
+                self._clear_keyboard_state()
                 
-                # 실행 상태 완전 초기화
+                # 실행 상태 초기화
                 self.reset_execution_state()
-                
-                self._log_with_time("[로그] 모든 로직 강제 중지 완료")
                 
             except Exception as e:
                 self._log_with_time("[오류] 로직 중지 중 오류 발생: {}".format(str(e)))
+
+    def _clear_timers_async(self):
+        """타이머를 비동기적으로 정리"""
+        self._log_with_time(f"[로그] 타이머 정리 시작 (총 {len(self._active_timers)}개)")
+        
+        # 타이머를 작은 그룹으로 나누어 처리
+        BATCH_SIZE = 10
+        timer_groups = [self._active_timers[i:i + BATCH_SIZE] 
+                       for i in range(0, len(self._active_timers), BATCH_SIZE)]
+        
+        def clear_timer_group():
+            if not timer_groups:
+                self._active_timers.clear()
+                self._log_with_time("[로그] 모든 타이머 정리 완료")
+                return
+            
+            group = timer_groups.pop(0)
+            for timer in group:
+                try:
+                    timer.stop()
+                    timer.deleteLater()
+                except:
+                    pass
+                
+            # 다음 그룹을 처리하기 위해 새로운 타이머 생성
+            QTimer.singleShot(0, clear_timer_group)
+        
+        # 첫 번째 그룹 처리 시작
+        QTimer.singleShot(0, clear_timer_group)
+
+    def _clear_keyboard_state(self):
+        """키보드 상태 정리"""
+        if self.selected_logic and 'items' in self.selected_logic:
+            pressed_keys = set()
+            for item in self.selected_logic['items']:
+                if item.get('type') == 'key_input' and item.get('action') == '누르기':
+                    vk = item.get('virtual_key')
+                    if vk:
+                        pressed_keys.add(vk)
+            
+            self._log_with_time(f"[로그] 키 상태 정리 시작 (총 {len(pressed_keys)}개)")
+            for vk in pressed_keys:
+                try:
+                    win32api.keybd_event(vk, 0, win32con.KEYEVENTF_KEYUP, 0)
+                except Exception as e:
+                    self._log_with_time(f"[오류] 키 해제 실패 (VK: {vk}): {str(e)}")
 
     def force_stop(self):
         """강제 중지"""

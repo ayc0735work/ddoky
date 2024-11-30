@@ -14,7 +14,7 @@
             "order": 1,
             "name": "체력 회복 - 4회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-11-30T10:06:06.372259",
+            "updated_at": "2024-11-30T10:26:43.987111",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 /",
@@ -131,7 +131,7 @@
             "order": 2,
             "name": "체력 회복 - 1회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-11-30T10:06:06.378830",
+            "updated_at": "2024-11-30T10:26:43.987111",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "키 코드 192",
@@ -248,7 +248,7 @@
             "order": 3,
             "name": "보호 무장 힘",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-11-30T10:06:06.383858",
+            "updated_at": "2024-11-30T10:26:43.987111",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 .",
@@ -565,7 +565,7 @@
             "order": 4,
             "name": "모두 줍기",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-11-30T10:06:06.389534",
+            "updated_at": "2024-11-30T10:26:43.987111",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "오른쪽 쉬프트",
@@ -694,7 +694,7 @@
             "order": 5,
             "name": "공력증강 - 1회",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-11-30T10:06:06.396212",
+            "updated_at": "2024-11-30T10:26:43.987111",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 6",
@@ -759,7 +759,7 @@
             "order": 6,
             "name": "동동주 마시기 - 1회",
             "created_at": "2024-11-30T07:08:49.271692",
-            "updated_at": "2024-11-30T10:06:06.401251",
+            "updated_at": "2024-11-30T10:26:43.987111",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "",
@@ -832,9 +832,188 @@
         },
         "f7c64ad9-fb3a-44bc-a1f1-6c92293e5ba7": {
             "order": 7,
-            "name": "첨 공격 - 1회",
+            "name": "일반 신수 공격 - 1회",
             "created_at": "2024-11-30T07:03:44.632368",
-            "updated_at": "2024-11-30T10:06:06.406795",
+            "updated_at": "2024-11-30T10:42:44.531458",
+            "trigger_key": {
+                "display_text": "",
+                "key_code": "",
+                "modifiers": 0,
+                "scan_code": 0,
+                "virtual_key": 0
+            },
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.8초",
+                    "duration": 0.8,
+                    "order": 1
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 숫자패드 8 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 8",
+                    "scan_code": 72,
+                    "virtual_key": 104,
+                    "modifiers": 0
+                },
+                {
+                    "order": 3,
+                    "display_text": "키 입력: 숫자패드 8 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 8",
+                    "scan_code": 72,
+                    "virtual_key": 104,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 4
+                },
+                {
+                    "order": 5,
+                    "display_text": "키 입력: 방향키 왼쪽 ← --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 왼쪽 ←",
+                    "scan_code": 75,
+                    "virtual_key": 37,
+                    "modifiers": 0
+                },
+                {
+                    "order": 6,
+                    "display_text": "키 입력: 방향키 왼쪽 ← --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 왼쪽 ←",
+                    "scan_code": 75,
+                    "virtual_key": 37,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 7
+                },
+                {
+                    "order": 8,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 9,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 10
+                },
+                {
+                    "order": 11,
+                    "display_text": "키 입력: 숫자패드 8 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 8",
+                    "scan_code": 72,
+                    "virtual_key": 104,
+                    "modifiers": 0
+                },
+                {
+                    "order": 12,
+                    "display_text": "키 입력: 숫자패드 8 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 8",
+                    "scan_code": 72,
+                    "virtual_key": 104,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 13
+                },
+                {
+                    "order": 14,
+                    "display_text": "키 입력: 방향키 왼쪽 ← --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 왼쪽 ←",
+                    "scan_code": 75,
+                    "virtual_key": 37,
+                    "modifiers": 0
+                },
+                {
+                    "order": 15,
+                    "display_text": "키 입력: 방향키 왼쪽 ← --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 왼쪽 ←",
+                    "scan_code": 75,
+                    "virtual_key": 37,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 16
+                },
+                {
+                    "order": 17,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 18,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 19
+                }
+            ]
+        },
+        "970a1723-88f9-4a50-8bb4-4f8c8f8199fe": {
+            "order": 8,
+            "name": "첨 공격 - 1회",
+            "created_at": "2024-11-30T10:25:06.438732",
+            "updated_at": "2024-11-30T10:26:43.987111",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "",
@@ -882,10 +1061,10 @@
             ]
         },
         "b6b2cf76-cd02-47f5-accf-5ad0de620c00": {
-            "order": 8,
+            "order": 9,
             "name": "자동사냥 - 첨 마법",
             "created_at": "2024-11-30T07:13:20.157256",
-            "updated_at": "2024-11-30T10:09:03.313685",
+            "updated_at": "2024-11-30T10:42:58.265837",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 -",
@@ -924,7 +1103,7 @@
                     "order": 4,
                     "type": "logic",
                     "display_text": "첨 공격 - 1회",
-                    "logic_id": "f7c64ad9-fb3a-44bc-a1f1-6c92293e5ba7",
+                    "logic_id": "970a1723-88f9-4a50-8bb4-4f8c8f8199fe",
                     "logic_name": "첨 공격 - 1회",
                     "repeat_count": 1
                 },
@@ -932,7 +1111,7 @@
                     "order": 5,
                     "type": "logic",
                     "display_text": "첨 공격 - 1회",
-                    "logic_id": "f7c64ad9-fb3a-44bc-a1f1-6c92293e5ba7",
+                    "logic_id": "970a1723-88f9-4a50-8bb4-4f8c8f8199fe",
                     "logic_name": "첨 공격 - 1회",
                     "repeat_count": 1
                 },
@@ -956,7 +1135,7 @@
                     "order": 8,
                     "type": "logic",
                     "display_text": "첨 공격 - 1회",
-                    "logic_id": "f7c64ad9-fb3a-44bc-a1f1-6c92293e5ba7",
+                    "logic_id": "970a1723-88f9-4a50-8bb4-4f8c8f8199fe",
                     "logic_name": "첨 공격 - 1회",
                     "repeat_count": 1
                 },
@@ -964,8 +1143,225 @@
                     "order": 9,
                     "type": "logic",
                     "display_text": "첨 공격 - 1회",
-                    "logic_id": "f7c64ad9-fb3a-44bc-a1f1-6c92293e5ba7",
+                    "logic_id": "970a1723-88f9-4a50-8bb4-4f8c8f8199fe",
                     "logic_name": "첨 공격 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 10,
+                    "type": "logic",
+                    "display_text": "공력증강 - 1회",
+                    "logic_id": "e058193f-99b3-434c-be33-bb6222114c09",
+                    "logic_name": "공력증강 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 11,
+                    "type": "logic",
+                    "display_text": "공력증강 - 1회",
+                    "logic_id": "e058193f-99b3-434c-be33-bb6222114c09",
+                    "logic_name": "공력증강 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 12,
+                    "type": "logic",
+                    "display_text": "첨 공격 - 1회",
+                    "logic_id": "970a1723-88f9-4a50-8bb4-4f8c8f8199fe",
+                    "logic_name": "첨 공격 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 13,
+                    "type": "logic",
+                    "display_text": "첨 공격 - 1회",
+                    "logic_id": "970a1723-88f9-4a50-8bb4-4f8c8f8199fe",
+                    "logic_name": "첨 공격 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 14,
+                    "type": "logic",
+                    "display_text": "공력증강 - 1회",
+                    "logic_id": "e058193f-99b3-434c-be33-bb6222114c09",
+                    "logic_name": "공력증강 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 15,
+                    "type": "logic",
+                    "display_text": "공력증강 - 1회",
+                    "logic_id": "e058193f-99b3-434c-be33-bb6222114c09",
+                    "logic_name": "공력증강 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 16,
+                    "type": "logic",
+                    "display_text": "첨 공격 - 1회",
+                    "logic_id": "970a1723-88f9-4a50-8bb4-4f8c8f8199fe",
+                    "logic_name": "첨 공격 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 17,
+                    "type": "logic",
+                    "display_text": "첨 공격 - 1회",
+                    "logic_id": "970a1723-88f9-4a50-8bb4-4f8c8f8199fe",
+                    "logic_name": "첨 공격 - 1회",
+                    "repeat_count": 1
+                }
+            ]
+        },
+        "5d8d3c9a-ff66-40b7-a4bd-60311c6bffff": {
+            "order": 10,
+            "name": "자동사냥 - 일반 신수 공격",
+            "created_at": "2024-11-30T10:26:43.980312",
+            "updated_at": "2024-11-30T10:29:24.204938",
+            "trigger_key": {
+                "display_text": "",
+                "key_code": "숫자패드 *",
+                "modifiers": 0,
+                "scan_code": 55,
+                "virtual_key": 106
+            },
+            "repeat_count": 9999,
+            "is_nested": false,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "보호 무장 힘",
+                    "logic_id": "b8796333-e8d6-4ae2-9fec-801a713517d8",
+                    "logic_name": "보호 무장 힘",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 2,
+                    "type": "logic",
+                    "display_text": "공력증강 - 1회",
+                    "logic_id": "e058193f-99b3-434c-be33-bb6222114c09",
+                    "logic_name": "공력증강 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 3,
+                    "type": "logic",
+                    "display_text": "공력증강 - 1회",
+                    "logic_id": "e058193f-99b3-434c-be33-bb6222114c09",
+                    "logic_name": "공력증강 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 4,
+                    "type": "logic",
+                    "display_text": "일반 신수 공격 - 1회",
+                    "logic_id": "f7c64ad9-fb3a-44bc-a1f1-6c92293e5ba7",
+                    "logic_name": "일반 신수 공격 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 5,
+                    "type": "logic",
+                    "display_text": "일반 신수 공격 - 1회",
+                    "logic_id": "f7c64ad9-fb3a-44bc-a1f1-6c92293e5ba7",
+                    "logic_name": "일반 신수 공격 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 6,
+                    "type": "logic",
+                    "display_text": "공력증강 - 1회",
+                    "logic_id": "e058193f-99b3-434c-be33-bb6222114c09",
+                    "logic_name": "공력증강 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 7,
+                    "type": "logic",
+                    "display_text": "공력증강 - 1회",
+                    "logic_id": "e058193f-99b3-434c-be33-bb6222114c09",
+                    "logic_name": "공력증강 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 8,
+                    "type": "logic",
+                    "display_text": "일반 신수 공격 - 1회",
+                    "logic_id": "f7c64ad9-fb3a-44bc-a1f1-6c92293e5ba7",
+                    "logic_name": "일반 신수 공격 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 9,
+                    "type": "logic",
+                    "display_text": "일반 신수 공격 - 1회",
+                    "logic_id": "f7c64ad9-fb3a-44bc-a1f1-6c92293e5ba7",
+                    "logic_name": "일반 신수 공격 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 10,
+                    "type": "logic",
+                    "display_text": "공력증강 - 1회",
+                    "logic_id": "e058193f-99b3-434c-be33-bb6222114c09",
+                    "logic_name": "공력증강 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 11,
+                    "type": "logic",
+                    "display_text": "공력증강 - 1회",
+                    "logic_id": "e058193f-99b3-434c-be33-bb6222114c09",
+                    "logic_name": "공력증강 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 12,
+                    "type": "logic",
+                    "display_text": "일반 신수 공격 - 1회",
+                    "logic_id": "f7c64ad9-fb3a-44bc-a1f1-6c92293e5ba7",
+                    "logic_name": "일반 신수 공격 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 13,
+                    "type": "logic",
+                    "display_text": "일반 신수 공격 - 1회",
+                    "logic_id": "f7c64ad9-fb3a-44bc-a1f1-6c92293e5ba7",
+                    "logic_name": "일반 신수 공격 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 14,
+                    "type": "logic",
+                    "display_text": "공력증강 - 1회",
+                    "logic_id": "e058193f-99b3-434c-be33-bb6222114c09",
+                    "logic_name": "공력증강 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 15,
+                    "type": "logic",
+                    "display_text": "공력증강 - 1회",
+                    "logic_id": "e058193f-99b3-434c-be33-bb6222114c09",
+                    "logic_name": "공력증강 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 16,
+                    "type": "logic",
+                    "display_text": "일반 신수 공격 - 1회",
+                    "logic_id": "f7c64ad9-fb3a-44bc-a1f1-6c92293e5ba7",
+                    "logic_name": "일반 신수 공격 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 17,
+                    "type": "logic",
+                    "display_text": "일반 신수 공격 - 1회",
+                    "logic_id": "f7c64ad9-fb3a-44bc-a1f1-6c92293e5ba7",
+                    "logic_name": "일반 신수 공격 - 1회",
                     "repeat_count": 1
                 }
             ]
