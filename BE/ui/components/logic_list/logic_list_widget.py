@@ -383,7 +383,7 @@ class LogicListWidget(QFrame):
             self.edit_logic.emit(logic_info)
 
     def _delete_item(self):
-        """���택된 아이템 삭제"""
+        """택된 아이템 삭제"""
         selected_items = self.SavedLogicList__QListWidget.selectedItems()
         if not selected_items:
             return
@@ -509,7 +509,7 @@ class LogicListWidget(QFrame):
                 
             # Delete: 삭제
             elif key == Qt.Key_Delete:
-                self._delete_item()  # 기존의 삭제 �����과 동일한 메서드 호출
+                self._delete_item()  # 기존의 삭제 과 동일한 메서드 호출
                 return True
                 
         return super().eventFilter(obj, event)
@@ -591,3 +591,17 @@ class LogicListWidget(QFrame):
             
         except Exception as e:
             self.log_message.emit(f"로직 붙여넣기 중 오류 발생: {str(e)}")
+
+    def _on_stop_button_clicked(self):
+        try:
+            # 실행 중인 로직 강제 중지
+            self._logic_executor.force_stop()
+            
+            # UI 상태도 초기화
+            self._update_ui_state(is_executing=False)
+            
+            # 선택된 로직 초기화 (옵션)
+            self._selected_logic = None
+            
+        except Exception as e:
+            logger.error(f"로직 중지 중 오류 발생: {e}")
