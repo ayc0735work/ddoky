@@ -611,7 +611,7 @@ class LogicDetailWidget(QFrame):
             # UUID 저장 (logic_info에서 직접 가져옴)
             self.current_logic_id = logic_info.get('id')
             
-            # 중첩로직 여부 설정 (먼저 설정하여 트리거 키 UI 상태 제어)
+            # 중첩로직 여부 정 (먼저 설정하여 트리거 키 UI 상태 제어)
             is_nested = logic_info.get('is_nested', False)
             self.is_nested_checkbox.setChecked(is_nested)
             
@@ -653,31 +653,43 @@ class LogicDetailWidget(QFrame):
         if not isinstance(item_info, dict):
             return
             
+        # 이미 변환된 형식인 경우 (로직 타입)
+        if item_info.get('type') == 'logic':
+            logic_name = item_info.get('logic_name')
+            logic_id = item_info.get('logic_id')
+            
+            # UUID가 없거나 유효하지 않은 경우
+            if not logic_id or logic_id not in self.settings_manager.load_logics():
+                # 이름으로 찾기
+                logics = self.settings_manager.load_logics()
+                for existing_id, existing_logic in logics.items():
+                    if existing_logic.get('name') == logic_name:
+                        logic_id = existing_id
+                        break
+                
+                # 여전히 찾지 못한 경우
+                if not logic_id:
+                    QMessageBox.critical(
+                        self,
+                        "오류",
+                        f"원본 로직 '{logic_name}'을(를) 찾을 수 없습니다.\n"
+                        "해당 로직이 삭제되었거나 이름이 변경되었을 수 있습니다."
+                    )
+                    return
+                
+                # UUID 업데이트
+                item_info['logic_id'] = logic_id
+                if 'logic_data' in item_info:
+                    item_info['logic_data']['logic_id'] = logic_id
+            
+            self.log_message.emit(f"중첩 로직 '{logic_name}'의 UUID가 {logic_id}로 업데이트되었습니다.")
+        
         # content 필드가 있는 경우 (이전 형식) 새 형식으로 변환
-        if 'content' in item_info:
+        elif 'content' in item_info:
             content = item_info['content']
             if "키 입력:" in content:
-                # 키 입력 아이템으로 변환
-                parts = content.split(" --- ")
-                key_part = parts[0].replace("키 입력: ", "").strip()
-                action = parts[1]  # 현재 액션 ("누르기" 또는 "떼기")
-                
-                # Shift 키가 있는지 확인
-                if "Shift+" in key_part:
-                    key_code = key_part.replace("Shift+", "")
-                    modifiers = 33554432  # Shift modifier
-                else:
-                    key_code = key_part
-                    modifiers = 0
-                    
-                item_info = {
-                    'type': 'key_input',
-                    'key_code': key_code,
-                    'action': action,
-                    'modifiers': modifiers,
-                    'display_text': content,
-                    'order': item_info.get('order', 1)
-                }
+                # 키 입력 아이템 처리...
+                pass
             else:
                 # 로직 이름으로 원본 로직 찾기
                 logic_name = content.replace("로직:", "").strip()
@@ -714,55 +726,14 @@ class LogicDetailWidget(QFrame):
                     }
                 }
         
-        # 아이템의 순서를 현 리스트의 이템 개수 + 1로 설정
+        # 아이템의 순서를 현재 리스트의 아이템 개수 + 1로 설정
         current_count = self.LogicItemList__QListWidget.count()
         item_info['order'] = current_count + 1
         
-        # 아이템 타입에 따라 표시 텍스트와 데이터 설정
-        item_type = item_info.get('type', '')
-        if item_type == 'logic':
-            # 로직 아이템인 경우
-            logic_name = item_info.get('logic_name', '')
-            display_text = f"{logic_name}"
-
-            # 기존 로직에서 UUID 찾기
-            logics = self.settings_manager.load_logics()
-            logic_id = None
-            for existing_id, existing_logic in logics.items():
-                if existing_logic.get('name') == logic_name:
-                    logic_id = existing_id
-                    break
-
-            # UUID가 없는 경우에만 새로 생성
-            if not logic_id:
-                logic_id = item_info.get('logic_id', str(uuid.uuid4()))
-
-            # user_data에 로직 정보 저장
-            user_data = {
-                'order': item_info['order'],
-                'logic_data': {
-                    'logic_id': logic_id,
-                    'logic_name': logic_name,
-                    'repeat_count': item_info.get('repeat_count', 1)
-                }
-            }
-        elif item_type == 'key_input':
-            # 키 입력 아이템인 경우
-            display_text = item_info.get('display_text', '')
-            user_data = {'order': item_info['order']}
-        elif item_type == 'delay':
-            # 딜레이 아이템인 경우
-            display_text = item_info.get('display_text', '')
-            user_data = {'order': item_info['order']}
-        else:
-            # 기타 아이템
-            display_text = item_info.get('content', '')
-            user_data = {'order': item_info['order'], 'content': display_text}
-            
-        list_item = QListWidgetItem()
-        list_item.setText(display_text)
-        list_item.setData(Qt.UserRole, user_data)
-        self.LogicItemList__QListWidget.addItem(list_item)
+        # QListWidgetItem 생성 및 추가
+        item = QListWidgetItem(item_info.get('display_text', ''))
+        item.setData(Qt.UserRole, item_info)
+        self.LogicItemList__QListWidget.addItem(item)
 
     def has_items(self):
         """목록에 아이템이 있는지 확인"""
@@ -799,47 +770,40 @@ class LogicDetailWidget(QFrame):
         for idx, item_text in enumerate(self.copied_items):
             current_insert_position = insert_position + idx
             
-            # 중첩 로직인 경우 원본 로직의 UUID 유지
+            # 중첩 로직인 경우 원본 로직의 UUID 찾기
             if item_text.startswith("로직:"):
                 logic_name = item_text.replace("로직:", "").strip()
                 
-                # 복사된 아이템의 원본 데이터에서 UUID 가져오기
-                original_item = self.LogicItemList__QListWidget.item(current_row)
-                if original_item:
-                    original_data = original_item.data(Qt.UserRole) or {}
-                    original_logic_data = original_data.get('logic_data', {})
-                    logic_id = original_logic_data.get('logic_id')
-                    
-                    if logic_id:
-                        # 새 아이템 생성 시 원본 로직의 UUID와 데이터 유지
-                        item = QListWidgetItem(item_text)
-                        item.setData(Qt.UserRole, {
-                            'order': current_insert_position + 1,
-                            'content': item_text,
-                            'logic_data': {
-                                'logic_id': logic_id,  # 원본 UUID 유지
-                                'logic_name': logic_name,
-                                'repeat_count': 1
-                            }
-                        })
-                    else:
-                        # UUID를 찾지 못한 경우 이름으로 찾기
-                        logics = self.settings_manager.load_logics()
-                        for existing_id, existing_logic in logics.items():
-                            if existing_logic.get('name') == logic_name:
-                                logic_id = existing_id
-                                break
-                        
-                        item = QListWidgetItem(item_text)
-                        item.setData(Qt.UserRole, {
-                            'order': current_insert_position + 1,
-                            'content': item_text,
-                            'logic_data': {
-                                'logic_id': logic_id,
-                                'logic_name': logic_name,
-                                'repeat_count': 1
-                            }
-                        })
+                # settings.json에서 이름으로 원본 로직 찾기
+                logics = self.settings_manager.load_logics()
+                logic_id = None
+                
+                # 이름이 일치하는 로직 찾기
+                for existing_id, existing_logic in logics.items():
+                    if existing_logic.get('name') == logic_name:
+                        logic_id = existing_id
+                        break
+                
+                if not logic_id:
+                    QMessageBox.critical(
+                        self,
+                        "오류",
+                        f"원본 로직 '{logic_name}'을(를) 찾을 수 없습니다.\n"
+                        "해당 로직이 삭제되었거나 이름이 변경되었을 수 있습니다."
+                    )
+                    continue
+                
+                # 새 아이템 생성 시 찾은 UUID 사용
+                item = QListWidgetItem(item_text)
+                item.setData(Qt.UserRole, {
+                    'order': current_insert_position + 1,
+                    'content': item_text,
+                    'logic_data': {
+                        'logic_id': logic_id,  # 찾은 UUID 사용
+                        'logic_name': logic_name,
+                        'repeat_count': 1
+                    }
+                })
             else:
                 # 일반 아이템의 경우 기존 처리 유지
                 item = QListWidgetItem(item_text)
@@ -931,7 +895,7 @@ class LogicDetailWidget(QFrame):
                     # QInputDialog 커스터마이징
                     dialog = QInputDialog(self)
                     dialog.setWindowTitle("지연시간 수정")
-                    dialog.setLabelText("��연시간(초):")
+                    dialog.setLabelText("지연시간(초):")
                     dialog.setDoubleDecimals(3)  # 소수점 3자리까지 표시 (0.001초 단위)
                     dialog.setDoubleValue(current_delay)  # 현재 지연시간을 기본값으로 설정
                     dialog.setDoubleRange(0.001, 100.0)  # 0.001초 ~ 100초

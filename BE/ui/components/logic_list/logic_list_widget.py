@@ -259,7 +259,7 @@ class LogicListWidget(QFrame):
     def on_logic_updated(self, original_name, logic_info):
         """로직이 수정되었을 때 호출되는 메서드"""
         try:
-            # 기��� 로직 ID 찾기
+            # 기존 로직 ID 찾기
             logics = self.settings_manager.load_logics()
             logic_id = None
             for id, logic in logics.items():
