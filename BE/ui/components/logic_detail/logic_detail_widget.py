@@ -496,7 +496,7 @@ class LogicDetailWidget(QFrame):
         self.LogicItemList__QListWidget.clear()          # 목록 초기화
         self.TriggerKeyInputWidget__KeyInputWidget.clear_key()        # 트리거 키 입력 초기화
         self.TriggerKeyInfoLabel__QLabel.clear()       # 트리거 키 정보 초기화
-        self.trigger_key_info = None      # 트리거 키 정보 초기화
+        self.trigger_key_info = None      # 트리��� 키 정보 초기화
         self.edit_mode = False            # 수정 모드 해제
         self.original_name = None         # 원래 이름 초기화
         self.current_logic_id = None     # UUID도 초기화
@@ -521,7 +521,7 @@ class LogicDetailWidget(QFrame):
     def _save_logic(self):
         """로직 저장"""
         try:
-            # 로직 이름 가져오기
+            # 로직 이름 가져오���
             name = self.LogicNameInput__QLineEdit.text().strip()
             if not name:
                 self.log_message.emit("오류: 로직 이름을 입력해주세요.")
@@ -778,25 +778,43 @@ class LogicDetailWidget(QFrame):
             if item_text.startswith("로직:"):
                 logic_name = item_text.replace("로직:", "").strip()
                 
-                # 기존 로직에서 UUID 찾기
-                logics = self.settings_manager.load_logics()
-                logic_id = None
-                for existing_id, existing_logic in logics.items():
-                    if existing_logic.get('name') == logic_name:
-                        logic_id = existing_id
-                        break
-                
-                # 새 아이템 생성 시 원본 로직의 UUID와 데이터 유지
-                item = QListWidgetItem(item_text)
-                item.setData(Qt.UserRole, {
-                    'order': current_insert_position + 1,
-                    'content': item_text,
-                    'logic_data': {
-                        'logic_id': logic_id,
-                        'logic_name': logic_name,
-                        'repeat_count': 1
-                    }
-                })
+                # 복사된 아이템의 원본 데이터에서 UUID 가져오기
+                original_item = self.LogicItemList__QListWidget.item(current_row)
+                if original_item:
+                    original_data = original_item.data(Qt.UserRole) or {}
+                    original_logic_data = original_data.get('logic_data', {})
+                    logic_id = original_logic_data.get('logic_id')
+                    
+                    if logic_id:
+                        # 새 아이템 생성 시 원본 로직의 UUID와 데이터 유지
+                        item = QListWidgetItem(item_text)
+                        item.setData(Qt.UserRole, {
+                            'order': current_insert_position + 1,
+                            'content': item_text,
+                            'logic_data': {
+                                'logic_id': logic_id,  # 원본 UUID 유지
+                                'logic_name': logic_name,
+                                'repeat_count': 1
+                            }
+                        })
+                    else:
+                        # UUID를 찾지 못한 경우 이름으로 찾기
+                        logics = self.settings_manager.load_logics()
+                        for existing_id, existing_logic in logics.items():
+                            if existing_logic.get('name') == logic_name:
+                                logic_id = existing_id
+                                break
+                        
+                        item = QListWidgetItem(item_text)
+                        item.setData(Qt.UserRole, {
+                            'order': current_insert_position + 1,
+                            'content': item_text,
+                            'logic_data': {
+                                'logic_id': logic_id,
+                                'logic_name': logic_name,
+                                'repeat_count': 1
+                            }
+                        })
             else:
                 # 일반 아이템의 경우 기존 처리 유지
                 item = QListWidgetItem(item_text)
