@@ -45,6 +45,12 @@ class LogWidget(QFrame):
         self.log_text.setReadOnly(True)
         self.log_text.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         self.log_text.setStyleSheet(LOG_TEXT_STYLE)
+        self.log_text.setTextInteractionFlags(
+            Qt.TextInteractionFlag.TextSelectableByMouse | 
+            Qt.TextInteractionFlag.TextSelectableByKeyboard
+        )
+        # HTML 지원 활성화
+        self.log_text.setAcceptRichText(True)
         
         # 로그 텍스트의 크기 정책을 Expanding으로 설정
         log_text_size_policy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)

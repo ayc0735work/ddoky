@@ -65,13 +65,13 @@ class LogicExecutor(QObject):
 
     def _update_state(self, **kwargs):
         """상태 업데이트 및 알림"""
-        self._log_with_time("[로그] 상태 업데이트 시작: {}".format(kwargs))
+        self._log_with_time("[상태 로그] 상태 업데이트 시작: {}".format(kwargs))
         with self._state_lock:
-            self._log_with_time("[로그] 상태 락 획득")
+            self._log_with_time("[상태 로그] 상태 락 획득")
             self.execution_state.update(kwargs)
-            self._log_with_time("[로그] 새로운 상태: {}".format(self.execution_state))
+            self._log_with_time("[상태 로그] 새로운 상태: {}".format(self.execution_state))
             self.execution_state_changed.emit(self.execution_state.copy())
-            self._log_with_time("[로그] 상태 변경 알림 완료")
+            self._log_with_time("[상태 로그] 상태 변경 알림 완료")
     
     def start_monitoring(self):
         """트리거 키 모니터링 시작"""
@@ -83,7 +83,7 @@ class LogicExecutor(QObject):
                 self.keyboard_hook = KeyboardHook()
                 self.keyboard_hook.key_released.connect(self._on_key_released)
                 self.keyboard_hook.start()
-                self._log_with_time("[로그] 키보드 모니터링 시작")
+                self._log_with_time("[중지 로그] 키보드 모니터링 시작")
             except Exception as e:
                 self._log_with_time("[오류] 키보드 모니터링 시작 실패: {}".format(str(e)))
                 self._safe_cleanup()
@@ -96,32 +96,32 @@ class LogicExecutor(QObject):
                     self.keyboard_hook.stop()
                     self.keyboard_hook.key_released.disconnect()
                     self.keyboard_hook = None
-                    self._log_with_time("[로그] 키보드 모니터링 중지")
+                    self._log_with_time("[중지 로그] 키보드 모니터링 중지")
                 except Exception as e:
                     self._log_with_time("[오류] 키보드 모니터링 중지 실패: {}".format(str(e)))
     
     def _safe_cleanup(self):
         """안전한 정리 작업"""
-        self._log_with_time("[로그] 안전한 정리 작업 시작")
+        self._log_with_time("[마무리 로그] 안전한 정리 작업 시작")
         try:
             # 먼저 실행 상태를 False로 설정
-            self._log_with_time("[로그] 실행 상태 False로 설정 시작")
+            self._log_with_time("[마무리 로그] 실행 상태 False로 설정 시작")
             self._update_state(is_executing=False)
-            self._log_with_time("[로그] 실행 상태 False로 설정 완료")
+            self._log_with_time("[마무리 로그] 실행 상태 False로 설정 완료")
 
             # 중지 상태를 False로 설정
-            self._log_with_time("[로그] 중지 상태 False로 설정 시작")
+            self._log_with_time("[마무리 로그] 중지 상태 False로 설정 시작")
             self._update_state(is_stopping=False)
-            self._log_with_time("[로그] 중지 상태 False로 설정 완료")
+            self._log_with_time("[마무리 로그] 중지 상태 False로 설정 완료")
 
             # 현재 단계와 반복 횟수 초기화
-            self._log_with_time("[로그] 단계와 반복 횟수 초기화 시작")
+            self._log_with_time("[마무리 로그] 단계와 반복 횟수 초기화 시작")
             self._update_state(current_step=0, current_repeat=1)
-            self._log_with_time("[로그] 단계와 반복 횟수 초기화 완료")
+            self._log_with_time("[마무리 로그] 단계와 반복 횟수 초기화 완료")
 
-            self._log_with_time("[로그] 안전한 정리 작업 완료")
+            self._log_with_time("[마무리 로그] 안전한 정리 작업 완료")
             self.cleanup_finished.emit()
-            self._log_with_time("[로그] 정리 완료 시그널 발생")
+            self._log_with_time("[마무리 로그] 정리 완료 시그널 발생")
         except Exception as e:
             self._log_with_time("[오류] 안전한 정리 작업 중 오류 발생: {}".format(str(e)))
             self.execution_error.emit("정리 작업 중 오류 발생: {}".format(str(e)))
@@ -132,11 +132,11 @@ class LogicExecutor(QObject):
         Args:
             key_info (dict): 입력된 키 정보
         """
-        self._log_with_time("[로그] 키 입력 감지: {}".format(key_info))
+        self._log_with_time("[키 감지 로그] 키 입력 감지: {}".format(key_info))
         
         # ESC 키 감지 (virtual_key = 27)
         if key_info.get('virtual_key') == 27:
-            self._log_with_time("[로그] ESC 키 감지 - 로직 강제 중지 실행")
+            self._log_with_time("[키 감지 로그] ESC 키 감지 - 로직 강제 중지 실행")
             self.force_stop()
             return
         
@@ -162,7 +162,7 @@ class LogicExecutor(QObject):
                     )
                     # 로직 실행 시작 시 시간 초기화
                     self._start_time = time.time()
-                    self._log_with_time("[로그] 로직 '{}' 실행 시작".format(logic_name))
+                    self._log_with_time(f"[로직 실행] 로직 '{logic.get('name')}({logic.get('id')})' 실행 시작")
                     
                     self.execution_started.emit()
                     
@@ -191,7 +191,21 @@ class LogicExecutor(QObject):
                 repeat_count = self.selected_logic.get('repeat_count', 1)
                 current_repeat = self.execution_state['current_repeat']
                 
-                self._log_with_time(f"[로그] 현재 {current_repeat}/{repeat_count} 반복 완료")
+                # 현재 실행 중인 로직 정보
+                current_logic_name = self.selected_logic.get('name', '')
+                current_logic_id = self.selected_logic.get('id', '')
+                
+                # 부모 로직이 있는 경우 (중첩 로직인 경우)
+                if self._logic_stack:
+                    parent_logic, parent_state = self._logic_stack[-1]
+                    parent_name = parent_logic.get('name', '')
+                    parent_id = parent_logic.get('id', '')
+                    parent_step = parent_state.get('current_step', 0)
+                    parent_info = f" - {parent_name}({parent_id})의 {parent_step}번 스텝"
+                    self._log_with_time(f"[로직-중첩로직]{parent_info} 중첩로직 '{current_logic_name}({current_logic_id})' {current_repeat}/{repeat_count} 반복 완료")
+                else:
+                    # 일반 로직의 경우
+                    self._log_with_time(f"[로직 실행] 로직 '{current_logic_name}({current_logic_id})' {current_repeat}/{repeat_count} 반복 완료")
                 
                 if current_repeat < repeat_count:
                     # 아직 반복 횟수 남았으면 처음부터 다시 시작
@@ -203,8 +217,6 @@ class LogicExecutor(QObject):
                     QTimer.singleShot(0, self._execute_next_step)
                 else:
                     # 모든 반복이 완료된 경우
-                    self._log_with_time(f"[로그] 로직 '{self.selected_logic.get('name')}' 실행 완료")
-                    
                     # 스택에 이전 로직이 있으면 복원
                     if self._logic_stack:
                         prev_logic, prev_state = self._logic_stack.pop()
@@ -232,7 +244,7 @@ class LogicExecutor(QObject):
             return
             
         try:
-            self._log_with_time("[로그] 스텝 {} 실행: {}".format(self.execution_state['current_step'], step['display_text']))
+            self._log_with_time("[로직 스텝] 스텝 {} 실행: {}".format(self.execution_state['current_step'], step['display_text']))
             
             if step['type'] == 'key_input':
                 self._execute_key_input(step)
@@ -321,6 +333,14 @@ class LogicExecutor(QObject):
             nested_logic = dict(nested_logic)
             self.selected_logic = nested_logic
 
+            # 부모 로직 정보
+            parent_name = self._logic_stack[-1][0].get('name', '')
+            parent_id = self._logic_stack[-1][0].get('id', '')
+            parent_step = current_state['current_step']
+
+            # 중첩 로직 정보
+            logic_id = nested_logic.get('id', '')
+
             self._update_state(
                 current_step=0,
                 current_repeat=1,
@@ -328,7 +348,7 @@ class LogicExecutor(QObject):
                 is_stopping=False
             )
 
-            self._log_with_time(f"[로그] 중첩 로직 '{logic_name}' 실행 시작 (총 {nested_logic.get('repeat_count', 1)}회 반복)")
+            self._log_with_time(f"[로직-중첩로직] {parent_name}({parent_id})의 {parent_step}번 스텝 중첩로직 '{logic_name}({logic_id})' 실행 시작 (총 {nested_logic.get('repeat_count', 1)}회 반복)")
             QTimer.singleShot(0, self._execute_next_step)
             
         except Exception as e:
@@ -468,7 +488,6 @@ class LogicExecutor(QObject):
             "상태 업데이트 시작",
             "상태 락 획득",
             "새로운 상태",
-            "실행 상태 변경",
             "상태 변경 알림 완료"
         ]
 
@@ -492,9 +511,26 @@ class LogicExecutor(QObject):
         # 시간 정보 포함할 패턴이 있는 경우 시간 정보 추가
         if any(pattern in message for pattern in time_patterns):
             elapsed = int((time.time() - self._start_time) * 1000)
-            formatted_message = f"[{elapsed}ms] {message}"
+            time_info = f"[{elapsed}ms]"
         else:
-            formatted_message = message
+            time_info = ""
+
+        # 메시지 스타일 적용
+        if "[오류]" in message:
+            # 오류 메시지 - 어두운 빨간색
+            formatted_message = f"{time_info} <span style='color: #8B0000; font-size: 12px;'>{message}</span>"
+        
+        elif "ESC 키 감지" in message or "강제 중지" in message:
+            formatted_message = f"{time_info} <span style='color: #FFA500; font-size: 18px; font-weight: bold;'>{message}</span>"
+        
+        elif "중첩로직" in message:
+            formatted_message = f"{time_info} <span style='color: #008000; font-size: 18px; font-weight: bold;'>{message}</span>"
+        
+        elif "로직" in message and ("실행 시작" in message or "반복 완료" in message):
+            formatted_message = f"{time_info} <span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{message}</span>"
+        else:
+            # 기본 메시지 - 기본 스타일
+            formatted_message = f"{time_info} {message}"
             
         self.log_message.emit(formatted_message)
 

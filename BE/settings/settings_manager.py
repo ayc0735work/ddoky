@@ -304,7 +304,7 @@ class SettingsManager:
         """모든 로직을 저장합니다."""
         ordered_logics = {}
         for logic_id, logic_data in logics.items():
-            # 아���템 순서 정렬
+            # 아이템 순서 정렬
             ordered_items = []
             for item in logic_data.get('items', []):
                 if 'type' in item:
