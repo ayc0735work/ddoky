@@ -496,7 +496,7 @@ class LogicDetailWidget(QFrame):
         self.LogicItemList__QListWidget.clear()          # 목록 초기화
         self.TriggerKeyInputWidget__KeyInputWidget.clear_key()        # 트리거 키 입력 초기화
         self.TriggerKeyInfoLabel__QLabel.clear()       # 트리거 키 정보 초기화
-        self.trigger_key_info = None      # 트리��� 키 정보 초기화
+        self.trigger_key_info = None      # 트리 키 정보 초기화
         self.edit_mode = False            # 수정 모드 해제
         self.original_name = None         # 원래 이름 초기화
         self.current_logic_id = None     # UUID도 초기화
@@ -521,7 +521,7 @@ class LogicDetailWidget(QFrame):
     def _save_logic(self):
         """로직 저장"""
         try:
-            # 로직 이름 가져오���
+            # 로직 이름 가져오
             name = self.LogicNameInput__QLineEdit.text().strip()
             if not name:
                 self.log_message.emit("오류: 로직 이름을 입력해주세요.")
@@ -679,14 +679,39 @@ class LogicDetailWidget(QFrame):
                     'order': item_info.get('order', 1)
                 }
             else:
-                # 일반 텍스트를 로직 타입으로 변환
+                # 로직 이름으로 원본 로직 찾기
+                logic_name = content.replace("로직:", "").strip()
+                logics = self.settings_manager.load_logics()
+                logic_id = None
+                
+                # 이름으로 원본 로직 찾기
+                for existing_id, existing_logic in logics.items():
+                    if existing_logic.get('name') == logic_name:
+                        logic_id = existing_id
+                        break
+                
+                # 원본 로직을 찾지 못한 경우 에러 메시지 표시
+                if not logic_id:
+                    QMessageBox.critical(
+                        self,
+                        "오류",
+                        f"원본 로직 '{logic_name}'을(를) 찾을 수 없습니다.\n"
+                        "해당 로직이 삭제되었거나 이름이 변경되었을 수 있습니다."
+                    )
+                    return
+                
                 item_info = {
                     'type': 'logic',
-                    'logic_name': content,
-                    'display_text': f"로직: {content}",
-                    'logic_id': str(uuid.uuid4()),  # 새로운 UUID 생성
+                    'logic_name': logic_name,
+                    'display_text': f"로직: {logic_name}",
+                    'logic_id': logic_id,
                     'repeat_count': 1,
-                    'order': item_info.get('order', 1)
+                    'order': item_info.get('order', 1),
+                    'logic_data': {
+                        'logic_id': logic_id,
+                        'logic_name': logic_name,
+                        'repeat_count': 1
+                    }
                 }
         
         # 아이템의 순서를 현 리스트의 이템 개수 + 1로 설정
@@ -906,7 +931,7 @@ class LogicDetailWidget(QFrame):
                     # QInputDialog 커스터마이징
                     dialog = QInputDialog(self)
                     dialog.setWindowTitle("지연시간 수정")
-                    dialog.setLabelText("지연시간(초):")
+                    dialog.setLabelText("��연시간(초):")
                     dialog.setDoubleDecimals(3)  # 소수점 3자리까지 표시 (0.001초 단위)
                     dialog.setDoubleValue(current_delay)  # 현재 지연시간을 기본값으로 설정
                     dialog.setDoubleRange(0.001, 100.0)  # 0.001초 ~ 100초
