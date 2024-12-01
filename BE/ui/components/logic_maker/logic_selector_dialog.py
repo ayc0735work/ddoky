@@ -20,8 +20,8 @@ class LogicSelectorDialog(QDialog):
     def init_ui(self):
         """UI 초기화"""
         self.setWindowTitle("만든 로직 선택 모달")
-        self.setMinimumWidth(400)
-        self.setMinimumHeight(300)
+        self.setMinimumWidth(500)
+        self.setMinimumHeight(1300)
         
         # 메인 레이아웃
         layout = QVBoxLayout()
