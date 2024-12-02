@@ -16,12 +16,13 @@ from BE.ui.components.logic_maker.logic_maker_controller import LogicMakerContro
 from BE.ui.components.logic_operation.logic_operation_controller import LogicOperationController
 from BE.ui.components.logic_operation.logic_operation_widget import LogicOperationWidget
 from BE.ui.components.advanced.advanced_widget import AdvancedWidget
+from BE.ui.components.advanced.advanced_controller import AdvancedController
 from BE.ui.components.log.log_widget import LogWidget
 from BE.settings.settings_manager import SettingsManager
 from BE.ui.utils.error_handler import ErrorHandler
 from BE.logic.logic_manager import LogicManager
 from BE.logic.logic_executor import LogicExecutor
-from BE.ui.components.process.process_manager import ProcessManager  # ProcessManager import 경로 수정
+from BE.ui.components.process.process_manager import ProcessManager
 
 from BE.ui.constants.dimensions import (MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, BASIC_SECTION_HEIGHT,
                                MIDDLE_SPACE, ADVANCED_SECTION_HEIGHT)
@@ -150,6 +151,13 @@ class MainWindow(QMainWindow):
         self.advanced_widget.update_saved_logics(self.logic_list_widget.saved_logics)
         self.advanced_features_layout.addWidget(self.advanced_widget)
         self.main_layout.addLayout(self.advanced_features_layout)
+        
+        # AdvancedController 초기화 및 연결
+        self.advanced_controller = AdvancedController(
+            process_manager=self.process_manager,
+            logic_manager=self.logic_manager
+        )
+        self.advanced_controller.widget = self.advanced_widget
         
     def init_log_features(self):
         """로그 영역 초기화"""
@@ -281,9 +289,11 @@ class MainWindow(QMainWindow):
         """로직 동작 체크박스 상태가 변경되었을 때 호출"""
         if is_enabled:
             self.logic_executor.start_monitoring()
+            self.advanced_controller.set_monitoring_enabled(True)  # 게이지 모니터링 시작
             self._append_log("로직 동작이 활성화되었습니다")
         else:
             self.logic_executor.stop_monitoring()
+            self.advanced_controller.set_monitoring_enabled(False)  # 게이지 모니터링 중지
             self._append_log("로직 동작이 비활성화되었습니다")
     
     def _on_logic_saved(self, logic_info):
@@ -315,11 +325,13 @@ class MainWindow(QMainWindow):
     def _on_process_selected(self, process_info):
         """프로세스가 선택되었을 때 호출"""
         self.process_manager.set_selected_process(process_info)
+        self.advanced_controller.set_target_process(process_info)
         self._append_log(f"프로세스를 선택했습니다: {process_info}")
     
     def _on_process_reset(self):
         """프로세스가 초기화되었을 때 호출"""
         self.process_manager.set_selected_process(None)
+        self.advanced_controller.set_target_process(None)
         self._append_log("프로세스 선택이 초기화되었습니다")
 
     def _on_add_logic(self, logic_name):

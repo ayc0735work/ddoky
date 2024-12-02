@@ -38,12 +38,9 @@ class LogicOperationController(QObject):
         
     def _handle_operation_toggle(self, checked):
         """로직 동작 토글 처리"""
-        if checked:
-            self.widget.log_message.emit("프로세스에서 로직 동작을 시작합니다")
-        else:
+        if not checked and self.widget.logic_executor:
             # LogicExecutor의 인스턴스를 사용하여 모든 로직 중지
-            if self.widget.logic_executor:
-                self.widget.logic_executor.stop_all_logic()
+            self.widget.logic_executor.stop_all_logic()
             self.widget.log_message.emit("프로세스에서 로직 동작을 종료합니다")
         
     def _handle_process_reset(self):
@@ -52,7 +49,7 @@ class LogicOperationController(QObject):
         
     def _handle_process_selected(self, process_info):
         """프로세스 선택 처리"""
-        self.widget.log_message.emit(f"{process_info} 프로세스를 선택했습니다")
+        pass  # 로그 출력 제거
         
     def _handle_process_selection(self):
         """프로세스 선택 처리"""

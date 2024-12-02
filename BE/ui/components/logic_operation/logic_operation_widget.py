@@ -128,7 +128,6 @@ class LogicOperationWidget(QFrame):
             text = f"선택된 프로세스 : {self._get_process_info_text(process)}"
             self.selected_process_label.setText(text)
             self.selected_process = process
-            self.log_message.emit(f"프로세스에서 로직 동작을 시작합니다")
             self.process_selected.emit(process)  # 프로세스 정보 전체를 전달
         
     def _on_reset_process(self):

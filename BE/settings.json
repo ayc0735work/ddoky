@@ -9,6 +9,41 @@
             "height": 2000
         }
     },
+    "gauge_monitor": {
+        "hp_gauge": {
+            "coordinates": {
+                "x": 2132,
+                "y": 1407,
+                "width": 285,
+                "height": 25
+            },
+            "image_file": "captures\\capture_hp.png",
+            "timestamp": "20241202_220744"
+        },
+        "mp_gauge": {
+            "coordinates": {
+                "x": 1920,
+                "y": 1357,
+                "width": 471,
+                "height": 85
+            },
+            "image_file": "captures\\capture_mp.png",
+            "timestamp": "20241202_220741"
+        }
+    },
+    "advanced_settings": {
+        "hp_threshold": 30,
+        "mp_threshold": 30,
+        "hp_logic": {
+            "uuid": "0dfa1418-cab1-4439-ae8a-b0c971471c99",
+            "enabled": true
+        },
+        "mp_logic": {
+            "uuid": "ba00b4b7-4268-4138-a424-d1e9353d7743",
+            "enabled": true
+        },
+        "common_logic": null
+    },
     "logics": {
         "0dfa1418-cab1-4439-ae8a-b0c971471c99": {
             "order": 1,
@@ -1558,7 +1593,7 @@
                 {
                     "order": 3,
                     "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
+                    "action": "떼��",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,

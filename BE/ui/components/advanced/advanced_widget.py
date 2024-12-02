@@ -2,7 +2,8 @@ from PySide6.QtWidgets import (QFrame, QVBoxLayout, QLabel,
                                QHBoxLayout, QCheckBox, QSlider, QSpinBox, QPushButton, QProgressBar, QWidget)
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
-
+import os
+import json
 from ...constants.styles import (FRAME_STYLE, CONTAINER_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from ...constants.dimensions import (ADVANCED_FRAME_WIDTH, ADVANCED_SECTION_HEIGHT,
@@ -56,17 +57,18 @@ class AdvancedWidget(QWidget):
     
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.init_ui()
-        self._connect_signals()
-        
         # 선택된 로직 정보 저장
         self.hp_selected_logic = None
         self.mp_selected_logic = None
         self.common_selected_logic = None  # 공통 로직 정보 저장 변수 추가
         self.saved_logics = {}  # 저장된 로직 정보
-        self.settings_manager = SettingsManager()
-        # 초기화 시점에는 설정을 불러오지 않음
-        # self.load_settings()  # 설정 불러오기
+        
+        # UI 초기화
+        self.init_ui()
+        self._connect_signals()
+        
+        # 초기화 시에는 설정을 로드하지 않음
+        # 로직 정보가 업데이트될 때 load_settings가 호출됨
     
     def _connect_signals(self):
         """시그널 연결"""
@@ -158,7 +160,7 @@ class AdvancedWidget(QWidget):
             self.common_logic_name.setText("선택된 로직 없음")
             self.common_logic_checkbox.setChecked(False)
             self.common_logic_checkbox.setEnabled(False)
-            # 공통 로직 초기화 �� 개별 체트롤 활성화
+            # 공통 로직 초기화  개별 체트롤 활성화
             self._update_individual_controls(True)
         # 로직 초기화 후 설정 저장
         self.save_settings()
@@ -416,7 +418,7 @@ class AdvancedWidget(QWidget):
     def update_saved_logics(self, logics):
         """저장된 로직 정보 업데이트"""
         self.saved_logics = logics
-        # 로직 정보가 업데이트되 후에 설정을 불러옴
+        # 로직 정보가 업데이트되 후에 설정을 로드
         self.load_settings()
     
     def _show_compare_area_dialog(self, type_):
@@ -426,68 +428,104 @@ class AdvancedWidget(QWidget):
     
     def save_settings(self):
         """현재 설정을 저장"""
-        settings = {
-            'hp_threshold': self.hp_slider.value(),
-            'mp_threshold': self.mp_slider.value(),
-            'hp_logic': {
-                'uuid': self.hp_selected_logic,
-                'enabled': self.hp_logic_checkbox.isChecked()
-            } if self.hp_selected_logic else None,
-            'mp_logic': {
-                'uuid': self.mp_selected_logic,
-                'enabled': self.mp_logic_checkbox.isChecked()
-            } if self.mp_selected_logic else None,
-            'common_logic': {
-                'uuid': self.common_selected_logic,
-                'enabled': self.common_logic_checkbox.isChecked()
-            } if self.common_selected_logic else None
-        }
-        print("저장하려는 설정:", settings)  # 디버그 출력
-        self.settings_manager.save_advanced_settings(settings)
+        try:
+            # 설정 파일 경로
+            self.settings_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'settings.json')
+            
+            # 현재 settings.json 파일 읽기
+            with open(self.settings_path, 'r', encoding='utf-8') as f:
+                settings = json.load(f)
+            
+            # advanced_settings 섹션이 없으면 생성
+            if 'advanced_settings' not in settings:
+                settings['advanced_settings'] = {}
+            
+            # 현재 설정 업데이트
+            settings['advanced_settings'].update({
+                'hp_threshold': self.hp_slider.value(),
+                'mp_threshold': self.mp_slider.value(),
+                'hp_logic': {
+                    'uuid': self.hp_selected_logic,
+                    'enabled': self.hp_logic_checkbox.isChecked()
+                } if self.hp_selected_logic else None,
+                'mp_logic': {
+                    'uuid': self.mp_selected_logic,
+                    'enabled': self.mp_logic_checkbox.isChecked()
+                } if self.mp_selected_logic else None,
+                'common_logic': {
+                    'uuid': self.common_selected_logic,
+                    'enabled': self.common_logic_checkbox.isChecked()
+                } if self.common_selected_logic else None
+            })
+            
+            # 변경된 설정을 파일에 저장
+            with open(self.settings_path, 'w', encoding='utf-8') as f:
+                json.dump(settings, f, indent=4, ensure_ascii=False)
+            
+            print("설정이 성공적으로 저장되었습니다.")
+            
+        except Exception as e:
+            print(f"설정 저장 중 오류 발생: {str(e)}")
+            import traceback
+            traceback.print_exc()
     
     def load_settings(self):
         """저장된 설정 불러오기"""
-        settings = self.settings_manager.load_advanced_settings()
-        print("불러온 설정:", settings)  # 디버그 출력
-        if not settings:
-            return
+        try:
+            # 설정 파일 경로
+            self.settings_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'settings.json')
             
-        # 회복 기준값 설정
-        if 'hp_threshold' in settings:
-            self.hp_slider.setValue(settings['hp_threshold'])
-            self.hp_spinbox.setValue(settings['hp_threshold'])
-        if 'mp_threshold' in settings:
-            self.mp_slider.setValue(settings['mp_threshold'])
-            self.mp_spinbox.setValue(settings['mp_threshold'])
+            # settings.json 파일 로드
+            with open(self.settings_path, 'r', encoding='utf-8') as f:
+                settings = json.load(f)
             
-        # HP 로직 설정
-        if settings.get('hp_logic'):
-            hp_logic = settings['hp_logic']
-            uuid = hp_logic['uuid']
-            if uuid in self.saved_logics:
-                self.hp_selected_logic = uuid
-                self.hp_logic_name.setText(self.saved_logics[uuid]['name'])
+            # 고급 설정 로드
+            advanced_settings = settings.get('advanced_settings', {})
+            
+            # 슬라이더 값 설정
+            hp_threshold = advanced_settings.get('hp_threshold', DEFAULT_RECOVERY_THRESHOLD)
+            mp_threshold = advanced_settings.get('mp_threshold', DEFAULT_RECOVERY_THRESHOLD)
+            
+            self.hp_slider.setValue(hp_threshold)
+            self.hp_spinbox.setValue(hp_threshold)
+            self.mp_slider.setValue(mp_threshold)
+            self.mp_spinbox.setValue(mp_threshold)
+            
+            # HP 로직 설정
+            hp_logic = advanced_settings.get('hp_logic')
+            if hp_logic and hp_logic.get('uuid') in self.saved_logics:
+                self.hp_selected_logic = hp_logic['uuid']
+                logic_info = self.saved_logics[self.hp_selected_logic]
+                self.hp_logic_name.setText(logic_info.get('name', '알 수 없는 로직'))
                 self.hp_logic_checkbox.setEnabled(True)
-                self.hp_logic_checkbox.setChecked(hp_logic['enabled'])
-                
-        # MP 로직 설정
-        if settings.get('mp_logic'):
-            mp_logic = settings['mp_logic']
-            uuid = mp_logic['uuid']
-            if uuid in self.saved_logics:
-                self.mp_selected_logic = uuid
-                self.mp_logic_name.setText(self.saved_logics[uuid]['name'])
+                self.hp_logic_checkbox.setChecked(hp_logic.get('enabled', False))
+            
+            # MP 로직 설정
+            mp_logic = advanced_settings.get('mp_logic')
+            if mp_logic and mp_logic.get('uuid') in self.saved_logics:
+                self.mp_selected_logic = mp_logic['uuid']
+                logic_info = self.saved_logics[self.mp_selected_logic]
+                self.mp_logic_name.setText(logic_info.get('name', '알 수 없는 로직'))
                 self.mp_logic_checkbox.setEnabled(True)
-                self.mp_logic_checkbox.setChecked(mp_logic['enabled'])
-                
-        # 공통 로직 설정
-        if settings.get('common_logic'):
-            common_logic = settings['common_logic']
-            uuid = common_logic['uuid']
-            if uuid in self.saved_logics:
-                self.common_selected_logic = uuid
-                self.common_logic_name.setText(self.saved_logics[uuid]['name'])
+                self.mp_logic_checkbox.setChecked(mp_logic.get('enabled', False))
+            
+            # 공통 로직 설정
+            common_logic = advanced_settings.get('common_logic')
+            if common_logic and common_logic.get('uuid') in self.saved_logics:
+                self.common_selected_logic = common_logic['uuid']
+                logic_info = self.saved_logics[self.common_selected_logic]
+                self.common_logic_name.setText(logic_info.get('name', '알 수 없는 로직'))
                 self.common_logic_checkbox.setEnabled(True)
-                self.common_logic_checkbox.setChecked(common_logic['enabled'])
-                if common_logic['enabled']:
+                self.common_logic_checkbox.setChecked(common_logic.get('enabled', False))
+                if common_logic.get('enabled', False):
                     self._update_individual_controls(False)
+            
+            # 게이지 모니터 설정 로드
+            gauge_monitor = settings.get('gauge_monitor', {})
+            print("HP 캡처 영역 로드:", gauge_monitor.get('hp_gauge', {}))
+            print("MP 캡처 영역 로드:", gauge_monitor.get('mp_gauge', {}))
+            
+        except Exception as e:
+            print(f"설정 로드 중 오류 발생: {str(e)}")
+            import traceback
+            traceback.print_exc()
