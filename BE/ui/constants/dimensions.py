@@ -4,7 +4,7 @@ MAIN_WINDOW_HEIGHT = 2000
 
 # Section heights
 BASIC_SECTION_HEIGHT = 800
-ADVANCED_SECTION_HEIGHT = 200
+ADVANCED_SECTION_HEIGHT = 400
 LOG_CONTAINER_MIN_HEIGHT = 100
 
 # Spacing
@@ -20,3 +20,6 @@ LOG_FRAME_WIDTH = 870
 # Button dimensions
 LOGIC_BUTTON_WIDTH = 280 // 4  # For logic list and detail buttons
 MAKER_BUTTON_WIDTH = 160  # For logic maker buttons
+
+# 회복 기준값
+DEFAULT_RECOVERY_THRESHOLD = 25
