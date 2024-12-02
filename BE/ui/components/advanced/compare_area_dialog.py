@@ -220,55 +220,32 @@ class CompareAreaDialog(QDialog):
         self.saved_captures = []
         self.last_capture = None
         
-        # 마지막 저장된 캡처 정보 로드
-        self._load_last_capture()
-        
+        # UI 초기화 먼저 실행
         self.init_ui()
         
-    def _load_last_capture(self):
-        """마지막으로 저장된 캡처 정보 로드"""
-        json_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 
-                               'data', 'captures', f'captures_{self.type_}.json')
-        if os.path.exists(json_path):
-            try:
-                with open(json_path, 'r', encoding='utf-8') as f:
-                    captures = json.load(f)
-                if captures:
-                    self.last_capture = captures[-1]  # 가장 최근 캡처 정보
-            except Exception:
-                self.last_capture = None
-                
-    def _load_saved_capture(self):
-        """저장된 캡처 정보로 UI 업데이트"""
-        if not self.last_capture:
-            return
-            
-        # 이미지 로드
-        image_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 
-                                'data', 'captures', self.last_capture['image_file'])
-        if os.path.exists(image_path):
-            self.captured_image = QPixmap(image_path)
-            
-            # 좌표 정보 설정
-            coords = self.last_capture['coordinates']
-            self.captured_rect = QRect(coords['x'], coords['y'], coords['width'], coords['height'])
-            
-            # UI 업데이트
-            self._update_capture_display()
-            
-            # 프로세스 정보 표시
-            self.process_info.setText(f"{self.last_capture['process_name']} ({self.last_capture['process_id']})")
-            
-            # 좌표 입력란 업데이트
-            self.top_left_x.setText(str(coords['x']))
-            self.top_left_y.setText(str(coords['y']))
-            self.top_right_x.setText(str(coords['x'] + coords['width']))
-            self.top_right_y.setText(str(coords['y']))
-            self.bottom_left_x.setText(str(coords['x']))
-            self.bottom_left_y.setText(str(coords['y'] + coords['height']))
-            self.bottom_right_x.setText(str(coords['x'] + coords['width']))
-            self.bottom_right_y.setText(str(coords['y'] + coords['height']))
-            
+        # 오버레이 초기화
+        self.current_overlay = None
+        
+        # UI 초기화 후에 마지막 저장된 캡처 정보 로드
+        self._load_last_capture()
+        
+        # 시그널 연결 (UI 초기화 후에 호출)
+        self._connect_signals()
+
+    def _connect_signals(self):
+        """시그널 연결"""
+        # 프로세스 관련 버튼
+        self.process_select_btn.clicked.connect(self._select_process)
+        self.process_reset_btn.clicked.connect(self._reset_process)
+        
+        # 캡처 관련 버튼
+        self.capture_btn.clicked.connect(self._capture_area)
+        self.reset_btn.clicked.connect(self._reset_capture_area)  # 캡처 초기화 버튼
+        
+        # 저장/취소 버튼
+        self.save_btn.clicked.connect(self._save_area)
+        self.cancel_btn.clicked.connect(self.reject)
+
     def init_ui(self):
         """UI 초기화"""
         layout = QVBoxLayout()
@@ -418,7 +395,7 @@ class CompareAreaDialog(QDialog):
         self.capture_frame.setMinimumHeight(150)
         
         # 캡처 이미지가 없을 때 표시할 안내 텍스트
-        guide_label = QLabel("캡처된 이미지가 없습니다.\n영역을 지정해주세요.")
+        guide_label = QLabel("캡처된 이미지가 없습니다.\n영역을 지��해주세요.")
         guide_label.setAlignment(Qt.AlignCenter)
         guide_label.setStyleSheet("color: #666;")
         
@@ -432,7 +409,7 @@ class CompareAreaDialog(QDialog):
         capture_button_layout.setSpacing(10)
         
         self.capture_btn = QPushButton("캡처 영역 지정")
-        self.capture_btn.setEnabled(False)  # 초기에는 비활성화
+        self.capture_btn.setEnabled(False)
         self.reset_btn = QPushButton("캡처 영역 초기화")
         
         button_style = """
@@ -460,7 +437,6 @@ class CompareAreaDialog(QDialog):
         button_layout.setSpacing(10)
         
         self.save_btn = QPushButton("저장", self)
-        self.save_btn.clicked.connect(self._save_area)
         self.save_btn.setEnabled(False)
         
         self.cancel_btn = QPushButton("취소", self)
@@ -507,13 +483,119 @@ class CompareAreaDialog(QDialog):
         layout.addLayout(button_layout)
         
         self.setLayout(layout)
+
+    def _reset_capture_area(self):
+        """캡처 영역 초기화 (UI에서만)"""
+        # 로그 시그널 발생 (부모 위젯의 log_message 시그널 사용)
+        log_type = "체력" if self.type_ == "hp" else "마력"
+        self.parent().advanced_action.emit(f"[고급 기능] {log_type} 캡처 영역 초기화를 시작합니다.")
         
-        # 시그널 연결
-        self.process_select_btn.clicked.connect(self._select_process)
-        self.process_reset_btn.clicked.connect(self._reset_process)
-        self.capture_btn.clicked.connect(self._capture_area)
-        self.cancel_btn.clicked.connect(self.reject)  # 취소 버튼에 reject 연결
+        # 캡처된 이미지 초기화
+        self.captured_image = None
+        self.captured_rect = None
         
+        # 좌표 입력란 초기화
+        self.top_left_x.clear()
+        self.top_left_y.clear()
+        self.top_right_x.clear()
+        self.top_right_y.clear()
+        self.bottom_left_x.clear()
+        self.bottom_left_y.clear()
+        self.bottom_right_x.clear()
+        self.bottom_right_y.clear()
+        
+        # 캡처 프레임 초기화
+        if self.capture_frame.layout().count() > 0:
+            item = self.capture_frame.layout().takeAt(0)
+            if item.widget():
+                item.widget().deleteLater()
+        
+        # 안내 텍스트 다시 표시
+        guide_label = QLabel("캡처된 이미지가 없습니다.\n영역을 지정해주세요.")
+        guide_label.setAlignment(Qt.AlignCenter)
+        guide_label.setStyleSheet("color: #666;")
+        self.capture_frame.layout().addWidget(guide_label)
+        
+        # 저장 버튼 비활성화
+        self.save_btn.setEnabled(False)
+        
+        # 초기화 완료 로그
+        self.parent().advanced_action.emit(f"[고급 기능] {log_type} 캡처 영역이 초기화되었습니다.")
+
+    def _load_last_capture(self):
+        """마지막으로 저장된 캡처 정보 로드"""
+        json_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 
+                               'data', 'captures', f'captures_{self.type_}.json')
+        image_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 
+                                'data', 'captures', f'capture_{self.type_}.png')
+        
+        if os.path.exists(json_path) and os.path.exists(image_path):
+            try:
+                # JSON 파일 로드
+                with open(json_path, 'r', encoding='utf-8') as f:
+                    self.last_capture = json.load(f)
+                
+                # 이미지 로드
+                self.captured_image = QPixmap(image_path)
+                
+                # 캡처 영역 정보 복원
+                coords = self.last_capture['coordinates']
+                self.captured_rect = QRect(
+                    coords['x'],
+                    coords['y'],
+                    coords['width'],
+                    coords['height']
+                )
+                
+                # UI 업데이트
+                self._update_capture_display()
+                
+            except Exception as e:
+                self.parent().advanced_action.emit(f"[고급 기능] 캡처 정보 로드 중 오류가 발생했습니다: {str(e)}")
+                self.last_capture = None
+                self.captured_image = None
+                self.captured_rect = None
+
+    def _load_saved_capture(self):
+        """저장된 캡처 정보로 UI 업데이트"""
+        if not self.last_capture:
+            return
+            
+        # 이미지 로드
+        image_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 
+                           'data', 'captures', self.last_capture['image_file'])
+        if os.path.exists(image_path):
+            try:
+                # 이미지 로드
+                self.captured_image = QPixmap(image_path)
+                
+                # 좌표 정보 설정
+                coords = self.last_capture['coordinates']
+                self.captured_rect = QRect(
+                    coords['x'],
+                    coords['y'],
+                    coords['width'],
+                    coords['height']
+                )
+                
+                # UI 업데이트
+                self._update_capture_display()
+                
+                # 좌표 입력란 업데이트
+                self.top_left_x.setText(str(coords['x']))
+                self.top_left_y.setText(str(coords['y']))
+                self.top_right_x.setText(str(coords['x'] + coords['width']))
+                self.top_right_y.setText(str(coords['y']))
+                self.bottom_left_x.setText(str(coords['x']))
+                self.bottom_left_y.setText(str(coords['y'] + coords['height']))
+                self.bottom_right_x.setText(str(coords['x'] + coords['width']))
+                self.bottom_right_y.setText(str(coords['y'] + coords['height']))
+                
+            except Exception as e:
+                self.last_capture = None
+                self.captured_image = None
+                self.captured_rect = None
+
     def _select_process(self):
         """프로세스 선택"""
         dialog = ProcessSelectorDialog(self)
@@ -545,7 +627,7 @@ class CompareAreaDialog(QDialog):
         win32gui.SetForegroundWindow(hwnd)
         
         # 캡처 오버레이 표시 (타이머를 통해 지연 초기화)
-        self.current_overlay = CaptureOverlay(hwnd, self)  # self를 부모로 전달
+        self.current_overlay = CaptureOverlay(hwnd, self)  # self를 부모로 전
         self.current_overlay.setAttribute(Qt.WA_DeleteOnClose)  # 창이 닫힐 때 자동으로 메모리 해제
         self.current_overlay.show()
         
@@ -607,67 +689,65 @@ class CompareAreaDialog(QDialog):
             
     def _save_area(self):
         """캡처된 영역 저장"""
-        if not self.captured_image or not self.selected_process:
-            return
-            
-        # 저장할 디렉토리 생성
-        save_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'data', 'captures')
-        os.makedirs(save_dir, exist_ok=True)
-        
-        # 현재 시간을 파일명에 포함
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        
-        # 이미지 파일명 (타입 포함)
-        image_filename = f"capture_{self.type_}_{timestamp}.png"
-        image_path = os.path.join(save_dir, image_filename)
-        
-        # 캡처 정보
-        capture_info = {
-            'timestamp': timestamp,
-            'process_name': self.selected_process['name'],
-            'process_id': self.selected_process['pid'],
-            'window_title': self.selected_process['title'],
-            'coordinates': {
-                'x': self.captured_rect.x(),
-                'y': self.captured_rect.y(),
-                'width': self.captured_rect.width(),
-                'height': self.captured_rect.height()
-            },
-            'image_file': image_filename
-        }
-        
         try:
+            save_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'data', 'captures')
+            os.makedirs(save_dir, exist_ok=True)
+            
+            image_path = os.path.join(save_dir, f"capture_{self.type_}.png")
+            json_path = os.path.join(save_dir, f'captures_{self.type_}.json')
+            
+            if not self.captured_image:
+                # 캡처된 이미지가 없는 경우 (초기화 상태로 저장)
+                # 기존 파일들 삭제
+                if os.path.exists(image_path):
+                    os.remove(image_path)
+                if os.path.exists(json_path):
+                    os.remove(json_path)
+                
+                log_type = "체력" if self.type_ == "hp" else "마력"
+                self.parent().advanced_action.emit(f"[고급 기능] {log_type} 캡처 정보가 초기화되었습니다.")
+                self.last_capture = None  # last_capture 초기화
+                self.close()
+                return
+            
+            # 캡처된 이미지가 있는 경우 새로운 정보 저장
+            image_filename = f"capture_{self.type_}.png"
+            
+            # 좌표값만 저장
+            capture_info = {
+                'timestamp': datetime.now().strftime("%Y%m%d_%H%M%S"),
+                'coordinates': {
+                    'x': self.captured_rect.x(),
+                    'y': self.captured_rect.y(),
+                    'width': self.captured_rect.width(),
+                    'height': self.captured_rect.height()
+                },
+                'image_file': image_filename
+            }
+            
             # 이미지 저장
             self.captured_image.save(image_path)
             
-            # 캡처 정보 JSON 파일에 저장 (타입별로 구분)
-            json_path = os.path.join(save_dir, f'captures_{self.type_}.json')
-            
-            # 기존 데이터 로드 또는 새로운 리스트 생성
-            if os.path.exists(json_path):
-                with open(json_path, 'r', encoding='utf-8') as f:
-                    captures = json.load(f)
-            else:
-                captures = []
-            
-            # 새로운 캡처 정보 추가
-            captures.append(capture_info)
-            self.last_capture = capture_info  # 마지막 캡처 정보 업데이트
-            
             # JSON 파일 저장
             with open(json_path, 'w', encoding='utf-8') as f:
-                json.dump(captures, f, indent=4, ensure_ascii=False)
+                json.dump(capture_info, f, indent=4, ensure_ascii=False)
             
             # 저장 성공 메시지
-            QMessageBox.information(self, "저장 완료", "캡처 정보가 성공적으로 저장되었습니다.")
+            log_type = "체력" if self.type_ == "hp" else "마력"
+            QMessageBox.information(self, "저장 완료", f"{log_type} 캡처 정보가 성공적으로 저장되었습니다.")
             
-            # 성공적으로 저장되었음을 알리는 결과 설정
-            self.setResult(QDialog.Accepted)
+            # 저장 완료 로그 (모달이 닫히기 전에만 한 번 표시)
+            self.parent().advanced_action.emit(f"[고급 기능] {log_type} 캡처 정보가 저장되었습니다.")
+            
+            # 모달을 닫기 전에 last_capture 초기화
+            self.last_capture = None
+            
+            # 저장 후 바로 닫기
             self.accept()
             
         except Exception as e:
             QMessageBox.critical(self, "저장 실패", f"캡처 정보 저장 중 오류가 발생했습니다.\n{str(e)}")
-            
+
     def showEvent(self, event):
         """다이얼로그가 표시될 때 호출"""
         super().showEvent(event)
