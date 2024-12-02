@@ -1,0 +1,10 @@
+{
+  "hp_threshold": 17,
+  "mp_threshold": 53,
+  "hp_logic": {
+    "uuid": "e058193f-99b3-434c-be33-bb6222114c09",
+    "enabled": true
+  },
+  "mp_logic": null,
+  "common_logic": null
+}

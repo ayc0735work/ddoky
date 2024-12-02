@@ -9,6 +9,7 @@ from ...constants.dimensions import (ADVANCED_FRAME_WIDTH, ADVANCED_SECTION_HEIG
                                    DEFAULT_RECOVERY_THRESHOLD, MIDDLE_SPACE)
 from BE.ui.components.logic_maker.logic_selector_dialog import LogicSelectorDialog
 from .compare_area_dialog import CompareAreaDialog
+from ...data.settings_manager import SettingsManager
 
 class CustomSpinBox(QSpinBox):
     def __init__(self, parent=None):
@@ -63,6 +64,9 @@ class AdvancedWidget(QWidget):
         self.mp_selected_logic = None
         self.common_selected_logic = None  # 공통 로직 정보 저장 변수 추가
         self.saved_logics = {}  # 저장된 로직 정보
+        self.settings_manager = SettingsManager()
+        # 초기화 시점에는 설정을 불러오지 않음
+        # self.load_settings()  # 설정 불러오기
     
     def _connect_signals(self):
         """시그널 연결"""
@@ -92,6 +96,13 @@ class AdvancedWidget(QWidget):
         # 실시간 비교 영역 관리 버튼 시그널 연결
         self.hp_compare_area_btn.clicked.connect(lambda: self._show_compare_area_dialog('hp'))
         self.mp_compare_area_btn.clicked.connect(lambda: self._show_compare_area_dialog('mp'))
+        
+        # 설정 저장 시그널 연결
+        self.hp_slider.valueChanged.connect(self.save_settings)
+        self.mp_slider.valueChanged.connect(self.save_settings)
+        self.hp_logic_checkbox.stateChanged.connect(self.save_settings)
+        self.mp_logic_checkbox.stateChanged.connect(self.save_settings)
+        self.common_logic_checkbox.stateChanged.connect(self.save_settings)
     
     def _show_logic_select_dialog(self, type_):
         """로직 선택 다이얼로그 표시"""
@@ -121,6 +132,8 @@ class AdvancedWidget(QWidget):
                     self.common_logic_checkbox.setChecked(True)
                     # 공통 로직 선택 시 개별 체트롤 비활성화
                     self._update_individual_controls(False)
+            # 로직 선택 후 설정 저장
+            self.save_settings()
     
     def _reset_logic(self, type_):
         """로직 초기화"""
@@ -145,8 +158,10 @@ class AdvancedWidget(QWidget):
             self.common_logic_name.setText("선택된 로직 없음")
             self.common_logic_checkbox.setChecked(False)
             self.common_logic_checkbox.setEnabled(False)
-            # 공통 로직 초기화 시 개별 체트롤 활성화
+            # 공통 로직 초기화 �� 개별 체트롤 활성화
             self._update_individual_controls(True)
+        # 로직 초기화 후 설정 저장
+        self.save_settings()
     
     def _update_individual_controls(self, enabled: bool):
         """개별 로직 컨트롤 활성화/비활성화"""
@@ -350,7 +365,7 @@ class AdvancedWidget(QWidget):
         common_logic_info_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         
         common_logic_header = QHBoxLayout()
-        self.common_logic_checkbox = QCheckBox("체력, 마력 회복 기준 이하시 동작할 로직")
+        self.common_logic_checkbox = QCheckBox("체력, 마력 회복 기준 이하시 동작할 공통 로직")
         self.common_logic_checkbox.setEnabled(False)
         self.common_logic_name = QLabel("선택된 로직 없음")
         self.common_logic_name.setWordWrap(True)
@@ -401,8 +416,78 @@ class AdvancedWidget(QWidget):
     def update_saved_logics(self, logics):
         """저장된 로직 정보 업데이트"""
         self.saved_logics = logics
+        # 로직 정보가 업데이트되 후에 설정을 불러옴
+        self.load_settings()
     
     def _show_compare_area_dialog(self, type_):
         """실시간 비교 영역 관리 다이얼로그 표시"""
         dialog = CompareAreaDialog(type_, self)
         dialog.exec_()
+    
+    def save_settings(self):
+        """현재 설정을 저장"""
+        settings = {
+            'hp_threshold': self.hp_slider.value(),
+            'mp_threshold': self.mp_slider.value(),
+            'hp_logic': {
+                'uuid': self.hp_selected_logic,
+                'enabled': self.hp_logic_checkbox.isChecked()
+            } if self.hp_selected_logic else None,
+            'mp_logic': {
+                'uuid': self.mp_selected_logic,
+                'enabled': self.mp_logic_checkbox.isChecked()
+            } if self.mp_selected_logic else None,
+            'common_logic': {
+                'uuid': self.common_selected_logic,
+                'enabled': self.common_logic_checkbox.isChecked()
+            } if self.common_selected_logic else None
+        }
+        print("저장하려는 설정:", settings)  # 디버그 출력
+        self.settings_manager.save_advanced_settings(settings)
+    
+    def load_settings(self):
+        """저장된 설정 불러오기"""
+        settings = self.settings_manager.load_advanced_settings()
+        print("불러온 설정:", settings)  # 디버그 출력
+        if not settings:
+            return
+            
+        # 회복 기준값 설정
+        if 'hp_threshold' in settings:
+            self.hp_slider.setValue(settings['hp_threshold'])
+            self.hp_spinbox.setValue(settings['hp_threshold'])
+        if 'mp_threshold' in settings:
+            self.mp_slider.setValue(settings['mp_threshold'])
+            self.mp_spinbox.setValue(settings['mp_threshold'])
+            
+        # HP 로직 설정
+        if settings.get('hp_logic'):
+            hp_logic = settings['hp_logic']
+            uuid = hp_logic['uuid']
+            if uuid in self.saved_logics:
+                self.hp_selected_logic = uuid
+                self.hp_logic_name.setText(self.saved_logics[uuid]['name'])
+                self.hp_logic_checkbox.setEnabled(True)
+                self.hp_logic_checkbox.setChecked(hp_logic['enabled'])
+                
+        # MP 로직 설정
+        if settings.get('mp_logic'):
+            mp_logic = settings['mp_logic']
+            uuid = mp_logic['uuid']
+            if uuid in self.saved_logics:
+                self.mp_selected_logic = uuid
+                self.mp_logic_name.setText(self.saved_logics[uuid]['name'])
+                self.mp_logic_checkbox.setEnabled(True)
+                self.mp_logic_checkbox.setChecked(mp_logic['enabled'])
+                
+        # 공통 로직 설정
+        if settings.get('common_logic'):
+            common_logic = settings['common_logic']
+            uuid = common_logic['uuid']
+            if uuid in self.saved_logics:
+                self.common_selected_logic = uuid
+                self.common_logic_name.setText(self.saved_logics[uuid]['name'])
+                self.common_logic_checkbox.setEnabled(True)
+                self.common_logic_checkbox.setChecked(common_logic['enabled'])
+                if common_logic['enabled']:
+                    self._update_individual_controls(False)

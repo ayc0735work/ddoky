@@ -395,7 +395,7 @@ class CompareAreaDialog(QDialog):
         self.capture_frame.setMinimumHeight(150)
         
         # 캡처 이미지가 없을 때 표시할 안내 텍스트
-        guide_label = QLabel("캡처된 이미지가 없습니다.\n영역을 지��해주세요.")
+        guide_label = QLabel("캡처된 이미지가 없습니다.\n영역을 지정해주세요.")
         guide_label.setAlignment(Qt.AlignCenter)
         guide_label.setStyleSheet("color: #666;")
         
