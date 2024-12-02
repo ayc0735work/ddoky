@@ -27,20 +27,30 @@ class CaptureOverlay(QDialog):
         self.is_capturing = False
         self.captured_rect = None
         
-        # 화면 크기 가져오기
-        screen = QApplication.primaryScreen()
+        # 마우스 추적을 위한 변수
+        self.mouse_pos = None
         
-        # 대상 윈도우의 위치와 크기 가져오기
+        # 윈도우 정보 가져오기
         window_rect = win32gui.GetWindowRect(self.target_hwnd)
-        self.window_x = window_rect[0]
-        self.window_y = window_rect[1]
-        self.window_width = window_rect[2] - window_rect[0]
-        self.window_height = window_rect[3] - window_rect[1]
+        client_rect = win32gui.GetClientRect(self.target_hwnd)
+        
+        # 프라이언트 영역 크기 저장
+        self.client_width = client_rect[2]
+        self.client_height = client_rect[3]
+        
+        # 프레임 크기 계산
+        self.frame_x = ((window_rect[2] - window_rect[0]) - client_rect[2]) // 2
+        self.frame_y = (window_rect[3] - window_rect[1]) - client_rect[3] - self.frame_x
+        
+        # 클라이언트 영역의 실제 좌표 계산
+        self.client_x = window_rect[0] + self.frame_x
+        self.client_y = window_rect[1] + self.frame_y
         
         # 오버레이 위치와 크기 설정
         self.setGeometry(
-            self.window_x, self.window_y,
-            self.window_width, self.window_height
+            window_rect[0], window_rect[1],
+            window_rect[2] - window_rect[0],
+            window_rect[3] - window_rect[1]
         )
         
         # 반투명 오버레이 설정
@@ -48,9 +58,12 @@ class CaptureOverlay(QDialog):
         self.setStyleSheet("background-color: transparent;")
         
         # 초기 이미지와 확대경 설정
-        self.window_image = QPixmap()  # 빈 픽스맵으로 초기화
-        self.magnifier_size = QSize(120, 120)  # 확대경 크기
-        self.magnifier_scale = 2.0  # 확대 비율
+        self.window_image = QPixmap()
+        self.magnifier_size = QSize(120, 120)
+        self.magnifier_scale = 2.0
+        
+        # 마우스 추적 활성화
+        self.setMouseTracking(True)
         
         # 타이머 설정
         self.init_timer = QTimer(self)
@@ -87,6 +100,7 @@ class CaptureOverlay(QDialog):
         self.update()
         
     def paintEvent(self, event):
+        """화면 그리기 이벤트"""
         painter = QPainter(self)
         
         # 배경 이미지 그리기
@@ -97,36 +111,37 @@ class CaptureOverlay(QDialog):
             overlay = QColor(0, 0, 0, 128)
             painter.fillRect(self.rect(), overlay)
             
-        if self.start_pos and self.current_pos:
-            # 선택 영역 계산
-            capture_rect = QRect(self.start_pos, self.current_pos).normalized()
-            
-            # 선택 영역은 원본 이미지 보이게
-            painter.setCompositionMode(QPainter.CompositionMode_SourceOver)
-            painter.drawPixmap(capture_rect, self.window_image, capture_rect)
-            
-            # 선택 영역 테두리 그리기
-            pen = QPen(QColor(0, 120, 215), 1)
-            painter.setPen(pen)
-            painter.drawRect(capture_rect)
-            
-            # 확대경 그리기
-            if self.current_pos:
-                self._draw_magnifier(painter, self.current_pos)
+            # 캡처 영역 그리기
+            if self.start_pos and self.current_pos:
+                capture_rect = QRect(self.start_pos, self.current_pos).normalized()
                 
-            # 크기 정보 표시
-            size_text = f"{capture_rect.width()} x {capture_rect.height()}"
-            text_rect = capture_rect.adjusted(0, -25, 0, 0)
-            painter.setPen(Qt.white)
-            painter.drawText(text_rect, Qt.AlignCenter, size_text)
+                # 선택 영역은 원본 이미지 보이게
+                painter.setCompositionMode(QPainter.CompositionMode_SourceOver)
+                painter.drawPixmap(capture_rect, self.window_image, capture_rect)
+                
+                # 선택 영역 테두리 그리기
+                pen = QPen(QColor(0, 120, 215), 1)
+                painter.setPen(pen)
+                painter.drawRect(capture_rect)
+                
+                # 크기 정보 표시
+                size_text = f"{capture_rect.width()} x {capture_rect.height()}"
+                text_rect = capture_rect.adjusted(0, -25, 0, 0)
+                painter.setPen(Qt.white)
+                painter.drawText(text_rect, Qt.AlignCenter, size_text)
+            
+            # 마우스 위치에 돋보기 그리기
+            if self.mouse_pos:
+                self._draw_magnifier(painter, self.mouse_pos)
     
     def _draw_magnifier(self, painter, pos):
+        """돋보기 그리기"""
         # 확대경이 표시될 위치 계산
         magnifier_x = pos.x() + 20
         magnifier_y = pos.y() - self.magnifier_size.height() - 20
         
         # 화면 경계를 벗어나지 않도록 조정
-        if magnifier_x + self.magnifier_size.width() > self.window_width:
+        if magnifier_x + self.magnifier_size.width() > self.width():
             magnifier_x = pos.x() - self.magnifier_size.width() - 20
         if magnifier_y < 0:
             magnifier_y = pos.y() + 20
@@ -172,6 +187,17 @@ class CaptureOverlay(QDialog):
             center_x, center_y - 10,
             center_x, center_y + 10
         )
+        
+        # 현재 좌표 표시
+        coord_text = f"X: {pos.x()}, Y: {pos.y()}"
+        text_rect = QRect(
+            magnifier_x,
+            magnifier_y + self.magnifier_size.height() + 5,
+            self.magnifier_size.width(),
+            20
+        )
+        painter.setPen(Qt.white)
+        painter.drawText(text_rect, Qt.AlignCenter, coord_text)
     
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
@@ -181,15 +207,40 @@ class CaptureOverlay(QDialog):
             self.update()
     
     def mouseMoveEvent(self, event):
+        """마우스 이동 이벤트"""
+        self.mouse_pos = event.pos()
         if self.is_capturing:
             self.current_pos = event.pos()
-            self.update()
+        self.update()
     
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton and self.is_capturing:
             self.is_capturing = False
             if self.start_pos and self.current_pos:
-                self.captured_rect = QRect(self.start_pos, self.current_pos).normalized()
+                # 전체 화면 기준 캡처 영역
+                screen_rect = QRect(self.start_pos, self.current_pos).normalized()
+                
+                # 클라이언트 영역 기준 상대 좌표로 변환
+                relative_x = screen_rect.x() - self.frame_x
+                relative_y = screen_rect.y() - self.frame_y
+                
+                # 대 좌표를 비율로 변환 (0.0 ~ 1.0)
+                x_ratio = relative_x / self.client_width
+                y_ratio = relative_y / self.client_height
+                width_ratio = screen_rect.width() / self.client_width
+                height_ratio = screen_rect.height() / self.client_height
+                
+                # 비율 정보를 포함한 캡처 영역 저장
+                self.captured_rect = {
+                    'x_ratio': x_ratio,
+                    'y_ratio': y_ratio,
+                    'width_ratio': width_ratio,
+                    'height_ratio': height_ratio,
+                    'x': relative_x,
+                    'y': relative_y,
+                    'width': screen_rect.width(),
+                    'height': screen_rect.height()
+                }
                 self.accept()
     
     def keyPressEvent(self, event):
@@ -536,14 +587,25 @@ class CompareAreaDialog(QDialog):
             gauge_type = 'hp_gauge' if self.type_ == 'hp' else 'mp_gauge'
             gauge_info = gauge_monitor.get(gauge_type, {})
             
-            if gauge_info and 'coordinates' in gauge_info:
-                coordinates = gauge_info['coordinates']
-                self.captured_rect = QRect(
-                    coordinates['x'],
-                    coordinates['y'],
-                    coordinates['width'],
-                    coordinates['height']
-                )
+            if gauge_info:
+                # 좌표 정보 로드
+                if 'coordinates' in gauge_info:
+                    coordinates = gauge_info['coordinates']
+                    self.captured_rect = {
+                        'x': coordinates['x'],
+                        'y': coordinates['y'],
+                        'width': coordinates['width'],
+                        'height': coordinates['height']
+                    }
+                    
+                    # 비율 정보가 있다면 추가
+                    if 'ratios' in gauge_info:
+                        self.captured_rect.update({
+                            'x_ratio': gauge_info['ratios']['x'],
+                            'y_ratio': gauge_info['ratios']['y'],
+                            'width_ratio': gauge_info['ratios']['width'],
+                            'height_ratio': gauge_info['ratios']['height']
+                        })
                 
                 # 이미지 파일 로드
                 image_file = gauge_info.get('image_file', '')
@@ -565,6 +627,8 @@ class CompareAreaDialog(QDialog):
             
         except Exception as e:
             print(f"캡처 정보 로드 중 오류 발생: {str(e)}")
+            import traceback
+            traceback.print_exc()
 
     def _save_capture(self, image, gauge_type):
         """캡처 이미지 저장"""
@@ -621,24 +685,33 @@ class CompareAreaDialog(QDialog):
         # 창을 최상위로 가져오고 활성화
         win32gui.SetForegroundWindow(hwnd)
         
-        # 캡처 오버레이 표시 (타이머를 통해 지연 초기화)
-        self.current_overlay = CaptureOverlay(hwnd, self)  # self를 부모로 전
-        self.current_overlay.setAttribute(Qt.WA_DeleteOnClose)  # 창이 닫힐 때 자동으로 메모리 해제
+        # 캡처 오버레이 표시
+        self.current_overlay = CaptureOverlay(hwnd, self)
+        self.current_overlay.setAttribute(Qt.WA_DeleteOnClose)
         self.current_overlay.show()
         
         # 모달 실행
         if self.current_overlay.exec_():
+            # 상대 좌표와 비율 정보가 포함된 캡처 영역 저장
             self.captured_rect = self.current_overlay.captured_rect
             
-            # 프로세스 창의 위치와 크기 가져오기
+            # 윈도우 정보 가져오기
             window_rect = win32gui.GetWindowRect(hwnd)
+            client_rect = win32gui.GetClientRect(hwnd)
             
-            # 캡처할 영역 계산
-            capture_rect = self.captured_rect
-            x = window_rect[0] + capture_rect.x()
-            y = window_rect[1] + capture_rect.y()
-            width = capture_rect.width()
-            height = capture_rect.height()
+            # 프레임 크기 계산
+            frame_x = ((window_rect[2] - window_rect[0]) - client_rect[2]) // 2
+            frame_y = (window_rect[3] - window_rect[1]) - client_rect[3] - frame_x
+            
+            # 클라이언트 영역의 실제 좌표 계산
+            client_x = window_rect[0] + frame_x
+            client_y = window_rect[1] + frame_y
+            
+            # 캡처할 영역 계산 (상대 좌표를 화면 좌표로 변환)
+            x = client_x + self.captured_rect['x']
+            y = client_y + self.captured_rect['y']
+            width = self.captured_rect['width']
+            height = self.captured_rect['height']
             
             # 스크린샷 캡처
             screen = QApplication.primaryScreen()
@@ -649,7 +722,7 @@ class CompareAreaDialog(QDialog):
             
             # UI 업데이트
             self._update_capture_display()
-            
+
     def _update_capture_display(self):
         """캡처된 이미지와 좌표 표시 업데이트"""
         if self.captured_image and not self.captured_image.isNull():
@@ -669,19 +742,19 @@ class CompareAreaDialog(QDialog):
             self.capture_label.setPixmap(scaled_pixmap)
             self.capture_frame.layout().addWidget(self.capture_label)
             
-            # 좌표 표시
-            self.top_left_x.setText(str(self.captured_rect.x()))
-            self.top_left_y.setText(str(self.captured_rect.y()))
-            self.top_right_x.setText(str(self.captured_rect.x() + self.captured_rect.width()))
-            self.top_right_y.setText(str(self.captured_rect.y()))
-            self.bottom_left_x.setText(str(self.captured_rect.x()))
-            self.bottom_left_y.setText(str(self.captured_rect.y() + self.captured_rect.height()))
-            self.bottom_right_x.setText(str(self.captured_rect.x() + self.captured_rect.width()))
-            self.bottom_right_y.setText(str(self.captured_rect.y() + self.captured_rect.height()))
+            # 좌표 표시 (픽셀 단위)
+            self.top_left_x.setText(str(self.captured_rect['x']))
+            self.top_left_y.setText(str(self.captured_rect['y']))
+            self.top_right_x.setText(str(self.captured_rect['x'] + self.captured_rect['width']))
+            self.top_right_y.setText(str(self.captured_rect['y']))
+            self.bottom_left_x.setText(str(self.captured_rect['x']))
+            self.bottom_left_y.setText(str(self.captured_rect['y'] + self.captured_rect['height']))
+            self.bottom_right_x.setText(str(self.captured_rect['x'] + self.captured_rect['width']))
+            self.bottom_right_y.setText(str(self.captured_rect['y'] + self.captured_rect['height']))
             
             # 저장 버튼 활성화
             self.save_btn.setEnabled(True)
-            
+
     def _save_area(self):
         """캡처된 영역 저장"""
         try:
@@ -710,13 +783,19 @@ class CompareAreaDialog(QDialog):
             # 캡처된 이미지가 있는 경우 새로운 정보 저장
             image_file, timestamp = self._save_capture(self.captured_image, self.type_)
             
-            # 캡처 정보 생성
+            # 캡처 정보 생성 (비율과 픽셀 좌표 모두 저장)
             capture_info = {
                 'coordinates': {
-                    'x': self.captured_rect.x(),
-                    'y': self.captured_rect.y(),
-                    'width': self.captured_rect.width(),
-                    'height': self.captured_rect.height()
+                    'x': self.captured_rect['x'],
+                    'y': self.captured_rect['y'],
+                    'width': self.captured_rect['width'],
+                    'height': self.captured_rect['height']
+                },
+                'ratios': {
+                    'x': self.captured_rect['x_ratio'],
+                    'y': self.captured_rect['y_ratio'],
+                    'width': self.captured_rect['width_ratio'],
+                    'height': self.captured_rect['height_ratio']
                 },
                 'image_file': image_file,
                 'timestamp': timestamp

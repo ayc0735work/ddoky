@@ -6,6 +6,7 @@ from PySide6.QtCore import QObject, Signal
 from PySide6.QtGui import QPixmap, QImage
 from BE.logic.window_controller import WindowController
 from ...data.settings_manager import SettingsManager
+import win32gui
 
 class GaugeMonitor(QObject):
     """게이지 모니터링을 위한 클래스"""
@@ -53,8 +54,11 @@ class GaugeMonitor(QObject):
                 
                 # HP 캡처 영역 로드
                 hp_gauge = gauge_settings.get('hp_gauge', {})
-                if 'coordinates' in hp_gauge:
-                    self.hp_capture_area = hp_gauge['coordinates']
+                if hp_gauge:
+                    self.hp_capture_area = {
+                        'coordinates': hp_gauge.get('coordinates', {}),
+                        'ratios': hp_gauge.get('ratios', {})
+                    }
                     print(f"HP 캡처 영역 로드: {self.hp_capture_area}")
                 else:
                     print("HP 캡처 영역 정보가 없습니다.")
@@ -62,8 +66,11 @@ class GaugeMonitor(QObject):
                 
                 # MP 캡처 영역 로드
                 mp_gauge = gauge_settings.get('mp_gauge', {})
-                if 'coordinates' in mp_gauge:
-                    self.mp_capture_area = mp_gauge['coordinates']
+                if mp_gauge:
+                    self.mp_capture_area = {
+                        'coordinates': mp_gauge.get('coordinates', {}),
+                        'ratios': mp_gauge.get('ratios', {})
+                    }
                     print(f"MP 캡처 영역 로드: {self.mp_capture_area}")
                 else:
                     print("MP 캡처 영역 정보가 없습니다.")
@@ -81,7 +88,7 @@ class GaugeMonitor(QObject):
             self.mp_capture_area = {}
     
     def analyze_gauge(self, image, type_):
-        """게이지 이미지 분석"""
+        """게이지 이미지 분"""
         try:
             if not self.debug_dir or not os.path.exists(self.debug_dir):
                 print("GaugeMonitor: 디버그 디렉토리가 존재하지 않습니다")
@@ -250,14 +257,44 @@ class GaugeMonitor(QObject):
             return
             
         try:
+            # 윈도우 정보 가져오기
+            hwnd = self.window_controller.target_hwnd
+            window_rect = win32gui.GetWindowRect(hwnd)
+            client_rect = win32gui.GetClientRect(hwnd)
+            
+            # 프레임 크기 계산
+            frame_x = ((window_rect[2] - window_rect[0]) - client_rect[2]) // 2
+            frame_y = (window_rect[3] - window_rect[1]) - client_rect[3] - frame_x
+            
+            # 클라이언트 영역의 실제 좌표 계산
+            client_x = window_rect[0] + frame_x
+            client_y = window_rect[1] + frame_y
+            
+            # 클라이언트 영역의 현재 크기
+            client_width = client_rect[2]
+            client_height = client_rect[3]
+            
+            print(f"현재 클라이언트 영역: width={client_width}, height={client_height}")
+            
             # HP 게이지 캡처 및 분석
-            if self.hp_capture_area and all(k in self.hp_capture_area for k in ['x', 'y', 'width', 'height']):
-                print(f"HP 캡처 시도 - 좌표: {self.hp_capture_area}")
+            if self.hp_capture_area and 'ratios' in self.hp_capture_area:
+                ratios = self.hp_capture_area['ratios']
+                print(f"HP 캡처 시도 - 비율: {ratios}")
+                
+                # 비율을 현재 클라이언트 크기에 맞춰 픽셀 좌표로 변환
+                x = int(ratios['x'] * client_width)
+                y = int(ratios['y'] * client_height)
+                width = int(ratios['width'] * client_width)
+                height = int(ratios['height'] * client_height)
+                
+                # 절대 좌표 계산
+                abs_x = client_x + x
+                abs_y = client_y + y
+                
+                print(f"HP 캡처 시도 - 절대 좌표: x={abs_x}, y={abs_y}, width={width}, height={height}")
+                
                 hp_image = self.window_controller.capture_screen(
-                    int(self.hp_capture_area['x']),
-                    int(self.hp_capture_area['y']),
-                    int(self.hp_capture_area['width']),
-                    int(self.hp_capture_area['height'])
+                    abs_x, abs_y, width, height
                 )
                 
                 if hp_image is not None:
@@ -275,15 +312,26 @@ class GaugeMonitor(QObject):
             else:
                 print("HP 게이지 캡처 영역이 올바르게 설정되지 않았습니다.")
                 self.gauge_analyzed.emit('hp', 0.0)
-
+            
             # MP 게이지 캡처 및 분석
-            if self.mp_capture_area and all(k in self.mp_capture_area for k in ['x', 'y', 'width', 'height']):
-                print(f"MP 캡처 시도 - 좌표: {self.mp_capture_area}")
+            if self.mp_capture_area and 'ratios' in self.mp_capture_area:
+                ratios = self.mp_capture_area['ratios']
+                print(f"MP 캡처 시도 - 비율: {ratios}")
+                
+                # 비율을 현재 클라이언트 크기에 맞춰 픽셀 좌표로 변환
+                x = int(ratios['x'] * client_width)
+                y = int(ratios['y'] * client_height)
+                width = int(ratios['width'] * client_width)
+                height = int(ratios['height'] * client_height)
+                
+                # 절대 좌표 계산
+                abs_x = client_x + x
+                abs_y = client_y + y
+                
+                print(f"MP 캡처 시도 - 절대 좌표: x={abs_x}, y={abs_y}, width={width}, height={height}")
+                
                 mp_image = self.window_controller.capture_screen(
-                    int(self.mp_capture_area['x']),
-                    int(self.mp_capture_area['y']),
-                    int(self.mp_capture_area['width']),
-                    int(self.mp_capture_area['height'])
+                    abs_x, abs_y, width, height
                 )
                 
                 if mp_image is not None:
@@ -301,13 +349,11 @@ class GaugeMonitor(QObject):
             else:
                 print("MP 게이지 캡처 영역이 올바르게 설정되지 않았습니다.")
                 self.gauge_analyzed.emit('mp', 0.0)
-
+                
         except Exception as e:
-            print(f"게이지 캡처 및 분석 중 오류 발생: {str(e)}")
+            print(f"캡처 및 분석 중 오류 발생: {str(e)}")
             import traceback
             traceback.print_exc()
-            self.gauge_analyzed.emit('hp', 0.0)
-            self.gauge_analyzed.emit('mp', 0.0)
     
     def set_target_process(self, process_info):
         """대상 프로세스 설정"""

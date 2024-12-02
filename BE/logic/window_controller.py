@@ -55,7 +55,7 @@ class WindowController:
         """화면 캡처"""
         try:
             if not self.target_hwnd:
-                print("WindowController: 대상 윈도우가 설정되지 않���습니다")
+                print("WindowController: 대상 윈도우가 설정되지 않았습니다")
                 return None
             
             if not self.debug_dir or not os.path.exists(self.debug_dir):

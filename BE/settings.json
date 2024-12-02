@@ -12,23 +12,35 @@
     "gauge_monitor": {
         "hp_gauge": {
             "coordinates": {
-                "x": 2132,
-                "y": 1404,
-                "width": 285,
-                "height": 28
+                "x": 2873,
+                "y": 1767,
+                "width": 378,
+                "height": 44
+            },
+            "ratios": {
+                "x": 0.7481770833333333,
+                "y": 0.8426323319027181,
+                "width": 0.0984375,
+                "height": 0.020982355746304245
             },
             "image_file": "captures\\capture_hp.png",
-            "timestamp": "20241202_235219"
+            "timestamp": "20241203_060936"
         },
         "mp_gauge": {
             "coordinates": {
-                "x": 2131,
-                "y": 1446,
-                "width": 285,
-                "height": 29
+                "x": 2873,
+                "y": 1825,
+                "width": 377,
+                "height": 41
+            },
+            "ratios": {
+                "x": 0.7481770833333333,
+                "y": 0.8702908917501192,
+                "width": 0.09817708333333333,
+                "height": 0.0195517405817835
             },
             "image_file": "captures\\capture_mp.png",
-            "timestamp": "20241202_235222"
+            "timestamp": "20241203_060950"
         }
     },
     "advanced_settings": {
@@ -443,7 +455,7 @@
                 },
                 {
                     "order": 24,
-                    "display_text": "키 입력: W --- 누르���",
+                    "display_text": "키 입력: W --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
                     "key_code": "W",
@@ -1045,7 +1057,7 @@
                 },
                 {
                     "order": 11,
-                    "display_text": "키 입력: 숫자패드 8 --- ���르기",
+                    "display_text": "키 입력: 숫자패드 8 --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
                     "key_code": "숫자패드 8",
@@ -1157,7 +1169,7 @@
                 {
                     "order": 3,
                     "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼��",
+                    "action": "떼기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1249,7 +1261,7 @@
                     "display_text": "키 입력: 숫자패드 3 --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
-                    "key_code": "숫자패�� 3",
+                    "key_code": "숫자패드 3",
                     "scan_code": 81,
                     "virtual_key": 99,
                     "modifiers": 0
@@ -2190,7 +2202,7 @@
                     "display_text": "키 입력: 숫자패드 5 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
-                    "key_code": "숫��패드 5",
+                    "key_code": "숫자패드 5",
                     "scan_code": 76,
                     "virtual_key": 101,
                     "modifiers": 0
