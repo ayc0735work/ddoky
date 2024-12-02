@@ -13,7 +13,7 @@ class CustomSpinBox(QSpinBox):
         super().__init__(parent)
         self.setSuffix(" / 100")
         self.setRange(0, 100)
-        self.setValue(50)  # 기본값
+        self.setValue(50)  # 체력 회복 기준치 기본값
         self.setFixedWidth(80)
         
         # 라인에딧의 선택 가능 범위를 제한
@@ -59,6 +59,7 @@ class AdvancedWidget(QWidget):
         # 선택된 로직 정보 저장
         self.hp_selected_logic = None
         self.mp_selected_logic = None
+        self.common_selected_logic = None  # 공통 로직 정보 저장 변수 추가
         self.saved_logics = {}  # 저장된 로직 정보
     
     def _connect_signals(self):
@@ -70,6 +71,10 @@ class AdvancedWidget(QWidget):
         # 마력 로직 관련 시그널
         self.mp_logic_select_btn.clicked.connect(lambda: self._show_logic_select_dialog('mp'))
         self.mp_logic_reset_btn.clicked.connect(lambda: self._reset_logic('mp'))
+        
+        # 공통 로직 관련 시그널
+        self.common_logic_select_btn.clicked.connect(lambda: self._show_logic_select_dialog('common'))
+        self.common_logic_reset_btn.clicked.connect(lambda: self._reset_logic('common'))
         
         # 게이지 값 변경 시그널
         self.hp_slider.valueChanged.connect(self.hp_spinbox.setValue)
@@ -91,12 +96,18 @@ class AdvancedWidget(QWidget):
                     self.hp_logic_name.setWordWrap(True)
                     self.hp_logic_checkbox.setEnabled(True)
                     self.hp_logic_checkbox.setChecked(True)
-                else:
+                elif type_ == 'mp':
                     self.mp_selected_logic = selected_logic
                     self.mp_logic_name.setText(logic_name)
                     self.mp_logic_name.setWordWrap(True)
                     self.mp_logic_checkbox.setEnabled(True)
                     self.mp_logic_checkbox.setChecked(True)
+                else:  # common 타입
+                    self.common_selected_logic = selected_logic
+                    self.common_logic_name.setText(logic_name)
+                    self.common_logic_name.setWordWrap(True)
+                    self.common_logic_checkbox.setEnabled(True)
+                    self.common_logic_checkbox.setChecked(True)
     
     def _reset_logic(self, type_):
         """로직 초기화"""
@@ -105,11 +116,16 @@ class AdvancedWidget(QWidget):
             self.hp_logic_name.setText("선택된 로직 없음")
             self.hp_logic_checkbox.setChecked(False)
             self.hp_logic_checkbox.setEnabled(False)
-        else:
+        elif type_ == 'mp':
             self.mp_selected_logic = None
             self.mp_logic_name.setText("선택된 로직 없음")
             self.mp_logic_checkbox.setChecked(False)
             self.mp_logic_checkbox.setEnabled(False)
+        else:  # common 타입
+            self.common_selected_logic = None
+            self.common_logic_name.setText("선택된 로직 없음")
+            self.common_logic_checkbox.setChecked(False)
+            self.common_logic_checkbox.setEnabled(False)
     
     def init_ui(self):
         """UI 초기화"""
@@ -128,7 +144,7 @@ class AdvancedWidget(QWidget):
         # 고급 기능 컨테이너
         container = QFrame()
         container.setStyleSheet(CONTAINER_STYLE)
-        container.setFixedSize(ADVANCED_FRAME_WIDTH - 20, ADVANCED_SECTION_HEIGHT)
+        container.setFixedSize(ADVANCED_FRAME_WIDTH - 20, ADVANCED_SECTION_HEIGHT + 50)
         
         # 컨테이너 레이아웃
         container_layout = QVBoxLayout()
@@ -145,7 +161,7 @@ class AdvancedWidget(QWidget):
             }
         """)
         recovery_layout = QVBoxLayout()
-        recovery_layout.setSpacing(15)  # 섹션 간 간격
+        recovery_layout.setSpacing(12)  # 섹션 간 간격
         recovery_layout.setContentsMargins(0, 0, 0, 0)
         
         # 체력 섹션
@@ -203,7 +219,7 @@ class AdvancedWidget(QWidget):
         # 체크박스와 로직 이름 레이아웃
         hp_logic_header = QHBoxLayout()
         hp_logic_header.setContentsMargins(0, 0, 0, 0)
-        self.hp_logic_checkbox = QCheckBox("동작할 로직")
+        self.hp_logic_checkbox = QCheckBox("체력 회복 동작 로직")
         self.hp_logic_checkbox.setEnabled(False)
         hp_logic_header.addWidget(self.hp_logic_checkbox)
         
@@ -218,7 +234,7 @@ class AdvancedWidget(QWidget):
         hp_button_layout.setSpacing(10)
         
         # 로직 선택 버튼
-        self.hp_logic_select_btn = QPushButton("로직 선택")
+        self.hp_logic_select_btn = QPushButton("체력 회복 로직 선택")
         self.hp_logic_select_btn.setStyleSheet("""
             QPushButton {
                 background-color: #f0f0f0;
@@ -274,7 +290,7 @@ class AdvancedWidget(QWidget):
         
         self.mp_slider = QSlider(Qt.Horizontal)
         self.mp_slider.setRange(0, 100)
-        self.mp_slider.setValue(50)
+        self.mp_slider.setValue(25) # 마력 회복 기준치 기본값
         self.mp_slider.setFixedWidth(200)
         self.mp_slider.setStyleSheet("""
             QSlider::groove:horizontal {
@@ -308,7 +324,7 @@ class AdvancedWidget(QWidget):
         # 체크박스와 로직 이름 레이아웃
         mp_logic_header = QHBoxLayout()
         mp_logic_header.setContentsMargins(0, 0, 0, 0)
-        self.mp_logic_checkbox = QCheckBox("동작할 로직")
+        self.mp_logic_checkbox = QCheckBox("마력 회복 동작 로직")
         self.mp_logic_checkbox.setEnabled(False)
         mp_logic_header.addWidget(self.mp_logic_checkbox)
         
@@ -323,7 +339,7 @@ class AdvancedWidget(QWidget):
         mp_button_layout.setSpacing(10)
         
         # 로직 선택 버튼
-        self.mp_logic_select_btn = QPushButton("로직 선택")
+        self.mp_logic_select_btn = QPushButton("마력 회복 로직 선택")
         self.mp_logic_select_btn.setStyleSheet("""
             QPushButton {
                 background-color: #f0f0f0;
@@ -362,19 +378,9 @@ class AdvancedWidget(QWidget):
         recovery_layout.addLayout(hp_section)
         recovery_layout.addLayout(mp_section)
         
-        recovery_frame.setLayout(recovery_layout)
-        container_layout.addWidget(recovery_frame)
-        
-        # 공통 동작 로직 섹션
-        common_frame = QFrame()
-        common_frame.setStyleSheet("QFrame { background-color: transparent; border: none; }")
-        common_layout = QVBoxLayout()
-        common_layout.setContentsMargins(0, 15, 0, 0)  # 위쪽 여백 추가
-        
-        # 타이틀
-        common_title = QLabel("공통 동작 로직")
-        common_title.setFont(QFont(TITLE_FONT_FAMILY, SECTION_FONT_SIZE, QFont.Weight.Bold))
-        common_layout.addWidget(common_title)
+        # 공통 동작 로직 레이아웃
+        common_logic_layout = QVBoxLayout()
+        common_logic_layout.setContentsMargins(0, 0, 0, 0)  # 여백 제거 (recovery_layout의 spacing으로 간격 조절)
         
         # 공통 로직 컨텐츠 영역
         common_content_layout = QHBoxLayout()
@@ -383,14 +389,14 @@ class AdvancedWidget(QWidget):
         # 공통 로직 정보 영역
         common_logic_frame = QFrame()
         common_logic_frame.setStyleSheet("QFrame { background-color: transparent; }")
-        common_logic_layout = QVBoxLayout()
-        common_logic_layout.setContentsMargins(0, 0, 0, 0)
-        common_logic_layout.setSpacing(5)
+        common_logic_info_layout = QVBoxLayout()
+        common_logic_info_layout.setContentsMargins(0, 0, 0, 0)
+        common_logic_info_layout.setSpacing(5)
         
         # 체크박스와 로직 이름 레이아웃
         common_logic_header = QHBoxLayout()
         common_logic_header.setContentsMargins(0, 0, 0, 0)
-        self.common_logic_checkbox = QCheckBox("동작할 로직")
+        self.common_logic_checkbox = QCheckBox("체력, 마력 회복 기준 이하시 동작할 로직")
         self.common_logic_checkbox.setEnabled(False)
         common_logic_header.addWidget(self.common_logic_checkbox)
         
@@ -398,14 +404,14 @@ class AdvancedWidget(QWidget):
         self.common_logic_name.setWordWrap(True)
         common_logic_header.addWidget(self.common_logic_name, 1)
         
-        common_logic_layout.addLayout(common_logic_header)
+        common_logic_info_layout.addLayout(common_logic_header)
         
         # 버튼 레이아웃
         common_button_layout = QHBoxLayout()
         common_button_layout.setSpacing(10)
         
         # 로직 선택 버튼
-        self.common_logic_select_btn = QPushButton("로직 선택")
+        self.common_logic_select_btn = QPushButton("체력, 마력 회복에 사용할 로직 선택")
         self.common_logic_select_btn.setStyleSheet("""
             QPushButton {
                 background-color: #f0f0f0;
@@ -419,7 +425,6 @@ class AdvancedWidget(QWidget):
         """)
         common_button_layout.addWidget(self.common_logic_select_btn, 1)
         
-        # 로직 초기화 버튼
         self.common_logic_reset_btn = QPushButton("로직 초기화")
         self.common_logic_reset_btn.setStyleSheet("""
             QPushButton {
@@ -434,13 +439,15 @@ class AdvancedWidget(QWidget):
         """)
         common_button_layout.addWidget(self.common_logic_reset_btn, 1)
         
-        common_logic_layout.addLayout(common_button_layout)
-        common_logic_frame.setLayout(common_logic_layout)
-        common_content_layout.addWidget(common_logic_frame, 1)  # stretch factor 1
+        common_logic_info_layout.addLayout(common_button_layout)
+        common_logic_frame.setLayout(common_logic_info_layout)
+        common_content_layout.addWidget(common_logic_frame, 1)
         
-        common_layout.addLayout(common_content_layout)
-        common_frame.setLayout(common_layout)
-        container_layout.addWidget(common_frame)
+        common_logic_layout.addLayout(common_content_layout)
+        
+        recovery_layout.addLayout(common_logic_layout)
+        recovery_frame.setLayout(recovery_layout)
+        container_layout.addWidget(recovery_frame)
         
         container.setLayout(container_layout)
         layout.addWidget(container)
