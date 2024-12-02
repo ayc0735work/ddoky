@@ -4,7 +4,7 @@ import json
 import os
 from PySide6.QtCore import QObject, Signal
 from PySide6.QtGui import QPixmap, QImage
-from BE.logic.window_controller import WindowController
+from .window_controller import WindowController
 from ...data.settings_manager import SettingsManager
 import win32gui
 
@@ -19,6 +19,21 @@ class GaugeMonitor(QObject):
         self.window_controller = WindowController()
         self.monitoring = False
         self.settings_manager = SettingsManager()
+        
+        # 기본 게이지 비율 설정
+        self.hp_ratio = {
+            'x': 0.7481770833333333,  # 창 너비의 약 75% 위치
+            'y': 0.8426323319027181,  # 창 높이의 약 84% 위치
+            'width': 0.0984375,       # 창 너비의 약 10%
+            'height': 0.020982355746304245  # 창 높이의 약 2%
+        }
+        
+        self.mp_ratio = {
+            'x': 0.7481770833333333,  # 창 너비의 약 75% 위치
+            'y': 0.8702908917501192,  # 창 높이의 약 87% 위치
+            'width': 0.09817708333333333,  # 창 너비의 약 10%
+            'height': 0.0195517405817835   # 창 높이의 약 2%
+        }
         
         try:
             # 디버그 이미지 저장 경로 설정
@@ -250,113 +265,140 @@ class GaugeMonitor(QObject):
             traceback.print_exc()
             return 0
     
-    def capture_and_analyze(self):
-        """게이지 캡처 및 분석"""
-        if not self.window_controller.is_target_window_active():
-            print("대상 윈도우가 활성화되지 않음")
-            return
-            
+    def _get_client_rect(self, hwnd):
+        """클라이언트 영역의 실제 화면 좌표를 계산"""
         try:
-            # 윈도우 정보 가져오기
-            hwnd = self.window_controller.target_hwnd
+            # 윈도우 전체 영역
             window_rect = win32gui.GetWindowRect(hwnd)
+            # 클라이언트 영역
             client_rect = win32gui.GetClientRect(hwnd)
             
-            # 프레임 크기 계산
-            frame_x = ((window_rect[2] - window_rect[0]) - client_rect[2]) // 2
-            frame_y = (window_rect[3] - window_rect[1]) - client_rect[3] - frame_x
+            # 클라이언트 영역의 좌상단 스크린 좌표 얻기
+            point = win32gui.ClientToScreen(hwnd, (0, 0))
             
-            # 클라이언트 영역의 실제 좌표 계산
-            client_x = window_rect[0] + frame_x
-            client_y = window_rect[1] + frame_y
-            
-            # 클라이언트 영역의 현재 크기
-            client_width = client_rect[2]
-            client_height = client_rect[3]
-            
-            print(f"현재 클라이언트 영역: width={client_width}, height={client_height}")
-            
-            # HP 게이지 캡처 및 분석
-            if self.hp_capture_area and 'ratios' in self.hp_capture_area:
-                ratios = self.hp_capture_area['ratios']
-                print(f"HP 캡처 시도 - 비율: {ratios}")
-                
-                # 비율을 현재 클라이언트 크기에 맞춰 픽셀 좌표로 변환
-                x = int(ratios['x'] * client_width)
-                y = int(ratios['y'] * client_height)
-                width = int(ratios['width'] * client_width)
-                height = int(ratios['height'] * client_height)
-                
-                # 절대 좌표 계산
-                abs_x = client_x + x
-                abs_y = client_y + y
-                
-                print(f"HP 캡처 시도 - 절대 좌표: x={abs_x}, y={abs_y}, width={width}, height={height}")
-                
-                hp_image = self.window_controller.capture_screen(
-                    abs_x, abs_y, width, height
-                )
-                
-                if hp_image is not None:
-                    print(f"HP 이미지 캡처 성공 - 크기: {hp_image.shape}")
-                    # 캡처된 이미지 저장 (디버깅용)
-                    debug_hp_path = os.path.join(self.debug_dir, 'capture_hp.png')
-                    cv2.imwrite(debug_hp_path, hp_image)
-                    
-                    hp_ratio = self.analyze_gauge(hp_image, 'hp')
-                    print(f"HP 게이지 분석 결과: {hp_ratio}%")
-                    self.gauge_analyzed.emit('hp', hp_ratio)
-                else:
-                    print("HP 이미지 캡처 실패")
-                    self.gauge_analyzed.emit('hp', 0.0)
-            else:
-                print("HP 게이지 캡처 영역이 올바르게 설정되지 않았습니다.")
-                self.gauge_analyzed.emit('hp', 0.0)
-            
-            # MP 게이지 캡처 및 분석
-            if self.mp_capture_area and 'ratios' in self.mp_capture_area:
-                ratios = self.mp_capture_area['ratios']
-                print(f"MP 캡처 시도 - 비율: {ratios}")
-                
-                # 비율을 현재 클라이언트 크기에 맞춰 픽셀 좌표로 변환
-                x = int(ratios['x'] * client_width)
-                y = int(ratios['y'] * client_height)
-                width = int(ratios['width'] * client_width)
-                height = int(ratios['height'] * client_height)
-                
-                # 절대 좌표 계산
-                abs_x = client_x + x
-                abs_y = client_y + y
-                
-                print(f"MP 캡처 시도 - 절대 좌표: x={abs_x}, y={abs_y}, width={width}, height={height}")
-                
-                mp_image = self.window_controller.capture_screen(
-                    abs_x, abs_y, width, height
-                )
-                
-                if mp_image is not None:
-                    print(f"MP 이미지 캡처 성공 - 크기: {mp_image.shape}")
-                    # 캡처된 이미지 저장 (디버깅용)
-                    debug_mp_path = os.path.join(self.debug_dir, 'capture_mp.png')
-                    cv2.imwrite(debug_mp_path, mp_image)
-                    
-                    mp_ratio = self.analyze_gauge(mp_image, 'mp')
-                    print(f"MP 게이지 분석 결과: {mp_ratio}%")
-                    self.gauge_analyzed.emit('mp', mp_ratio)
-                else:
-                    print("MP 이미지 캡처 실패")
-                    self.gauge_analyzed.emit('mp', 0.0)
-            else:
-                print("MP 게이지 캡처 영역이 올바르게 설정되지 않았습니다.")
-                self.gauge_analyzed.emit('mp', 0.0)
-                
+            # 실제 클라이언트 영역의 화면 좌표와 크기
+            return {
+                'x': point[0],
+                'y': point[1],
+                'width': client_rect[2],
+                'height': client_rect[3]
+            }
         except Exception as e:
-            print(f"캡처 및 분석 중 오류 발생: {str(e)}")
+            print(f"클라이언트 영역 계산 중 오류: {str(e)}")
+            return None
+    
+    def capture_and_analyze(self):
+        """게이지 캡역을 캡처하고 분석합니다."""
+        try:
+            print("GaugeMonitor: 캡처 및 분석 시작")
+            
+            # 윈도우 정보 가져오기
+            print("GaugeMonitor: 윈도우 정보 가져오기 시도")
+            window_info = self.window_controller.get_window_info()
+            if not window_info:
+                print("GaugeMonitor: 윈도우 정보를 가져올 수 없음")
+                return
+                
+            print(f"WindowController: 윈도우 정보 = {window_info}")
+            
+            client_area = window_info['client']
+            print(f"GaugeMonitor: 현재 클라이언트 영역 = {client_area}")
+            
+            # HP 게이지 캡처
+            print(f"GaugeMonitor: HP 캡처 시도 - 비율 = {self.hp_ratio}")
+            
+            hp_x = int(client_area['width'] * self.hp_ratio['x'])
+            hp_y = int(client_area['height'] * self.hp_ratio['y'])
+            hp_width = int(client_area['width'] * self.hp_ratio['width'])
+            hp_height = int(client_area['height'] * self.hp_ratio['height'])
+            
+            print("GaugeMonitor: HP 좌표 계산 과정:")
+            print(f"  - 원본 비율: x={self.hp_ratio['x']:.4f}, y={self.hp_ratio['y']:.4f}")
+            print(f"  - 클라이언트 크기: width={client_area['width']}, height={client_area['height']}")
+            print(f"  - 계산된 픽셀 좌표: x={hp_x}, y={hp_y}")
+            print(f"  - 계산된 크기: width={hp_width}, height={hp_height}")
+            
+            print("GaugeMonitor: HP 캡처 영역:")
+            print(f"  - 상대 좌표: x={hp_x}, y={hp_y}")
+            print(f"  - 크기: {hp_width}x{hp_height}")
+            
+            hp_image = self.window_controller.capture_region(hp_x, hp_y, hp_width, hp_height, gauge_type='hp')
+            if hp_image is None:
+                print("GaugeMonitor: HP 이미지 캡처 실패")
+                self.gauge_analyzed.emit('hp', 0.0)
+                return
+                
+            hp_ratio = self.analyze_gauge(hp_image, 'hp')
+            print(f"GaugeMonitor: HP 게이지 분석 결과 = {hp_ratio}%")
+            self.gauge_analyzed.emit('hp', hp_ratio)
+            
+            # MP 게이지 캡처
+            print(f"GaugeMonitor: MP 캡처 시도 - 비율 = {self.mp_ratio}")
+            
+            mp_x = int(client_area['width'] * self.mp_ratio['x'])
+            mp_y = int(client_area['height'] * self.mp_ratio['y'])
+            mp_width = int(client_area['width'] * self.mp_ratio['width'])
+            mp_height = int(client_area['height'] * self.mp_ratio['height'])
+            
+            print("GaugeMonitor: MP 좌표 계산 과정:")
+            print(f"  - 원본 비율: x={self.mp_ratio['x']:.4f}, y={self.mp_ratio['y']:.4f}")
+            print(f"  - 클라이언트 크기: width={client_area['width']}, height={client_area['height']}")
+            print(f"  - 계산된 픽셀 좌표: x={mp_x}, y={mp_y}")
+            print(f"  - 계산된 크기: width={mp_width}, height={mp_height}")
+            
+            print("GaugeMonitor: MP 캡처 영역:")
+            print(f"  - 상대 좌표: x={mp_x}, y={mp_y}")
+            print(f"  - 크기: {mp_width}x{mp_height}")
+            
+            mp_image = self.window_controller.capture_region(mp_x, mp_y, mp_width, mp_height, gauge_type='mp')
+            if mp_image is None:
+                print("GaugeMonitor: MP 이미지 캡처 실패")
+                self.gauge_analyzed.emit('mp', 0.0)
+                return
+                
+            mp_ratio = self.analyze_gauge(mp_image, 'mp')
+            print(f"GaugeMonitor: MP 게이지 분석 결과 = {mp_ratio}%")
+            self.gauge_analyzed.emit('mp', mp_ratio)
+            
+        except Exception as e:
+            print(f"GaugeMonitor: 캡처 및 분석 중 오류 발생 - {e}")
             import traceback
             traceback.print_exc()
     
     def set_target_process(self, process_info):
-        """대상 프로세스 설정"""
-        if process_info:
-            self.window_controller.set_target_window(process_info['hwnd'])
-            print(f"대상 프로세스 설정됨: {process_info['name']} (hwnd: {process_info['hwnd']})")
+        """대상 프로세스를 설정합니다."""
+        try:
+            print(f"GaugeMonitor: 대상 프로세스 정 시도 - {process_info}")
+            if not process_info or 'hwnd' not in process_info:
+                print("GaugeMonitor: 유효하지 않은 프로세스 정보")
+                return False
+                
+            # 윈도우 컨트롤러에 대상 윈도우 설정
+            if self.window_controller.set_target_window(process_info['hwnd']):
+                print(f"GaugeMonitor: 대상 프로세스 설정됨 - {process_info['name']} (hwnd: {process_info['hwnd']})")
+                return True
+            else:
+                print("GaugeMonitor: 대상 프로세스 설정 실패")
+                return False
+                
+        except Exception as e:
+            print(f"GaugeMonitor: 대상 프로세스 설정 중 오류 발생 - {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return False
+    
+    def set_gauge_ratio(self, gauge_type, x, y, width, height):
+        """게이지 영역의 비율을 설정합니다."""
+        ratio = {
+            'x': x,
+            'y': y,
+            'width': width,
+            'height': height
+        }
+        
+        if gauge_type == 'hp':
+            self.hp_ratio = ratio
+        elif gauge_type == 'mp':
+            self.mp_ratio = ratio
+            
+        print(f"게이지 비율 설정됨 - {gauge_type}: {ratio}")

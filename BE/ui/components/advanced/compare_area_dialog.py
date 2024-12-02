@@ -30,27 +30,23 @@ class CaptureOverlay(QDialog):
         # 마우스 추적을 위한 변수
         self.mouse_pos = None
         
-        # 윈도우 정보 가져오기
-        window_rect = win32gui.GetWindowRect(self.target_hwnd)
-        client_rect = win32gui.GetClientRect(self.target_hwnd)
+        # 클라이언트 영역 정보 가져오기
+        client_info = self._get_client_rect(target_hwnd)
+        if not client_info:
+            raise Exception("클라이언트 영역 정보를 가져올 수 없습니다.")
         
-        # 프라이언트 영역 크기 저장
-        self.client_width = client_rect[2]
-        self.client_height = client_rect[3]
+        # 클라이언트 영역 정보 저장
+        self.client_x = client_info['x']
+        self.client_y = client_info['y']
+        self.client_width = client_info['width']
+        self.client_height = client_info['height']
         
-        # 프레임 크기 계산
-        self.frame_x = ((window_rect[2] - window_rect[0]) - client_rect[2]) // 2
-        self.frame_y = (window_rect[3] - window_rect[1]) - client_rect[3] - self.frame_x
-        
-        # 클라이언트 영역의 실제 좌표 계산
-        self.client_x = window_rect[0] + self.frame_x
-        self.client_y = window_rect[1] + self.frame_y
-        
-        # 오버레이 위치와 크기 설정
+        # 오버레이 위치와 크기 설정 (전체 창 기준)
         self.setGeometry(
-            window_rect[0], window_rect[1],
-            window_rect[2] - window_rect[0],
-            window_rect[3] - window_rect[1]
+            client_info['window_x'],
+            client_info['window_y'],
+            client_info['window_width'],
+            client_info['window_height']
         )
         
         # 반투명 오버레이 설정
@@ -221,10 +217,10 @@ class CaptureOverlay(QDialog):
                 screen_rect = QRect(self.start_pos, self.current_pos).normalized()
                 
                 # 클라이언트 영역 기준 상대 좌표로 변환
-                relative_x = screen_rect.x() - self.frame_x
-                relative_y = screen_rect.y() - self.frame_y
+                relative_x = screen_rect.x() - (self.client_x - self.geometry().x())
+                relative_y = screen_rect.y() - (self.client_y - self.geometry().y())
                 
-                # 대 좌표를 비율로 변환 (0.0 ~ 1.0)
+                # 상대 좌표를 비율로 변환 (0.0 ~ 1.0)
                 x_ratio = relative_x / self.client_width
                 y_ratio = relative_y / self.client_height
                 width_ratio = screen_rect.width() / self.client_width
@@ -246,6 +242,32 @@ class CaptureOverlay(QDialog):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
             self.reject()
+
+    def _get_client_rect(self, hwnd):
+        """클라이언트 영역의 실제 화면 좌표를 계산"""
+        try:
+            # 윈도우 전체 영역
+            window_rect = win32gui.GetWindowRect(hwnd)
+            # 클라이언트 영역
+            client_rect = win32gui.GetClientRect(hwnd)
+            
+            # 클라이언트 영역의 좌상단 스크린 좌표 얻기
+            point = win32gui.ClientToScreen(hwnd, (0, 0))
+            
+            # 실제 클라이언트 영역의 화면 좌표와 크기
+            return {
+                'x': point[0],
+                'y': point[1],
+                'width': client_rect[2],
+                'height': client_rect[3],
+                'window_x': window_rect[0],
+                'window_y': window_rect[1],
+                'window_width': window_rect[2] - window_rect[0],
+                'window_height': window_rect[3] - window_rect[1]
+            }
+        except Exception as e:
+            print(f"클라이언트 영역 계산 중 오류: {str(e)}")
+            return None
 
 class CompareAreaDialog(QDialog):
     def __init__(self, type_, parent=None):
