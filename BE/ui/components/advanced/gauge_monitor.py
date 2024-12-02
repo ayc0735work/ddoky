@@ -48,20 +48,28 @@ class GaugeMonitor(QObject):
         """캡처 영역 정보 로드"""
         try:
             settings = self.settings_manager.load_settings()
-            if settings:
+            if settings and 'gauge_monitor' in settings:
                 gauge_settings = settings.get('gauge_monitor', {})
                 
                 # HP 캡처 영역 로드
                 hp_gauge = gauge_settings.get('hp_gauge', {})
-                self.hp_capture_area = hp_gauge.get('coordinates', {})
-                print(f"HP 캡처 영역 로드: {self.hp_capture_area}")  # 디버그 출력
+                if 'coordinates' in hp_gauge:
+                    self.hp_capture_area = hp_gauge['coordinates']
+                    print(f"HP 캡처 영역 로드: {self.hp_capture_area}")
+                else:
+                    print("HP 캡처 영역 정보가 없습니다.")
+                    self.hp_capture_area = {}
                 
                 # MP 캡처 영역 로드
                 mp_gauge = gauge_settings.get('mp_gauge', {})
-                self.mp_capture_area = mp_gauge.get('coordinates', {})
-                print(f"MP 캡처 영역 로드: {self.mp_capture_area}")  # 디버그 출력
+                if 'coordinates' in mp_gauge:
+                    self.mp_capture_area = mp_gauge['coordinates']
+                    print(f"MP 캡처 영역 로드: {self.mp_capture_area}")
+                else:
+                    print("MP 캡처 영역 정보가 없습니다.")
+                    self.mp_capture_area = {}
             else:
-                print("설정을 불러올 수 없습니다.")
+                print("게이지 모니터 설정을 찾을 수 없습니다.")
                 self.hp_capture_area = {}
                 self.mp_capture_area = {}
                 
@@ -69,7 +77,6 @@ class GaugeMonitor(QObject):
             print(f"캡처 영역 정보 로드 중 오류 발생: {str(e)}")
             import traceback
             traceback.print_exc()
-            # 기본값 설정
             self.hp_capture_area = {}
             self.mp_capture_area = {}
     
@@ -243,70 +250,64 @@ class GaugeMonitor(QObject):
             return
             
         try:
-            settings = self.settings_manager.load_settings()
-            if not settings:
-                print("설정을 불러올 수 없습니다.")
-                return
-
             # HP 게이지 캡처 및 분석
             if self.hp_capture_area and all(k in self.hp_capture_area for k in ['x', 'y', 'width', 'height']):
+                print(f"HP 캡처 시도 - 좌표: {self.hp_capture_area}")
                 hp_image = self.window_controller.capture_screen(
-                    self.hp_capture_area['x'],
-                    self.hp_capture_area['y'],
-                    self.hp_capture_area['width'],
-                    self.hp_capture_area['height']
+                    int(self.hp_capture_area['x']),
+                    int(self.hp_capture_area['y']),
+                    int(self.hp_capture_area['width']),
+                    int(self.hp_capture_area['height'])
                 )
+                
                 if hp_image is not None:
-                    print("HP 이미지 캡처 성공")
+                    print(f"HP 이미지 캡처 성공 - 크기: {hp_image.shape}")
+                    # 캡처된 이미지 저장 (디버깅용)
+                    debug_hp_path = os.path.join(self.debug_dir, 'capture_hp.png')
+                    cv2.imwrite(debug_hp_path, hp_image)
+                    
                     hp_ratio = self.analyze_gauge(hp_image, 'hp')
                     print(f"HP 게이지 분석 결과: {hp_ratio}%")
                     self.gauge_analyzed.emit('hp', hp_ratio)
-                    
-                    # HP 게이지 수치 저장
-                    if 'gauge_monitor' not in settings:
-                        settings['gauge_monitor'] = {}
-                    if 'hp_gauge' not in settings['gauge_monitor']:
-                        settings['gauge_monitor']['hp_gauge'] = {}
-                    settings['gauge_monitor']['hp_gauge']['value'] = hp_ratio
                 else:
                     print("HP 이미지 캡처 실패")
+                    self.gauge_analyzed.emit('hp', 0.0)
             else:
-                print("HP 게이지 캡처 영역이 설정되지 않았습니다.")
+                print("HP 게이지 캡처 영역이 올바르게 설정되지 않았습니다.")
                 self.gauge_analyzed.emit('hp', 0.0)
 
             # MP 게이지 캡처 및 분석
             if self.mp_capture_area and all(k in self.mp_capture_area for k in ['x', 'y', 'width', 'height']):
+                print(f"MP 캡처 시도 - 좌표: {self.mp_capture_area}")
                 mp_image = self.window_controller.capture_screen(
-                    self.mp_capture_area['x'],
-                    self.mp_capture_area['y'],
-                    self.mp_capture_area['width'],
-                    self.mp_capture_area['height']
+                    int(self.mp_capture_area['x']),
+                    int(self.mp_capture_area['y']),
+                    int(self.mp_capture_area['width']),
+                    int(self.mp_capture_area['height'])
                 )
+                
                 if mp_image is not None:
-                    print("MP 이미지 캡처 성공")
+                    print(f"MP 이미지 캡처 성공 - 크기: {mp_image.shape}")
+                    # 캡처된 이미지 저장 (디버깅용)
+                    debug_mp_path = os.path.join(self.debug_dir, 'capture_mp.png')
+                    cv2.imwrite(debug_mp_path, mp_image)
+                    
                     mp_ratio = self.analyze_gauge(mp_image, 'mp')
                     print(f"MP 게이지 분석 결과: {mp_ratio}%")
                     self.gauge_analyzed.emit('mp', mp_ratio)
-                    
-                    # MP 게이지 수치 저장
-                    if 'gauge_monitor' not in settings:
-                        settings['gauge_monitor'] = {}
-                    if 'mp_gauge' not in settings['gauge_monitor']:
-                        settings['gauge_monitor']['mp_gauge'] = {}
-                    settings['gauge_monitor']['mp_gauge']['value'] = mp_ratio
                 else:
                     print("MP 이미지 캡처 실패")
+                    self.gauge_analyzed.emit('mp', 0.0)
             else:
-                print("MP 게이지 캡처 영역이 설정되지 않았습니다.")
+                print("MP 게이지 캡처 영역이 올바르게 설정되지 않았습니다.")
                 self.gauge_analyzed.emit('mp', 0.0)
 
-            # 설정 저장
-            self.settings_manager.save_settings(settings)
-            
         except Exception as e:
             print(f"게이지 캡처 및 분석 중 오류 발생: {str(e)}")
             import traceback
             traceback.print_exc()
+            self.gauge_analyzed.emit('hp', 0.0)
+            self.gauge_analyzed.emit('mp', 0.0)
     
     def set_target_process(self, process_info):
         """대상 프로세스 설정"""

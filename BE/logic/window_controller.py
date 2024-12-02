@@ -65,19 +65,34 @@ class WindowController:
             # 윈도우 정보 가져오기
             window_rect = win32gui.GetWindowRect(self.target_hwnd)
             client_rect = win32gui.GetClientRect(self.target_hwnd)
-            window_width = window_rect[2] - window_rect[0]
-            window_height = window_rect[3] - window_rect[1]
+            
+            # 윈도우 프레임 크기 계산
+            frame_x = ((window_rect[2] - window_rect[0]) - client_rect[2]) // 2
+            frame_y = (window_rect[3] - window_rect[1]) - client_rect[3] - frame_x
+            
+            # 클라이언트 영역의 실제 좌표 계산
+            client_x = window_rect[0] + frame_x
+            client_y = window_rect[1] + frame_y
+            
+            # 전체 화면 좌표를 클라이언트 영역 좌표로 변환
+            capture_x = x - client_x
+            capture_y = y - client_y
+            capture_width = width
+            capture_height = height
             
             print(f"WindowController: 윈도우 위치 = {window_rect}")
             print(f"WindowController: 클라이언트 영역 = {client_rect}")
-            print(f"WindowController: 캡처 영역 = x:{x}, y:{y}, width:{width}, height:{height}")
+            print(f"WindowController: 프레임 크기 = x:{frame_x}, y:{frame_y}")
+            print(f"WindowController: 클라이언트 시작점 = x:{client_x}, y:{client_y}")
+            print(f"WindowController: 요청된 전체화면 좌표 = x:{x}, y:{y}, width:{width}, height:{height}")
+            print(f"WindowController: 변환된 클라이언트 좌표 = x:{capture_x}, y:{capture_y}, width:{capture_width}, height:{capture_height}")
             
             # DC 및 비트맵 생성
             hwnd_dc = win32gui.GetWindowDC(self.target_hwnd)
             mfc_dc = win32ui.CreateDCFromHandle(hwnd_dc)
             save_dc = mfc_dc.CreateCompatibleDC()
             save_bitmap = win32ui.CreateBitmap()
-            save_bitmap.CreateCompatibleBitmap(mfc_dc, window_width, window_height)
+            save_bitmap.CreateCompatibleBitmap(mfc_dc, client_rect[2], client_rect[3])
             save_dc.SelectObject(save_bitmap)
             
             # 화면 캡처
@@ -89,12 +104,16 @@ class WindowController:
                     # 전체 이미지를 numpy 배열로 변환
                     bmp_str = save_bitmap.GetBitmapBits(True)
                     full_img = np.frombuffer(bmp_str, dtype='uint8')
-                    full_img.shape = (window_height, window_width, 4)
+                    full_img.shape = (client_rect[3], client_rect[2], 4)
                     full_img = full_img[:, :, :3]  # BGR로 변환
                     
                     # 지정된 영역 추출
-                    if x >= 0 and y >= 0 and x + width <= window_width and y + height <= window_height:
-                        img = full_img[y:y+height, x:x+width].copy()  # 메모리 연속성을 위해 copy() 사용
+                    if (capture_x >= 0 and capture_y >= 0 and 
+                        capture_x + capture_width <= client_rect[2] and 
+                        capture_y + capture_height <= client_rect[3]):
+                        
+                        img = full_img[capture_y:capture_y+capture_height, 
+                                     capture_x:capture_x+capture_width].copy()
                         
                         # 디버그: 캡처된 이미지 저장
                         self.debug_counter += 1
@@ -153,7 +172,9 @@ class WindowController:
                         
                         return img
                     else:
-                        print("WindowController: 캡처 영역이 윈도우 범위를 벗어났습니다")
+                        print("WindowController: 캡처 영역이 클라이언트 영역을 벗어났습니다")
+                        print(f"요청 영역: ({capture_x}, {capture_y}, {capture_width}, {capture_height})")
+                        print(f"클라이언트 영역: (0, 0, {client_rect[2]}, {client_rect[3]})")
                         return None
                 except Exception as e:
                     print(f"WindowController: 이미지 처리 중 오류 발생 - {str(e)}")
@@ -168,3 +189,68 @@ class WindowController:
             import traceback
             traceback.print_exc()
             return None 
+
+    def capture_window_region(self, x, y, width, height):
+        if not self.is_window_active():
+            return None
+
+        # 클라이언트 영역 크기 확인
+        client_rect = win32gui.GetClientRect(self.target_hwnd)
+        
+        # 입력받은 좌표는 이미 클라이언트 좌표이므로 그대로 사용
+        client_x = x
+        client_y = y
+
+        self.log_debug(f"클라이언트 영역 = {client_rect}")
+        self.log_debug(f"캡처 좌표 = x:{client_x}, y:{client_y}, width:{width}, height:{height}")
+
+        # 캡처할 영역이 클라이언트 영역을 벗어나는지 확인
+        if (client_x < 0 or client_y < 0 or 
+            client_x + width > client_rect[2] or 
+            client_y + height > client_rect[3]):
+            self.log_debug("캡처 영역이 클라이언트 영역을 벗어남")
+            return None
+
+        # 윈도우 캡처
+        wDC = win32gui.GetWindowDC(self.target_hwnd)
+        dcObj = win32ui.CreateDCFromHandle(wDC)
+        cDC = dcObj.CreateCompatibleDC()
+        dataBitMap = win32ui.CreateBitmap()
+        dataBitMap.CreateCompatibleBitmap(dcObj, width, height)
+        cDC.SelectObject(dataBitMap)
+        
+        result = win32gui.PrintWindow(self.target_hwnd, cDC.GetSafeHdc(), 2)
+        self.log_debug(f"PrintWindow 결과 = {result}")
+
+        if result == 1:
+            cDC.BitBlt((0, 0), (width, height), dcObj, (client_x, client_y), win32con.SRCCOPY)
+            
+            # 비트맵을 numpy 배열로 변환
+            bmpinfo = dataBitMap.GetInfo()
+            bmpstr = dataBitMap.GetBitmapBits(True)
+            img = np.frombuffer(bmpstr, dtype=np.uint8)
+            img = img.reshape((height, width, 4))
+            img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
+
+            # 디버그용 이미지 저장
+            debug_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'captures', 'Real_time_Capture', f'capture_{self.capture_count}.png')
+            self.capture_count += 1
+            
+            try:
+                cv2.imwrite(debug_path, img)
+                file_size = os.path.getsize(debug_path)
+                self.log_debug(f"디버그 이미지 저장됨 = {debug_path}")
+                self.log_debug(f"파일 크기 = {file_size} bytes")
+                self.log_debug(f"이미지 shape = {img.shape}")
+                self.log_debug(f"이미지 dtype = {img.dtype}")
+                self.log_debug(f"이미지 min/max = {img.min()}/{img.max()}")
+            except Exception as e:
+                self.log_debug(f"디버그 이미지 저장 실패: {str(e)}")
+
+        # 리소스 해제
+        win32gui.DeleteObject(dataBitMap.GetHandle())
+        cDC.DeleteDC()
+        dcObj.DeleteDC()
+        win32gui.ReleaseDC(self.target_hwnd, wDC)
+
+        return img if result == 1 else None 

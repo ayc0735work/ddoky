@@ -12,14 +12,13 @@
     "gauge_monitor": {
         "hp_gauge": {
             "coordinates": {
-                "x": 2131,
-                "y": 1403,
-                "width": 288,
-                "height": 30
+                "x": 2132,
+                "y": 1404,
+                "width": 285,
+                "height": 28
             },
             "image_file": "captures\\capture_hp.png",
-            "timestamp": "20241202_232118",
-            "value": 0
+            "timestamp": "20241202_235219"
         },
         "mp_gauge": {
             "coordinates": {
@@ -29,8 +28,7 @@
                 "height": 29
             },
             "image_file": "captures\\capture_mp.png",
-            "timestamp": "20241202_232143",
-            "value": 0
+            "timestamp": "20241202_235222"
         }
     },
     "advanced_settings": {
