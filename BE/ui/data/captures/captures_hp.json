@@ -1,0 +1,15 @@
+[
+    {
+        "timestamp": "20241202_173336",
+        "process_name": "msw.exe",
+        "process_id": 115724,
+        "window_title": "MapleStory Worlds-바람의나라 클래식",
+        "coordinates": {
+            "x": 2004,
+            "y": 1217,
+            "width": 496,
+            "height": 103
+        },
+        "image_file": "capture_hp_20241202_173336.png"
+    }
+]

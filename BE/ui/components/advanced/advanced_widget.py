@@ -242,7 +242,7 @@ class AdvancedWidget(QWidget):
         
         self.hp_logic_select_btn = QPushButton("체력 회복 로직 선택")
         self.hp_logic_reset_btn = QPushButton("선택 로직 초기화")
-        self.hp_compare_area_btn = QPushButton("실시간 비교 영역 관리")
+        self.hp_compare_area_btn = QPushButton("체력 실시간 비교 영역 관리")
         
         button_style = """
             QPushButton {
@@ -329,7 +329,7 @@ class AdvancedWidget(QWidget):
         
         self.mp_logic_select_btn = QPushButton("마력 회복 로직 선택")
         self.mp_logic_reset_btn = QPushButton("선택 로직 초기화")
-        self.mp_compare_area_btn = QPushButton("실시간 비교 영역 관리")
+        self.mp_compare_area_btn = QPushButton("마력 실시간 비교 영역 관리")
         
         self.mp_logic_select_btn.setStyleSheet(button_style)
         self.mp_logic_reset_btn.setStyleSheet(button_style)
@@ -404,5 +404,5 @@ class AdvancedWidget(QWidget):
     
     def _show_compare_area_dialog(self, type_):
         """실시간 비교 영역 관리 다이얼로그 표시"""
-        dialog = CompareAreaDialog(self)
+        dialog = CompareAreaDialog(type_, self)
         dialog.exec_()

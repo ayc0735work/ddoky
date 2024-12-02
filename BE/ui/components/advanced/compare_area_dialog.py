@@ -195,11 +195,17 @@ class CaptureOverlay(QDialog):
             self.reject()
 
 class CompareAreaDialog(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, type_, parent=None):
         super().__init__(parent)
-        self.setAttribute(Qt.WA_DeleteOnClose)  # 메인 다이얼로그도 닫힐 때 자동 정리
+        self.setAttribute(Qt.WA_DeleteOnClose)
         
-        self.setWindowTitle("실시간 비교 영역 관리")
+        # 타입 저장 (hp 또는 mp)
+        self.type_ = type_
+        
+        # 타입에 따른 윈도우 제목 설정
+        title = "체력 실시간 비교 영역 관리" if type_ == "hp" else "마력 실시간 비교 영역 관리"
+        self.setWindowTitle(title)
+        
         self.setFixedSize(600, 500)
         self.selected_process = None
         self.captured_image = None
@@ -212,7 +218,7 @@ class CompareAreaDialog(QDialog):
         
         # 저장된 캡처 정보
         self.saved_captures = []
-        self.last_capture = None  # 마지막 저장된 캡처 정보
+        self.last_capture = None
         
         # 마지막 저장된 캡처 정보 로드
         self._load_last_capture()
@@ -221,7 +227,8 @@ class CompareAreaDialog(QDialog):
         
     def _load_last_capture(self):
         """마지막으로 저장된 캡처 정보 로드"""
-        json_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'data', 'captures', 'captures.json')
+        json_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 
+                               'data', 'captures', f'captures_{self.type_}.json')
         if os.path.exists(json_path):
             try:
                 with open(json_path, 'r', encoding='utf-8') as f:
@@ -610,8 +617,8 @@ class CompareAreaDialog(QDialog):
         # 현재 시간을 파일명에 포함
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         
-        # 이미지 파일명
-        image_filename = f"capture_{timestamp}.png"
+        # 이미지 파일명 (타입 포함)
+        image_filename = f"capture_{self.type_}_{timestamp}.png"
         image_path = os.path.join(save_dir, image_filename)
         
         # 캡처 정보
@@ -633,8 +640,8 @@ class CompareAreaDialog(QDialog):
             # 이미지 저장
             self.captured_image.save(image_path)
             
-            # 캡처 정보 JSON 파일에 저장
-            json_path = os.path.join(save_dir, 'captures.json')
+            # 캡처 정보 JSON 파일에 저장 (타입별로 구분)
+            json_path = os.path.join(save_dir, f'captures_{self.type_}.json')
             
             # 기존 데이터 로드 또는 새로운 리스트 생성
             if os.path.exists(json_path):
