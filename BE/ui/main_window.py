@@ -146,6 +146,8 @@ class MainWindow(QMainWindow):
     def init_advanced_features(self):
         """고급 기능 영역 초기화"""
         self.advanced_widget = AdvancedWidget()
+        # 초기 로직 목록 전달
+        self.advanced_widget.update_saved_logics(self.logic_list_widget.saved_logics)
         self.advanced_features_layout.addWidget(self.advanced_widget)
         self.main_layout.addLayout(self.advanced_features_layout)
         
@@ -287,23 +289,26 @@ class MainWindow(QMainWindow):
     def _on_logic_saved(self, logic_info):
         """로직이 저장되었을 때 호출"""
         self.logic_manager.load_logic(logic_info['name'])
-        # 로직 메이커의 저장된 로직 목록 업데이트
+        # 로직 메이커와 고급 기능 위젯의 저장된 로직 목록 업데이트
         self.logic_maker_widget.update_saved_logics(self.logic_list_widget.saved_logics)
+        self.advanced_widget.update_saved_logics(self.logic_list_widget.saved_logics)
         # 로직 구성 영역 초기화
         self.logic_detail_widget.clear_all()
     
     def _on_logic_updated(self, original_name, logic_info):
         """로직이 수정되었을 때 호출"""
         self.logic_manager.load_logic(logic_info['name'])
-        # 로직 메이커의 저장된 로직 목록 업데이트
+        # 로직 메이커와 고급 기능 위젯의 저장된 로직 목록 업데이트
         self.logic_maker_widget.update_saved_logics(self.logic_list_widget.saved_logics)
+        self.advanced_widget.update_saved_logics(self.logic_list_widget.saved_logics)
 
     def _on_logic_deleted(self, logic_name):
         """로직이 삭제되었을 때 호출"""
         # 로직 매니저에서 로직 제거
         self.logic_manager.remove_logic(logic_name)
-        # 로직 메이커의 저장된 로직 목록 업데이트
+        # 로직 메이커와 고급 기능 위젯의 저장된 로직 목록 업데이트
         self.logic_maker_widget.update_saved_logics(self.logic_list_widget.saved_logics)
+        self.advanced_widget.update_saved_logics(self.logic_list_widget.saved_logics)
         # 로직 구성 영역 초기화
         self.logic_detail_widget.clear_all()
 
