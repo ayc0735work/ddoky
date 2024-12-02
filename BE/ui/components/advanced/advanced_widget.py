@@ -8,6 +8,7 @@ from ...constants.styles import (FRAME_STYLE, CONTAINER_STYLE,
 from ...constants.dimensions import (ADVANCED_FRAME_WIDTH, ADVANCED_SECTION_HEIGHT,
                                    DEFAULT_RECOVERY_THRESHOLD, MIDDLE_SPACE)
 from BE.ui.components.logic_maker.logic_selector_dialog import LogicSelectorDialog
+from .compare_area_dialog import CompareAreaDialog
 
 class CustomSpinBox(QSpinBox):
     def __init__(self, parent=None):
@@ -87,6 +88,10 @@ class AdvancedWidget(QWidget):
         self.hp_spinbox.valueChanged.connect(self.hp_slider.setValue)
         self.mp_slider.valueChanged.connect(self.mp_spinbox.setValue)
         self.mp_spinbox.valueChanged.connect(self.mp_slider.setValue)
+        
+        # 실시간 비교 영역 관리 버튼 시그널 연결
+        self.hp_compare_area_btn.clicked.connect(lambda: self._show_compare_area_dialog('hp'))
+        self.mp_compare_area_btn.clicked.connect(lambda: self._show_compare_area_dialog('mp'))
     
     def _show_logic_select_dialog(self, type_):
         """로직 선택 다이얼로그 표시"""
@@ -237,7 +242,7 @@ class AdvancedWidget(QWidget):
         
         self.hp_logic_select_btn = QPushButton("체력 회복 로직 선택")
         self.hp_logic_reset_btn = QPushButton("선택 로직 초기화")
-        self.hp_compare_area_btn = QPushButton("실시간 비교 영역 지정")
+        self.hp_compare_area_btn = QPushButton("실시간 비교 영역 관리")
         
         button_style = """
             QPushButton {
@@ -324,7 +329,7 @@ class AdvancedWidget(QWidget):
         
         self.mp_logic_select_btn = QPushButton("마력 회복 로직 선택")
         self.mp_logic_reset_btn = QPushButton("선택 로직 초기화")
-        self.mp_compare_area_btn = QPushButton("실시간 비교 영역 지정")
+        self.mp_compare_area_btn = QPushButton("실시간 비교 영역 관리")
         
         self.mp_logic_select_btn.setStyleSheet(button_style)
         self.mp_logic_reset_btn.setStyleSheet(button_style)
@@ -396,3 +401,8 @@ class AdvancedWidget(QWidget):
     def update_saved_logics(self, logics):
         """저장된 로직 정보 업데이트"""
         self.saved_logics = logics
+    
+    def _show_compare_area_dialog(self, type_):
+        """실시간 비교 영역 관리 다이얼로그 표시"""
+        dialog = CompareAreaDialog(self)
+        dialog.exec_()
