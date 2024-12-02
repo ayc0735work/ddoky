@@ -12,37 +12,35 @@
     "gauge_monitor": {
         "hp_gauge": {
             "coordinates": {
-                "x": 2134,
-                "y": 1409,
-                "width": 285,
-                "height": 23
+                "x": 2131,
+                "y": 1403,
+                "width": 288,
+                "height": 30
             },
             "image_file": "captures\\capture_hp.png",
-            "timestamp": "20241202_224024"
+            "timestamp": "20241202_232118",
+            "value": 0
         },
         "mp_gauge": {
             "coordinates": {
-                "x": 1920,
-                "y": 1357,
-                "width": 471,
-                "height": 85
+                "x": 2131,
+                "y": 1446,
+                "width": 285,
+                "height": 29
             },
             "image_file": "captures\\capture_mp.png",
-            "timestamp": "20241202_220741",
-            "value": 0.0
+            "timestamp": "20241202_232143",
+            "value": 0
         }
     },
     "advanced_settings": {
         "hp_threshold": 30,
-        "mp_threshold": 33,
+        "mp_threshold": 31,
         "hp_logic": {
             "uuid": "0dfa1418-cab1-4439-ae8a-b0c971471c99",
             "enabled": true
         },
-        "mp_logic": {
-            "uuid": "ba00b4b7-4268-4138-a424-d1e9353d7743",
-            "enabled": true
-        },
+        "mp_logic": null,
         "common_logic": null
     },
     "logics": {
