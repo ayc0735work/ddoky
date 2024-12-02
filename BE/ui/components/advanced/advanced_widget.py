@@ -1,9 +1,11 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QLabel, 
                                QHBoxLayout, QCheckBox, QSlider, QSpinBox, QPushButton, QProgressBar, QWidget)
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont, QPixmap, QImage
 import os
 import json
+import cv2
+import numpy as np
 from ...constants.styles import (FRAME_STYLE, CONTAINER_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from ...constants.dimensions import (ADVANCED_FRAME_WIDTH, ADVANCED_SECTION_HEIGHT,
@@ -11,6 +13,7 @@ from ...constants.dimensions import (ADVANCED_FRAME_WIDTH, ADVANCED_SECTION_HEIG
 from BE.ui.components.logic_maker.logic_selector_dialog import LogicSelectorDialog
 from .compare_area_dialog import CompareAreaDialog
 from ...data.settings_manager import SettingsManager
+from .gauge_monitor import GaugeMonitor
 
 class CustomSpinBox(QSpinBox):
     def __init__(self, parent=None):
@@ -105,6 +108,11 @@ class AdvancedWidget(QWidget):
         self.hp_logic_checkbox.stateChanged.connect(self.save_settings)
         self.mp_logic_checkbox.stateChanged.connect(self.save_settings)
         self.common_logic_checkbox.stateChanged.connect(self.save_settings)
+        
+        # 게이지 모니터링 시그널 연결
+        self.gauge_monitor = GaugeMonitor()
+        self.gauge_monitor.gauge_analyzed.connect(self._update_gauge_info)
+        self.gauge_monitor.image_captured.connect(self._update_capture_image)
     
     def _show_logic_select_dialog(self, type_):
         """로직 선택 다이얼로그 표시"""
@@ -231,9 +239,52 @@ class AdvancedWidget(QWidget):
         """)
         self.hp_spinbox = CustomSpinBox()
         
+        # 실시간 캡처 이미지 영역
+        hp_capture_frame = QFrame()
+        hp_capture_frame.setStyleSheet("""
+            QFrame {
+                background-color: #f8f8f8;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
+        """)
+        hp_capture_layout = QHBoxLayout(hp_capture_frame)
+        hp_capture_layout.setContentsMargins(10, 5, 10, 5)
+        hp_capture_layout.setSpacing(15)
+        
+        # 캡처 이미지 표시 라벨
+        self.hp_capture_label = QLabel()
+        self.hp_capture_label.setFixedSize(100, 30)
+        self.hp_capture_label.setStyleSheet("border: 1px solid #ccc; background-color: white;")
+        self.hp_capture_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        
+        # 분석 수치값 표시 라벨
+        self.hp_ratio_label = QLabel("0%")
+        self.hp_ratio_label.setStyleSheet("""
+            QLabel {
+                color: #333;
+                font-size: 14px;
+                font-weight: bold;
+            }
+        """)
+        
+        # 기준값 비교 결과 표시 라벨
+        self.hp_compare_label = QLabel("-")
+        self.hp_compare_label.setStyleSheet("""
+            QLabel {
+                color: #666;
+                font-size: 13px;
+            }
+        """)
+        
+        hp_capture_layout.addWidget(self.hp_capture_label)
+        hp_capture_layout.addWidget(self.hp_ratio_label)
+        hp_capture_layout.addWidget(self.hp_compare_label)
+        
         hp_gauge_layout.addWidget(hp_label)
         hp_gauge_layout.addWidget(self.hp_slider)
         hp_gauge_layout.addWidget(self.hp_spinbox)
+        hp_gauge_layout.addWidget(hp_capture_frame)
         hp_gauge_layout.addStretch()
         
         hp_content_layout.addWidget(hp_gauge_frame)
@@ -310,7 +361,7 @@ class AdvancedWidget(QWidget):
                 border-radius: 5px;
             }
             QSlider::handle:horizontal {
-                background: #4dabf7;
+                background: #4b7bec;
                 width: 16px;
                 margin: -3px 0;
                 border-radius: 8px;
@@ -318,9 +369,52 @@ class AdvancedWidget(QWidget):
         """)
         self.mp_spinbox = CustomSpinBox()
         
+        # 실시간 캡처 이미지 영역
+        mp_capture_frame = QFrame()
+        mp_capture_frame.setStyleSheet("""
+            QFrame {
+                background-color: #f8f8f8;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
+        """)
+        mp_capture_layout = QHBoxLayout(mp_capture_frame)
+        mp_capture_layout.setContentsMargins(10, 5, 10, 5)
+        mp_capture_layout.setSpacing(15)
+        
+        # 캡처 이미지 표시 라벨
+        self.mp_capture_label = QLabel()
+        self.mp_capture_label.setFixedSize(100, 30)
+        self.mp_capture_label.setStyleSheet("border: 1px solid #ccc; background-color: white;")
+        self.mp_capture_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        
+        # 분석 수치값 표시 라벨
+        self.mp_ratio_label = QLabel("0%")
+        self.mp_ratio_label.setStyleSheet("""
+            QLabel {
+                color: #333;
+                font-size: 14px;
+                font-weight: bold;
+            }
+        """)
+        
+        # 기준값 비교 결과 표시 라벨
+        self.mp_compare_label = QLabel("-")
+        self.mp_compare_label.setStyleSheet("""
+            QLabel {
+                color: #666;
+                font-size: 13px;
+            }
+        """)
+        
+        mp_capture_layout.addWidget(self.mp_capture_label)
+        mp_capture_layout.addWidget(self.mp_ratio_label)
+        mp_capture_layout.addWidget(self.mp_compare_label)
+        
         mp_gauge_layout.addWidget(mp_label)
         mp_gauge_layout.addWidget(self.mp_slider)
         mp_gauge_layout.addWidget(self.mp_spinbox)
+        mp_gauge_layout.addWidget(mp_capture_frame)
         mp_gauge_layout.addStretch()
         
         mp_content_layout.addWidget(mp_gauge_frame)
@@ -527,5 +621,64 @@ class AdvancedWidget(QWidget):
             
         except Exception as e:
             print(f"설정 로드 중 오류 발생: {str(e)}")
+            import traceback
+            traceback.print_exc()
+    
+    def _update_gauge_info(self, type_, ratio):
+        """게이지 정보 업데이트"""
+        if type_ == 'hp':
+            # HP 게이지 정보 업데이트
+            self.hp_ratio_label.setText(f"{ratio:.1f}%")
+            threshold = self.hp_slider.value()
+            if ratio > threshold:
+                self.hp_compare_label.setText("기준값 초과")
+                self.hp_compare_label.setStyleSheet("color: #2ecc71;")
+            else:
+                self.hp_compare_label.setText("기준값 미만")
+                self.hp_compare_label.setStyleSheet("color: #e74c3c;")
+        else:
+            # MP 게이지 정보 업데이트
+            self.mp_ratio_label.setText(f"{ratio:.1f}%")
+            threshold = self.mp_slider.value()
+            if ratio > threshold:
+                self.mp_compare_label.setText("기준값 초과")
+                self.mp_compare_label.setStyleSheet("color: #2ecc71;")
+            else:
+                self.mp_compare_label.setText("기준값 미만")
+                self.mp_compare_label.setStyleSheet("color: #e74c3c;")
+    
+    def _update_capture_image(self, image, type_):
+        """캡처된 이미지 업데이트"""
+        try:
+            if image is None:
+                print(f"{type_} 이미지가 None입니다.")
+                return
+
+            # QImage로 변환
+            height, width = image.shape[:2]
+            bytes_per_line = 3 * width
+            
+            # BGR to RGB 변환 및 연속된 메모리 배열 확보
+            rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            rgb_image = np.ascontiguousarray(rgb_image)
+            
+            q_img = QImage(rgb_image.data, width, height, bytes_per_line, QImage.Format_RGB888)
+            pixmap = QPixmap.fromImage(q_img)
+            
+            # 이미지 크기 조정 (너무 크지 않게)
+            max_size = 200
+            if width > max_size or height > max_size:
+                pixmap = pixmap.scaled(max_size, max_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            
+            # 해당하는 라벨에 이미지 설정
+            if type_ == 'hp':
+                self.hp_capture_label.setPixmap(pixmap)
+                self.hp_capture_label.setAlignment(Qt.AlignCenter)
+            else:  # mp
+                self.mp_capture_label.setPixmap(pixmap)
+                self.mp_capture_label.setAlignment(Qt.AlignCenter)
+                
+        except Exception as e:
+            print(f"이미지 업데이트 중 오류 발생 ({type_}): {str(e)}")
             import traceback
             traceback.print_exc()
