@@ -10,12 +10,54 @@ class CompareAreaDialog(QDialog):
     def init_ui(self):
         """UI 초기화"""
         self.setWindowTitle("실시간 비교 영역 관리")
-        self.setFixedSize(600, 400)  # 모달 크기 고정
+        self.setFixedSize(600, 400)
         
-        # 메인 레이아웃
         layout = QVBoxLayout()
         layout.setSpacing(12)
         layout.setContentsMargins(20, 20, 20, 20)
+        
+        # 프로세스 선택 영역
+        process_frame = QFrame()
+        process_frame.setStyleSheet("QFrame { background-color: transparent; }")
+        process_layout = QVBoxLayout(process_frame)
+        process_layout.setContentsMargins(0, 0, 0, 0)
+        process_layout.setSpacing(5)
+        
+        # 프로세스 정보 표시 영역
+        process_header = QHBoxLayout()
+        self.process_info = QLabel("선택된 프로세스 없음")
+        self.process_info.setWordWrap(True)
+        process_header.addWidget(self.process_info)
+        
+        # 프로세스 선택 버튼 영역
+        process_button_layout = QHBoxLayout()
+        process_button_layout.setSpacing(10)
+        
+        self.process_select_btn = QPushButton("프로세스 선택")
+        self.process_reset_btn = QPushButton("프로세스 초기화")
+        
+        button_style = """
+            QPushButton {
+                background-color: #f0f0f0;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 4px;
+            }
+            QPushButton:hover {
+                background-color: #e0e0e0;
+            }
+        """
+        self.process_select_btn.setStyleSheet(button_style)
+        self.process_reset_btn.setStyleSheet(button_style)
+        
+        process_button_layout.addWidget(self.process_select_btn)
+        process_button_layout.addWidget(self.process_reset_btn)
+        process_button_layout.addStretch()
+        
+        process_layout.addLayout(process_header)
+        process_layout.addLayout(process_button_layout)
+        
+        layout.addWidget(process_frame)
         
         # 캡처 이미지 표시 영역
         capture_frame = QFrame()
@@ -43,6 +85,7 @@ class CompareAreaDialog(QDialog):
         capture_button_layout.setSpacing(10)
         
         self.capture_btn = QPushButton("캡처 영역 지정")
+        self.capture_btn.setEnabled(False)  # 초기에는 비활성화
         self.reset_btn = QPushButton("캡처 영역 초기화")
         
         button_style = """
@@ -105,4 +148,21 @@ class CompareAreaDialog(QDialog):
         
         layout.addLayout(button_layout)
         
-        self.setLayout(layout) 
+        self.setLayout(layout)
+        
+        # 시그널 연결
+        self.process_select_btn.clicked.connect(self._select_process)
+        self.process_reset_btn.clicked.connect(self._reset_process)
+        
+    def _select_process(self):
+        """프로세스 선택"""
+        # TODO: 프로세스 선택 다이얼로그 표시
+        # 임시로 프로세스가 선택되었다고 가정
+        self.process_info.setText("선택된 프로세스 [PID: 1234] MapleStory - 메이플스토리")
+        self.capture_btn.setEnabled(True)
+        
+    def _reset_process(self):
+        """프로세스 초기화"""
+        self.process_info.setText("선택된 프로세스 없음")
+        self.capture_btn.setEnabled(False)
+        
