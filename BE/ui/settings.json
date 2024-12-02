@@ -1,0 +1,31 @@
+{
+    "captures": [
+        {
+            "process": {
+                "pid": 115724,
+                "name": "msw.exe",
+                "title": "MapleStory Worlds-바람의나라 클래식"
+            },
+            "coordinates": {
+                "top_left": {
+                    "x": 1956,
+                    "y": 1189
+                },
+                "top_right": {
+                    "x": 2315,
+                    "y": 1189
+                },
+                "bottom_left": {
+                    "x": 1956,
+                    "y": 1314
+                },
+                "bottom_right": {
+                    "x": 2315,
+                    "y": 1314
+                }
+            },
+            "image": "capture_20241202_172119.png",
+            "timestamp": "20241202_172119"
+        }
+    ]
+}
