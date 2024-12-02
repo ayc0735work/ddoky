@@ -173,18 +173,37 @@ class GaugeMonitor(QObject):
             # 디버그 이미지 저장
             debug_path = os.path.join(self.debug_dir, f'debug_{type_}.png')
             try:
-                # 이미지가 유효한지 확인
                 if display_image is not None and display_image.size > 0 and len(display_image.shape) == 3:
-                    # 이미지 데이터가 연속적인지 확인
                     if not display_image.flags['C_CONTIGUOUS']:
                         display_image = np.ascontiguousarray(display_image)
                     
-                    success = cv2.imwrite(debug_path, display_image)
-                    if success and os.path.exists(debug_path):
-                        print(f"GaugeMonitor: 디버그 이미지 저장됨 = {debug_path}")
-                        print(f"GaugeMonitor: 파일 크기 = {os.path.getsize(debug_path)} bytes")
-                    else:
-                        print(f"GaugeMonitor: 이미지 저장 실패 - cv2.imwrite 반환값: {success}")
+                    # 방법 1: PIL 사용
+                    try:
+                        from PIL import Image
+                        # BGR에서 RGB로 변환
+                        rgb_img = cv2.cvtColor(display_image, cv2.COLOR_BGR2RGB)
+                        pil_img = Image.fromarray(rgb_img)
+                        pil_img.save(debug_path)
+                        success = os.path.exists(debug_path)
+                        if success:
+                            print(f"GaugeMonitor: 디버그 이미지 저장됨 = {debug_path}")
+                            print(f"GaugeMonitor: 파일 크기 = {os.path.getsize(debug_path)} bytes")
+                        else:
+                            print(f"GaugeMonitor: PIL 저장 실패")
+                    except Exception as e:
+                        print(f"GaugeMonitor: PIL 저장 실패 - {str(e)}")
+                        success = False
+                    
+                    # 방법 2: OpenCV 시도 (PIL이 실패한 경우)
+                    if not success:
+                        try:
+                            success = cv2.imwrite(str(debug_path), display_image)
+                            if success:
+                                print(f"GaugeMonitor: OpenCV로 이미지 저장됨 = {debug_path}")
+                            else:
+                                print("GaugeMonitor: OpenCV 저장 실패")
+                        except Exception as e:
+                            print(f"GaugeMonitor: OpenCV 저장 실패 - {str(e)}")
                 else:
                     print(f"GaugeMonitor: 유효하지 않은 이미지 데이터 - shape: {display_image.shape if display_image is not None else 'None'}")
             except Exception as e:
@@ -194,7 +213,6 @@ class GaugeMonitor(QObject):
             
             # UI 업데이트를 위한 이미지 변환 및 시그널 발생
             try:
-                # 이미지가 유효한지 확인
                 if display_image is not None and display_image.size > 0 and len(display_image.shape) == 3:
                     rgb_image = cv2.cvtColor(display_image, cv2.COLOR_BGR2RGB)
                     h, w, ch = rgb_image.shape

@@ -55,7 +55,7 @@ class WindowController:
         """화면 캡처"""
         try:
             if not self.target_hwnd:
-                print("WindowController: 대상 윈도우가 설정되지 않았습니다")
+                print("WindowController: 대상 윈도우가 설정되지 않���습니다")
                 return None
             
             if not self.debug_dir or not os.path.exists(self.debug_dir):
@@ -102,18 +102,37 @@ class WindowController:
                         
                         # 이미지 저장 시도
                         try:
-                            # 이미지가 유효한지 확인
                             if img is not None and img.size > 0 and len(img.shape) == 3:
-                                # 이미지 데이터가 연속적인지 확인
                                 if not img.flags['C_CONTIGUOUS']:
                                     img = np.ascontiguousarray(img)
                                 
-                                success = cv2.imwrite(debug_path, img)
-                                if success and os.path.exists(debug_path):
-                                    print(f"WindowController: 디버그 이미지 저장됨 = {debug_path}")
-                                    print(f"WindowController: 파일 크기 = {os.path.getsize(debug_path)} bytes")
-                                else:
-                                    print(f"WindowController: 이미지 저장 실패 - cv2.imwrite 반환값: {success}")
+                                # 방법 1: PIL 사용
+                                try:
+                                    from PIL import Image
+                                    # BGR에서 RGB로 변환
+                                    rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                                    pil_img = Image.fromarray(rgb_img)
+                                    pil_img.save(debug_path)
+                                    success = os.path.exists(debug_path)
+                                    if success:
+                                        print(f"WindowController: 디버그 이미지 저장됨 = {debug_path}")
+                                        print(f"WindowController: 파일 크기 = {os.path.getsize(debug_path)} bytes")
+                                    else:
+                                        print(f"WindowController: PIL 저장 실패")
+                                except Exception as e:
+                                    print(f"WindowController: PIL 저장 실패 - {str(e)}")
+                                    success = False
+                                
+                                # 방법 2: OpenCV 시도 (PIL이 실패한 경우)
+                                if not success:
+                                    try:
+                                        success = cv2.imwrite(str(debug_path), img)
+                                        if success:
+                                            print(f"WindowController: OpenCV로 이미지 저장됨 = {debug_path}")
+                                        else:
+                                            print("WindowController: OpenCV 저장 실패")
+                                    except Exception as e:
+                                        print(f"WindowController: OpenCV 저장 실패 - {str(e)}")
                             else:
                                 print(f"WindowController: 유효하지 않은 이미지 데이터 - shape: {img.shape if img is not None else 'None'}")
                         except Exception as e:
