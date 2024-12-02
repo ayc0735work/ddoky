@@ -24,14 +24,14 @@ class GaugeMonitor(QObject):
         self.hp_ratio = {
             'x': 0.7481770833333333,  # 창 너비의 약 75% 위치
             'y': 0.8426323319027181,  # 창 높이의 약 84% 위치
-            'width': 0.0984375,       # 창 너비의 약 10%
+            'width': 0.1,             # 창 너비의 10% (기존 0.0984375에서 수정)
             'height': 0.020982355746304245  # 창 높이의 약 2%
         }
         
         self.mp_ratio = {
             'x': 0.7481770833333333,  # 창 너비의 약 75% 위치
             'y': 0.8702908917501192,  # 창 높이의 약 87% 위치
-            'width': 0.09817708333333333,  # 창 너비의 약 10%
+            'width': 0.1,             # 창 너비의 10% (기존 0.09817708333333333에서 수정)
             'height': 0.0195517405817835   # 창 높이의 약 2%
         }
         
@@ -193,7 +193,7 @@ class GaugeMonitor(QObject):
                     segments_str += '□'
             
             print(f"{type_} 게이지 구간 분석: {segments_str}")
-            print(f"{type_} 게이지: 게이지 길이 = {max_gauge_length}/{len(gauge_segments)}, 비율 = {ratio}%")
+            print(f"{type_} 게이지: 게이지 길이 = {max_gauge_length}/{len(gauge_segments)}, 비 = {ratio}%")
             
             # 분석 영역 표시
             cv2.line(display_image, (0, top_margin), (display_image.shape[1], top_margin), (0, 255, 0), 1)
@@ -240,7 +240,7 @@ class GaugeMonitor(QObject):
                 import traceback
                 traceback.print_exc()
             
-            # UI 업데이트를 위한 이미지 변환 및 시그널 발생
+            # UI 업데이트를 위한 이미지 변환  시그널 발생
             try:
                 if display_image is not None and display_image.size > 0 and len(display_image.shape) == 3:
                     rgb_image = cv2.cvtColor(display_image, cv2.COLOR_BGR2RGB)
@@ -304,13 +304,28 @@ class GaugeMonitor(QObject):
             client_area = window_info['client']
             print(f"GaugeMonitor: 현재 클라이언트 영역 = {client_area}")
             
+            # 창이 최소화되었거나 유효하지 않은 상태인지 확인
+            if (client_area['width'] <= 0 or client_area['height'] <= 0 or
+                client_area['x'] < -10000 or client_area['y'] < -10000):
+                print("GaugeMonitor: 창이 최소화되었거나 화면을 벗어남")
+                self.gauge_analyzed.emit('hp', 0.0)
+                self.gauge_analyzed.emit('mp', 0.0)
+                return
+            
             # HP 게이지 캡처
             print(f"GaugeMonitor: HP 캡처 시도 - 비율 = {self.hp_ratio}")
             
+            # 실제 클라이언트 영역 내에서의 상대 좌표 계산
             hp_x = int(client_area['width'] * self.hp_ratio['x'])
             hp_y = int(client_area['height'] * self.hp_ratio['y'])
             hp_width = int(client_area['width'] * self.hp_ratio['width'])
             hp_height = int(client_area['height'] * self.hp_ratio['height'])
+            
+            # 캡처 영역이 유효한지 확인
+            if hp_width <= 0 or hp_height <= 0:
+                print("GaugeMonitor: 유효하지 않은 HP 캡처 영역")
+                self.gauge_analyzed.emit('hp', 0.0)
+                return
             
             print("GaugeMonitor: HP 좌표 계산 과정:")
             print(f"  - 원본 비율: x={self.hp_ratio['x']:.4f}, y={self.hp_ratio['y']:.4f}")
@@ -335,10 +350,17 @@ class GaugeMonitor(QObject):
             # MP 게이지 캡처
             print(f"GaugeMonitor: MP 캡처 시도 - 비율 = {self.mp_ratio}")
             
+            # 실제 클라이언트 영역 내에서의 상대 좌표 계산
             mp_x = int(client_area['width'] * self.mp_ratio['x'])
             mp_y = int(client_area['height'] * self.mp_ratio['y'])
             mp_width = int(client_area['width'] * self.mp_ratio['width'])
             mp_height = int(client_area['height'] * self.mp_ratio['height'])
+            
+            # 캡처 영역이 유효한지 확인
+            if mp_width <= 0 or mp_height <= 0:
+                print("GaugeMonitor: 유효하지 않은 MP 캡처 영역")
+                self.gauge_analyzed.emit('mp', 0.0)
+                return
             
             print("GaugeMonitor: MP 좌표 계산 과정:")
             print(f"  - 원본 비율: x={self.mp_ratio['x']:.4f}, y={self.mp_ratio['y']:.4f}")

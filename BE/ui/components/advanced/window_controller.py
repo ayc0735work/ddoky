@@ -50,11 +50,19 @@ class WindowController:
             # 클라이언트 영역
             client_rect = win32gui.GetClientRect(self.target_hwnd)
             client_point = win32gui.ClientToScreen(self.target_hwnd, (0, 0))
+            
+            # DPI 스케일링 고려
+            try:
+                dpi = win32gui.GetDpiForWindow(self.target_hwnd)
+                scale_factor = dpi / 96.0  # 기본 DPI는 96
+            except AttributeError:
+                scale_factor = 1.0
+            
             client_info = {
                 'x': client_point[0],
                 'y': client_point[1],
-                'width': client_rect[2],
-                'height': client_rect[3]
+                'width': int(client_rect[2] * scale_factor),
+                'height': int(client_rect[3] * scale_factor)
             }
             
             print(f"WindowController: 윈도우 정보 = {{'window': {window_info}, 'client': {client_info}}}")
@@ -116,12 +124,36 @@ class WindowController:
             client_rect = self.get_client_rect()
             if not client_rect:
                 return None
-                
-            abs_x = client_rect['x'] + x
-            abs_y = client_rect['y'] + y
+            
+            # DPI 스케일링 고려
+            try:
+                dpi = win32gui.GetDpiForWindow(self.target_hwnd)
+                scale_factor = dpi / 96.0
+            except AttributeError:
+                scale_factor = 1.0
+            
+            # 스케일링된 좌표 계산
+            scaled_x = int(x * scale_factor)
+            scaled_y = int(y * scale_factor)
+            scaled_width = int(width * scale_factor)
+            scaled_height = int(height * scale_factor)
+            
+            # 절대 좌표 계산
+            abs_x = client_rect['x'] + scaled_x
+            abs_y = client_rect['y'] + scaled_y
+            
+            # 캡처 영역이 클라이언트 영역을 벗어나는지 확인
+            if (abs_x < client_rect['x'] or 
+                abs_y < client_rect['y'] or 
+                abs_x + scaled_width > client_rect['x'] + client_rect['width'] or 
+                abs_y + scaled_height > client_rect['y'] + client_rect['height']):
+                print("캡처 영역이 클라이언트 영역을 벗어남")
+                print(f"캡처 영역: x={abs_x}, y={abs_y}, width={scaled_width}, height={scaled_height}")
+                print(f"클라이언트 영역: x={client_rect['x']}, y={client_rect['y']}, width={client_rect['width']}, height={client_rect['height']}")
+                return None
             
             # 화면 캡처
-            screenshot = ImageGrab.grab(bbox=(abs_x, abs_y, abs_x + width, abs_y + height))
+            screenshot = ImageGrab.grab(bbox=(abs_x, abs_y, abs_x + scaled_width, abs_y + scaled_height))
             img_array = np.array(screenshot)
             
             # 디버그용 이미지 저장
@@ -137,6 +169,8 @@ class WindowController:
             
         except Exception as e:
             print(f"이미지 캡처 중 오류: {e}")
+            import traceback
+            traceback.print_exc()
             return None
     
     def is_target_window_active(self):
