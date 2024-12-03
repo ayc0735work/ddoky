@@ -1,8 +1,8 @@
 {
     "window": {
         "position": {
-            "x": 3984,
-            "y": 7
+            "x": 4176,
+            "y": 17
         },
         "size": {
             "width": 900,
@@ -12,48 +12,45 @@
     "gauge_monitor": {
         "hp_gauge": {
             "coordinates": {
-                "x": 2873,
-                "y": 1767,
-                "width": 378,
-                "height": 44
+                "x": 2251,
+                "y": 1394,
+                "width": 303,
+                "height": 38
             },
             "ratios": {
-                "x": 0.7481770833333333,
-                "y": 0.8426323319027181,
-                "width": 0.0984375,
-                "height": 0.020982355746304245
+                "x": 0.7500833055648117,
+                "y": 0.8407720144752714,
+                "width": 0.10096634455181606,
+                "height": 0.022919179734620022
             },
-            "image_file": "captures\\capture_hp.png",
-            "timestamp": "20241203_060936"
+            "image_file": "captures\\capture_setting_img\\capture_hp.png",
+            "timestamp": "20241203_145013"
         },
         "mp_gauge": {
             "coordinates": {
-                "x": 2873,
-                "y": 1825,
-                "width": 377,
-                "height": 41
+                "x": 2252,
+                "y": 1443,
+                "width": 302,
+                "height": 33
             },
             "ratios": {
-                "x": 0.7481770833333333,
-                "y": 0.8702908917501192,
-                "width": 0.09817708333333333,
-                "height": 0.0195517405817835
+                "x": 0.7504165278240587,
+                "y": 0.8703256936067552,
+                "width": 0.10063312229256914,
+                "height": 0.019903498190591073
             },
-            "image_file": "captures\\capture_mp.png",
-            "timestamp": "20241203_060950"
+            "image_file": "captures\\capture_setting_img\\capture_mp.png",
+            "timestamp": "20241203_145030"
         }
     },
     "advanced_settings": {
-        "hp_threshold": 30,
-        "mp_threshold": 31,
+        "hp_threshold": 25,
+        "mp_threshold": 21,
         "hp_logic": {
             "uuid": "0dfa1418-cab1-4439-ae8a-b0c971471c99",
             "enabled": true
         },
-        "mp_logic": {
-            "uuid": "e058193f-99b3-434c-be33-bb6222114c09",
-            "enabled": true
-        },
+        "mp_logic": null,
         "common_logic": null
     },
     "logics": {

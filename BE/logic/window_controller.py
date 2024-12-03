@@ -117,7 +117,10 @@ class WindowController:
                         
                         # 디버그: 캡처된 이미지 저장
                         self.debug_counter += 1
-                        debug_path = os.path.join(self.debug_dir, f"capture_{self.debug_counter}.png")
+                        debug_path = os.path.join('BE', 'captures', 'capture_setting_img', f"capture_{self.debug_counter}.png")
+                        
+                        # 디렉토리가 없으면 생성
+                        os.makedirs(os.path.dirname(debug_path), exist_ok=True)
                         
                         # 이미지 저장 시도
                         try:

@@ -626,59 +626,78 @@ class AdvancedWidget(QWidget):
     
     def _update_gauge_info(self, type_, ratio):
         """게이지 정보 업데이트"""
-        if type_ == 'hp':
-            # HP 게이지 정보 업데이트
-            self.hp_ratio_label.setText(f"{ratio:.1f}%")
-            threshold = self.hp_slider.value()
-            if ratio > threshold:
-                self.hp_compare_label.setText("기준값 초과")
-                self.hp_compare_label.setStyleSheet("color: #2ecc71;")
-            else:
-                self.hp_compare_label.setText("기준값 미만")
-                self.hp_compare_label.setStyleSheet("color: #e74c3c;")
-        else:
-            # MP 게이지 정보 업데이트
-            self.mp_ratio_label.setText(f"{ratio:.1f}%")
-            threshold = self.mp_slider.value()
-            if ratio > threshold:
-                self.mp_compare_label.setText("기준값 초과")
-                self.mp_compare_label.setStyleSheet("color: #2ecc71;")
-            else:
-                self.mp_compare_label.setText("기준값 미만")
-                self.mp_compare_label.setStyleSheet("color: #e74c3c;")
-    
-    def _update_capture_image(self, image, type_):
-        """캡처된 이미지 업데이트"""
         try:
-            if image is None:
-                print(f"{type_} 이미지가 None입니다.")
-                return
-
-            # QImage로 변환
-            height, width = image.shape[:2]
-            bytes_per_line = 3 * width
-            
-            # BGR to RGB 변환 및 연속된 메모리 배열 확보
-            rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            rgb_image = np.ascontiguousarray(rgb_image)
-            
-            q_img = QImage(rgb_image.data, width, height, bytes_per_line, QImage.Format_RGB888)
-            pixmap = QPixmap.fromImage(q_img)
-            
-            # 이미지 크기 조정 (너무 크지 않게)
-            max_size = 200
-            if width > max_size or height > max_size:
-                pixmap = pixmap.scaled(max_size, max_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-            
-            # 해당하는 라벨에 이미지 설정
             if type_ == 'hp':
-                self.hp_capture_label.setPixmap(pixmap)
-                self.hp_capture_label.setAlignment(Qt.AlignCenter)
+                # 비율 표시 업데이트
+                self.hp_ratio_label.setText(f"{ratio:.1f}%")
+                
+                # 기준값과 비교하여 상태 표시
+                threshold = self.hp_slider.value()
+                if ratio < threshold:
+                    self.hp_compare_label.setText("위험")
+                    self.hp_compare_label.setStyleSheet("""
+                        QLabel {
+                            color: #ff4444;
+                            font-size: 13px;
+                            font-weight: bold;
+                        }
+                    """)
+                else:
+                    self.hp_compare_label.setText("양호")
+                    self.hp_compare_label.setStyleSheet("""
+                        QLabel {
+                            color: #44bb44;
+                            font-size: 13px;
+                            font-weight: bold;
+                        }
+                    """)
+                
+                # 프로그레스바 업데이트
+                self.hp_progress.setValue(int(ratio))
+                
             else:  # mp
-                self.mp_capture_label.setPixmap(pixmap)
-                self.mp_capture_label.setAlignment(Qt.AlignCenter)
+                # 비율 표시 업데이트
+                self.mp_ratio_label.setText(f"{ratio:.1f}%")
+                
+                # 기준값과 비교하여 상태 표시
+                threshold = self.mp_slider.value()
+                if ratio < threshold:
+                    self.mp_compare_label.setText("위험")
+                    self.mp_compare_label.setStyleSheet("""
+                        QLabel {
+                            color: #ff4444;
+                            font-size: 13px;
+                            font-weight: bold;
+                        }
+                    """)
+                else:
+                    self.mp_compare_label.setText("양호")
+                    self.mp_compare_label.setStyleSheet("""
+                        QLabel {
+                            color: #44bb44;
+                            font-size: 13px;
+                            font-weight: bold;
+                        }
+                    """)
+                
+                # 프로그레스바 업데이트
+                self.mp_progress.setValue(int(ratio))
                 
         except Exception as e:
-            print(f"이미지 업데이트 중 오류 발생 ({type_}): {str(e)}")
+            print(f"게이지 정보 업데이트 중 오류 발생: {str(e)}")
+            import traceback
+            traceback.print_exc()
+
+    def _update_capture_image(self, type_, image):
+        """캡처된 이미지 업데이트"""
+        try:
+            # QPixmap을 해당하는 라벨에 표시
+            if type_ == 'hp':
+                self.hp_capture_label.setPixmap(image)
+            else:  # mp
+                self.mp_capture_label.setPixmap(image)
+                
+        except Exception as e:
+            print(f"캡처 이미지 업데이트 중 오류 발생: {str(e)}")
             import traceback
             traceback.print_exc()

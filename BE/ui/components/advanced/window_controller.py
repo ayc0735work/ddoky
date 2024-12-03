@@ -15,12 +15,27 @@ class WindowController:
         self.shell = win32com.client.Dispatch("WScript.Shell")
         
         # 디버그용 디렉토리 설정
-        self.debug_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 
-                                    'captures', 'Real_time_Capture')
+        current_dir = os.path.dirname(os.path.abspath(__file__))  # BE/ui/components/advanced
+        be_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(current_dir))))  # BE
+        self.debug_dir = os.path.join(be_dir, 'BE', 'captures', 'Real_time_Capture')
         
         # 디버그 디렉토리 생성
-        if not os.path.exists(self.debug_dir):
-            os.makedirs(self.debug_dir)
+        try:
+            if not os.path.exists(self.debug_dir):
+                os.makedirs(self.debug_dir)
+                
+            # 디버그 출력 추가
+            print(f"WindowController: 현재 디렉토리 = {current_dir}")
+            print(f"WindowController: BE 디렉토리 = {be_dir}")
+            print(f"WindowController: 디버그 이미지 저장 경로 = {self.debug_dir}")
+            print(f"WindowController: 디렉토리 존재 여부 = {os.path.exists(self.debug_dir)}")
+            print(f"WindowController: 디렉토리 쓰기 권한 = {os.access(self.debug_dir, os.W_OK)}")
+            print(f"WindowController: 디렉토리 절대 경로 = {os.path.abspath(self.debug_dir)}")
+        except Exception as e:
+            print(f"WindowController: 디렉토리 생성 중 오류 발생 - {str(e)}")
+            import traceback
+            traceback.print_exc()
+            self.debug_dir = None
             
         print(f"WindowController: 디버그 이미지 저장 경로 = {self.debug_dir}")
         print(f"WindowController: 디렉토리 존재 여부 = {os.path.exists(self.debug_dir)}")
@@ -156,16 +171,79 @@ class WindowController:
             screenshot = ImageGrab.grab(bbox=(abs_x, abs_y, abs_x + scaled_width, abs_y + scaled_height))
             img_array = np.array(screenshot)
             
-            # 디버그용 이미지 저장
-            if gauge_type:
-                debug_path = os.path.join(self.debug_dir, f'debug_{gauge_type}.png')
-            else:
-                debug_path = os.path.join(self.debug_dir, f'capture_{x}_{y}.png')
+            # 이미지 저장
+            try:
+                # BGR로 변환하여 저장
+                bgr_image = cv2.cvtColor(img_array, cv2.COLOR_RGB2BGR)
                 
-            cv2.imwrite(debug_path, cv2.cvtColor(img_array, cv2.COLOR_RGB2BGR))
-            print(f"캡처 이미지 저장됨: {debug_path}")
+                # 이미지 데이터 유효성 검사
+                if bgr_image is None or bgr_image.size == 0:
+                    print("WindowController: 이미지 데이터가 유효하지 않음")
+                    return None
+
+                try:
+                    # BE/captures/Real_time_Capture 경로 계산 (한글 경로 피하기)
+                    current_dir = os.path.dirname(os.path.abspath(__file__))
+                    be_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(current_dir))))
+                    capture_dir = os.path.join(be_dir, 'BE', 'captures', 'Real_time_Capture')
+                    
+                    # 디렉토리가 없으면 생성
+                    if not os.path.exists(capture_dir):
+                        os.makedirs(capture_dir)
+                    
+                    # 파일명 설정
+                    if gauge_type:
+                        filename = f'capture_{gauge_type}.png'
+                    else:
+                        filename = f'capture_{x}_{y}.png'
+                    
+                    # 전체 경로
+                    save_path = os.path.join(capture_dir, filename)
+                    
+                    print(f"WindowController: 이미지 저장 시도")
+                    print(f"  - 이미지 정보:")
+                    print(f"    - 데이터 타입: {bgr_image.dtype}")
+                    print(f"    - 최소값: {bgr_image.min()}")
+                    print(f"    - 최대값: {bgr_image.max()}")
+                    print(f"    - 평균값: {bgr_image.mean()}")
+                    print(f"  - 저장 경로: {save_path}")
+                    print(f"  - 원본 이미지 크기: {img_array.shape}")
+                    print(f"  - 저장할 이미지 크기: {bgr_image.shape}")
+                    
+                    # PIL을 사용하여 이미지 저장 시도
+                    try:
+                        from PIL import Image
+                        pil_image = Image.fromarray(cv2.cvtColor(bgr_image, cv2.COLOR_BGR2RGB))
+                        # 회전 없이 원본 그대로 저장
+                        pil_image.save(save_path)
+                        success = True
+                    except Exception as e:
+                        print(f"PIL 저장 실패: {str(e)}")
+                        # OpenCV로 저장 시도 - 회전 없이 원본 그대로 저장
+                        success = cv2.imwrite(str(save_path), bgr_image)
+                    
+                    print(f"  - 파일 저장 성공: {success}")
+                    print(f"  - 파일 존재 여부: {os.path.exists(save_path)}")
+                    if os.path.exists(save_path):
+                        print(f"  - 파일 크기: {os.path.getsize(save_path)} bytes")
+                        
+                    if not success:
+                        print("  - 저장 실패 원인 확인:")
+                        print(f"    - 디렉토리 존재: {os.path.exists(os.path.dirname(save_path))}")
+                        print(f"    - 디렉토리 쓰기 권한: {os.access(os.path.dirname(save_path), os.W_OK)}")
+                        print(f"    - 전체 경로: {os.path.abspath(save_path)}")
+                        
+                except Exception as e:
+                    print(f"WindowController: 이미지 저장 중 오류 발생 - {str(e)}")
+                    import traceback
+                    traceback.print_exc()
+                    success = False
+            except Exception as e:
+                print(f"WindowController: 이미지 저장 중 오류 발생 - {str(e)}")
+                import traceback
+                traceback.print_exc()
             
-            return img_array
+            return img_array if success else None
             
         except Exception as e:
             print(f"이미지 캡처 중 오류: {e}")

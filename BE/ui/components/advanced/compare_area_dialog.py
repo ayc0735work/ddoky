@@ -310,7 +310,7 @@ class CompareAreaDialog(QDialog):
 
     def _connect_signals(self):
         """시그널 연결"""
-        # 프로세스 관련 버튼
+        # 프로세스 관련 버
         self.process_select_btn.clicked.connect(self._select_process)
         self.process_reset_btn.clicked.connect(self._reset_process)
         
@@ -632,9 +632,8 @@ class CompareAreaDialog(QDialog):
                 # 이미지 파일 로드
                 image_file = gauge_info.get('image_file', '')
                 if image_file:
-                    # 경로 정규화 - captures가 포함된 모든 부분 제거
-                    image_file = os.path.basename(image_file)
-                    image_path = os.path.normpath(os.path.join(self.base_path, 'captures', image_file))
+                    # 경로 정규화
+                    image_path = os.path.normpath(os.path.join(self.base_path, image_file))
                     
                     if os.path.exists(image_path):
                         # QPixmap으로 이미지 로드
@@ -656,9 +655,9 @@ class CompareAreaDialog(QDialog):
         """캡처 이미지 저장"""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"capture_{gauge_type}.png"
-        filepath = os.path.normpath(os.path.join(self.captures_dir, filename))
+        filepath = os.path.normpath(os.path.join(self.base_path, 'captures', 'capture_setting_img', filename))
         
-        # captures 디렉토리가 없으면 생성
+        # capture_setting_img 디렉토리가 없으면 생성
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
         
         try:
@@ -674,7 +673,7 @@ class CompareAreaDialog(QDialog):
             return None, None
         
         # settings.json에 저장될 상대 경로
-        relative_path = os.path.join('captures', filename)
+        relative_path = os.path.join('captures', 'capture_setting_img', filename)
         return relative_path, timestamp
 
     def _select_process(self):
