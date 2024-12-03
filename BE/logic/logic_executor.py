@@ -518,19 +518,19 @@ class LogicExecutor(QObject):
         # 메시지 스타일 적용
         if "[오류]" in message:
             # 오류 메시지 - 어두운 빨간색
-            formatted_message = f"{time_info} <span style='color: #8B0000; font-size: 12px;'>{message}</span>"
+            formatted_message = f"<span style='color: #8B0000; font-size: 12px;'>{time_info}</span> <span style='color: #8B0000; font-size: 12px;'>{message}</span>"
         
         elif "ESC 키 감지" in message or "강제 중지" in message:
-            formatted_message = f"{time_info} <span style='color: #FFA500; font-size: 18px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #FFA500; font-size: 18px; font-weight: bold;'>{time_info}</span> <span style='color: #FFA500; font-size: 18px; font-weight: bold;'>{message}</span>"
         
         elif "중첩로직" in message:
-            formatted_message = f"{time_info} <span style='color: #008000; font-size: 18px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #008000; font-size: 18px; font-weight: bold;'>{time_info}</span> <span style='color: #008000; font-size: 18px; font-weight: bold;'>{message}</span>"
         
         elif "로직" in message and ("실행 시작" in message or "반복 완료" in message):
-            formatted_message = f"{time_info} <span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{time_info}</span> <span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{message}</span>"
         else:
             # 기본 메시지 - 기본 스타일
-            formatted_message = f"{time_info} {message}"
+            formatted_message = f"<span style='color: #666666;'>{time_info}</span> {message}"
             
         self.log_message.emit(formatted_message)
 
