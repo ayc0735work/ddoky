@@ -90,7 +90,7 @@ class LogicMakerWidget(QFrame):
         """키가 선택되었을 때"""
         # 로그 메시지 생성
         log_msg = (
-            f"키 입력이 추가되었습니다 [ "
+            f"키 입력이 추가되습니다 [ "
             f"키: {key_info['key_code']}, "
             f"스캔 코드 (하드웨어 고유값): {key_info['scan_code']}, "
             f"확장 가상 키 (운영체제 레벨의 고유 값): {key_info['virtual_key']}, "
@@ -146,10 +146,10 @@ class LogicMakerWidget(QFrame):
         dialog = QInputDialog(self)
         dialog.setWindowTitle("지연시간")
         dialog.setLabelText("지연시간(초):")
-        dialog.setDoubleDecimals(3)  # 소수점 3자리까지 표시 (0.001초 단위)
+        dialog.setDoubleDecimals(4)  # 소수점 4자리까지 표시 (0.0001초 단위)
         dialog.setDoubleValue(0.01)  # 기본값 0.01초
-        dialog.setDoubleRange(0.001, 100.0)  # 0.001초 ~ 100초
-        dialog.setDoubleStep(0.001)  # 증가/감소 단위
+        dialog.setDoubleRange(0.0001, 10000.0)  # 0.0001초 ~ 10000초
+        dialog.setDoubleStep(0.0001)  # 증가/감소 단위
         
         # 버튼 텍스트 변경
         dialog.setOkButtonText("지연시간 저장")
@@ -157,9 +157,9 @@ class LogicMakerWidget(QFrame):
         
         if dialog.exec():
             delay = dialog.doubleValue()
-            delay_text = f"지연시간 : {delay:.3f}초"
+            delay_text = f"지연시간 : {delay:.4f}초"
             self.delay_input.emit(delay_text)
-            self.log_message.emit(f"지연시간 {delay:.3f}초가 추가되었습니다")
+            self.log_message.emit(f"지연시간 {delay:.4f}초가 추가되었습니다")
             
     def _toggle_record_mode(self, checked):
         """기록 모드 토글"""

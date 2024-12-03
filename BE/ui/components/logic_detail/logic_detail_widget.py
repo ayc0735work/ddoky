@@ -896,10 +896,10 @@ class LogicDetailWidget(QFrame):
                     dialog = QInputDialog(self)
                     dialog.setWindowTitle("지연시간 수정")
                     dialog.setLabelText("지연시간(초):")
-                    dialog.setDoubleDecimals(3)  # 소수점 3자리까지 표시 (0.001초 단위)
+                    dialog.setDoubleDecimals(4)  # 소수점 4자리까지 표시 (0.0001초 단위)
                     dialog.setDoubleValue(current_delay)  # 현재 지연시간을 기본값으로 설정
-                    dialog.setDoubleRange(0.001, 100.0)  # 0.001초 ~ 100초
-                    dialog.setDoubleStep(0.001)  # 증가/감소 단위
+                    dialog.setDoubleRange(0.0001, 10000.0)  # 0.0001초 ~ 10000초
+                    dialog.setDoubleStep(0.0001)  # 증가/감소 단위
                     
                     # 버튼 텍스트 변경
                     dialog.setOkButtonText("지연시간 저장")
@@ -907,14 +907,14 @@ class LogicDetailWidget(QFrame):
                     
                     if dialog.exec():
                         delay = dialog.doubleValue()
-                        delay_text = f"지연시간 : {delay:.3f}초"
+                        delay_text = f"지연시간 : {delay:.4f}초"
                         current_item.setText(delay_text)
                         # 순서 값과 content 유지
                         current_data = current_item.data(Qt.UserRole) or {}
                         current_data['content'] = delay_text  # content 필드 업데이트
                         current_item.setData(Qt.UserRole, current_data)
                         self.item_edited.emit(delay_text)
-                        self.log_message.emit(f"지연시간이 {delay:.3f}초로 수정되었습니다")
+                        self.log_message.emit(f"지연시간이 {delay:.4f}초로 수정되었습니다")
                 except ValueError:
                     self.log_message.emit("지연시간 형식이 올바르지 않습니다")
             # 키 입 아이템인 경우

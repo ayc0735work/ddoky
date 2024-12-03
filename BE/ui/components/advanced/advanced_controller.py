@@ -16,7 +16,7 @@ class AdvancedController(QObject):
         
         # 모니터링 타이머 설정
         self.monitor_timer = QTimer()
-        self.monitor_timer.setInterval(500000)
+        self.monitor_timer.setInterval(5000000)
         self.monitor_timer.timeout.connect(self.gauge_monitor.capture_and_analyze)
         
         # 게이지 분석 결과 시그널 연결
