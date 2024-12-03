@@ -117,16 +117,18 @@ class GaugeMonitor(QObject):
                 print(f"{type_} 이미지가 None입니다.")
                 return
             
+            # 이미지를 RGB로 변환
+            rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            
             # 이미지 저장
             save_dir = "BE/captures/Real_time_Capture"
             os.makedirs(save_dir, exist_ok=True)
             save_path = os.path.join(save_dir, f"capture_{type_}.png")
-            cv2.imwrite(save_path, image)
+            cv2.imwrite(save_path, image)  # 원본 BGR 이미지 저장
             
             # QPixmap 생성
-            height, width = image.shape[:2]
+            height, width = rgb_image.shape[:2]
             bytes_per_line = 3 * width
-            rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             rgb_image = np.ascontiguousarray(rgb_image)
             q_img = QImage(rgb_image.data, width, height, bytes_per_line, QImage.Format_RGB888)
             pixmap = QPixmap.fromImage(q_img)
@@ -136,8 +138,8 @@ class GaugeMonitor(QObject):
             if width > max_size or height > max_size:
                 pixmap = pixmap.scaled(max_size, max_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
             
-            # 게이지 비율 계산
-            ratio = self._analyze_gauge(image, type_)
+            # 게이지 비율 계산 (RGB 이미지 사용)
+            ratio = self._analyze_gauge(rgb_image, type_)
             
             # UI 업데이트
             if type_ == 'hp':
@@ -175,60 +177,68 @@ class GaugeMonitor(QObject):
             middle_pixels = image[middle_row]
             print(f"중앙 행 ({middle_row}) RGB 값 샘플:")
             for i in range(0, min(width, 5)):  # 처음 5개 픽셀만 출력
-                b, g, r = middle_pixels[i]
+                r, g, b = middle_pixels[i]
                 print(f"픽셀 {i}: R={r}, G={g}, B={b}")
 
-            # BGR 이미지를 분석
+            # RGB 이미지를 분석
             mask = np.zeros((height, width), dtype=np.uint8)
             
             if gauge_type == 'hp':
                 # HP 게이지 색상 범위 (붉은 계열)
-                # BGR 순서로 변경 (원래 RGB: 5f1300, 8b1f00, b72f00, e74300, ff4f00)
+                # RGB HEX: 5f1300, 8b1f00, b72f00, e74300, ff4f00
                 hp_colors = [
-                    (0x00, 0x13, 0x5f),  # BGR: 00135f (RGB: 5f1300)
-                    (0x00, 0x1f, 0x8b),  # BGR: 001f8b (RGB: 8b1f00)
-                    (0x00, 0x2f, 0xb7),  # BGR: 002fb7 (RGB: b72f00)
-                    (0x00, 0x43, 0xe7),  # BGR: 0043e7 (RGB: e74300)
-                    (0x00, 0x4f, 0xff),  # BGR: 004fff (RGB: ff4f00)
+                    (0x5f, 0x13, 0x00),  # 5f1300 (RGB)
+                    (0x8b, 0x1f, 0x00),  # 8b1f00
+                    (0xb7, 0x2f, 0x00),  # b72f00
+                    (0xe7, 0x43, 0x00),  # e74300
+                    (0xff, 0x4f, 0x00),  # ff4f00
                 ]
                 
-                for b, g, r in hp_colors:
-                    # 각 색상에 대해 허용 오차를 적용 (오차 범위 확대)
+                for r, g, b in hp_colors:
+                    # RGB 이미지의 각 채널과 비교
                     color_mask = (
-                        (image[..., 0] >= max(0, b - 20)) & (image[..., 0] <= min(255, b + 20)) &  # Blue
-                        (image[..., 1] >= max(0, g - 20)) & (image[..., 1] <= min(255, g + 20)) &  # Green
-                        (image[..., 2] >= max(0, r - 20)) & (image[..., 2] <= min(255, r + 20))    # Red
+                        (image[..., 0] >= max(0, r - 40)) & (image[..., 0] <= min(255, r + 40)) &  # Red
+                        (image[..., 1] >= max(0, g - 40)) & (image[..., 1] <= min(255, g + 40)) &  # Green
+                        (image[..., 2] >= max(0, b - 40)) & (image[..., 2] <= min(255, b + 40))    # Blue
                     )
                     mask = mask | color_mask
+                    
+                    # 디버그: 각 색상에 대한 매칭 픽셀 수 출력
+                    matching_pixels = np.sum(color_mask)
+                    print(f"HP 색상 (R={r:02x}, G={g:02x}, B={b:02x}) 매칭 픽셀: {matching_pixels}")
             else:
                 # MP 게이지 색상 범위 (파란 계열)
-                # BGR 순서로 변경 (원래 RGB: 17235f, 33437f, 53679b, 7b93bb, abbfd7)
+                # RGB HEX: 17235f, 33437f, 53679b, 7b93bb, abbfd7
                 mp_colors = [
-                    (0x5f, 0x23, 0x17),  # BGR: 5f2317 (RGB: 17235f)
-                    (0x7f, 0x43, 0x33),  # BGR: 7f4333 (RGB: 33437f)
-                    (0x9b, 0x67, 0x53),  # BGR: 9b6753 (RGB: 53679b)
-                    (0xbb, 0x93, 0x7b),  # BGR: bb937b (RGB: 7b93bb)
-                    (0xd7, 0xbf, 0xab),  # BGR: d7bfab (RGB: abbfd7)
+                    (0x17, 0x23, 0x5f),  # 17235f (RGB)
+                    (0x33, 0x43, 0x7f),  # 33437f
+                    (0x53, 0x67, 0x9b),  # 53679b
+                    (0x7b, 0x93, 0xbb),  # 7b93bb
+                    (0xab, 0xbf, 0xd7),  # abbfd7
                 ]
                 
-                for b, g, r in mp_colors:
-                    # 각 색상에 대해 허용 오차를 적용 (오차 범위 확대)
+                for r, g, b in mp_colors:
+                    # RGB 이미지의 각 채널과 비교
                     color_mask = (
-                        (image[..., 0] >= max(0, b - 20)) & (image[..., 0] <= min(255, b + 20)) &  # Blue
-                        (image[..., 1] >= max(0, g - 20)) & (image[..., 1] <= min(255, g + 20)) &  # Green
-                        (image[..., 2] >= max(0, r - 20)) & (image[..., 2] <= min(255, r + 20))    # Red
+                        (image[..., 0] >= max(0, r - 40)) & (image[..., 0] <= min(255, r + 40)) &  # Red
+                        (image[..., 1] >= max(0, g - 40)) & (image[..., 1] <= min(255, g + 40)) &  # Green
+                        (image[..., 2] >= max(0, b - 40)) & (image[..., 2] <= min(255, b + 40))    # Blue
                     )
                     mask = mask | color_mask
+                    
+                    # 디버그: 각 색상에 대한 매칭 픽셀 수 출력
+                    matching_pixels = np.sum(color_mask)
+                    print(f"MP 색상 (R={r:02x}, G={g:02x}, B={b:02x}) 매칭 픽셀: {matching_pixels}")
 
             # 각 열에서 색상이 있는 픽셀 수 계산
             col_sums = np.sum(mask, axis=0)
             
-            # 임계값 설정 (높이의 20%로 낮춤)
-            threshold = height * 0.02
+            # 임계값 설정 (높이의 10%로 낮춤)
+            threshold = height * 0.1
             
             print(f"\n열별 색상 픽셀 수:")
             for i in range(0, width, 10):  # 10픽셀 간격으로 출력
-                print(f"열 {i}: {col_sums[i]} (threshold: {threshold})")
+                print(f"열 {i}: {col_sums[i]} (threshold: {threshold:.2f})")
             
             # 게이지가 있는 마지막 열 찾기 (왼쪽에서 오른쪽으로)
             last_gauge_col = -1
