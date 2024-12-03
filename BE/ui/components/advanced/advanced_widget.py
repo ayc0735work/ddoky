@@ -12,7 +12,7 @@ from ...constants.dimensions import (ADVANCED_FRAME_WIDTH, ADVANCED_SECTION_HEIG
                                    DEFAULT_RECOVERY_THRESHOLD, MIDDLE_SPACE)
 from BE.ui.components.logic_maker.logic_selector_dialog import LogicSelectorDialog
 from .compare_area_dialog import CompareAreaDialog
-from ...data.settings_manager import SettingsManager
+from BE.settings.settings import Settings
 from .gauge_monitor import GaugeMonitor
 
 class CustomSpinBox(QSpinBox):
@@ -369,7 +369,7 @@ class AdvancedWidget(QWidget):
         """)
         self.mp_spinbox = CustomSpinBox()
         
-        # 실시간 캡처 이미지 영역
+        # 실시간 캡 이미지 영역
         mp_capture_frame = QFrame()
         mp_capture_frame.setStyleSheet("""
             QFrame {
@@ -484,6 +484,11 @@ class AdvancedWidget(QWidget):
         common_logic_info_layout.addLayout(common_logic_header)
         common_logic_info_layout.addLayout(common_button_layout)
         
+        # 회복 감지 동작 체크박스 추가
+        self.recovery_detection_checkbox = QCheckBox("회복 감지 동작", self)
+        self.recovery_detection_checkbox.setChecked(False)
+        self.recovery_detection_checkbox.stateChanged.connect(self.on_recovery_detection_changed)
+        
         # 메인 레이아웃 구성
         main_layout = QVBoxLayout(recovery_frame)
         main_layout.setSpacing(8)
@@ -492,6 +497,7 @@ class AdvancedWidget(QWidget):
         main_layout.addLayout(hp_content_layout)
         main_layout.addLayout(mp_content_layout)
         main_layout.addLayout(common_logic_info_layout)
+        main_layout.addWidget(self.recovery_detection_checkbox)
         
         # 최종 레이아웃 구성
         layout = QVBoxLayout(self)
@@ -701,3 +707,8 @@ class AdvancedWidget(QWidget):
             print(f"캡처 이미지 업데이트 중 오류 발생: {str(e)}")
             import traceback
             traceback.print_exc()
+
+    def on_recovery_detection_changed(self, state):
+        enabled = state == Qt.Checked
+        settings = Settings()
+        settings.set("recovery_detection_enabled", enabled)

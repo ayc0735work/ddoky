@@ -46,10 +46,7 @@
     "advanced_settings": {
         "hp_threshold": 25,
         "mp_threshold": 21,
-        "hp_logic": {
-            "uuid": "0dfa1418-cab1-4439-ae8a-b0c971471c99",
-            "enabled": true
-        },
+        "hp_logic": null,
         "mp_logic": null,
         "common_logic": null
     },
@@ -58,7 +55,7 @@
             "order": 1,
             "name": "체력 회복 - 5회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-02T02:03:00.967941",
+            "updated_at": "2024-12-03T20:37:39.341261",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 /",
@@ -212,7 +209,7 @@
             "order": 3,
             "name": "보호 무장 힘",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-12-02T06:50:04.572160",
+            "updated_at": "2024-12-03T20:38:40.573215",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 .",
@@ -649,9 +646,9 @@
         },
         "ba00b4b7-4268-4138-a424-d1e9353d7743": {
             "order": 6,
-            "name": "공력증강 - 6회",
+            "name": "공력증강 - 4회",
             "created_at": "2024-11-30T16:57:51.034740",
-            "updated_at": "2024-12-02T06:50:05.341008",
+            "updated_at": "2024-12-03T20:37:39.362090",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "",
@@ -659,7 +656,7 @@
                 "scan_code": 0,
                 "virtual_key": 0
             },
-            "repeat_count": 6,
+            "repeat_count": 4,
             "is_nested": true,
             "items": [
                 {
@@ -716,7 +713,7 @@
             "order": 7,
             "name": "동동주 마시기 - 1회",
             "created_at": "2024-11-30T07:08:49.271692",
-            "updated_at": "2024-12-02T02:03:00.968938",
+            "updated_at": "2024-12-03T20:37:39.350165",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "",
@@ -791,7 +788,7 @@
             "order": 8,
             "name": "자사 - 중독, 저주, 마비 종합 공격",
             "created_at": "2024-12-01T20:20:37.139725",
-            "updated_at": "2024-12-02T06:50:05.371529",
+            "updated_at": "2024-12-03T20:38:40.675797",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 *",
@@ -813,129 +810,129 @@
                 {
                     "order": 2,
                     "type": "logic",
-                    "display_text": "중독만 - 17회",
+                    "display_text": "중독만 - 20회",
                     "logic_id": "ff47c224-b8e1-4a88-bf03-20850f87e232",
-                    "logic_name": "중독만 - 17회",
+                    "logic_name": "중독만 - 20회",
                     "repeat_count": 1
                 },
                 {
                     "order": 3,
                     "type": "logic",
-                    "display_text": "마비만 - 14회",
-                    "logic_id": "59070f24-4d2d-4c54-8100-f104e4645d06",
-                    "logic_name": "마비만 - 14회",
+                    "display_text": "공력증강 - 4회",
+                    "logic_id": "c8696bd3-1508-478f-b4cf-c3c03cb974ab",
+                    "logic_name": "공력증강 - 4회",
                     "repeat_count": 1
                 },
                 {
                     "order": 4,
                     "type": "logic",
-                    "display_text": "공력증강 - 6회",
-                    "logic_id": "ba00b4b7-4268-4138-a424-d1e9353d7743",
-                    "logic_name": "공력증강 - 6회",
+                    "display_text": "마비만 - 20회",
+                    "logic_id": "59070f24-4d2d-4c54-8100-f104e4645d06",
+                    "logic_name": "마비만 - 20회",
                     "repeat_count": 1
                 },
                 {
                     "order": 5,
                     "type": "logic",
-                    "display_text": "저주만 - 15회",
-                    "logic_id": "753fe62f-775d-4518-9a11-5b0810605183",
-                    "logic_name": "저주만 - 15회",
+                    "display_text": "공력증강 - 4회",
+                    "logic_id": "b316cf19-f81c-4a29-83a1-df3593627125",
+                    "logic_name": "공력증강 - 4회",
                     "repeat_count": 1
                 },
                 {
                     "order": 6,
                     "type": "logic",
-                    "display_text": "중독만 - 17회",
+                    "display_text": "중독만 - 20회",
                     "logic_id": "ff47c224-b8e1-4a88-bf03-20850f87e232",
-                    "logic_name": "중독만 - 17회",
+                    "logic_name": "중독만 - 20회",
                     "repeat_count": 1
                 },
                 {
                     "order": 7,
                     "type": "logic",
-                    "display_text": "공력증강 - 6회",
-                    "logic_id": "ba00b4b7-4268-4138-a424-d1e9353d7743",
-                    "logic_name": "공력증강 - 6회",
+                    "display_text": "공력증강 - 4회",
+                    "logic_id": "4b0d98ef-9c7c-4acb-9f47-86781f862e58",
+                    "logic_name": "공력증강 - 4회",
                     "repeat_count": 1
                 },
                 {
                     "order": 8,
                     "type": "logic",
-                    "display_text": "중독, 첨 - 1회",
-                    "logic_id": "5e7f8b90-c0e2-4583-83c8-492013f0ac52",
-                    "logic_name": "중독, 첨 - 1회",
+                    "display_text": "저주만 - 20회",
+                    "logic_id": "753fe62f-775d-4518-9a11-5b0810605183",
+                    "logic_name": "저주만 - 20회",
                     "repeat_count": 1
                 },
                 {
                     "order": 9,
                     "type": "logic",
-                    "display_text": "공력증강 - 6회",
-                    "logic_id": "ba00b4b7-4268-4138-a424-d1e9353d7743",
-                    "logic_name": "공력증강 - 6회",
+                    "display_text": "공력증강 - 4회",
+                    "logic_id": "af1e3db7-8551-429d-a062-d3a91da2962e",
+                    "logic_name": "공력증강 - 4회",
                     "repeat_count": 1
                 },
                 {
                     "order": 10,
                     "type": "logic",
-                    "display_text": "중독, 첨 - 1회",
-                    "logic_id": "5e7f8b90-c0e2-4583-83c8-492013f0ac52",
-                    "logic_name": "중독, 첨 - 1회",
+                    "display_text": "중독만 - 20회",
+                    "logic_id": "ff47c224-b8e1-4a88-bf03-20850f87e232",
+                    "logic_name": "중독만 - 20회",
                     "repeat_count": 1
                 },
                 {
                     "order": 11,
                     "type": "logic",
-                    "display_text": "공력증강 - 6회",
-                    "logic_id": "ba00b4b7-4268-4138-a424-d1e9353d7743",
-                    "logic_name": "공력증강 - 6회",
+                    "display_text": "공력증강 - 4회",
+                    "logic_id": "9f267a1c-96a9-432e-9f84-a76f15f12eb5",
+                    "logic_name": "공력증강 - 4회",
                     "repeat_count": 1
                 },
                 {
                     "order": 12,
                     "type": "logic",
-                    "display_text": "중독, 첨 - 1회",
-                    "logic_id": "5e7f8b90-c0e2-4583-83c8-492013f0ac52",
-                    "logic_name": "중독, 첨 - 1회",
+                    "display_text": "마비만 - 20회",
+                    "logic_id": "59070f24-4d2d-4c54-8100-f104e4645d06",
+                    "logic_name": "마비만 - 20회",
                     "repeat_count": 1
                 },
                 {
                     "order": 13,
                     "type": "logic",
-                    "display_text": "공력증강 - 6회",
-                    "logic_id": "ba00b4b7-4268-4138-a424-d1e9353d7743",
-                    "logic_name": "공력증강 - 6회",
+                    "display_text": "공력증강 - 4회",
+                    "logic_id": "31f49fb6-55d0-4085-928a-01d78d84036b",
+                    "logic_name": "공력증강 - 4회",
                     "repeat_count": 1
                 },
                 {
                     "order": 14,
                     "type": "logic",
-                    "display_text": "중독, 첨 - 1회",
-                    "logic_id": "5e7f8b90-c0e2-4583-83c8-492013f0ac52",
-                    "logic_name": "중독, 첨 - 1회",
+                    "display_text": "중독만 - 20회",
+                    "logic_id": "ff47c224-b8e1-4a88-bf03-20850f87e232",
+                    "logic_name": "중독만 - 20회",
                     "repeat_count": 1
                 },
                 {
                     "order": 15,
                     "type": "logic",
-                    "display_text": "공력증강 - 6회",
-                    "logic_id": "ba00b4b7-4268-4138-a424-d1e9353d7743",
-                    "logic_name": "공력증강 - 6회",
+                    "display_text": "공력증강 - 4회",
+                    "logic_id": "7e0375a8-1bec-4fb1-b3bf-6aae7b0b790d",
+                    "logic_name": "공력증강 - 4회",
                     "repeat_count": 1
                 },
                 {
                     "order": 16,
                     "type": "logic",
-                    "display_text": "중독, 첨 - 1회",
-                    "logic_id": "5e7f8b90-c0e2-4583-83c8-492013f0ac52",
-                    "logic_name": "중독, 첨 - 1회",
+                    "display_text": "중독만 - 20회",
+                    "logic_id": "ff47c224-b8e1-4a88-bf03-20850f87e232",
+                    "logic_name": "중독만 - 20회",
                     "repeat_count": 1
                 },
                 {
                     "order": 17,
                     "type": "logic",
-                    "display_text": "공력증강 - 6회",
-                    "logic_id": "ba00b4b7-4268-4138-a424-d1e9353d7743",
-                    "logic_name": "공력증강 - 6회",
+                    "display_text": "공력증강 - 4회",
+                    "logic_id": "093d29f0-9390-4876-95be-45eefd06f505",
+                    "logic_name": "공력증강 - 4회",
                     "repeat_count": 1
                 },
                 {
@@ -949,9 +946,89 @@
                 {
                     "order": 19,
                     "type": "logic",
-                    "display_text": "공력증강 - 6회",
-                    "logic_id": "ba00b4b7-4268-4138-a424-d1e9353d7743",
-                    "logic_name": "공력증강 - 6회",
+                    "display_text": "공력증강 - 4회",
+                    "logic_id": "900b9e8b-002c-4174-8ce6-6bd8db4b7fdc",
+                    "logic_name": "공력증강 - 4회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 20,
+                    "type": "logic",
+                    "display_text": "중독, 첨 - 1회",
+                    "logic_id": "5e7f8b90-c0e2-4583-83c8-492013f0ac52",
+                    "logic_name": "중독, 첨 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 21,
+                    "type": "logic",
+                    "display_text": "공력증강 - 4회",
+                    "logic_id": "ef78ed44-01ef-4930-bd5e-d3136322a7c1",
+                    "logic_name": "공력증강 - 4회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 22,
+                    "type": "logic",
+                    "display_text": "중독, 첨 - 1회",
+                    "logic_id": "5e7f8b90-c0e2-4583-83c8-492013f0ac52",
+                    "logic_name": "중독, 첨 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 23,
+                    "type": "logic",
+                    "display_text": "공력증강 - 4회",
+                    "logic_id": "1e7bad46-79db-489b-9f45-e0584e40921c",
+                    "logic_name": "공력증강 - 4회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 24,
+                    "type": "logic",
+                    "display_text": "중독, 첨 - 1회",
+                    "logic_id": "5e7f8b90-c0e2-4583-83c8-492013f0ac52",
+                    "logic_name": "중독, 첨 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 25,
+                    "type": "logic",
+                    "display_text": "공력증강 - 4회",
+                    "logic_id": "3256db37-a095-48c8-877d-af8381fc1e0e",
+                    "logic_name": "공력증강 - 4회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 26,
+                    "type": "logic",
+                    "display_text": "중독, 첨 - 1회",
+                    "logic_id": "5e7f8b90-c0e2-4583-83c8-492013f0ac52",
+                    "logic_name": "중독, 첨 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 27,
+                    "type": "logic",
+                    "display_text": "공력증강 - 4회",
+                    "logic_id": "34955bc2-d014-4045-bfa0-0ef720253115",
+                    "logic_name": "공력증강 - 4회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 28,
+                    "type": "logic",
+                    "display_text": "중독, 첨 - 1회",
+                    "logic_id": "5e7f8b90-c0e2-4583-83c8-492013f0ac52",
+                    "logic_name": "중독, 첨 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 29,
+                    "type": "logic",
+                    "display_text": "공력증강 - 4회",
+                    "logic_id": "5f349e18-610e-4cf0-af1b-6134875ea726",
+                    "logic_name": "공력증강 - 4회",
                     "repeat_count": 1
                 }
             ]
@@ -1392,7 +1469,7 @@
             "order": 14,
             "name": "중독, 첨 - 1회",
             "created_at": "2024-12-01T21:23:19.617646",
-            "updated_at": "2024-12-02T02:30:52.848402",
+            "updated_at": "2024-12-03T20:38:40.661564",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "",
@@ -1509,9 +1586,9 @@
         },
         "ff47c224-b8e1-4a88-bf03-20850f87e232": {
             "order": 15,
-            "name": "중독만 - 17회",
+            "name": "중독만 - 20회",
             "created_at": "2024-11-30T14:19:30.464189",
-            "updated_at": "2024-12-02T06:50:05.130988",
+            "updated_at": "2024-12-03T20:38:54.886489",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "키 코드 25",
@@ -1519,7 +1596,7 @@
                 "scan_code": 29,
                 "virtual_key": 25
             },
-            "repeat_count": 17,
+            "repeat_count": 20,
             "is_nested": false,
             "items": [
                 {
@@ -1699,9 +1776,9 @@
         },
         "39e67926-aab9-4b61-bd2f-19797480f4bf": {
             "order": 17,
-            "name": "절망만 - 15회",
+            "name": "절망만 - 20회",
             "created_at": "2024-12-01T02:22:23.843289",
-            "updated_at": "2024-12-02T02:03:00.968938",
+            "updated_at": "2024-12-03T20:38:58.822931",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 0",
@@ -1709,7 +1786,7 @@
                 "scan_code": 82,
                 "virtual_key": 96
             },
-            "repeat_count": 15,
+            "repeat_count": 20,
             "is_nested": false,
             "items": [
                 {
@@ -1794,9 +1871,9 @@
         },
         "753fe62f-775d-4518-9a11-5b0810605183": {
             "order": 18,
-            "name": "저주만 - 15회",
+            "name": "저주만 - 20회",
             "created_at": "2024-11-30T16:06:26.318706",
-            "updated_at": "2024-12-02T06:50:05.147993",
+            "updated_at": "2024-12-03T20:39:02.889339",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 4",
@@ -1804,7 +1881,7 @@
                 "scan_code": 75,
                 "virtual_key": 100
             },
-            "repeat_count": 15,
+            "repeat_count": 20,
             "is_nested": false,
             "items": [
                 {
@@ -1889,9 +1966,9 @@
         },
         "59070f24-4d2d-4c54-8100-f104e4645d06": {
             "order": 19,
-            "name": "마비만 - 14회",
+            "name": "마비만 - 20회",
             "created_at": "2024-11-30T14:35:32.801674",
-            "updated_at": "2024-12-02T06:50:05.097968",
+            "updated_at": "2024-12-03T20:38:46.190318",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 5",
@@ -1899,7 +1976,7 @@
                 "scan_code": 76,
                 "virtual_key": 101
             },
-            "repeat_count": 14,
+            "repeat_count": 20,
             "is_nested": false,
             "items": [
                 {
@@ -2285,28 +2362,29 @@
                 {
                     "order": 1,
                     "type": "logic",
-                    "display_text": "중독만 - 17회",
+                    "display_text": "중독만 - 20회",
                     "logic_id": "ff47c224-b8e1-4a88-bf03-20850f87e232",
-                    "logic_name": "중독만 - 17회",
+                    "logic_name": "중독만 - 20회",
                     "repeat_count": 1
                 },
                 {
                     "order": 2,
                     "type": "logic",
-                    "display_text": "저주만 - 15회",
+                    "display_text": "저주만 - 20회",
                     "logic_id": "753fe62f-775d-4518-9a11-5b0810605183",
-                    "logic_name": "저주만 - 15회",
+                    "logic_name": "저주만 - 20회",
                     "repeat_count": 1
                 },
                 {
                     "order": 3,
                     "type": "logic",
-                    "display_text": "공력증강 - 6회",
+                    "display_text": "공력증강 - 4회",
                     "logic_id": "ba00b4b7-4268-4138-a424-d1e9353d7743",
-                    "logic_name": "공력증강 - 6회",
+                    "logic_name": "공력증강 - 4회",
                     "repeat_count": 1
                 }
             ]
         }
-    }
+    },
+    "recovery_detection_enabled": false
 }

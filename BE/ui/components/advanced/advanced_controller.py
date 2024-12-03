@@ -5,6 +5,7 @@ from BE.logic.logic_executor import LogicExecutor
 import time
 import os
 import json
+from BE.settings.settings import Settings
 
 class AdvancedController(QObject):
     def __init__(self, process_manager, logic_manager, parent=None):
@@ -15,7 +16,7 @@ class AdvancedController(QObject):
         
         # 모니터링 타이머 설정
         self.monitor_timer = QTimer()
-        self.monitor_timer.setInterval(5000)
+        self.monitor_timer.setInterval(500000)
         self.monitor_timer.timeout.connect(self.gauge_monitor.capture_and_analyze)
         
         # 게이지 분석 결과 시그널 연결
@@ -96,3 +97,8 @@ class AdvancedController(QObject):
     def set_target_process(self, process_info):
         """대상 프로세스 설정"""
         self.gauge_monitor.set_target_process(process_info)
+    
+    def initialize(self):
+        settings = Settings()
+        recovery_enabled = settings.get("recovery_detection_enabled", False)
+        self.widget.recovery_detection_checkbox.setChecked(recovery_enabled)

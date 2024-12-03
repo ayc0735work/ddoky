@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+from BE.settings.settings import Settings
 
 def capture_hp_gauge(self):
     # 디버그: 캡처 전 정보 출력
@@ -97,3 +98,11 @@ def get_gauge_values(self):
     mp_ratio = self.analyze_gauge(mp_image, "mp")
     
     return hp_ratio, mp_ratio 
+
+class ScreenCapture:
+    def process_capture(self):
+        settings = Settings()
+        if not settings.get("recovery_detection_enabled"):
+            return
+            
+        # 기존의 캡처 및 분석 로직... 
