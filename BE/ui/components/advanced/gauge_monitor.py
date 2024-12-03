@@ -78,6 +78,8 @@ class GaugeMonitor(QObject):
                         'coordinates': hp_gauge.get('coordinates', {}),
                         'ratios': hp_gauge.get('ratios', {})
                     }
+                    # 비율 업데이트
+                    self.hp_ratio = self.hp_capture_area['ratios']
                     print(f"HP 캡처 영역 로드: {self.hp_capture_area}")
                 else:
                     print("HP 캡처 영역 정보가 없습니다.")
@@ -90,6 +92,8 @@ class GaugeMonitor(QObject):
                         'coordinates': mp_gauge.get('coordinates', {}),
                         'ratios': mp_gauge.get('ratios', {})
                     }
+                    # 비율 업데이트
+                    self.mp_ratio = self.mp_capture_area['ratios']
                     print(f"MP 캡처 영역 로드: {self.mp_capture_area}")
                 else:
                     print("MP 캡처 영역 정보가 없습니다.")
@@ -163,77 +167,104 @@ class GaugeMonitor(QObject):
                 print(f"{gauge_type} 게이지 분석 실패: 유효하지 않은 이미지 크기 ({width}x{height})")
                 return 0.0
 
-            # BGR 이미지를 HSV로 변환
-            hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-            height, width = hsv.shape[:2]
+            print(f"\n{gauge_type} 게이지 분석 시작:")
+            print(f"이미지 크기: {width}x{height}")
 
-            # 이미지를 위, 아래 영역으로 분할 (중간 부분 제외)
-            top_region = hsv[:height//3]  # 상단 1/3
-            bottom_region = hsv[2*height//3:]  # 하단 1/3
+            # 이미지 중앙 행의 RGB 값 출력 (디버그용)
+            middle_row = height // 2
+            middle_pixels = image[middle_row]
+            print(f"중앙 행 ({middle_row}) RGB 값 샘플:")
+            for i in range(0, min(width, 5)):  # 처음 5개 픽셀만 출력
+                b, g, r = middle_pixels[i]
+                print(f"픽셀 {i}: R={r}, G={g}, B={b}")
+
+            # BGR 이미지를 분석
+            mask = np.zeros((height, width), dtype=np.uint8)
             
-            # 게이지 타입에 따른 색상 범위 설정
             if gauge_type == 'hp':
-                # 빨간색/주황색 계열 (HP)
-                lower1 = np.array([0, 100, 100])    # 빨간색 범위 1 (0-10)
-                upper1 = np.array([10, 255, 255])
-                lower2 = np.array([170, 100, 100])  # 빨간색 범위 2 (170-180)
-                upper2 = np.array([180, 255, 255])
-            else:
-                # 파란색 계열 (MP)
-                lower = np.array([100, 100, 100])
-                upper = np.array([140, 255, 255])
-
-            # 상단과 하단 영역에 대해 마스크 생성
-            if gauge_type == 'hp':
-                # HP는 빨간색의 두 범위를 합침
-                top_mask1 = cv2.inRange(top_region, lower1, upper1)
-                top_mask2 = cv2.inRange(top_region, lower2, upper2)
-                bottom_mask1 = cv2.inRange(bottom_region, lower1, upper1)
-                bottom_mask2 = cv2.inRange(bottom_region, lower2, upper2)
+                # HP 게이지 색상 범위 (붉은 계열)
+                # BGR 순서로 변경 (원래 RGB: 5f1300, 8b1f00, b72f00, e74300, ff4f00)
+                hp_colors = [
+                    (0x00, 0x13, 0x5f),  # BGR: 00135f (RGB: 5f1300)
+                    (0x00, 0x1f, 0x8b),  # BGR: 001f8b (RGB: 8b1f00)
+                    (0x00, 0x2f, 0xb7),  # BGR: 002fb7 (RGB: b72f00)
+                    (0x00, 0x43, 0xe7),  # BGR: 0043e7 (RGB: e74300)
+                    (0x00, 0x4f, 0xff),  # BGR: 004fff (RGB: ff4f00)
+                ]
                 
-                top_mask = cv2.bitwise_or(top_mask1, top_mask2)
-                bottom_mask = cv2.bitwise_or(bottom_mask1, bottom_mask2)
+                for b, g, r in hp_colors:
+                    # 각 색상에 대해 허용 오차를 적용 (오차 범위 확대)
+                    color_mask = (
+                        (image[..., 0] >= max(0, b - 20)) & (image[..., 0] <= min(255, b + 20)) &  # Blue
+                        (image[..., 1] >= max(0, g - 20)) & (image[..., 1] <= min(255, g + 20)) &  # Green
+                        (image[..., 2] >= max(0, r - 20)) & (image[..., 2] <= min(255, r + 20))    # Red
+                    )
+                    mask = mask | color_mask
             else:
-                # MP는 단일 범위
-                top_mask = cv2.inRange(top_region, lower, upper)
-                bottom_mask = cv2.inRange(bottom_region, lower, upper)
+                # MP 게이지 색상 범위 (파란 계열)
+                # BGR 순서로 변경 (원래 RGB: 17235f, 33437f, 53679b, 7b93bb, abbfd7)
+                mp_colors = [
+                    (0x5f, 0x23, 0x17),  # BGR: 5f2317 (RGB: 17235f)
+                    (0x7f, 0x43, 0x33),  # BGR: 7f4333 (RGB: 33437f)
+                    (0x9b, 0x67, 0x53),  # BGR: 9b6753 (RGB: 53679b)
+                    (0xbb, 0x93, 0x7b),  # BGR: bb937b (RGB: 7b93bb)
+                    (0xd7, 0xbf, 0xab),  # BGR: d7bfab (RGB: abbfd7)
+                ]
+                
+                for b, g, r in mp_colors:
+                    # 각 색상에 대해 허용 오차를 적용 (오차 범위 확대)
+                    color_mask = (
+                        (image[..., 0] >= max(0, b - 20)) & (image[..., 0] <= min(255, b + 20)) &  # Blue
+                        (image[..., 1] >= max(0, g - 20)) & (image[..., 1] <= min(255, g + 20)) &  # Green
+                        (image[..., 2] >= max(0, r - 20)) & (image[..., 2] <= min(255, r + 20))    # Red
+                    )
+                    mask = mask | color_mask
 
-            # 각 열에서 색상이 있는 픽셀 수 계산 (상단과 하단 영역만)
-            top_sums = np.sum(top_mask > 0, axis=0)
-            bottom_sums = np.sum(bottom_mask > 0, axis=0)
+            # 각 열에서 색상이 있는 픽셀 수 계산
+            col_sums = np.sum(mask, axis=0)
             
-            # 각 열의 게이지 존재 여부 판단
-            top_threshold = top_region.shape[0] * 0.3  # 상단 영역 30%
-            bottom_threshold = bottom_region.shape[0] * 0.3  # 하단 영역 30%
+            # 임계값 설정 (높이의 20%로 낮춤)
+            threshold = height * 0.02
             
-            gauge_columns = (top_sums > top_threshold) | (bottom_sums > bottom_threshold)
-
-            # 게이지가 있는 마지막 열 찾기
-            last_gauge_column = -1
+            print(f"\n열별 색상 픽셀 수:")
+            for i in range(0, width, 10):  # 10픽셀 간격으로 출력
+                print(f"열 {i}: {col_sums[i]} (threshold: {threshold})")
+            
+            # 게이지가 있는 마지막 열 찾기 (왼쪽에서 오른쪽으로)
+            last_gauge_col = -1
             for i in range(width):
-                if gauge_columns[i]:
-                    last_gauge_column = i
+                if col_sums[i] > threshold:
+                    last_gauge_col = i
 
-            # 게이지 비율 계산 (가로 기준)
-            if last_gauge_column == -1:
+            # 게이지 비율 계산 (가로 기준, 왼쪽에서 오른쪽으로)
+            if last_gauge_col == -1:
                 ratio = 0.0
+                empty_cols = width
             else:
-                ratio = (last_gauge_column + 1) / width * 100
+                # 게이지가 차 있는 부분까지의 비율 계산
+                ratio = (last_gauge_col + 1) / width * 100
+                empty_cols = width - (last_gauge_col + 1)
+
+            print(f"\n분석 결과:")
+            print(f"- 마지막 게이지 열: {last_gauge_col}")
+            print(f"- 빈 열 수: {empty_cols}")
+            print(f"- 계산된 비율: {ratio:.1f}%")
 
             # 디버그용 이미지 저장
             debug_image = image.copy()
             
-            # 분석 영역 표시
-            cv2.line(debug_image, (0, height//3), (width, height//3), (0, 255, 255), 1)  # 상단 경계
-            cv2.line(debug_image, (0, 2*height//3), (width, 2*height//3), (0, 255, 255), 1)  # 하단 경계
+            # 분석된 영역 표시
+            if last_gauge_col != -1:
+                cv2.line(debug_image, (last_gauge_col, 0), (last_gauge_col, height), (0, 0, 255), 1)
             
-            if last_gauge_column != -1:
-                cv2.line(debug_image, (last_gauge_column, 0), (last_gauge_column, height), (0, 0, 255), 1)
+            # threshold 선 표시
+            for i in range(width):
+                if col_sums[i] > threshold:
+                    cv2.line(debug_image, (i, height-2), (i, height-1), (0, 255, 0), 1)
             
             debug_path = os.path.join(self.debug_dir, f'analyzed_{gauge_type}.png')
             cv2.imwrite(debug_path, debug_image)
 
-            print(f"{gauge_type} 게이지 분석 결과: {ratio:.1f}%")
             return ratio
 
         except Exception as e:

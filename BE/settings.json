@@ -12,35 +12,35 @@
     "gauge_monitor": {
         "hp_gauge": {
             "coordinates": {
-                "x": 2251,
-                "y": 1394,
-                "width": 303,
-                "height": 38
+                "x": 2258,
+                "y": 1403,
+                "width": 296,
+                "height": 21
             },
             "ratios": {
-                "x": 0.7500833055648117,
-                "y": 0.8407720144752714,
-                "width": 0.10096634455181606,
-                "height": 0.022919179734620022
+                "x": 0.7524158613795402,
+                "y": 0.8462002412545235,
+                "width": 0.09863378873708764,
+                "height": 0.012665862484921592
             },
             "image_file": "captures\\capture_setting_img\\capture_hp.png",
-            "timestamp": "20241203_145013"
+            "timestamp": "20241203_163916"
         },
         "mp_gauge": {
             "coordinates": {
-                "x": 2252,
-                "y": 1443,
-                "width": 302,
-                "height": 33
+                "x": 2256,
+                "y": 1452,
+                "width": 295,
+                "height": 19
             },
             "ratios": {
-                "x": 0.7504165278240587,
-                "y": 0.8703256936067552,
-                "width": 0.10063312229256914,
-                "height": 0.019903498190591073
+                "x": 0.7517494168610463,
+                "y": 0.8757539203860072,
+                "width": 0.09830056647784072,
+                "height": 0.011459589867310011
             },
             "image_file": "captures\\capture_setting_img\\capture_mp.png",
-            "timestamp": "20241203_145030"
+            "timestamp": "20241203_163738"
         }
     },
     "advanced_settings": {

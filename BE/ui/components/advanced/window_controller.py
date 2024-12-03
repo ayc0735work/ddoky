@@ -171,11 +171,24 @@ class WindowController:
             screenshot = ImageGrab.grab(bbox=(abs_x, abs_y, abs_x + scaled_width, abs_y + scaled_height))
             img_array = np.array(screenshot)
             
+            # RGB 이미지의 중앙 픽셀 색상 출력 (디버그용)
+            height, width = img_array.shape[:2]
+            middle_y = height // 2
+            middle_x = width // 2
+            rgb_color = img_array[middle_y, middle_x]
+            print(f"\n캡처된 이미지 중앙 픽셀 RGB 값:")
+            print(f"RGB: R={rgb_color[0]}, G={rgb_color[1]}, B={rgb_color[2]}")
+            
+            # BGR로 변환하여 저장
+            bgr_image = cv2.cvtColor(img_array, cv2.COLOR_RGB2BGR)
+            
+            # BGR 이미지의 중앙 픽셀 색상 출력 (디버그용)
+            bgr_color = bgr_image[middle_y, middle_x]
+            print(f"BGR: B={bgr_color[0]}, G={bgr_color[1]}, R={bgr_color[2]}\n")
+            
             # 이미지 저장
             try:
                 # BGR로 변환하여 저장
-                bgr_image = cv2.cvtColor(img_array, cv2.COLOR_RGB2BGR)
-                
                 # 이미지 데이터 유효성 검사
                 if bgr_image is None or bgr_image.size == 0:
                     print("WindowController: 이미지 데이터가 유효하지 않음")
