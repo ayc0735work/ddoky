@@ -195,11 +195,11 @@ class GaugeMonitor(QObject):
                 ]
                 
                 for r, g, b in hp_colors:
-                    # RGB 이미지의 각 채널과 비교
+                    # RGB 이미지의 각 채널과 비교 (허용 오차 범위 축소)
                     color_mask = (
-                        (image[..., 0] >= max(0, r - 40)) & (image[..., 0] <= min(255, r + 40)) &  # Red
-                        (image[..., 1] >= max(0, g - 40)) & (image[..., 1] <= min(255, g + 40)) &  # Green
-                        (image[..., 2] >= max(0, b - 40)) & (image[..., 2] <= min(255, b + 40))    # Blue
+                        (image[..., 0] >= max(0, r - 20)) & (image[..., 0] <= min(255, r + 20)) &  # Red
+                        (image[..., 1] >= max(0, g - 20)) & (image[..., 1] <= min(255, g + 20)) &  # Green
+                        (image[..., 2] >= max(0, b - 20)) & (image[..., 2] <= min(255, b + 20))    # Blue
                     )
                     mask = mask | color_mask
                     
@@ -218,11 +218,11 @@ class GaugeMonitor(QObject):
                 ]
                 
                 for r, g, b in mp_colors:
-                    # RGB 이미지의 각 채널과 비교
+                    # RGB 이미지의 각 채널과 비교 (허용 오차 범위 축소)
                     color_mask = (
-                        (image[..., 0] >= max(0, r - 40)) & (image[..., 0] <= min(255, r + 40)) &  # Red
-                        (image[..., 1] >= max(0, g - 40)) & (image[..., 1] <= min(255, g + 40)) &  # Green
-                        (image[..., 2] >= max(0, b - 40)) & (image[..., 2] <= min(255, b + 40))    # Blue
+                        (image[..., 0] >= max(0, r - 20)) & (image[..., 0] <= min(255, r + 20)) &  # Red
+                        (image[..., 1] >= max(0, g - 20)) & (image[..., 1] <= min(255, g + 20)) &  # Green
+                        (image[..., 2] >= max(0, b - 20)) & (image[..., 2] <= min(255, b + 20))    # Blue
                     )
                     mask = mask | color_mask
                     
@@ -233,33 +233,72 @@ class GaugeMonitor(QObject):
             # 각 열에서 색상이 있는 픽셀 수 계산
             col_sums = np.sum(mask, axis=0)
             
-            # 임계값 설정 (높이의 10%로 낮춤)
-            threshold = height * 0.1
+            # 임계값 설정 (높이의 5%로 낮춤)
+            threshold = height * 0.05
             
             print(f"\n열별 색상 픽셀 수:")
             for i in range(0, width, 10):  # 10픽셀 간격으로 출력
                 print(f"열 {i}: {col_sums[i]} (threshold: {threshold:.2f})")
             
-            # 게이지가 있는 마지막 열 찾기 (왼쪽에서 오른쪽으로)
-            last_gauge_col = -1
+            # 연속된 게이지 세그먼트 찾기
+            gauge_segments = []
+            start_col = -1
             for i in range(width):
                 if col_sums[i] > threshold:
-                    last_gauge_col = i
-
-            # 게이지 비율 계산 (가로 기준, 왼쪽에서 오른쪽으로)
-            if last_gauge_col == -1:
+                    if start_col == -1:
+                        start_col = i
+                elif start_col != -1:
+                    # 최소 5픽셀 이상의 연속된 영역만 고려
+                    if i - start_col >= 5:
+                        gauge_segments.append((start_col, i-1))
+                    start_col = -1
+            
+            # 마지막 세그먼트 처리
+            if start_col != -1 and width - start_col >= 5:
+                gauge_segments.append((start_col, width-1))
+            
+            # 게이지 세그먼트 분석
+            if not gauge_segments:
                 ratio = 0.0
-                empty_cols = width
+                first_gauge_col = -1
+                last_gauge_col = -1
             else:
-                # 게이지가 차 있는 부분까지의 비율 계산
-                ratio = (last_gauge_col + 1) / width * 100
-                empty_cols = width - (last_gauge_col + 1)
+                # 가장 긴 세그먼트 찾기
+                longest_segment = max(gauge_segments, key=lambda x: x[1] - x[0])
+                
+                # 게이지 시작과 끝 지점 설정
+                first_gauge_col = min(seg[0] for seg in gauge_segments)
+                last_gauge_col = max(seg[1] for seg in gauge_segments)
+                
+                # 전체 게이지 영역
+                total_width = last_gauge_col - first_gauge_col + 1
+                
+                # 실제 채워진 픽셀 수 계산
+                filled_pixels = 0
+                total_pixels = 0
+                
+                for i in range(first_gauge_col, last_gauge_col + 1):
+                    # 각 열의 최대 가능한 픽셀 수
+                    total_pixels += height
+                    # 실제 채워진 픽셀 수
+                    if col_sums[i] > threshold:
+                        filled_pixels += col_sums[i]
+                
+                # 비율 계산 (실제 채워진 픽셀 / 전체 가능한 픽셀)
+                ratio = (filled_pixels / total_pixels) * 100 if total_pixels > 0 else 0.0
+                
+                # 100%를 넘지 않도록 제한
+                ratio = min(ratio, 100.0)
 
             print(f"\n분석 결과:")
+            print(f"- 감지된 게이지 세그먼트: {gauge_segments}")
+            print(f"- 첫 번째 게이지 열: {first_gauge_col}")
             print(f"- 마지막 게이지 열: {last_gauge_col}")
-            print(f"- 빈 열 수: {empty_cols}")
+            if len(gauge_segments) > 0:
+                print(f"- 전체 픽셀 수: {total_pixels}")
+                print(f"- 채워진 픽셀 수: {filled_pixels}")
             print(f"- 계산된 비율: {ratio:.1f}%")
-
+            
             # 디버그용 이미지 저장
             debug_image = image.copy()
             
