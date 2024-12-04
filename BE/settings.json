@@ -113,9 +113,9 @@
         },
         "0dfa1418-cab1-4439-ae8a-b0c971471c99": {
             "order": 1,
-            "name": "체력 회복 - 6회",
+            "name": "체력 회복 - 7회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-04T09:29:02.504291",
+            "updated_at": "2024-12-04T12:55:49.936774",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 /",
@@ -123,7 +123,7 @@
                 "scan_code": 53,
                 "virtual_key": 111
             },
-            "repeat_count": 6,
+            "repeat_count": 7,
             "is_nested": false,
             "items": [
                 {
@@ -643,7 +643,7 @@
             "order": 6,
             "name": "공력증강 - 1회",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-12-04T09:28:43.174777",
+            "updated_at": "2024-12-04T12:55:49.956326",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 6",
@@ -655,7 +655,13 @@
             "is_nested": false,
             "items": [
                 {
-                    "order": 1,
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.025초",
+                    "duration": 0.025,
+                    "order": 1
+                },
+                {
+                    "order": 2,
                     "display_text": "키 입력: 숫자패드 6 --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -665,7 +671,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 2,
+                    "order": 3,
                     "display_text": "키 입력: 숫자패드 6 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -676,26 +682,26 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
-                    "order": 3
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
+                    "order": 4
                 },
                 {
-                    "order": 4,
+                    "order": 5,
                     "type": "logic",
-                    "display_text": "체력 회복 - 6회",
+                    "display_text": "체력 회복 - 7회",
                     "logic_id": "0dfa1418-cab1-4439-ae8a-b0c971471c99",
-                    "logic_name": "체력 회복 - 6회",
+                    "logic_name": "체력 회복 - 7회",
                     "repeat_count": 1
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
-                    "order": 5
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
+                    "order": 6
                 },
                 {
-                    "order": 6,
+                    "order": 7,
                     "type": "logic",
                     "display_text": "동동주 마시기 - 1회",
                     "logic_id": "9614e85c-3ceb-423b-97ea-e17bfc0101fc",
@@ -704,9 +710,9 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
-                    "order": 7
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
+                    "order": 8
                 }
             ]
         },
@@ -748,9 +754,9 @@
                 {
                     "order": 3,
                     "type": "logic",
-                    "display_text": "체력 회복 - 6회",
+                    "display_text": "체력 회복 - 7회",
                     "logic_id": "0dfa1418-cab1-4439-ae8a-b0c971471c99",
-                    "logic_name": "체력 회복 - 6회",
+                    "logic_name": "체력 회복 - 7회",
                     "repeat_count": 1
                 },
                 {
@@ -807,9 +813,9 @@
                 {
                     "order": 3,
                     "type": "logic",
-                    "display_text": "체력 회복 - 6회",
+                    "display_text": "체력 회복 - 7회",
                     "logic_id": "0dfa1418-cab1-4439-ae8a-b0c971471c99",
-                    "logic_name": "체력 회복 - 6회",
+                    "logic_name": "체력 회복 - 7회",
                     "repeat_count": 1
                 },
                 {
@@ -840,7 +846,7 @@
             "order": 7,
             "name": "동동주 마시기 - 1회",
             "created_at": "2024-11-30T07:08:49.271692",
-            "updated_at": "2024-12-04T09:29:02.512322",
+            "updated_at": "2024-12-04T12:55:49.943777",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "",
@@ -889,12 +895,38 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.02초",
-                    "duration": 0.02,
+                    "display_text": "지연시간 : 0.0350초",
+                    "duration": 0.035,
                     "order": 5
                 },
                 {
                     "order": 6,
+                    "display_text": "키 입력: F --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "F",
+                    "scan_code": 33,
+                    "virtual_key": 70,
+                    "modifiers": 0
+                },
+                {
+                    "order": 7,
+                    "display_text": "키 입력: F --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "F",
+                    "scan_code": 33,
+                    "virtual_key": 70,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 8
+                },
+                {
+                    "order": 9,
                     "display_text": "키 입력: 왼쪽 컨트롤 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -907,7 +939,7 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.02초",
                     "duration": 0.02,
-                    "order": 7
+                    "order": 10
                 }
             ]
         },
@@ -1042,8 +1074,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 3
                 },
                 {
@@ -1068,8 +1100,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 6
                 },
                 {
@@ -1094,8 +1126,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 9
                 },
                 {
@@ -1183,8 +1215,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 3
                 },
                 {
@@ -1209,8 +1241,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 6
                 },
                 {
@@ -1235,8 +1267,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 9
                 },
                 {
@@ -1410,7 +1442,7 @@
             "order": 15,
             "name": "중독만 - 20회 - 우컨트롤",
             "created_at": "2024-11-30T14:19:30.464189",
-            "updated_at": "2024-12-04T09:28:43.174777",
+            "updated_at": "2024-12-04T12:02:27.328071",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "키 코드 25",
@@ -1443,8 +1475,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 3
                 },
                 {
@@ -1469,8 +1501,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 6
                 },
                 {
@@ -1495,8 +1527,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 9
                 }
             ]
@@ -1538,8 +1570,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 3
                 },
                 {
@@ -1564,8 +1596,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 6
                 },
                 {
@@ -1590,8 +1622,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 9
                 }
             ]
@@ -1633,8 +1665,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 3
                 },
                 {
@@ -1659,8 +1691,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 6
                 },
                 {
@@ -1685,8 +1717,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 9
                 }
             ]
@@ -1728,8 +1760,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 3
                 },
                 {
@@ -1754,8 +1786,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 6
                 },
                 {
@@ -1780,8 +1812,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 9
                 }
             ]
@@ -1823,8 +1855,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 3
                 },
                 {
@@ -1849,8 +1881,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 6
                 },
                 {
@@ -1875,8 +1907,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 9
                 }
             ]
@@ -1918,8 +1950,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 3
                 },
                 {
@@ -1944,8 +1976,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 6
                 },
                 {
@@ -1970,8 +2002,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0025초",
-                    "duration": 0.0025,
+                    "display_text": "지연시간 : 0.0115초",
+                    "duration": 0.0115,
                     "order": 9
                 }
             ]

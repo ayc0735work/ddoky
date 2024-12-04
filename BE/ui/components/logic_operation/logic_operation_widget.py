@@ -3,6 +3,7 @@ from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
                              QMessageBox)
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
+import copy
 
 from ...constants.styles import (FRAME_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
@@ -158,3 +159,24 @@ class LogicOperationWidget(QFrame):
     def set_logic_executor(self, executor):
         """LogicExecutor 인스턴스 설정"""
         self.logic_executor = executor
+
+    def copy_items(self):
+        """선택된 아이템들을 복사합니다."""
+        selected_items = self.get_selected_items()
+        if not selected_items:
+            return
+        
+        copied_items = []
+        for item in selected_items:
+            # 아이템의 딥카피 생성
+            copied_item = copy.deepcopy(item)
+            
+            # type이 'logic'인 경우 UUID를 유지
+            if copied_item.get('type') == 'logic':
+                # UUID 관련 필드들을 원본 그대로 유지
+                copied_item['logic_id'] = item['logic_id']
+            
+            copied_items.append(copied_item)
+        
+        # 복사된 아이템들을 클립보드에 저장
+        self._clipboard = copied_items
