@@ -67,3 +67,31 @@ class LogicListController:
         """
         # TODO: 새로운 로직을 리스트에 추가
         self.widget.list_widget.addItem(logic_name)
+
+    def copy_logic(self, logic_data):
+        """로직 복사"""
+        new_logic = copy.deepcopy(logic_data)
+        # ID는 원본 그대로 유지 (새로 생성하지 않음)
+        
+        # 중첩 로직의 참조 관계도 그대로 유지
+        if 'items' in new_logic:
+            for item in new_logic['items']:
+                if item['type'] == 'logic':
+                    # 중첩 로직의 logic_id와 참조 관계 유지
+                    continue
+                
+        return new_logic
+
+    def paste_logic(self, copied_logic):
+        """로직 붙여넣기"""
+        # 중첩 로직 참조 검증
+        if 'items' in copied_logic:
+            for item in copied_logic['items']:
+                if item['type'] == 'logic':
+                    # 참조된 로직이 실제로 존재하는지 확인
+                    referenced_logic = self.logic_manager.get_logic(item['logic_id'])
+                    if not referenced_logic:
+                        self.log_message.emit(f"[오류] 참조된 로직을 찾을 수 없습니다: {item['logic_name']}")
+                        return None
+        
+        return copied_logic

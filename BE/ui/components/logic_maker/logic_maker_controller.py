@@ -52,3 +52,15 @@ class LogicMakerController:
         status = "시작" if is_recording else "중지"
         log_msg = f"기록 모드가 {status}되었습니다."
         self.widget.log_message.emit(log_msg)
+        
+    def save_logic(self, logic_data):
+        """로직 저장"""
+        # 중첩 로직 참조 정보 유지
+        if 'items' in logic_data:
+            for item in logic_data['items']:
+                if item['type'] == 'logic':
+                    # 중첩 로직의 logic_id는 수정하지 않음
+                    continue
+        
+        # 나머지 저장 로직 수행
+        return self.logic_manager.save_logic(logic_data)
