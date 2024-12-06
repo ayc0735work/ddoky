@@ -280,7 +280,7 @@ class LogicListWidget(QFrame):
             self.log_message.emit(f"로직 업데이트 중 오류 발생: {str(e)}")
 
     def load_saved_logics(self):
-        """저장된 로직 ��보 불러오기"""
+        """저장된 로직 정보 불러오기"""
         try:
             # 기존 목록 초기화
             self.SavedLogicList__QListWidget.clear()
@@ -704,7 +704,7 @@ class LogicListWidget(QFrame):
     def _on_stop_button_clicked(self):
         """로직 중지 버튼 클릭 시 호출"""
         try:
-            # 실행 중인 로직 강�� 중지
+            # 실행 중인 로직 강제 중지
             self._logic_executor.force_stop()
             
             # UI 상태도 초기화

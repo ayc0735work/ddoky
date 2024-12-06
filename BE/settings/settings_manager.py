@@ -299,7 +299,7 @@ class SettingsManager:
                         updated_items = []
                         for item in existing_logic['items']:
                             if item.get('type') == 'logic' and item.get('logic_id') == logic_id:
-                                # UUID가 일치하는 경우 이름��� 업데이트
+                                # UUID가 일치하는 경우 이름정보 업데이트
                                 item = item.copy()
                                 item['logic_name'] = logic_info['name']
                                 item['display_text'] = logic_info['name']

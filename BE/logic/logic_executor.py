@@ -69,7 +69,7 @@ class LogicExecutor(QObject):
         with self._state_lock:
             self._log_with_time("[상태 로그] 상태 락 획득")
             self.execution_state.update(kwargs)
-            self._log_with_time("[상태 로그] 새로운 상��: {}".format(self.execution_state))
+            self._log_with_time("[상태 로그] 새로운 상태: {}".format(self.execution_state))
             self.execution_state_changed.emit(self.execution_state.copy())
             self._log_with_time("[상태 로그] 상태 변경 알림 완료")
     
@@ -150,7 +150,7 @@ class LogicExecutor(QObject):
             if self._is_trigger_key_matched(logic, key_info):
                 found_matching_logic = True
                 if self.execution_state['is_executing']:
-                    self._log_with_time("[로그] 현재 다른 로직이 실��� 중이므로 '{}' 로직을 실행할 수 없습니다.".format(logic_name))
+                    self._log_with_time("[로그] 현재 다른 로직이 실행 중이므로 '{}' 로직을 실행할 수 없습니다.".format(logic_name))
                     return
                     
                 try:
@@ -178,7 +178,7 @@ class LogicExecutor(QObject):
             self._log_with_time("[로그] 일치하는 트리거 키를 찾을 수 없습니다.")
     
     def _execute_next_step(self):
-        """현재 실행할 스텝이 무엇인지 결정하는 관��자 함수"""
+        """현재 실행할 스텝이 무엇인지 결정하는 관련자 함수"""
         if not self.selected_logic or self.execution_state['is_stopping']:
             return
             
@@ -244,7 +244,7 @@ class LogicExecutor(QObject):
             return
             
         try:
-            self._log_with_time("[로직 스텝] 스텝 {} 실행: {}".format(self.execution_state['current_step'], step['display_text']))
+            self._log_with_time("[로직 스텝] 스텝-{} 실행: {}".format(self.execution_state['current_step'], step['display_text']))
             
             if step['type'] == 'key_input':
                 self._execute_key_input(step)
@@ -322,7 +322,7 @@ class LogicExecutor(QObject):
                 self._schedule_next_step()
                 return
 
-            # 로직 ��행
+            # 로직 실행
             current_state = {
                 'current_step': self.execution_state['current_step'],
                 'current_repeat': self.execution_state['current_repeat'],
@@ -536,7 +536,7 @@ class LogicExecutor(QObject):
 
     # 로직 실행 상태를 완전히 초기화하는 메서드 추가
     def reset_execution_state(self):
-        """실행 상태를 완전히 ���기화"""
+        """실행 상태를 완전히 초기화"""
         with self._state_lock:
             # execution_state 초기화
             self.execution_state = {
