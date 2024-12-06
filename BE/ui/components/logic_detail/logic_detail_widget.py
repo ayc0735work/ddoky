@@ -405,7 +405,7 @@ class LogicDetailWidget(QFrame):
                         '방향키 왼쪽 ←': win32con.VK_LEFT,
                         '방향키 오른쪽 →': win32con.VK_RIGHT,
                         '방향키 위쪽 ↑': win32con.VK_UP,
-                        '방키 아래쪽 ↓': win32con.VK_DOWN,
+                        '방향키 아래쪽 ↓': win32con.VK_DOWN,
                         '숫자패드 0': win32con.VK_NUMPAD0,
                         '숫자패드 1': win32con.VK_NUMPAD1,
                         '숫자패드 2': win32con.VK_NUMPAD2,

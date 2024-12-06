@@ -242,11 +242,32 @@ class LogicExecutor(QObject):
         """실제로 해당 스텝이 가지고 있는 어떤 동작을 수행하는 작업자 함수"""
         if self.execution_state['is_stopping']:
             return
-            
+        
         try:
-            self._log_with_time("[로직 스텝] 스텝-{} 실행: {}".format(self.execution_state['current_step'], step['display_text']))
-            
             if step['type'] == 'key_input':
+                # 키 입력 관련 정보 미리 계산
+                virtual_key = step['virtual_key']
+                scan_code = step['scan_code']
+                flags = 0
+                
+                # 확장 키 플래그 설정
+                if step['key_code'] == '숫자패드 엔터' or scan_code > 0xFF:
+                    flags |= win32con.KEYEVENTF_EXTENDEDKEY
+                
+                # 쉼표 키 특별 처리
+                if step['key_code'] == ',':
+                    virtual_key = win32api.VkKeyScan(',') & 0xFF
+                    
+                # 통합된 로그 메시지
+                self._log_with_time("[로직 스텝] 스텝-{} 실행: {} -----키정보 (키: {}, 가상키: {}, 스캔코드: {}, 플래그: {})".format(
+                    self.execution_state['current_step'], 
+                    step['display_text'],
+                    step['key_code'],
+                    virtual_key,
+                    scan_code,
+                    flags
+                ))
+                
                 self._execute_key_input(step)
                 # 키 입력 동작에 따른 딜레이 적용
                 delay = self.KEY_DELAYS.get(step['action'], self.KEY_DELAYS['기본'])
@@ -255,21 +276,27 @@ class LogicExecutor(QObject):
                 timer.timeout.connect(lambda: self._schedule_next_step())
                 timer.start(int(delay * 1000))
                 self._active_timers.append(timer)
-            elif step['type'] == 'delay':
-                duration = float(step['duration'])
-                self._log_with_time("[로그] {}초 대기 시작".format(duration))
-                timer = QTimer()
-                timer.setSingleShot(True)
-                timer.timeout.connect(lambda: self._schedule_next_step())
-                timer.start(int(duration * 1000))
-                self._active_timers.append(timer)
-            elif step['type'] == 'logic':
-                self._execute_nested_logic(step)
+            else:
+                # 키 입력이 아닌 경우는 기존 로그 형식 유지
+                self._log_with_time("[로직 스텝] 스텝-{} 실행: {}".format(
+                    self.execution_state['current_step'], 
+                    step['display_text']
+                ))
                 
+                if step['type'] == 'delay':
+                    duration = float(step['duration'])
+                    timer = QTimer()
+                    timer.setSingleShot(True)
+                    timer.timeout.connect(lambda: self._schedule_next_step())
+                    timer.start(int(duration * 1000))
+                    self._active_timers.append(timer)
+                elif step['type'] == 'logic':
+                    self._execute_nested_logic(step)
+                    
         except Exception as e:
             self._log_with_time("[오류] 스텝 실행 중 오류 발생: {}".format(str(e)))
             self._safe_cleanup()
-
+    
     def _schedule_next_step(self):
         """다음 스텝 실행을 예약"""
         if not self.execution_state['is_stopping']:
@@ -290,8 +317,6 @@ class LogicExecutor(QObject):
             if step['key_code'] == ',':
                 virtual_key = win32api.VkKeyScan(',') & 0xFF
                 
-            self._log_with_time("[로그] 키 입력 시도 - 키: {}, 가상키: {}, 스캔코드: {}, 플래그: {}".format(step['key_code'], virtual_key, scan_code, flags))
-            
             if step['action'] == '누르기':
                 win32api.keybd_event(virtual_key, scan_code, flags, 0)
             else:  # 떼기
@@ -482,7 +507,7 @@ class LogicExecutor(QObject):
         
         # 무시할 로그 메시지 패턴
         ignore_patterns = [
-            "키 입력 ���도",
+            "키 입력 도",
             "키 입력 감지",
             "로직 실행 조건이 맞지 않습니다",
             "상태 업데이트 시작",
