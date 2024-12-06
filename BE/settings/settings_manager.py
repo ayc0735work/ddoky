@@ -28,7 +28,7 @@ class SettingsManager:
     def _save_settings(self, settings):
         """설정 파일에 현재 설정을 저장합니다."""
         try:
-            # 로직 데이터에서 uuid 필드 제거 및 필드 순서 정리
+            # 로직 데이터에서 uuid 필드 제거 및 드 순서 정리
             if 'logics' in settings:
                 ordered_logics = {}
                 for logic_id, logic_data in settings['logics'].items():
@@ -88,7 +88,7 @@ class SettingsManager:
                     "height": 600
                 }
             },
-            "logics": {}  # UUID를 키로 사용하는 로직 저장소
+            "logics": {}  # UUID를 키로 사용하는 직 저장소
         }
     
     def _migrate_to_uuid(self, settings):
@@ -220,10 +220,22 @@ class SettingsManager:
         # 업데이트된 설정 저장
         self._save_settings(self.settings)
 
-    def reload_settings(self):
-        """설정을 다시 로드합니다."""
-        self.settings = self._load_settings()
+    def reload_settings(self, force=False):
+        """설정을 다시 로드합니다.
         
+        Args:
+            force (bool): 강제로 파일에서 다시 로드할지 여부
+        """
+        if force:
+            # 파일에서 직접 로드
+            with open(self.settings_file, 'r', encoding='utf-8') as f:
+                self.settings = json.load(f)
+                return self._migrate_to_uuid(self.settings)
+        else:
+            # 기존 방식대로 로드
+            self.settings = self._load_settings()
+        return self.settings
+
     def save_logic(self, logic_id, logic_data):
         """로직 저장
         
@@ -251,9 +263,19 @@ class SettingsManager:
             # 중첩로직용 여부 저장
             is_nested = logic_data.get('is_nested', False)
             
+            # order 값 처리
+            if logic_id in settings['logics']:
+                # 기존 로직인 경우 order 값 유지
+                current_order = settings['logics'][logic_id].get('order', 0)
+                if current_order == 0:  # order가 0인 경우 새로운 order 할당
+                    current_order = max([l.get('order', 0) for l in settings['logics'].values()], default=0) + 1
+            else:
+                # 새 로직인 경우 마지막 order + 1
+                current_order = max([l.get('order', 0) for l in settings['logics'].values()], default=0) + 1
+            
             # 기본 로직 정보 구성
             logic_info = {
-                'order': logic_data.get('order', len(settings['logics']) + 1),
+                'order': current_order,  # 계산된 order 값 사용
                 'name': logic_data['name'],
                 'created_at': logic_data.get('created_at', datetime.now().isoformat()),
                 'updated_at': datetime.now().isoformat(),
@@ -277,7 +299,7 @@ class SettingsManager:
                         updated_items = []
                         for item in existing_logic['items']:
                             if item.get('type') == 'logic' and item.get('logic_id') == logic_id:
-                                # UUID가 일치하는 경우 이름도 업데이트
+                                # UUID가 일치하는 경우 이름��� 업데이트
                                 item = item.copy()
                                 item['logic_name'] = logic_info['name']
                                 item['display_text'] = logic_info['name']
@@ -296,8 +318,14 @@ class SettingsManager:
             print(f"로직 저장 중 오류 발생: {str(e)}")
             raise
 
-    def load_logics(self):
-        """저장된 모든 로직을 불러옵니다."""
+    def load_logics(self, force=False):
+        """저장된 로직들을 로드합니다.
+        
+        Args:
+            force (bool): 강제로 설정을 다시 로드할지 여부
+        """
+        if force:
+            self.reload_settings(force=True)
         return self.settings.get('logics', {})
 
     def save_logics(self, logics):

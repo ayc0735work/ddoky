@@ -40,9 +40,9 @@ class LogicExecutor(QObject):
         
         # 키 입력 딜레이 세분화
         self.KEY_DELAYS = {
-            '누르기': 0.0205,  # 키를 누를 때의 딜레이
-            '떼기': 0.0205,    # 키를 뗄 때의 딜레이
-            '기본': 0.0205     # 기타 동작의 기본 딜레이
+            '누르기': 0.021,  # 키를 누를 때의 딜레이
+            '떼기': 0.021,    # 키를 뗄 때의 딜레이
+            '기본': 0.021     # 기타 동작의 기본 딜레이
         }
         
         # 리소스 관리
@@ -69,7 +69,7 @@ class LogicExecutor(QObject):
         with self._state_lock:
             self._log_with_time("[상태 로그] 상태 락 획득")
             self.execution_state.update(kwargs)
-            self._log_with_time("[상태 로그] 새로운 상��: {}".format(self.execution_state))
+            self._log_with_time("[상태 로그] 새로운 상태: {}".format(self.execution_state))
             self.execution_state_changed.emit(self.execution_state.copy())
             self._log_with_time("[상태 로그] 상태 변경 알림 완료")
     
@@ -150,7 +150,7 @@ class LogicExecutor(QObject):
             if self._is_trigger_key_matched(logic, key_info):
                 found_matching_logic = True
                 if self.execution_state['is_executing']:
-                    self._log_with_time("[로그] 현재 다른 로직이 실��� 중이므로 '{}' 로직을 실행할 수 없습니다.".format(logic_name))
+                    self._log_with_time("[로그] 현재 다른 로직이 실행 중이므로 '{}' 로직을 실행할 수 없습니다.".format(logic_name))
                     return
                     
                 try:
@@ -178,7 +178,7 @@ class LogicExecutor(QObject):
             self._log_with_time("[로그] 일치하는 트리거 키를 찾을 수 없습니다.")
     
     def _execute_next_step(self):
-        """현재 실행할 스텝이 무엇인지 결정하는 관��자 함수"""
+        """현재 실행할 스텝이 무엇인지 결정하는 관리자 함수"""
         if not self.selected_logic or self.execution_state['is_stopping']:
             return
             
@@ -322,7 +322,7 @@ class LogicExecutor(QObject):
                 self._schedule_next_step()
                 return
 
-            # 로직 ��행
+            # 로직 실행
             current_state = {
                 'current_step': self.execution_state['current_step'],
                 'current_repeat': self.execution_state['current_repeat'],
@@ -482,7 +482,7 @@ class LogicExecutor(QObject):
         
         # 무시할 로그 메시지 패턴
         ignore_patterns = [
-            "키 입력 ���도",
+            "키 입력 시도",
             "키 입력 감지",
             "로직 실행 조건이 맞지 않습니다",
             "상태 업데이트 시작",
@@ -518,25 +518,25 @@ class LogicExecutor(QObject):
         # 메시지 스타일 적용
         if "[오류]" in message:
             # 오류 메시지 - 어두운 빨간색
-            formatted_message = f"<span style='color: #8B0000; font-size: 12px;'>{time_info}</span> <span style='color: #8B0000; font-size: 12px;'>{message}</span>"
+            formatted_message = f"{time_info} <span style='color: #8B0000; font-size: 12px;'>{message}</span>"
         
         elif "ESC 키 감지" in message or "강제 중지" in message:
-            formatted_message = f"<span style='color: #FFA500; font-size: 18px; font-weight: bold;'>{time_info}</span> <span style='color: #FFA500; font-size: 18px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"{time_info} <span style='color: #FFA500; font-size: 18px; font-weight: bold;'>{message}</span>"
         
         elif "중첩로직" in message:
-            formatted_message = f"<span style='color: #008000; font-size: 18px; font-weight: bold;'>{time_info}</span> <span style='color: #008000; font-size: 18px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"{time_info} <span style='color: #008000; font-size: 18px; font-weight: bold;'>{message}</span>"
         
         elif "로직" in message and ("실행 시작" in message or "반복 완료" in message):
-            formatted_message = f"<span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{time_info}</span> <span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"{time_info} <span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{message}</span>"
         else:
             # 기본 메시지 - 기본 스타일
-            formatted_message = f"<span style='color: #666666;'>{time_info}</span> {message}"
+            formatted_message = f"{time_info} {message}"
             
         self.log_message.emit(formatted_message)
 
     # 로직 실행 상태를 완전히 초기화하는 메서드 추가
     def reset_execution_state(self):
-        """실행 상태를 완전히 ���기화"""
+        """실행 상태를 완전히 초기화"""
         with self._state_lock:
             # execution_state 초기화
             self.execution_state = {
@@ -606,43 +606,3 @@ class LogicExecutor(QObject):
             self.log_message.emit(f"로직 저장 중 오류 발생: {str(e)}")
             # 오류 발생 시 저장된 로직 다시 불러오기
             self.load_saved_logics()
-
-    def execute_logic(self, logic_id, repeat_count=None):
-        """로직 실행"""
-        try:
-            # 실행 시점에 최신 로직 데이터 로드
-            logics = self.settings_manager.load_logics(force=True)
-            if logic_id not in logics:
-                raise ValueError(f"로직을 찾을 수 없습니다: {logic_id}")
-                
-            logic_data = logics[logic_id]
-            
-            # repeat_count가 지정되지 않은 경우 로직의 기본값 사용
-            if repeat_count is None:
-                repeat_count = logic_data.get('repeat_count', 1)
-                
-            self.running = True
-            self.stop_requested = False
-            
-            for _ in range(repeat_count):
-                if self.stop_requested:
-                    break
-                    
-                for item in logic_data.get('items', []):
-                    if self.stop_requested:
-                        break
-                        
-                    if item.get('type') == 'logic':
-                        # 중첩 로직 실행 시에도 최신 데이터 사용
-                        nested_logic_id = item.get('logic_id')
-                        if nested_logic_id:
-                            nested_repeat = item.get('repeat_count', 1)
-                            self.execute_logic(nested_logic_id, nested_repeat)
-                    # ... 나머지 실행 로직 ...
-                    
-        except Exception as e:
-            print(f"로직 실행 중 오류 발생: {str(e)}")
-            raise
-        finally:
-            self.running = False
-            self.stop_requested = False
