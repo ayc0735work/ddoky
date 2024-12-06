@@ -551,7 +551,7 @@ class LogicExecutor(QObject):
         elif "중첩로직" in message:
             formatted_message = f"<span style='color: #008000; font-size: 18px; font-weight: bold;'>{time_info}</span> <span style='color: #008000; font-size: 18px; font-weight: bold;'>{message}</span>"
         
-        elif "로직" in message and ("실행 시작" in message or "반복 완료" in message):
+        elif "로직 실행" in message and ("실행 시작" in message or "반복 완료" in message):
             formatted_message = f"<span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{time_info}</span> <span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{message}</span>"
         else:
             # 기본 메시지 - 기본 스타일

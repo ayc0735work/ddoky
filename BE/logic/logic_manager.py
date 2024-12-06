@@ -60,7 +60,7 @@ class LogicManager(QObject):
         """
         return self.current_logic_name
     
-    def get_all_logics(self):
+    def get_all_logics(self, force=False):
         """모든 로직 반환
         
         Returns:
@@ -115,6 +115,8 @@ class LogicManager(QObject):
             # 새 로직 저장
             self.logics[logic_id] = logic_data
             self._save_to_file()
+            # 캐시 즉시 업데이트
+            self.get_all_logics(force=True)
             return True, logic_id
         except ValueError as e:
             return False, str(e)

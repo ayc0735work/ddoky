@@ -180,3 +180,22 @@ class LogicOperationWidget(QFrame):
         
         # 복사된 아이템들을 클립보드에 저장
         self._clipboard = copied_items
+
+    def _add_logic_item(self, item_info):
+        """로직 아이템을 리스트에 추가"""
+        if not isinstance(item_info, dict):
+            return
+            
+        # 이미 변환된 형식인 경우 (로직 타입)
+        if item_info.get('type') == 'logic':
+            logic_name = item_info.get('logic_name')
+            logic_id = item_info.get('logic_id')
+            
+            # UUID가 없거나 유효하지 않은 경우
+            if not logic_id or logic_id not in self.settings_manager.load_logics(force=True):  # 캐시 강제 새로고침
+                # 이름으로 찾기
+                logics = self.settings_manager.load_logics(force=True)  # 캐시 강제 새로고침
+                for existing_id, existing_logic in logics.items():
+                    if existing_logic.get('name') == logic_name:
+                        logic_id = existing_id
+                        break

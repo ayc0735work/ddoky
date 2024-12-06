@@ -86,7 +86,7 @@
             "order": 2,
             "name": "체력 회복 - 7회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-06T17:29:50.700511",
+            "updated_at": "2024-12-07T07:39:07.841224",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 /",
@@ -2059,16 +2059,16 @@
             "order": 21,
             "name": "마비만 - 20회",
             "created_at": "2024-11-30T14:35:32.801674",
-            "updated_at": "2024-12-07T06:47:04.503419",
+            "updated_at": "2024-12-07T07:44:57.040013",
             "trigger_key": {
                 "display_text": "",
-                "key_code": "숫자패드 5",
+                "key_code": "",
                 "modifiers": 0,
-                "scan_code": 76,
-                "virtual_key": 101
+                "scan_code": 0,
+                "virtual_key": 0
             },
             "repeat_count": 20,
-            "is_nested": false,
+            "is_nested": true,
             "items": [
                 {
                     "order": 1,
@@ -2154,23 +2154,23 @@
             "order": 22,
             "name": "마비 - 상하좌우 - 전체20회 - 1회",
             "created_at": "2024-12-06T17:17:32.031972",
-            "updated_at": "2024-12-07T06:46:59.187640",
+            "updated_at": "2024-12-07T07:44:57.054098",
             "trigger_key": {
                 "display_text": "",
-                "key_code": "",
+                "key_code": "숫자패드 5",
                 "modifiers": 0,
-                "scan_code": 0,
-                "virtual_key": 0
+                "scan_code": 76,
+                "virtual_key": 101
             },
             "repeat_count": 1,
-            "is_nested": true,
+            "is_nested": false,
             "items": [
                 {
                     "order": 1,
                     "type": "logic",
-                    "display_text": "마비 상하좌우 - 2회",
+                    "display_text": "마비 상하좌우 - 3회",
                     "logic_id": "27d1f013-d82b-42f2-87cd-785dad90b052",
-                    "logic_name": "마비 상하좌우 - 2회",
+                    "logic_name": "마비 상하좌우 - 3회",
                     "repeat_count": 1
                 },
                 {
@@ -2185,9 +2185,9 @@
         },
         "27d1f013-d82b-42f2-87cd-785dad90b052": {
             "order": 23,
-            "name": "마비 상하좌우 - 2회",
+            "name": "마비 상하좌우 - 3회",
             "created_at": "2024-12-06T16:29:20.641646",
-            "updated_at": "2024-12-07T07:14:23.186250",
+            "updated_at": "2024-12-07T07:44:57.033322",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "오른쪽 쉬프트",
@@ -2195,7 +2195,7 @@
                 "scan_code": 54,
                 "virtual_key": 161
             },
-            "repeat_count": 1,
+            "repeat_count": 3,
             "is_nested": false,
             "items": [
                 {
@@ -2228,8 +2228,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1초",
-                    "duration": 0.1,
+                    "display_text": "지연시간 : 0.0203초",
+                    "duration": 0.0203,
                     "order": 4
                 },
                 {
@@ -2254,8 +2254,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1초",
-                    "duration": 0.1,
+                    "display_text": "지연시간 : 0.0203초",
+                    "duration": 0.0203,
                     "order": 7
                 },
                 {
@@ -2288,8 +2288,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1초",
-                    "duration": 0.1,
+                    "display_text": "지연시간 : 0.0203초",
+                    "duration": 0.0203,
                     "order": 11
                 },
                 {
@@ -2314,8 +2314,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1초",
-                    "duration": 0.1,
+                    "display_text": "지연시간 : 0.0203초",
+                    "duration": 0.0203,
                     "order": 14
                 },
                 {
@@ -2348,8 +2348,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1초",
-                    "duration": 0.1,
+                    "display_text": "지연시간 : 0.0203초",
+                    "duration": 0.0203,
                     "order": 18
                 },
                 {
@@ -2374,8 +2374,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1초",
-                    "duration": 0.1,
+                    "display_text": "지연시간 : 0.0203초",
+                    "duration": 0.0203,
                     "order": 21
                 },
                 {
@@ -2408,8 +2408,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1초",
-                    "duration": 0.1,
+                    "display_text": "지연시간 : 0.0203초",
+                    "duration": 0.0203,
                     "order": 25
                 },
                 {
@@ -2434,8 +2434,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1초",
-                    "duration": 0.1,
+                    "display_text": "지연시간 : 0.0203초",
+                    "duration": 0.0203,
                     "order": 28
                 }
             ]
@@ -2444,7 +2444,7 @@
             "order": 24,
             "name": "마비 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
-            "updated_at": "2024-12-07T07:14:23.170666",
+            "updated_at": "2024-12-07T07:35:12.550365",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "",
