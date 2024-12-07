@@ -521,7 +521,7 @@ class LogicDetailWidget(QFrame):
     def _save_logic(self):
         """로직 저장"""
         try:
-            # 로직 이름 가져오
+            # 로직 이름 가져오기
             name = self.LogicNameInput__QLineEdit.text().strip()
             if not name:
                 self.log_message.emit("오류: 로직 이름을 입력해주세요.")
@@ -571,14 +571,27 @@ class LogicDetailWidget(QFrame):
                     'virtual_key': self.trigger_key_info.get('virtual_key', 0)
                 }
 
-            # 수정 모드인 경우 업데이트
-            if self.current_logic and self.current_logic_id:  # UUID가 있는 경우
-                # UUID로 저장
-                self.settings_manager.save_logic(self.current_logic_id, logic_info)
+            # 이름으로 기존 로직 찾기
+            logics = self.settings_manager.load_logics()
+            existing_logic_id = None
+
+            # 1. 현재 편집 중인 로직의 ID가 있는 경우
+            if self.current_logic_id:
+                existing_logic_id = self.current_logic_id
+            else:
+                # 2. 이름으로 기존 로직 찾기
+                for logic_id, saved_logic in logics.items():
+                    if saved_logic.get('name') == name:
+                        existing_logic_id = logic_id
+                        break
+
+            if existing_logic_id:
+                # 기존 로직 업데이트 (UUID 유지)
+                self.settings_manager.save_logic(existing_logic_id, logic_info)
                 self.logic_updated.emit(self.original_name, logic_info)
                 self.log_message.emit(f"로직 '{name}'이(가) 업데이트되었습니다.")
             else:
-                # 새 로직 저장
+                # 완전히 새로운 로직인 경우에만 새 UUID 발급
                 new_logic_id = str(uuid.uuid4())
                 self.settings_manager.save_logic(new_logic_id, logic_info)
                 self.logic_saved.emit(logic_info)
@@ -608,8 +621,14 @@ class LogicDetailWidget(QFrame):
             self.edit_mode = True
             self.original_name = logic_info.get('name')
             
-            # UUID 저장 (logic_info에서 직접 가져옴)
-            self.current_logic_id = logic_info.get('id')
+            # UUID 저장 (settings에서 이름으로 찾기)
+            logics = self.settings_manager.load_logics()
+            for logic_id, saved_logic in logics.items():
+                if saved_logic.get('name') == logic_info.get('name'):
+                    self.current_logic_id = logic_id
+                    # 로직 정보에도 UUID 저장
+                    self.current_logic['id'] = logic_id
+                    break
             
             # 중첩로직 여부 설정 (먼저 설정하여 트리거 키 UI 상태 제어)
             is_nested = logic_info.get('is_nested', False)
@@ -918,7 +937,7 @@ class LogicDetailWidget(QFrame):
                 except ValueError:
                     self.log_message.emit("지연시간 형식이 올바르지 않습니다")
             # 키 입 아이템인 경우
-            elif item_text.startswith("키 입력:"):
+            elif item_text.startswith("��� 입력:"):
                 key_parts = item_text.split(" --- ")
                 if len(key_parts) == 2:
                     key_text = key_parts[0]

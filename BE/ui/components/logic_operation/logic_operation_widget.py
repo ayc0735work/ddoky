@@ -192,10 +192,31 @@ class LogicOperationWidget(QFrame):
             logic_id = item_info.get('logic_id')
             
             # UUID가 없거나 유효하지 않은 경우
-            if not logic_id or logic_id not in self.settings_manager.load_logics(force=True):  # 캐시 강제 새로고침
-                # 이름으로 찾기
-                logics = self.settings_manager.load_logics(force=True)  # 캐시 강제 새로고침
+            logics = self.settings_manager.load_logics(force=True)  # 캐시 강제 새로고침
+            if logic_id and logic_id in logics:
+                # UUID가 있고 유효한 경우, 최신 이름으로 업데이트
+                updated_logic = logics[logic_id]
+                logic_name = updated_logic.get('name', logic_name)
+                item_info['logic_name'] = logic_name
+                item_info['display_text'] = logic_name
+            else:
+                # UUID가 없거나 유효하지 않은 경우, 이름으로 찾기
                 for existing_id, existing_logic in logics.items():
                     if existing_logic.get('name') == logic_name:
                         logic_id = existing_id
                         break
+                    
+            if not logic_id:
+                QMessageBox.critical(
+                    self,
+                    "오류",
+                    f"원본 로직 '{logic_name}'을(를) 찾을 수 없습니다.\n"
+                    "해당 로직이 삭제되었거나 이름이 변경되었을 수 있습니다."
+                )
+                return
+                
+            # UUID 업데이트
+            item_info['logic_id'] = logic_id
+            if 'logic_data' in item_info:
+                item_info['logic_data']['logic_id'] = logic_id
+                item_info['logic_data']['logic_name'] = logic_name
