@@ -539,7 +539,8 @@ class LogicDetailWidget(QFrame):
         if duplicate_logics:
             # 중복된 트리거 키가 있는 경우
             duplicate_info = "\n\n".join([
-                f"로직 이름: {logic['name']}\n  로직 UUID: {logic['id']}"
+                f"로직 이름: {logic['name']}\n
+                로직 UUID: {logic['id']}"
                 for logic in duplicate_logics
             ])
             
