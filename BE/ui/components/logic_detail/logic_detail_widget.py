@@ -539,8 +539,8 @@ class LogicDetailWidget(QFrame):
         if duplicate_logics:
             # 중복된 트리거 키가 있는 경우
             duplicate_info = "\n\n".join([
-                f"로직 이름: {logic['name']}\n
-                로직 UUID: {logic['id']}"
+                f"로직 이름: {logic['name']}\n"
+                f"로직 UUID: {logic['id']}"
                 for logic in duplicate_logics
             ])
             
@@ -548,7 +548,7 @@ class LogicDetailWidget(QFrame):
             msg.setIcon(QMessageBox.Warning)
             msg.setWindowTitle("트리거 키 중복")
             msg.setText("이미 다른 로직에서 사용 중인 트리거 키입니다.\n\n"
-                       "아래 로직(들)에서 해당 트리거 키를 사용하고 있습니다:\n\n"
+                       "사용 중인 로직 정보\n\n"
                        f"{duplicate_info}")
             msg.setStandardButtons(QMessageBox.Ok)
             
