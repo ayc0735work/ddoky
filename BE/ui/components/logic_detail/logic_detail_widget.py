@@ -440,7 +440,7 @@ class LogicDetailWidget(QFrame):
                     
                     # 스캔 코드 얻기
                     if key == '숫자패드 엔터':
-                        scan_code = 0x1C + 0xE0  # 252 (숫자패드 엔터의 확장 �� 코드)
+                        scan_code = 0x1C + 0xE0  # 252 (숫자패드 엔터의 확장 코드)
                     else:
                         scan_code = win32api.MapVirtualKey(virtual_key, 0)
                     
@@ -520,7 +520,7 @@ class LogicDetailWidget(QFrame):
         if not isinstance(key_info['modifiers'], int):
             key_info['modifiers'] = key_info['modifiers'].value
         
-        # 트리거 키 중복 체크
+        # 트리 키 중복 체크
         logics = self.settings_manager.load_logics()
         duplicate_logics = []
         
@@ -579,7 +579,7 @@ class LogicDetailWidget(QFrame):
 
             # 중첩로직용이 아닐 경우에만 트리거 키 검사
             if not is_nested and not self.trigger_key_info:
-                self.log_message.emit("오류: 트리거 키를 설정해주세요.")
+                self.log_message.emit("오류: 트리거 키를 정해주세요.")
                 return False
 
             if not self.has_items():
@@ -706,6 +706,69 @@ class LogicDetailWidget(QFrame):
             self.log_message.emit(f"로직 로드 중 오류 발생: {str(e)}")
             self.clear_all()
 
+    def _create_nested_logic_item(self, logic_name, logic_id=None, original_data=None):
+        """중첩 로직 아이템 생성을 위한 공통 메서드
+        
+        Args:
+            logic_name (str): 로직 이름
+            logic_id (str, optional): 이미 알고 있는 로직 ID
+            original_data (dict, optional): 원본 데이터 (복사-붙여넣기 시)
+            
+        Returns:
+            tuple: (QListWidgetItem, bool) - 생성된 아이템과 성공 여부
+        """
+        try:
+            # 1. 원본 데이터가 있는 경우 (복사-붙여넣기)
+            if original_data:
+                item = QListWidgetItem(logic_name)
+                new_data = original_data.copy()
+                item.setData(Qt.UserRole, new_data)
+                return item, True
+            
+            # 2. 원본 데이터가 없는 경우 (새로 추가)
+            # 캐시를 강제로 갱신하여 최신 데이터 가져오기
+            logics = self.settings_manager.load_logics(force=True)
+            
+            # logic_id가 없으면 이름으로 찾기
+            if not logic_id:
+                for existing_id, existing_logic in logics.items():
+                    if existing_logic.get('name') == logic_name:
+                        logic_id = existing_id
+                        break
+            
+            # 로직을 찾지 못한 경우
+            if not logic_id:
+                QMessageBox.critical(
+                    self,
+                    "오류",
+                    f"로직 '{logic_name}'을(를) 찾을 수 없습니다.\n"
+                    "해당 로직이 삭제되었거나 이름이 변경되었을 수 있습니다."
+                )
+                return None, False
+            
+            # 새 아이템 생성
+            item = QListWidgetItem(logic_name)
+            item_data = {
+                'type': 'logic',
+                'logic_id': logic_id,
+                'logic_name': logic_name,
+                'display_text': logic_name,
+                'repeat_count': 1,
+                'logic_data': {
+                    'logic_id': logic_id,
+                    'logic_name': logic_name,
+                    'repeat_count': 1
+                }
+            }
+            
+            item.setData(Qt.UserRole, item_data)
+            self.log_message.emit(f"중첩 로직 '{logic_name}'이(가) UUID {logic_id}로 처리되었습니다.")
+            return item, True
+            
+        except Exception as e:
+            self.log_message.emit(f"중첩 로직 처리 중 오류 발생: {str(e)}")
+            return None, False
+    
     def _add_logic_item(self, item_info):
         """로직 아이템을 리스트에 추가"""
         if not isinstance(item_info, dict):
@@ -716,102 +779,26 @@ class LogicDetailWidget(QFrame):
             logic_name = item_info.get('logic_name')
             logic_id = item_info.get('logic_id')
             
-            # UUID가 없거나 유효하지 않은 경우
-            if not logic_id or logic_id not in self.settings_manager.load_logics():
-                # 이름으로 찾기
-                logics = self.settings_manager.load_logics()
-                for existing_id, existing_logic in logics.items():
-                    if existing_logic.get('name') == logic_name:
-                        logic_id = existing_id
-                        break
-                
-                # 여전히 찾지 못한 경우
-                if not logic_id:
-                    QMessageBox.critical(
-                        self,
-                        "오류",
-                        f"원본 로직 '{logic_name}'을(를) 찾을 수 없습니다.\n"
-                        "해당 로직이 삭제되었거나 이름이 변경되었을 수 있습니다."
-                    )
-                    return
-                
-                # UUID 업데이트
-                item_info['logic_id'] = logic_id
-                if 'logic_data' in item_info:
-                    item_info['logic_data']['logic_id'] = logic_id
+            # 공통 메서드 사용
+            item, success = self._create_nested_logic_item(logic_name, logic_id)
+            if not success:
+                return
             
-            self.log_message.emit(f"중첩 로직 '{logic_name}'의 UUID가 {logic_id}로 업데이트되었습니다.")
-        
-        # content 필드가 있는 경우 (이전 형식) 새 형식으로 변환
-        elif 'content' in item_info:
-            content = item_info['content']
-            if "키 입력:" in content:
-                # 키 입력 아이템 처리...
-                pass
-            else:
-                # 로직 이름으로 원본 로직 찾기
-                logic_name = content.replace("로직:", "").strip()
-                logics = self.settings_manager.load_logics()
-                logic_id = None
-                
-                # 이름으로 원본 로직 찾기
-                for existing_id, existing_logic in logics.items():
-                    if existing_logic.get('name') == logic_name:
-                        logic_id = existing_id
-                        break
-                
-                # 원본 로직을 찾지 못한 경우 에러 메시지 표시
-                if not logic_id:
-                    QMessageBox.critical(
-                        self,
-                        "오류",
-                        f"원본 로직 '{logic_name}'을(를) 찾을 수 없습니다.\n"
-                        "해당 로직이 삭제되었거나 이름이 변경되었을 수 있습니다."
-                    )
-                    return
-                
-                item_info = {
-                    'type': 'logic',
-                    'logic_name': logic_name,
-                    'display_text': f"로직: {logic_name}",
-                    'logic_id': logic_id,
-                    'repeat_count': 1,
-                    'order': item_info.get('order', 1),
-                    'logic_data': {
-                        'logic_id': logic_id,
-                        'logic_name': logic_name,
-                        'repeat_count': 1
-                    }
-                }
-        
-        # 아이템의 순서를 현재 리스트의 아이템 개수 + 1로 설정
-        current_count = self.LogicItemList__QListWidget.count()
-        item_info['order'] = current_count + 1
-        
-        # QListWidgetItem 생성 및 추가
-        item = QListWidgetItem(item_info.get('display_text', ''))
-        item.setData(Qt.UserRole, item_info)
-        self.LogicItemList__QListWidget.addItem(item)
-
-    def has_items(self):
-        """목록에 아이템이 있는지 확인"""
-        return self.LogicItemList__QListWidget.count() > 0
-
-    def _copy_key_info_to_clipboard(self, event):
-        """트리거 키 정보를 클립보드에 복사"""
-        if self.TriggerKeyInfoLabel__QLabel.text():
-            clipboard = QGuiApplication.clipboard()
-            clipboard.setText(self.TriggerKeyInfoLabel__QLabel.text())
-            self.log_message.emit("트리거 키 정보가 클립보드에 복사되었습니다")
-
-    def _copy_item(self):
-        """선택된 아이템들을 복사"""
-        selected_items = self.LogicItemList__QListWidget.selectedItems()
-        if selected_items:
-            self.copied_items = [item.text() for item in selected_items]
-            items_count = len(self.copied_items)
-            self.log_message.emit(f"{items_count}개의 로직 구성 아이템이 복사되었습니다")
+            # 순서 설정
+            current_count = self.LogicItemList__QListWidget.count()
+            item_data = item.data(Qt.UserRole)
+            item_data['order'] = current_count + 1
+            item.setData(Qt.UserRole, item_data)
             
+            self.LogicItemList__QListWidget.addItem(item)
+        else:
+            # 일반 아이템 처리 (기존 코드 유지)
+            current_count = self.LogicItemList__QListWidget.count()
+            item = QListWidgetItem(item_info.get('display_text', ''))
+            item_info['order'] = current_count + 1
+            item.setData(Qt.UserRole, item_info)
+            self.LogicItemList__QListWidget.addItem(item)
+    
     def _paste_item(self):
         """복사된 아이템들을 현재 선택된 아이템 아래에 붙여넣기"""
         if not self.copied_items:
@@ -825,50 +812,28 @@ class LogicDetailWidget(QFrame):
             insert_position = current_row + 1
             
         # 복사된 아이템들을 선택된 아이템 바로 다음에 순서대로 추가
-        for idx, item_text in enumerate(self.copied_items):
+        for idx, copied_item in enumerate(self.copied_items):
             current_insert_position = insert_position + idx
             
-            # 중첩 로직인 경우 원본 로직의 UUID 찾기
-            if item_text.startswith("로직:"):
-                logic_name = item_text.replace("로직:", "").strip()
-                
-                # settings.json에서 이름으로 원본 로직 찾기
-                logics = self.settings_manager.load_logics()
-                logic_id = None
-                
-                # 이름이 일치하는 로직 찾기
-                for existing_id, existing_logic in logics.items():
-                    if existing_logic.get('name') == logic_name:
-                        logic_id = existing_id
-                        break
-                
-                if not logic_id:
-                    QMessageBox.critical(
-                        self,
-                        "오류",
-                        f"원본 로직 '{logic_name}'을(를) 찾을 수 없습니다.\n"
-                        "해당 로직이 삭제되었거나 이름이 변경되었을 수 있습니다."
-                    )
+            if copied_item['data'] and copied_item['data'].get('type') == 'logic':
+                # 중첩 로직인 경우 공통 메서드 사용
+                item, success = self._create_nested_logic_item(
+                    copied_item['text'],
+                    original_data=copied_item['data']
+                )
+                if not success:
                     continue
-                
-                # 새 아이템 생성 시 찾은 UUID 사용
-                item = QListWidgetItem(item_text)
-                item.setData(Qt.UserRole, {
-                    'order': current_insert_position + 1,
-                    'content': item_text,
-                    'logic_data': {
-                        'logic_id': logic_id,  # 찾은 UUID 사용
-                        'logic_name': logic_name,
-                        'repeat_count': 1
-                    }
-                })
             else:
-                # 일반 아이템의 경우 기존 처리 유지
-                item = QListWidgetItem(item_text)
-                item.setData(Qt.UserRole, {
-                    'order': current_insert_position + 1, 
-                    'content': item_text
-                })
+                # 일반 아이템의 경우
+                item = QListWidgetItem(copied_item['text'])
+                if copied_item['data']:
+                    new_data = copied_item['data'].copy()
+                    item.setData(Qt.UserRole, new_data)
+            
+            # 순서 업데이트
+            item_data = item.data(Qt.UserRole) or {}
+            item_data['order'] = current_insert_position + 1
+            item.setData(Qt.UserRole, item_data)
             
             # 뒤의 아이템들의 order 업데이트
             for i in range(current_insert_position, self.LogicItemList__QListWidget.count()):
@@ -899,7 +864,7 @@ class LogicDetailWidget(QFrame):
                 self._copy_item()
                 return True
                 
-            # Ctrl+V: ���여넣기
+            # Ctrl+V: 붙여넣기
             elif modifiers == Qt.ControlModifier and key == Qt.Key_V:
                 self._paste_item()
                 return True
@@ -956,7 +921,7 @@ class LogicDetailWidget(QFrame):
                     dialog.setWindowTitle("지연시간 수정")
                     dialog.setLabelText("지연시간(초):")
                     dialog.setDoubleDecimals(4)  # 소수점 4자리까지 표시 (0.0001초 단위)
-                    dialog.setDoubleValue(current_delay)  # 현재 지연시간을 기본값으로 설정
+                    dialog.setDoubleValue(current_delay)  # 현재 지연시간을 기본으로 설정
                     dialog.setDoubleRange(0.0001, 10000.0)  # 0.0001초 ~ 10000초
                     dialog.setDoubleStep(0.0001)  # 증가/감소 단위
                     
@@ -1056,7 +1021,7 @@ class LogicDetailWidget(QFrame):
             'is_nested': self.is_nested_checkbox.isChecked()
         }
         
-        # 중첩로직용이 아닐 경우에�� 트리거 키 추가
+        # 중첩로직이 아닐 경우에만 트리거 키 추가
         if not data['is_nested']:
             data['trigger_key'] = self.trigger_key
             
@@ -1091,7 +1056,7 @@ class LogicDetailWidget(QFrame):
             # 반복 횟수 초기화
             self.RepeatCountInput__QSpinBox.setValue(1)
             
-            # 중첩 로직용 ���크박스 초기화
+            # 중첩 로직용 체크박스 초기화
             self.IsNestedCheckBox__QCheckBox.setChecked(False)
             
             # 로직 아이템 목록 초기화
@@ -1130,3 +1095,29 @@ class LogicDetailWidget(QFrame):
         except Exception as e:
             self.log_message.emit(f"로직 저장 중 오류 발생: {str(e)}")
             return False
+
+    def has_items(self):
+        """목록에 아이템이 있는지 확인"""
+        return self.LogicItemList__QListWidget.count() > 0
+
+    def _copy_key_info_to_clipboard(self, event):
+        """트리거 키 정보를 클립보드에 복사"""
+        if self.TriggerKeyInfoLabel__QLabel.text():
+            clipboard = QGuiApplication.clipboard()
+            clipboard.setText(self.TriggerKeyInfoLabel__QLabel.text())
+            self.log_message.emit("트리거 키 정보가 클립보드에 복사되었습니다")
+
+    def _copy_item(self):
+        """선택된 아이템들을 복사"""
+        selected_items = self.LogicItemList__QListWidget.selectedItems()
+        if selected_items:
+            # 텍스트와 함께 전체 데이터를 복사
+            self.copied_items = []
+            for item in selected_items:
+                item_data = {
+                    'text': item.text(),
+                    'data': item.data(Qt.UserRole)
+                }
+                self.copied_items.append(item_data)
+            items_count = len(self.copied_items)
+            self.log_message.emit(f"{items_count}개의 로직 구성 아이템이 복사되었습니다")

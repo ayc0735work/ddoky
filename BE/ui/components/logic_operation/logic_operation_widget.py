@@ -171,10 +171,48 @@ class LogicOperationWidget(QFrame):
             # 아이템의 딥카피 생성
             copied_item = copy.deepcopy(item)
             
-            # type이 'logic'인 경우 UUID를 유지
+            # type이 'logic'인 경우 이름으로 찾아서 UUID 설정
             if copied_item.get('type') == 'logic':
-                # UUID 관련 필드들을 원본 그대로 유지
-                copied_item['logic_id'] = item['logic_id']
+                logic_name = copied_item.get('logic_name')
+                
+                # settings.json에서 로직 정보 가져오기
+                logics = self.settings_manager.load_logics(force=False)
+                
+                # 이름으로 찾기
+                found = False
+                for existing_id, existing_logic in logics.items():
+                    if existing_logic.get('name') == logic_name:
+                        logic_id = existing_id
+                        found = True
+                        break
+                
+                # 못 찾은 경우 캐시 갱신 후 다시 시도
+                if not found:
+                    logics = self.settings_manager.load_logics(force=True)
+                    for existing_id, existing_logic in logics.items():
+                        if existing_logic.get('name') == logic_name:
+                            logic_id = existing_id
+                            found = True
+                            break
+                
+                # 여전히 못 찾은 경우
+                if not found:
+                    QMessageBox.critical(
+                        self,
+                        "오류",
+                        f"로직 '{logic_name}'을(를) 찾을 수 없습니다.\n"
+                        "해당 로직이 삭제되었거나 이름이 변경되었을 수 있습니다.\n"
+                        "캐시를 갱신했지만 여전히 로직을 찾을 수 없습니다."
+                    )
+                    return
+                
+                # 찾은 로직 정보로 업데이트
+                copied_item['logic_id'] = logic_id
+                copied_item['logic_name'] = logic_name
+                copied_item['display_text'] = logic_name
+                if 'logic_data' in copied_item:
+                    copied_item['logic_data']['logic_id'] = logic_id
+                    copied_item['logic_data']['logic_name'] = logic_name
             
             copied_items.append(copied_item)
         
@@ -189,34 +227,45 @@ class LogicOperationWidget(QFrame):
         # 이미 변환된 형식인 경우 (로직 타입)
         if item_info.get('type') == 'logic':
             logic_name = item_info.get('logic_name')
-            logic_id = item_info.get('logic_id')
             
-            # UUID가 없거나 유효하지 않은 경우
-            logics = self.settings_manager.load_logics(force=True)  # 캐시 강제 새로고침
-            if logic_id and logic_id in logics:
-                # UUID가 있고 유효한 경우, 최신 이름으로 업데이트
-                updated_logic = logics[logic_id]
-                logic_name = updated_logic.get('name', logic_name)
-                item_info['logic_name'] = logic_name
-                item_info['display_text'] = logic_name
-            else:
-                # UUID가 없거나 유효하지 않은 경우, 이름으로 찾기
+            # 1. 첫 번째 시도: settings.json에서 로직 정보 가져오기
+            logics = self.settings_manager.load_logics(force=False)
+            
+            # 이름으로 찾기
+            found = False
+            for existing_id, existing_logic in logics.items():
+                if existing_logic.get('name') == logic_name:
+                    logic_id = existing_id
+                    found = True
+                    break
+            
+            # 2. 찾지 못한 경우 캐시를 강제로 갱신하고 다시 시도
+            if not found:
+                logics = self.settings_manager.load_logics(force=True)  # 캐시 강제 갱신
                 for existing_id, existing_logic in logics.items():
                     if existing_logic.get('name') == logic_name:
                         logic_id = existing_id
+                        found = True
                         break
-                    
-            if not logic_id:
+            
+            # 3. 여전히 찾지 못한 경우 오류 메시지 표시
+            if not found:
                 QMessageBox.critical(
                     self,
                     "오류",
-                    f"원본 로직 '{logic_name}'을(를) 찾을 수 없습니다.\n"
-                    "해당 로직이 삭제되었거나 이름이 변경되었을 수 있습니다."
+                    f"로직 '{logic_name}'을(를) 찾을 수 없습니다.\n"
+                    "해당 로직이 삭제되었거나 이름이 변경되었을 수 있습니다.\n"
+                    "캐시를 갱신했지만 여전히 로직을 찾을 수 없습니다."
                 )
                 return
-                
-            # UUID 업데이트
+            
+            # 찾은 로직 정보로 업데이트
             item_info['logic_id'] = logic_id
+            item_info['logic_name'] = logic_name
+            item_info['display_text'] = logic_name
             if 'logic_data' in item_info:
                 item_info['logic_data']['logic_id'] = logic_id
                 item_info['logic_data']['logic_name'] = logic_name
+            
+            # 리스트에 아이템 추가
+            self._add_item_to_list(item_info)

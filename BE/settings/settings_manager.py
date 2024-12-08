@@ -28,7 +28,7 @@ class SettingsManager:
     def _save_settings(self, settings):
         """설정 파일에 현재 설정을 저장합니다."""
         try:
-            # 로직 데이터에서 uuid 필드 제거 및 드 순서 정리
+            # 로직 데이터에서 uuid 필드 제거 및 필드 순서 정리
             if 'logics' in settings:
                 ordered_logics = {}
                 for logic_id, logic_data in settings['logics'].items():
@@ -88,7 +88,7 @@ class SettingsManager:
                     "height": 600
                 }
             },
-            "logics": {}  # UUID를 키로 사용하는 직 저장소
+            "logics": {}  # UUID를 키로 사용하는 로직 저장소
         }
     
     def _migrate_to_uuid(self, settings):
@@ -312,6 +312,9 @@ class SettingsManager:
             # 설정 파일 저장
             self._save_settings(settings)
             
+            # 캐시 갱신
+            self.settings = settings
+            
             return logic_info
             
         except Exception as e:
@@ -370,3 +373,6 @@ class SettingsManager:
         
         self.settings['logics'] = ordered_logics
         self._save_settings(self.settings)
+        
+        # 캐시 갱신
+        self.reload_settings(force=True)
