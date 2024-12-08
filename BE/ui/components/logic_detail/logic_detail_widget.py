@@ -75,7 +75,7 @@ class LogicDetailWidget(QFrame):
         LogicNameSection__QHBoxLayout.setContentsMargins(0, 0, 0, 0)
         LogicNameSection__QHBoxLayout.setSpacing(5)
         
-        # ��직 이름 라벨
+        # 로직 이름 라벨
         LogicNameLabel__QLabel = QLabel("로직 이름:")
         LogicNameLabel__QLabel.setFixedWidth(70)
         LogicNameSection__QHBoxLayout.addWidget(LogicNameLabel__QLabel)
@@ -97,7 +97,7 @@ class LogicDetailWidget(QFrame):
         self.NewLogicButton__QPushButton = QPushButton("새 로직")
         self.NewLogicButton__QPushButton.setStyleSheet(BUTTON_STYLE)
         self.NewLogicButton__QPushButton.clicked.connect(self._create_new_logic)
-        self.NewLogicButton__QPushButton.setEnabled(False)  # 초기에는 비활성화
+        self.NewLogicButton__QPushButton.setEnabled(False)  # 초기에 비활성화
         LogicSaveSection__QHBoxLayout.addWidget(self.NewLogicButton__QPushButton)
         
         # 로직 저장 버튼
@@ -244,7 +244,7 @@ class LogicDetailWidget(QFrame):
         current_row = self.LogicItemList__QListWidget.currentRow()
         self.MoveUpButton__QPushButton.setEnabled(has_selection and current_row > 0)
         self.MoveDownButton__QPushButton.setEnabled(has_selection and current_row < self.LogicItemList__QListWidget.count() - 1)
-        self.EditItemButton__QPushButton.setEnabled(len(selected_items) == 1)  # 수정은 단일 선택만 가��
+        self.EditItemButton__QPushButton.setEnabled(len(selected_items) == 1)  # 수정은 단일 선택만 가능
         self.DeleteItemButton__QPushButton.setEnabled(has_selection)  # 삭제는 다중 선택 가능
 
     def add_item(self, item_text):
@@ -423,7 +423,7 @@ class LogicDetailWidget(QFrame):
                         '숫자패드 9': win32con.VK_NUMPAD9,
                         '숫자패드 *': win32con.VK_MULTIPLY,
                         '숫자패드 +': win32con.VK_ADD,
-                        '숫자패�� -': win32con.VK_SUBTRACT,
+                        '숫자패드 -': win32con.VK_SUBTRACT,
                         '숫자패드 .': win32con.VK_DECIMAL,
                         '숫자패드 /': win32con.VK_DIVIDE,
                     }
@@ -440,7 +440,7 @@ class LogicDetailWidget(QFrame):
                     
                     # 스캔 코드 얻기
                     if key == '숫자패드 엔터':
-                        scan_code = 0x1C + 0xE0  # 252 (숫자패드 엔터의 확장 캔 코드)
+                        scan_code = 0x1C + 0xE0  # 252 (숫자패드 엔터의 확장 �� 코드)
                     else:
                         scan_code = win32api.MapVirtualKey(virtual_key, 0)
                     
@@ -515,11 +515,54 @@ class LogicDetailWidget(QFrame):
         if not key_info:  # 키 정보가 비어있으면 라벨 초기화
             self.TriggerKeyInfoLabel__QLabel.clear()
             return
-            
-        # modifiers가 이미 정수값인지 확인하고, 아라면 int() 변환을 건너뜁니다
+        
+        # modifiers가 이미 정수값인지 확인하고, 아니라면 int() 변환을 건너뜁니다
         if not isinstance(key_info['modifiers'], int):
             key_info['modifiers'] = key_info['modifiers'].value
+        
+        # 트리거 키 중복 체크
+        logics = self.settings_manager.load_logics()
+        duplicate_logics = []
+        
+        for logic_id, logic in logics.items():
+            # 자기 자신은 제외하고 중첩로직이 아닌 것들만 체크
+            if (logic_id != self.current_logic_id and 
+                not logic.get('is_nested', False)):
+                trigger_key = logic.get('trigger_key', {})
+                if (trigger_key.get('virtual_key') == key_info.get('virtual_key') and 
+                    trigger_key.get('modifiers') == key_info.get('modifiers')):
+                    duplicate_logics.append({
+                        'name': logic.get('name'),
+                        'id': logic_id
+                    })
+        
+        if duplicate_logics:
+            # 중복된 트리거 키가 있는 경우
+            duplicate_info = "\n\n".join([
+                f"로직 이름: {logic['name']}\n  로직 UUID: {logic['id']}"
+                for logic in duplicate_logics
+            ])
             
+            msg = QMessageBox(self)
+            msg.setIcon(QMessageBox.Warning)
+            msg.setWindowTitle("트리거 키 중복")
+            msg.setText("이미 다른 로직에서 사용 중인 트리거 키입니다.\n\n"
+                       "아래 로직(들)에서 해당 트리거 키를 사용하고 있습니다:\n\n"
+                       f"{duplicate_info}")
+            msg.setStandardButtons(QMessageBox.Ok)
+            
+            # 로그 메시지도 출력
+            self.log_message.emit(f"트리거 키 중복: {len(duplicate_logics)}개의 로직에서 사용 중")
+            
+            # 키 입력 초기화
+            self.TriggerKeyInputWidget__KeyInputWidget.clear_key()
+            self.TriggerKeyInfoLabel__QLabel.clear()
+            self.trigger_key_info = None
+            
+            msg.exec_()
+            return
+        
+        # 중복이 없는 경우 정상적으로 트리거 키 설정
         self.TriggerKeyInfoLabel__QLabel.setText(format_key_info(key_info))
         self.trigger_key_info = key_info  # 트리거 키 정보 저장
 
@@ -575,7 +618,7 @@ class LogicDetailWidget(QFrame):
             if success:
                 if self.edit_mode:  # 수정 모드
                     self.logic_updated.emit(self.original_name, logic_info)
-                    self.log_message.emit(f"로직 '{name}'이(가) 업��이트되었습니다.")
+                    self.log_message.emit(f"로직 '{name}'이(가) 업이트되었습니다.")
                 else:  # 새 로직
                     self.logic_saved.emit(logic_info)
                     self.log_message.emit(f"새 로직 '{name}'이(가) 저장되었습니다.")
@@ -607,7 +650,7 @@ class LogicDetailWidget(QFrame):
             
             # UUID 설정 (logic_info에서 직접 가져오기)
             self.current_logic_id = logic_info.get('id')  # logic_info에서 직접 ID 가져오기
-            if not self.current_logic_id:  # ID가 없는 경�� 이름으로 찾기
+            if not self.current_logic_id:  # ID가 없는 경우 이름으로 찾기
                 logics = self.settings_manager.load_logics()
                 for logic_id, saved_logic in logics.items():
                     if saved_logic.get('name') == logic_info.get('name'):
@@ -855,7 +898,7 @@ class LogicDetailWidget(QFrame):
                 self._copy_item()
                 return True
                 
-            # Ctrl+V: 붙여넣기
+            # Ctrl+V: ���여넣기
             elif modifiers == Qt.ControlModifier and key == Qt.Key_V:
                 self._paste_item()
                 return True
@@ -873,7 +916,7 @@ class LogicDetailWidget(QFrame):
         # 1. 직 이름이 입력되어 있는 경우
         # 2. 트리거 키가 설정되어 있는 경우
         # 3. 아이템 목록에 하나 이상의 아이템이 있는 경우
-        # 4. 반��� 횟수가 1이 아닌 경우
+        # 4. 반복 횟수가 1이 아닌 경우
         has_logic_name = bool(self.LogicNameInput__QLineEdit.text().strip())
         has_trigger_key = bool(self.trigger_key_info)
         has_items = self.LogicItemList__QListWidget.count() > 0
@@ -997,7 +1040,7 @@ class LogicDetailWidget(QFrame):
         self.TriggerKeyInputWidget__KeyInputWidget.setEnabled(not is_nested)
         
         if is_nested:
-            # 중첩로직용일 경우 트리거 키 보 ���기화
+            # 중첩로직용일 경우 트리거 키 보 기화
             self.trigger_key_info = None
             self.TriggerKeyInfoLabel__QLabel.clear()
             # 트리거 키 입력 위젯 초기화
@@ -1012,7 +1055,7 @@ class LogicDetailWidget(QFrame):
             'is_nested': self.is_nested_checkbox.isChecked()
         }
         
-        # 중첩로직용이 아닐 경우에만 트리거 키 추가
+        # 중첩로직용이 아닐 경우에�� 트리거 키 추가
         if not data['is_nested']:
             data['trigger_key'] = self.trigger_key
             
@@ -1047,7 +1090,7 @@ class LogicDetailWidget(QFrame):
             # 반복 횟수 초기화
             self.RepeatCountInput__QSpinBox.setValue(1)
             
-            # 중첩 로직용 체크박스 초기화
+            # 중첩 로직용 ���크박스 초기화
             self.IsNestedCheckBox__QCheckBox.setChecked(False)
             
             # 로직 아이템 목록 초기화
