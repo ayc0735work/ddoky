@@ -99,24 +99,60 @@ class LogicManager(QObject):
         return True
     
     def save_logic(self, logic_id, logic_data):
-        """로직 저장"""
+        """로직 저장
+        
+        Args:
+            logic_id (str): 저장할 로직의 ID
+            logic_data (dict): 저장할 로직 데이터
+            
+        Returns:
+            tuple: (성공 여부, 로직 ID 또는 에러 메시지)
+        """
         try:
             self.validate_logic(logic_data)
             
-            # 중첩 로직인 경우 중복 생성 방지
+            settings = self.settings_manager._load_settings()
+            logics = settings.get('logics', {})
+            
+            # 이름 중복 검사 (중첩 로직은 제외)
+            logic_name = logic_data.get('name')
+            if not logic_data.get('is_nested', False):
+                for existing_id, existing_logic in logics.items():
+                    if (existing_logic['name'] == logic_name and 
+                        existing_id != logic_id and  # 자기 자신은 제외
+                        not existing_logic.get('is_nested', False)):  # 중첩 로직은 제외
+                        return False, "동일한 이름의 로직이 이미 존재합니다."
+            
+            # 중첩 로직인 경우 중복 생성 방지 및 원본 ID 유지
             if logic_data.get('is_nested', False):
-                existing_logics = self.get_all_logics()
-                for existing_id, existing_logic in existing_logics.items():
-                    if (existing_logic['name'] == logic_data['name'] and 
+                for existing_id, existing_logic in logics.items():
+                    if (existing_logic['name'] == logic_name and 
                         existing_logic['is_nested'] == True):
-                        # 기존 로직 ID 반환
+                        # 기존 로직의 ID를 유지하면서 내용만 업데이트
+                        logics[existing_id] = logic_data
+                        settings['logics'] = logics
+                        self.settings_manager._save_settings(settings)
                         return True, existing_id
             
-            # 새 로직 저장
-            self.logics[logic_id] = logic_data
-            self._save_to_file()
-            # 캐시 즉시 업데이트
-            self.get_all_logics(force=True)
+            # 새 로직 저장 또는 기존 로직 업데이트
+            if logic_id in logics:  # 기존 로직 업데이트
+                logics[logic_id] = logic_data
+            else:  # 새 로직 저장
+                # 이름 중복 한번 더 검사
+                for existing_logic in logics.values():
+                    if (existing_logic['name'] == logic_name and 
+                        not existing_logic.get('is_nested', False)):
+                        return False, "동일한 이름의 로직이 이미 존재합니다."
+                logics[logic_id] = logic_data
+            
+            settings['logics'] = logics
+            self.settings_manager._save_settings(settings)
+            
+            # 현재 로직 업데이트
+            if self.current_logic_name == logic_name:
+                self.current_logic = logic_data
+                self.logic_changed.emit(self.current_logic)
+            
             return True, logic_id
         except ValueError as e:
             return False, str(e)
