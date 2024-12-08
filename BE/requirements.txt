@@ -1,8 +1,8 @@
 opencv-python==4.8.1.78
 numpy==1.26.2
 Pillow==10.1.0
-torch==2.1.2+cu121
-torchvision==0.16.2+cu121
+torch==2.2.2+cu121
+torchvision==0.17.2+cu121
 easyocr==1.7.1
 keyboard==0.13.5
 mss==9.0.1
@@ -11,3 +11,4 @@ PySide6==6.6.1
 pywin32==308
 psutil==6.1.0
 pyinstaller==6.11.1
+setuptools>=68.0.0

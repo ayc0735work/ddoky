@@ -1,7 +1,10 @@
 import sys
 import os
 import subprocess
-import pkg_resources
+try:
+    from importlib import metadata as importlib_metadata
+except ImportError:
+    import importlib_metadata
 
 def install_requirements():
     """필요한 패키지들을 자동으로 설치합니다."""
