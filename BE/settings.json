@@ -982,7 +982,7 @@
             "order": 11,
             "name": "첨 중독, 저주, 마미 - 1회",
             "created_at": "2024-11-30T10:25:06.438732",
-            "updated_at": "2024-12-08T21:56:57.367864",
+            "updated_at": "2024-12-08T23:47:21.293576",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -1010,37 +1010,13 @@
                 {
                     "order": 3,
                     "type": "logic",
-                    "display_text": "체력 회복 - 1회",
-                    "logic_id": "ed0d7b48-c7ac-4397-8ce5-360143efa401",
-                    "logic_name": "체력 회복 - 1회",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 4,
-                    "type": "logic",
                     "display_text": "마비 상하좌우 - 1회",
                     "logic_id": "85cf8740-010e-4ad5-a03f-2d612ab6fda5",
                     "logic_name": "마비 상하좌우 - 1회",
                     "repeat_count": 1
                 },
                 {
-                    "order": 5,
-                    "type": "logic",
-                    "display_text": "저주 상하좌우 - 1회",
-                    "logic_id": "64891b6b-1b46-439e-8ee0-a2c4d722f514",
-                    "logic_name": "저주 상하좌우 - 1회",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 6,
-                    "type": "logic",
-                    "display_text": "중독만 - 8회",
-                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
-                    "logic_name": "중독만 - 8회",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 7,
+                    "order": 4,
                     "display_text": "키 입력: 숫자패드 9 --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -1050,7 +1026,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 8,
+                    "order": 5,
                     "display_text": "키 입력: 숫자패드 9 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -1060,11 +1036,39 @@
                     "modifiers": 0
                 },
                 {
+                    "order": 6,
+                    "type": "logic",
+                    "display_text": "중독만 - 5회",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "중독만 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 7,
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 8,
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
                     "order": 9,
                     "type": "logic",
-                    "display_text": "중독만 - 8회",
-                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
-                    "logic_name": "중독만 - 8회",
+                    "display_text": "저주 상하좌우 - 1회",
+                    "logic_id": "64891b6b-1b46-439e-8ee0-a2c4d722f514",
+                    "logic_name": "저주 상하좌우 - 1회",
                     "repeat_count": 1
                 },
                 {
@@ -1086,6 +1090,118 @@
                     "scan_code": 73,
                     "virtual_key": 105,
                     "modifiers": 0
+                },
+                {
+                    "order": 12,
+                    "type": "logic",
+                    "display_text": "마비 상하좌우 - 1회",
+                    "logic_id": "85cf8740-010e-4ad5-a03f-2d612ab6fda5",
+                    "logic_name": "마비 상하좌우 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 13,
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 14,
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 15,
+                    "type": "logic",
+                    "display_text": "중독만 - 5회",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "중독만 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 16,
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 17,
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 18,
+                    "type": "logic",
+                    "display_text": "중독만 - 5회",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "중독만 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 19,
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 20,
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 21,
+                    "type": "logic",
+                    "display_text": "중독만 - 5회",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "중독만 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 22,
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 23,
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
                 }
             ]
         },
@@ -1093,7 +1209,7 @@
             "order": 12,
             "name": "중독, 마비 첨 사냥 - 무한반복",
             "created_at": "2024-12-08T21:25:24.196785",
-            "updated_at": "2024-12-08T21:57:14.197571",
+            "updated_at": "2024-12-08T22:51:56.550401",
             "trigger_key": {
                 "key_code": "숫자패드 *",
                 "modifiers": 0,
@@ -1122,17 +1238,17 @@
                 {
                     "order": 3,
                     "type": "logic",
-                    "display_text": "첨 중독, 저주, 마미 - 1회",
-                    "logic_id": "970a1723-88f9-4a50-8bb4-4f8c8f8199fe",
-                    "logic_name": "첨 중독, 저주, 마미 - 1회",
+                    "display_text": "공력증강 - 연속1회 - 사냥용",
+                    "logic_id": "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7",
+                    "logic_name": "공력증강 - 연속1회 - 사냥용",
                     "repeat_count": 1
                 },
                 {
                     "order": 4,
                     "type": "logic",
-                    "display_text": "첨 중독, 저주, 마미 - 1회",
-                    "logic_id": "970a1723-88f9-4a50-8bb4-4f8c8f8199fe",
-                    "logic_name": "첨 중독, 저주, 마미 - 1회",
+                    "display_text": "공력증강 - 연속1회 - 사냥용",
+                    "logic_id": "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7",
+                    "logic_name": "공력증강 - 연속1회 - 사냥용",
                     "repeat_count": 1
                 },
                 {
@@ -1161,14 +1277,6 @@
                 },
                 {
                     "order": 8,
-                    "type": "logic",
-                    "display_text": "공력증강 - 연속1회 - 사냥용",
-                    "logic_id": "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7",
-                    "logic_name": "공력증강 - 연속1회 - 사냥용",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 9,
                     "type": "logic",
                     "display_text": "공력증강 - 연속1회 - 사냥용",
                     "logic_id": "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7",
@@ -1377,9 +1485,9 @@
                 {
                     "order": 1,
                     "type": "logic",
-                    "display_text": "중독만 - 8회",
+                    "display_text": "중독만 - 5회",
                     "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
-                    "logic_name": "중독만 - 8회",
+                    "logic_name": "중독만 - 5회",
                     "repeat_count": 1
                 },
                 {
@@ -1928,11 +2036,11 @@
         },
         "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf": {
             "order": 20,
-            "name": "중독만 - 8회",
+            "name": "중독만 - 5회",
             "created_at": "2024-12-08T20:39:14.995922",
-            "updated_at": "2024-12-08T21:25:24.212628",
+            "updated_at": "2024-12-08T23:11:48.801453",
             "trigger_key": null,
-            "repeat_count": 8,
+            "repeat_count": 5,
             "is_nested": true,
             "items": [
                 {
