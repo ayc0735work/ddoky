@@ -69,7 +69,6 @@ class LogicExecutor(QObject):
         with self._state_lock:
             self._log_with_time("[상태 로그] 상태 락 획득")
             self.execution_state.update(kwargs)
-            self._log_with_time("[상태 로그] 새로운 상태: {}".format(self.execution_state))
             self.execution_state_changed.emit(self.execution_state.copy())
             self._log_with_time("[상태 로그] 상태 변경 알림 완료")
     
@@ -495,8 +494,16 @@ class LogicExecutor(QObject):
 
     def _is_trigger_key_matched(self, logic, key_info):
         """트리거 키 매칭 확인"""
+        # 중첩 로직인 경우 매칭하지 않음
+        if logic.get('is_nested', False):
+            return False
+        
         trigger_key = logic.get('trigger_key', {})
         self._log_with_time("[로그] 트리거 키 매칭 확인 - 트리거 키: {}, 입력 키: {}".format(trigger_key, key_info))
+        
+        # trigger_key나 key_info가 None인 경우 처리
+        if not trigger_key or not key_info:
+            return False
         
         # 가상 키와 스캔 코드만 비교
         return (trigger_key.get('virtual_key') == key_info.get('virtual_key') and

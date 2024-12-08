@@ -725,14 +725,8 @@
             "order": 8,
             "name": "동동주 마시기 - 1회",
             "created_at": "2024-11-30T07:08:49.271692",
-            "updated_at": "2024-12-08T12:30:09.901660",
-            "trigger_key": {
-                "display_text": "",
-                "key_code": "",
-                "modifiers": 0,
-                "scan_code": 0,
-                "virtual_key": 0
-            },
+            "updated_at": "2024-12-08T13:11:01.378115",
+            "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
             "items": [
@@ -748,8 +742,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.02초",
-                    "duration": 0.02,
+                    "display_text": "지연시간 : 0.03초",
+                    "duration": 0.03,
                     "order": 2
                 },
                 {
@@ -774,12 +768,38 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.02초",
-                    "duration": 0.02,
+                    "display_text": "지연시간 : 0.03초",
+                    "duration": 0.03,
                     "order": 5
                 },
                 {
                     "order": 6,
+                    "display_text": "키 입력: F --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "F",
+                    "scan_code": 33,
+                    "virtual_key": 70,
+                    "modifiers": 0
+                },
+                {
+                    "order": 7,
+                    "display_text": "키 입력: F --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "F",
+                    "scan_code": 33,
+                    "virtual_key": 70,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.03초",
+                    "duration": 0.03,
+                    "order": 8
+                },
+                {
+                    "order": 9,
                     "display_text": "키 입력: 왼쪽 컨트롤 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -790,9 +810,9 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.02초",
-                    "duration": 0.02,
-                    "order": 7
+                    "display_text": "지연시간 : 0.03초",
+                    "duration": 0.03,
+                    "order": 10
                 }
             ]
         },
@@ -1743,9 +1763,9 @@
                 {
                     "order": 1,
                     "type": "logic",
-                    "display_text": "마비 상하좌우 - 2회",
+                    "display_text": "마비 상하좌우 - 3회",
                     "logic_id": "27d1f013-d82b-42f2-87cd-785dad90b052",
-                    "logic_name": "마비 상하좌우 - 2회",
+                    "logic_name": "마비 상하좌우 - 3회",
                     "repeat_count": 1
                 },
                 {
@@ -2236,9 +2256,9 @@
         },
         "27d1f013-d82b-42f2-87cd-785dad90b052": {
             "order": 23,
-            "name": "마비 상하좌우 - 2회",
+            "name": "마비 상하좌우 - 3회",
             "created_at": "2024-12-06T16:29:20.641646",
-            "updated_at": "2024-12-08T12:30:09.901660",
+            "updated_at": "2024-12-08T12:50:57.597938",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "오른쪽 쉬프트",
@@ -2246,7 +2266,7 @@
                 "scan_code": 54,
                 "virtual_key": 161
             },
-            "repeat_count": 2,
+            "repeat_count": 3,
             "is_nested": false,
             "items": [
                 {
@@ -2501,7 +2521,7 @@
             "order": 24,
             "name": "마비 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
-            "updated_at": "2024-12-08T12:30:09.901660",
+            "updated_at": "2024-12-08T12:50:57.584078",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "",
