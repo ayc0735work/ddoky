@@ -1,13 +1,14 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
                              QLabel, QCheckBox, QPushButton, QDialog,
-                             QMessageBox)
+                             QMessageBox, QLineEdit)
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont, QDoubleValidator
 import copy
 
 from ...constants.styles import (FRAME_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from BE.ui.components.process_selector.process_selector_dialog import ProcessSelectorDialog
+from BE.settings import Settings
 
 class LogicOperationWidget(QFrame):
     """로직 동작 온오프 위젯"""
@@ -24,6 +25,7 @@ class LogicOperationWidget(QFrame):
         self.logic_executor = None  # LogicExecutor 인스턴스를 저장할 속성 추가
         self._init_ui()
         self._connect_signals()
+        self.load_delay_settings()  # 초기화 시 설정 로드
         
     def _init_ui(self):
         """UI 초기화"""
@@ -36,11 +38,11 @@ class LogicOperationWidget(QFrame):
         layout.setSpacing(10)
         
         # 타이틀
-        title = QLabel("로직 동작 온오프")
+        title = QLabel("로직 동작 기본 설정")
         title.setFont(QFont(TITLE_FONT_FAMILY, SECTION_FONT_SIZE, QFont.Weight.Bold))
         layout.addWidget(title)
         
-        # 첫 번째 줄 레이아웃 (로직 동작, 버튼들)
+        # 첫 번째 줄 레이아웃 (로직 동작, 버튼)
         first_row = QHBoxLayout()
         first_row.setContentsMargins(0, 0, 0, 0)
         first_row.setSpacing(10)  # 체크박스와 버튼 그룹 사이 간격
@@ -88,6 +90,74 @@ class LogicOperationWidget(QFrame):
         second_row.addStretch()
         
         layout.addLayout(second_row)
+        
+        # 기본 지연 시간 설정 레이아웃 추가
+        delay_settings_layout = QHBoxLayout()
+        delay_settings_layout.setContentsMargins(0, 10, 0, 0)  # 상단에 여백 추가
+        delay_settings_layout.setSpacing(10)
+        
+        # 입력 필드들을 담을 컨테이너
+        inputs_layout = QHBoxLayout()
+        inputs_layout.setSpacing(5)
+        
+        # 키 누르기 후 지연시간 입력
+        key_press_layout = QVBoxLayout()
+        key_press_label = QLabel("키 누르기 후\n지연시간")
+        key_press_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.key_press_input = QLineEdit()
+        self.key_press_input.setFixedWidth(80)
+        self.key_press_input.setEnabled(False)
+        self.key_press_input.setValidator(QDoubleValidator(0.0000, 9.9999, 4))
+        key_press_layout.addWidget(key_press_label)
+        key_press_layout.addWidget(self.key_press_input)
+        inputs_layout.addLayout(key_press_layout)
+        
+        # 키 떼기 후 지연시간 입력
+        key_release_layout = QVBoxLayout()
+        key_release_label = QLabel("키 떼기 후\n지연시간")
+        key_release_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.key_release_input = QLineEdit()
+        self.key_release_input.setFixedWidth(80)
+        self.key_release_input.setEnabled(False)
+        self.key_release_input.setValidator(QDoubleValidator(0.0000, 9.9999, 4))
+        key_release_layout.addWidget(key_release_label)
+        key_release_layout.addWidget(self.key_release_input)
+        inputs_layout.addLayout(key_release_layout)
+        
+        # 기타 동작 후 지연시간 입력
+        default_delay_layout = QVBoxLayout()
+        default_delay_label = QLabel("기타 동작 후\n지연시간")
+        default_delay_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.default_delay_input = QLineEdit()
+        self.default_delay_input.setFixedWidth(80)
+        self.default_delay_input.setEnabled(False)
+        self.default_delay_input.setValidator(QDoubleValidator(0.0000, 9.9999, 4))
+        default_delay_layout.addWidget(default_delay_label)
+        default_delay_layout.addWidget(self.default_delay_input)
+        inputs_layout.addLayout(default_delay_layout)
+        
+        delay_settings_layout.addLayout(inputs_layout)
+        
+        # 버튼들
+        buttons_layout = QHBoxLayout()
+        buttons_layout.setSpacing(5)
+        
+        self.edit_delays_btn = QPushButton("수정하기")
+        self.edit_delays_btn.setStyleSheet(BUTTON_STYLE)
+        self.edit_delays_btn.clicked.connect(self._on_edit_delays)
+        
+        self.save_delays_btn = QPushButton("저장하기")
+        self.save_delays_btn.setStyleSheet(BUTTON_STYLE)
+        self.save_delays_btn.setEnabled(False)
+        self.save_delays_btn.clicked.connect(self._on_save_delays)
+        
+        buttons_layout.addWidget(self.edit_delays_btn)
+        buttons_layout.addWidget(self.save_delays_btn)
+        
+        delay_settings_layout.addLayout(buttons_layout)
+        delay_settings_layout.addStretch()  # 나머지 공간을 채움
+        
+        layout.addLayout(delay_settings_layout)
         
         # 세 번째 줄 레이아웃 (활성 프로세스)
         third_row = QHBoxLayout()
@@ -195,7 +265,7 @@ class LogicOperationWidget(QFrame):
                             found = True
                             break
                 
-                # 여전히 못 찾은 경우
+                # 전히 못 찾은 경우
                 if not found:
                     QMessageBox.critical(
                         self,
@@ -269,3 +339,61 @@ class LogicOperationWidget(QFrame):
             
             # 리스트에 아이템 추가
             self._add_item_to_list(item_info)
+
+    def _on_edit_delays(self):
+        """지연 시간 수정 버튼 클릭 시 호출"""
+        self.key_press_input.setEnabled(True)
+        self.key_release_input.setEnabled(True)
+        self.default_delay_input.setEnabled(True)
+        self.save_delays_btn.setEnabled(True)
+        self.edit_delays_btn.setEnabled(False)
+    
+    def _on_save_delays(self):
+        """지연 시간 저장 버튼 클릭 시 호출"""
+        try:
+            # 입력값 가져오기
+            key_press = float(self.key_press_input.text())
+            key_release = float(self.key_release_input.text())
+            default_delay = float(self.default_delay_input.text())
+            
+            # 로직 실행기의 딜레이 값 업데이트
+            if self.logic_executor:
+                self.logic_executor.KEY_DELAYS = {
+                    '누르기': key_press,
+                    '떼기': key_release,
+                    '기본': default_delay
+                }
+            
+            # 설정 파일에 저장
+            settings = Settings()
+            settings.set('key_delays', {
+                'press': key_press,
+                'release': key_release,
+                'default': default_delay
+            })
+            
+            # UI 상태 업데이트
+            self.key_press_input.setEnabled(False)
+            self.key_release_input.setEnabled(False)
+            self.default_delay_input.setEnabled(False)
+            self.save_delays_btn.setEnabled(False)
+            self.edit_delays_btn.setEnabled(True)
+            
+            self.log_message.emit("지연 시간 설정이 저장되었습니다.")
+            
+        except ValueError:
+            self.log_message.emit("올바른 숫자 형식을 입력해주세요.")
+    
+    def load_delay_settings(self):
+        """저장된 지연 시간 설정 로드"""
+        settings = Settings()
+        delays = settings.get('key_delays', {
+            'press': 0.0205,
+            'release': 0.0205,
+            'default': 0.0205
+        })
+        
+        # 입력 필드에 값 설정
+        self.key_press_input.setText(f"{delays['press']:.4f}")
+        self.key_release_input.setText(f"{delays['release']:.4f}")
+        self.default_delay_input.setText(f"{delays['default']:.4f}")

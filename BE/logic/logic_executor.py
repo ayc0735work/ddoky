@@ -4,6 +4,7 @@ import win32con
 from PySide6.QtCore import QObject, Signal, QTimer
 from ..utils.key_handler import KeyboardHook
 import threading
+from ..settings.settings import Settings
 
 class LogicExecutor(QObject):
     """로직 실행기"""
@@ -38,11 +39,18 @@ class LogicExecutor(QObject):
             'current_repeat': 1
         }
         
-        # 키 입력 딜레이 세분화
+        # 설정에서 딜레이 값 로드
+        settings = Settings()
+        delays = settings.get('key_delays', {
+            'press': 0.0205,
+            'release': 0.0205,
+            'default': 0.0205
+        })
+        
         self.KEY_DELAYS = {
-            '누르기': 0.0205,  # 키를 누를 때의 딜레이
-            '떼기': 0.0205,    # 키를 뗄 때의 딜레이
-            '기본': 0.0205     # 기타 동작의 기본 딜레이
+            '누르기': delays['press'],
+            '떼기': delays['release'],
+            '기본': delays['default']
         }
         
         # 리소스 관리
@@ -73,7 +81,7 @@ class LogicExecutor(QObject):
             self._log_with_time("[상태 로그] 상태 변경 알림 완료")
     
     def start_monitoring(self):
-        """트리거 키 모니터링 시작"""
+        """트리거 키 모니터링 작"""
         with self._hook_lock:
             if self.execution_state['is_executing'] or self.keyboard_hook:
                 return
@@ -159,7 +167,7 @@ class LogicExecutor(QObject):
                         current_step=0,
                         current_repeat=1
                     )
-                    # 로직 실행 시작 시 시간 초기화
+                    # 로직 실행 시작 ��� 시간 초기화
                     self._start_time = time.time()
                     self._log_with_time(f"[로직 실행] 로직 '{logic.get('name')}({logic.get('id')})' 실행 시작")
                     
@@ -471,7 +479,7 @@ class LogicExecutor(QObject):
         """로직 실행 조건 확인
         
         Returns:
-            bool: 로직을 실행해야 하는지 여부
+            bool: 로직을 실행���야 하는지 여부
         """
         # 이미 실행 중이면 실행하지 않음
         if self.execution_state['is_executing']:
@@ -540,7 +548,7 @@ class LogicExecutor(QObject):
             "지연시간"  # 지연시간 로그 추가
         ]
 
-        # 시간 정보 포함할 패턴이 있는 경우 시간 정보 추가
+        # 시간 정보 포함 패턴이 있는 경우 시간 정보 추가
         if any(pattern in message for pattern in time_patterns):
             elapsed = int((time.time() - self._start_time) * 1000)
             time_info = f"[{elapsed}ms]"
@@ -587,7 +595,7 @@ class LogicExecutor(QObject):
             self.execution_state_changed.emit(self.execution_state.copy())
 
     def _clear_all_timers(self):
-        """모든 타이머를 정리하는 메서드"""
+        """모든 ���이머를 정리하는 메서드"""
         active_timers = len(self._active_timers)
         logger.info(f"활성 타이머 개수: {active_timers}")
         
@@ -620,7 +628,7 @@ class LogicExecutor(QObject):
                         logic_info['order'] = 1 if i == 0 else i + 1
                         logic_info['updated_at'] = datetime.now().isoformat()
                         
-                        # settings_manager를 통해 로직 저장 (필드 순서 정리)
+                        # settings_manager를 통해 로직 저장 (필드 순서 정)
                         updated_logic = self.settings_manager.save_logic(logic_id, logic_info)
                         updated_logics[logic_id] = updated_logic
             
