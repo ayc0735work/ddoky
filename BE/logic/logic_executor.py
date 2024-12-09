@@ -167,7 +167,7 @@ class LogicExecutor(QObject):
                         current_step=0,
                         current_repeat=1
                     )
-                    # 로직 실행 시작 ��� 시간 초기화
+                    # 로직 실행 시작 시간 초기화
                     self._start_time = time.time()
                     self._log_with_time(f"[로직 실행] 로직 '{logic.get('name')}({logic.get('id')})' 실행 시작")
                     
@@ -479,7 +479,7 @@ class LogicExecutor(QObject):
         """로직 실행 조건 확인
         
         Returns:
-            bool: 로직을 실행���야 하는지 여부
+            bool: 로직을 실행해야 하는지 여부
         """
         # 이미 실행 중이면 실행하지 않음
         if self.execution_state['is_executing']:
@@ -595,7 +595,7 @@ class LogicExecutor(QObject):
             self.execution_state_changed.emit(self.execution_state.copy())
 
     def _clear_all_timers(self):
-        """모든 ���이머를 정리하는 메서드"""
+        """모든 타이머를 정리하는 메서드"""
         active_timers = len(self._active_timers)
         logger.info(f"활성 타이머 개수: {active_timers}")
         
