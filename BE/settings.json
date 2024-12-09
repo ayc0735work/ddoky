@@ -10,8 +10,8 @@
         }
     },
     "key_delays": {
-        "press": 1.0,
-        "release": 1.0,
+        "press": 0.0205,
+        "release": 0.0205,
         "default": 0.0205
     },
     "gauge_monitor": {
@@ -799,7 +799,7 @@
                 {
                     "order": 3,
                     "type": "logic",
-                    "display_text": "���력 회복 - 8회",
+                    "display_text": "체력 회복 - 8회",
                     "logic_id": "0dfa1418-cab1-4439-ae8a-b0c971471c99",
                     "logic_name": "체력 회복 - 8회",
                     "repeat_count": 1

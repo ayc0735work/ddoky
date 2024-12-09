@@ -151,8 +151,13 @@ class LogicOperationWidget(QFrame):
         self.save_delays_btn.setEnabled(False)
         self.save_delays_btn.clicked.connect(self._on_save_delays)
         
+        self.reset_delays_btn = QPushButton("초기화")
+        self.reset_delays_btn.setStyleSheet(BUTTON_STYLE)
+        self.reset_delays_btn.clicked.connect(self._on_reset_delays)
+        
         buttons_layout.addWidget(self.edit_delays_btn)
         buttons_layout.addWidget(self.save_delays_btn)
+        buttons_layout.addWidget(self.reset_delays_btn)
         
         delay_settings_layout.addLayout(buttons_layout)
         delay_settings_layout.addStretch()  # 나머지 공간을 채움
@@ -397,3 +402,30 @@ class LogicOperationWidget(QFrame):
         self.key_press_input.setText(f"{delays['press']:.4f}")
         self.key_release_input.setText(f"{delays['release']:.4f}")
         self.default_delay_input.setText(f"{delays['default']:.4f}")
+
+    def _on_reset_delays(self):
+        """지연 시간 초기화 버튼 클릭 시 호출"""
+        DEFAULT_DELAY = 0.0205
+        
+        # 입력 필드에 기본값 설정
+        self.key_press_input.setText(f"{DEFAULT_DELAY:.4f}")
+        self.key_release_input.setText(f"{DEFAULT_DELAY:.4f}")
+        self.default_delay_input.setText(f"{DEFAULT_DELAY:.4f}")
+        
+        # 설정 파일에 저장
+        settings = Settings()
+        settings.set('key_delays', {
+            'press': DEFAULT_DELAY,
+            'release': DEFAULT_DELAY,
+            'default': DEFAULT_DELAY
+        })
+        
+        # 로직 실행기의 딜레이 값 업데이트
+        if self.logic_executor:
+            self.logic_executor.KEY_DELAYS = {
+                '누르기': DEFAULT_DELAY,
+                '떼기': DEFAULT_DELAY,
+                '기본': DEFAULT_DELAY
+            }
+        
+        self.log_message.emit("지연 시간이 기본값으로 초기화되었습니다.")
