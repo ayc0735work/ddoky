@@ -91,6 +91,17 @@ class LogicOperationWidget(QFrame):
         
         layout.addLayout(second_row)
         
+        # 세 번째 줄 레이아웃 (활성 프로세스)
+        third_row = QHBoxLayout()
+        third_row.setContentsMargins(0, 0, 0, 0)
+        
+        # 활성 프로세스 라벨
+        self.active_process_label = QLabel("활성 프로세스: 없음")
+        third_row.addWidget(self.active_process_label)
+        third_row.addStretch()
+        
+        layout.addLayout(third_row)
+        
         # 기본 지연 시간 설정 레이아웃 추가
         delay_settings_layout = QHBoxLayout()
         delay_settings_layout.setContentsMargins(0, 10, 0, 0)  # 상단에 여백 추가
@@ -163,17 +174,6 @@ class LogicOperationWidget(QFrame):
         delay_settings_layout.addStretch()  # 나머지 공간을 채움
         
         layout.addLayout(delay_settings_layout)
-        
-        # 세 번째 줄 레이아웃 (활성 프로세스)
-        third_row = QHBoxLayout()
-        third_row.setContentsMargins(0, 0, 0, 0)
-        
-        # 활성 프로세스 라벨
-        self.active_process_label = QLabel("활성 프로세스: 없음")
-        third_row.addWidget(self.active_process_label)
-        third_row.addStretch()
-        
-        layout.addLayout(third_row)
         
         self.setLayout(layout)
         
