@@ -6,7 +6,6 @@ from PySide6.QtCore import Qt, QPoint, QSize, QSettings
 from PySide6.QtGui import QFont
 import sys
 
-from BE.ui.components.title.title_widget import TitleWidget
 from BE.ui.components.logic_list.logic_list_widget import LogicListWidget
 from BE.ui.components.logic_list.logic_list_controller import LogicListController
 from BE.ui.components.logic_detail.logic_detail_widget import LogicDetailWidget
@@ -50,7 +49,7 @@ class MainWindow(QMainWindow):
         
     def init_ui(self):
         """UI 초기화"""
-        self.setWindowTitle("또키 - 종합 매크로")
+        self.setWindowTitle("또키 - 종합 매크로")        
         self.setMinimumHeight(MAIN_WINDOW_HEIGHT)
         self.setFixedWidth(MAIN_WINDOW_WIDTH)
         
@@ -98,10 +97,6 @@ class MainWindow(QMainWindow):
     
     def init_components(self):
         """UI 컴포넌트 초기화"""
-        # 타이틀
-        self.title_widget = TitleWidget()
-        self.main_layout.addWidget(self.title_widget)
-        
         # 로직 동작 온오프 위젯
         self.logic_operation_widget = LogicOperationWidget()
         self.logic_operation_widget.set_logic_executor(self.logic_executor)  # set_logic_executor 메서드 사용
