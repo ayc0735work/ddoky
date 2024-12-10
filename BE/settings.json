@@ -10,9 +10,9 @@
         }
     },
     "key_delays": {
-        "press": 0.0205,
-        "release": 0.0205,
-        "default": 0.0205
+        "press": 0.02,
+        "release": 0.02,
+        "default": 0.02
     },
     "gauge_monitor": {
         "hp_gauge": {
