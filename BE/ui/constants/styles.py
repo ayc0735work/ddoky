@@ -73,4 +73,6 @@ LOG_TEXT_STYLE = """
 """
 
 # Font settings
+TITLE_FONT_FAMILY = "Noto Sans CJK KR"
+TITLE_FONT_SIZE = 20
 SECTION_FONT_SIZE = 14
