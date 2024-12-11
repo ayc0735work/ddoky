@@ -22,6 +22,7 @@ from BE.ui.utils.error_handler import ErrorHandler
 from BE.logic.logic_manager import LogicManager
 from BE.logic.logic_executor import LogicExecutor
 from BE.ui.components.process.process_manager import ProcessManager
+from BE.utils.mouse_data_handler import MouseDataHandler
 
 from BE.ui.constants.dimensions import (MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, BASIC_SECTION_HEIGHT,
                                MIDDLE_SPACE, ADVANCED_SECTION_HEIGHT)
@@ -226,19 +227,18 @@ class MainWindow(QMainWindow):
         display_text = f"키 입력: {modifier_text}{key_text}"
         self.logic_detail_widget.add_item(display_text)
         
-    def _on_mouse_input(self, display_text):
+    def _on_mouse_input(self, mouse_info):
         """마우스 입력이 추가되었을 때"""
+        # 마우스 입력 정보를 직렬화
+        serialized_data = MouseDataHandler.serialize(mouse_info)
+        
         # LogicDetailWidget의 아이템 목록에 추가
-        item = QListWidgetItem(display_text)
-        item.setData(Qt.UserRole, {
-            'type': 'mouse_input',
-            'display_text': display_text,
-            'order': self.logic_detail_widget.LogicItemList__QListWidget.count() + 1
-        })
+        item = QListWidgetItem(mouse_info.get('display_text', ''))
+        item.setData(Qt.UserRole, serialized_data)
         self.logic_detail_widget.LogicItemList__QListWidget.addItem(item)
         
         # 로그 메시지 출력
-        self._append_log(f"마우스 입력이 추가되었습니다: {display_text}")
+        self._append_log(f"마우스 입력이 추가되었습니다: {mouse_info.get('display_text', '')}")
         
     def _on_delay_input(self, delay_info):
         """지연시간이 추가되었을 때 호출"""
@@ -252,7 +252,7 @@ class MainWindow(QMainWindow):
     def _handle_edit_logic(self, logic_info):
         """로직 불러오기 처리"""
         if self.logic_detail_widget.has_items():
-            # 확인 모달 표시
+            # 확인 모달 ��시
             reply = QMessageBox.question(
                 self,
                 "로직 불러오기",
@@ -267,7 +267,7 @@ class MainWindow(QMainWindow):
         
         # 로직 데이터 로드
         self.logic_detail_widget.load_logic(logic_info)
-        self._append_log(f"로직 '{logic_info['name']}'을(를) 수정합니다")
+        self._append_log(f"���직 '{logic_info['name']}'을(를) 수정합니다")
 
     def _load_window_settings(self):
         """윈도우 설정 로드"""

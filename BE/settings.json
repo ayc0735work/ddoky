@@ -232,7 +232,7 @@
             "order": 3,
             "name": "체력 회복 - 3회",
             "created_at": "2024-12-08T14:28:34.950624",
-            "updated_at": "2024-12-11T17:36:26.164945",
+            "updated_at": "2024-12-11T20:54:35.245133",
             "trigger_key": null,
             "repeat_count": 4,
             "is_nested": true,
@@ -392,7 +392,7 @@
             "order": 5,
             "name": "보호 무장 힘",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-12-11T20:22:54.019748",
+            "updated_at": "2024-12-11T21:45:51.670529",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 .",
@@ -709,7 +709,7 @@
             "order": 6,
             "name": "모두 줍기",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-12-11T17:36:26.164945",
+            "updated_at": "2024-12-11T21:30:39.069555",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "키 코드 190",
@@ -766,7 +766,7 @@
             "order": 7,
             "name": "공력증강 - 연속1회 - 사냥용",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-11T20:42:21.346670",
+            "updated_at": "2024-12-11T21:42:01.759101",
             "trigger_key": {
                 "key_code": "숫자패드 6",
                 "modifiers": 0,
@@ -4289,23 +4289,17 @@
                 }
             ]
         },
-        "fa5f27bc-de45-4db8-855e-f3e0bde846d0": {
-            "order": 38,
-            "name": "마우스 클릭 테스트",
-            "created_at": "2024-12-11T20:07:53.038693",
-            "updated_at": "2024-12-11T20:42:21.373250",
+        "0ceb5d7f-00bb-48b5-95ba-0b204d99da44": {
+            "order": 39,
+            "name": "테스트",
+            "created_at": "2024-12-11T21:30:39.063045",
+            "updated_at": "2024-12-11T22:54:19.924966",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
             "items": [
                 {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.01초",
-                    "duration": 0.01,
-                    "order": 1
-                },
-                {
-                    "order": 2,
+                    "order": 1,
                     "display_text": "키 입력: 엔터 --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -4315,7 +4309,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 3,
+                    "order": 2,
                     "display_text": "키 입력: 엔터 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -4325,12 +4319,54 @@
                     "modifiers": 0
                 },
                 {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.01초",
+                    "duration": 0.01,
+                    "order": 3
+                },
+                {
                     "order": 4,
                     "type": "logic",
-                    "display_text": "공력증강 - 연속1회 - 사냥용",
-                    "logic_id": "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7",
-                    "logic_name": "공력증강 - 연속1회 - 사냥용",
+                    "display_text": "모두 줍기",
+                    "logic_id": "9ed591e4-b227-448b-9d0f-b90c76d1f662",
+                    "logic_name": "모두 줍기",
                     "repeat_count": 1
+                },
+                {
+                    "order": 5,
+                    "type": "logic",
+                    "display_text": "보호 무장 힘",
+                    "logic_id": "b8796333-e8d6-4ae2-9fec-801a713517d8",
+                    "logic_name": "보호 무장 힘",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 6,
+                    "type": "logic",
+                    "display_text": "보호 무장 힘",
+                    "logic_id": "b8796333-e8d6-4ae2-9fec-801a713517d8",
+                    "logic_name": "보호 무장 힘",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 7,
+                    "display_text": "키 입력: C --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "C",
+                    "scan_code": 46,
+                    "virtual_key": 67,
+                    "modifiers": 0
+                },
+                {
+                    "order": 8,
+                    "display_text": "키 입력: C --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "C",
+                    "scan_code": 46,
+                    "virtual_key": 67,
+                    "modifiers": 0
                 }
             ]
         }

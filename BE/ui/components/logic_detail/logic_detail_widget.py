@@ -434,6 +434,18 @@ class LogicDetailWidget(QFrame):
                         '숫자패드 -': win32con.VK_SUBTRACT,
                         '숫자패드 .': win32con.VK_DECIMAL,
                         '숫자패드 /': win32con.VK_DIVIDE,
+                        'F1': win32con.VK_F1,
+                        'F2': win32con.VK_F2,
+                        'F3': win32con.VK_F3,
+                        'F4': win32con.VK_F4,
+                        'F5': win32con.VK_F5,
+                        'F6': win32con.VK_F6,
+                        'F7': win32con.VK_F7,
+                        'F8': win32con.VK_F8,
+                        'F9': win32con.VK_F9,
+                        'F10': win32con.VK_F10,
+                        'F11': win32con.VK_F11,
+                        'F12': win32con.VK_F12,
                     }
                     
                     # 가상 키 코드 얻기
@@ -483,7 +495,18 @@ class LogicDetailWidget(QFrame):
                     
             # 마우스 입력 아이템인 경우
             elif item_text.startswith("마우스 입력:"):
-                mouse_data = user_data.copy()
+                # 마우스 입력 데이터가 직렬화된 문자열인 경우 역직렬화
+                if isinstance(user_data, str):
+                    try:
+                        mouse_data = MouseDataHandler.deserialize(user_data)
+                    except:
+                        mouse_data = {}
+                else:
+                    mouse_data = user_data.copy()
+                    
+                if not mouse_data:
+                    mouse_data = {}
+                    
                 mouse_data['order'] = i + 1
                 mouse_data['type'] = 'mouse_input'
                 
@@ -499,7 +522,7 @@ class LogicDetailWidget(QFrame):
                 if not mouse_data.get('ratios', {}).get('x'):
                     ratios = user_data.get('ratios', {})
                     mouse_data['ratios'] = ratios
-
+                    
                 # 액션과 버튼 정보 복원
                 if 'action' not in mouse_data:
                     mouse_data['action'] = user_data.get('action', '클릭')
@@ -507,7 +530,9 @@ class LogicDetailWidget(QFrame):
                     mouse_data['button'] = user_data.get('button', '왼쪽 버튼')
                 if 'name' not in mouse_data:
                     mouse_data['name'] = user_data.get('name', '')
-
+                if 'display_text' not in mouse_data:
+                    mouse_data['display_text'] = item_text
+                    
                 self.log_message.emit(f"[DEBUG] 마우스 입력 처리 - 원본 데이터: {user_data}")
                 self.log_message.emit(f"[DEBUG] 마우스 입력 처리 - 처리된 데이터: {mouse_data}")
                 items.append(mouse_data)
@@ -687,7 +712,7 @@ class LogicDetailWidget(QFrame):
                 return False
 
         except Exception as e:
-            print(f"[DEBUG] LogicDetailWidget._save_logic ���러 발생: {str(e)}")
+            print(f"[DEBUG] LogicDetailWidget._save_logic 오류 발생: {str(e)}")
             self.log_message.emit(f"로직 저장 중 오류 발생: {str(e)}")
             return False
 

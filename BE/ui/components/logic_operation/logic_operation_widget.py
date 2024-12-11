@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
                              QLabel, QCheckBox, QPushButton, QDialog,
-                             QMessageBox, QLineEdit)
+                             QMessageBox, QLineEdit, QListWidgetItem)
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont, QDoubleValidator
 import copy
@@ -9,6 +9,7 @@ from ...constants.styles import (FRAME_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from BE.ui.components.process_selector.process_selector_dialog import ProcessSelectorDialog
 from BE.settings import Settings
+from BE.utils.mouse_data_handler import MouseDataHandler
 
 class LogicOperationWidget(QFrame):
     """로직 동작 온오프 위젯"""
@@ -334,7 +335,7 @@ class LogicOperationWidget(QFrame):
                 )
                 return
             
-            # 찾은 로직 정보로 업데이트
+            # 찾은 ���직 정보로 업데이트
             item_info['logic_id'] = logic_id
             item_info['logic_name'] = logic_name
             item_info['display_text'] = logic_name
@@ -342,8 +343,24 @@ class LogicOperationWidget(QFrame):
                 item_info['logic_data']['logic_id'] = logic_id
                 item_info['logic_data']['logic_name'] = logic_name
             
-            # 리스트에 아이템 추가
-            self._add_item_to_list(item_info)
+        # 리스트에 아이템 추가
+        self._add_item_to_list(item_info)
+            
+    def _add_item_to_list(self, item_info):
+        """아이템을 리스트에 추가"""
+        if not isinstance(item_info, dict):
+            return
+            
+        # 마우스 입력 데이터인 경우 직렬화
+        if item_info.get('type') == 'mouse_input':
+            serialized_data = MouseDataHandler.serialize(item_info)
+            item = QListWidgetItem(item_info.get('display_text', ''))
+            item.setData(Qt.UserRole, serialized_data)
+        else:
+            item = QListWidgetItem(item_info.get('display_text', ''))
+            item.setData(Qt.UserRole, item_info)
+            
+        self.LogicItemList__QListWidget.addItem(item)
 
     def _on_edit_delays(self):
         """지연 시간 수정 버튼 클릭 시 호출"""
