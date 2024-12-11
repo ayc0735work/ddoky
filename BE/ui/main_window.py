@@ -231,28 +231,15 @@ class MainWindow(QMainWindow):
         """마우스 입력 정보를 받아서 처리"""
         try:
             # 로그 메시지 출력
-            display_text = mouse_info.get('display_text', '') if isinstance(mouse_info, dict) else str(mouse_info)
-            self.log_widget.append(f"(main_window--_on_mouse_input)마우스 입력이 추가되었습니다: {display_text}")
-            
-            # 로직 상세 위젯에 마우스 입력 추가
-            if self.logic_detail_widget:
-                # mouse_info가 문자열인 경우 기본 데이터 구조로 변환
-                if isinstance(mouse_info, str):
-                    mouse_data = {
-                        'type': 'mouse_input',
-                        'display_text': mouse_info,
-                        'coordinates_x': 0,
-                        'coordinates_y': 0,
-                        'ratios_x': 0,
-                        'ratios_y': 0,
-                        'action': '클릭',
-                        'button': '왼쪽 버튼',
-                        'name': ''
-                    }
-                else:
-                    mouse_data = mouse_info
+            if isinstance(mouse_info, dict):
+                display_text = mouse_info.get('display_text', '')
+                self.log_widget.append(f"(main_window--_on_mouse_input)마우스 입력이 추가되었습니다: {display_text}")
                 
-                self.logic_detail_widget.add_item(mouse_data)
+                # 로직 상세 위젯에 마우스 입력 추가
+                if self.logic_detail_widget:
+                    self.logic_detail_widget.add_item(mouse_info)
+            else:
+                self.log_widget.append(f"[경고] 잘못된 형식의 마우스 입력 데이터가 전달되었습니다: {mouse_info}")
                 
         except Exception as e:
             import traceback
@@ -284,7 +271,7 @@ class MainWindow(QMainWindow):
                 self._append_log("로직 불러오기가 취소되었습니다")
                 return
         
-        # ��직 데이터 로드
+        # 로직 데이터 로드
         self.logic_detail_widget.load_logic(logic_info)
         self._append_log(f"로직 '{logic_info['name']}'을(를) 수정합니다")
 

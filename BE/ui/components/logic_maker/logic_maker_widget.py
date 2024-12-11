@@ -15,7 +15,7 @@ class LogicMakerWidget(QFrame):
     
     # 시그널 정의
     key_input = Signal(dict)  # 키 입력이 추가되었을 때 (키 정보를 딕셔너리로 전달)
-    mouse_input = Signal(str)  # 마우스 입력이 추가되었을 때
+    mouse_input = Signal(dict)  # 마우스 입력이 추가되었을 때 (마우스 정보를 딕셔너리로 전달)
     delay_input = Signal(str)  # 지연시간이 추가되었을 때
     record_mode = Signal(bool)  # 기록 모드가 토글되었을 때
     log_message = Signal(str)  # 로그 메시지를 전달하는 시그널
@@ -118,7 +118,7 @@ class LogicMakerWidget(QFrame):
         """키의 키보드 위치 정보 반환"""
         if scan_code in [42, 29, 56, 91]:  # 왼쪽 Shift, Ctrl, Alt, Win
             return "키보드 왼쪽"
-        elif scan_code in [54, 285, 312, 92]:  # 오른�� Shift, Ctrl, Alt, Win
+        elif scan_code in [54, 285, 312, 92]:  # 오른쪽 Shift, Ctrl, Alt, Win
             return "키보드 오른쪽"
         elif 71 <= scan_code <= 83:  # 숫자패드 영역
             return "숫자패드"
@@ -146,8 +146,8 @@ class LogicMakerWidget(QFrame):
         
     def _on_mouse_input_selected(self, mouse_info):
         """마우스 입력이 선택되었을 때"""
-        # 로그 메시지 출력
-        self.mouse_input.emit(mouse_info['display_text'])
+        # 전체 마우스 입력 정보를 전달
+        self.mouse_input.emit(mouse_info)
         self.log_message.emit(f"(logic_maker_widget--_on_mouse_input_selected)마우스 입력이 추가되었습니다: {mouse_info['display_text']}")
             
     def _add_delay(self):
