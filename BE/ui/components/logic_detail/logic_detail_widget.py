@@ -325,7 +325,7 @@ class LogicDetailWidget(QFrame):
             order = user_data.get('order', i + 1)
             
             # 로직 타입 아이템인 경우
-            if item_text.startswith("로직:") or not any(item_text.startswith(prefix) for prefix in ["키 입력:", "지연시간"]):
+            if item_text.startswith("로직:") or not any(item_text.startswith(prefix) for prefix in ["키 입력:", "지연시간", "마우스 입력:"]):
                 logic_data = user_data.get('logic_data', {})
                 logic_name = logic_data.get('logic_name') or item_text.replace("로직:", "").strip()
                 
@@ -472,6 +472,20 @@ class LogicDetailWidget(QFrame):
                     items.append(item_data)
                 else:
                     items.append({"type": "text", "content": item_text, "order": order})
+            # 마우스 입력 아이템인 경우
+            elif item_text.startswith("마우스 입력:"):
+                mouse_data = user_data.get('mouse_data', {})
+                items.append({
+                    'type': 'mouse_input',
+                    'name': mouse_data.get('name', ''),
+                    'action': mouse_data.get('action', '클릭'),
+                    'button': mouse_data.get('button', '왼쪽 버튼'),
+                    'coordinates': mouse_data.get('coordinates', {'x': 0, 'y': 0}),
+                    'ratios': mouse_data.get('ratios', {'x': 0, 'y': 0}),
+                    'process': mouse_data.get('process', None),
+                    'display_text': item_text,
+                    'order': order
+                })
             # 지연시간 아이템인 경우
             elif item_text.startswith("지연시간"):
                 items.append({
@@ -570,12 +584,14 @@ class LogicDetailWidget(QFrame):
     def _save_logic(self):
         """로직 저장"""
         try:
+            print(f"[DEBUG] LogicDetailWidget._save_logic 시작")
             name = self.LogicNameInput__QLineEdit.text().strip()
             if not name:
                 self.log_message.emit("오류: 로직 이름을 입력해주세요.")
                 return False
 
             is_nested = self.is_nested_checkbox.isChecked()
+            print(f"[DEBUG] 로직 정보 - 이름: {name}, 중첩여부: {is_nested}")
 
             # 중첩로직용이 아닐 경우에만 트리거 키 검사
             if not is_nested and not self.trigger_key_info:
@@ -588,6 +604,7 @@ class LogicDetailWidget(QFrame):
 
             # 이름 중복 검사 (수정 모드가 아닐 때만)
             if not self.edit_mode:
+                print(f"[DEBUG] 새 로직 저장 - 이름 중복 검사")
                 logics = self.settings_manager.load_logics()
                 for logic in logics.values():
                     if (logic.get('name') == name and 
@@ -601,10 +618,11 @@ class LogicDetailWidget(QFrame):
                         self.log_message.emit(f"오류: 이미 '{name}' 이름의 로직이 존재합니다.")
                         return False
 
+            print(f"[DEBUG] 로직 정보 구성 시작")
             # 현재 로직 정보 구성
             logic_info = {
                 'name': name,
-                'order': self.current_logic.get('order', 0) if self.current_logic else 0,
+                'order': max([l.get('order', 0) for l in self.settings_manager.load_logics().values() if l.get('order', 0) > 0], default=0) + 1 if not self.current_logic else self.current_logic.get('order'),
                 'created_at': datetime.now().isoformat() if not self.current_logic else self.current_logic.get('created_at'),
                 'updated_at': datetime.now().isoformat(),
                 'repeat_count': self.RepeatCountInput__QSpinBox.value(),
@@ -612,14 +630,17 @@ class LogicDetailWidget(QFrame):
                 'is_nested': is_nested,
                 'trigger_key': self.trigger_key_info if not is_nested else None
             }
+            print(f"[DEBUG] 로직 정보: {logic_info}")
 
+            print(f"[DEBUG] LogicManager.save_logic 호출 전 - ID: {self.current_logic_id}")
             # LogicManager를 통해 저장
             success, result = self.logic_manager.save_logic(self.current_logic_id, logic_info)
+            print(f"[DEBUG] LogicManager.save_logic 호출 후 - 결과: {success}, {result}")
             
             if success:
                 if self.edit_mode:  # 수정 모드
                     self.logic_updated.emit(self.original_name, logic_info)
-                    self.log_message.emit(f"로직 '{name}'이(가) 업이트되었습니다.")
+                    self.log_message.emit(f"로직 '{name}'이(가) 업데이트되었습니다.")
                 else:  # 새 로직
                     self.logic_saved.emit(logic_info)
                     self.log_message.emit(f"새 로직 '{name}'이(가) 저장되었습니다.")
@@ -632,6 +653,7 @@ class LogicDetailWidget(QFrame):
                 return False
 
         except Exception as e:
+            print(f"[DEBUG] LogicDetailWidget._save_logic 에러 발생: {str(e)}")
             self.log_message.emit(f"로직 저장 중 오류 발생: {str(e)}")
             return False
 

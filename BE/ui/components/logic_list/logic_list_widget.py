@@ -189,63 +189,24 @@ class LogicListWidget(QFrame):
             is_update = bool(logic_id)  # 기존 로직 수정인지 여부
             logic_name = logic_info.get('name', '')
 
-            # 이름 중복 체크
-            existing_logics = self.settings_manager.load_logics()
-            for existing_id, existing_logic in existing_logics.items():
-                if existing_logic.get('name') == logic_name and existing_id != logic_id:
-                    self.log_message.emit(f"오류: 이미 존재하는 로직 이름입니다: {logic_name}")
-                    return
-
             # UUID 처리
             if not is_update:  # 새 로직인 경우
                 logic_id = str(uuid.uuid4())
+                logic_info['id'] = logic_id
             
-            # settings_manager를 통해 로직 저장
-            updated_logic = self.settings_manager.save_logic(logic_id, logic_info)
-            
-            # 현재 UI 상태 백업
-            current_items = []
-            for i in range(self.SavedLogicList__QListWidget.count()):
-                item = self.SavedLogicList__QListWidget.item(i)
-                if item:
-                    current_items.append({
-                        'id': item.data(Qt.UserRole),
-                        'text': item.text()
-                    })
-            current_row = self.SavedLogicList__QListWidget.currentRow()
+            # UI 업데이트
+            if is_update:
+                # 기존 아이템 찾아서 업데이트
+                for i in range(self.SavedLogicList__QListWidget.count()):
+                    item = self.SavedLogicList__QListWidget.item(i)
+                    if item and item.data(Qt.UserRole) == logic_id:
+                        item.setText(self._format_logic_item_text(logic_info))
+                        break
+            else:
+                # 새 아이템 추가
+                self._add_logic_to_list(logic_info, logic_id)
 
-            try:
-                # saved_logics 업데이트 (UI 업데이트 전에 수행)
-                self.saved_logics = self.settings_manager.load_logics()
-                
-                # UI 업데이트
-                if is_update:
-                    # 기존 아이템 찾아서 업데이트
-                    for i in range(self.SavedLogicList__QListWidget.count()):
-                        item = self.SavedLogicList__QListWidget.item(i)
-                        if item and item.data(Qt.UserRole) == logic_id:
-                            item.setText(self._format_logic_item_text(updated_logic))
-                            break
-                else:
-                    # 새 아이템 추가
-                    self._add_logic_to_list(updated_logic, logic_id)
-
-                # 선택 상태 복원
-                if current_row >= 0 and current_row < self.SavedLogicList__QListWidget.count():
-                    self.SavedLogicList__QListWidget.setCurrentRow(current_row)
-
-                self.log_message.emit(f"로직 '{logic_info.get('name', '')}'이(가) 저장되었습니다.")
-
-            except Exception as ui_error:
-                # UI 업데이트 실패 시 백업에서 복원
-                self.SavedLogicList__QListWidget.clear()
-                for item_info in current_items:
-                    item = QListWidgetItem(item_info['text'])
-                    item.setData(Qt.UserRole, item_info['id'])
-                    self.SavedLogicList__QListWidget.addItem(item)
-                if current_row >= 0:
-                    self.SavedLogicList__QListWidget.setCurrentRow(current_row)
-                raise Exception(f"UI 업데이트 실패: {str(ui_error)}")
+            self.log_message.emit(f"로직 '{logic_info.get('name', '')}'이(가) 저장되었습니다.")
 
         except Exception as e:
             self.log_message.emit(f"로직 저장 중 오류 발생: {str(e)}")

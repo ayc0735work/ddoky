@@ -268,10 +268,10 @@ class SettingsManager:
                 # 기존 로직인 경우 order 값 유지
                 current_order = settings['logics'][logic_id].get('order', 0)
                 if current_order == 0:  # order가 0인 경우 새로운 order 할당
-                    current_order = max([l.get('order', 0) for l in settings['logics'].values()], default=0) + 1
+                    current_order = max([l.get('order', 0) for l in settings['logics'].values() if l.get('order', 0) > 0], default=0) + 1
             else:
                 # 새 로직인 경우 마지막 order + 1
-                current_order = max([l.get('order', 0) for l in settings['logics'].values()], default=0) + 1
+                current_order = max([l.get('order', 0) for l in settings['logics'].values() if l.get('order', 0) > 0], default=0) + 1
             
             # 기본 로직 정보 구성
             logic_info = {

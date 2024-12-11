@@ -4233,10 +4233,10 @@
             ]
         },
         "c390e91a-ed44-4416-b3c9-1b5e089b98e9": {
-            "order": 36,
+            "order": 38,
             "name": "중독, 공격 - 1회",
             "created_at": "2024-12-09T20:33:02.065308",
-            "updated_at": "2024-12-10T22:17:32.072069",
+            "updated_at": "2024-12-11T14:06:14.994307",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -4297,51 +4297,34 @@
                 }
             ]
         },
-        "32c46cae-bb9b-476a-a69a-30cf0b181b96": {
-            "order": 0,
-            "name": "마우스 클릭 테스트",
-            "created_at": "2024-12-11T12:07:56.166054",
-            "updated_at": "2024-12-11T12:07:56.166054",
-            "trigger_key": {
-                "key_code": "Space",
-                "modifiers": 0,
-                "scan_code": 57,
-                "virtual_key": 32
-            },
+        "null": {
+            "order": 48,
+            "name": "테스트",
+            "created_at": "2024-12-11T15:33:14.356286",
+            "updated_at": "2024-12-11T15:33:14.356286",
+            "trigger_key": null,
             "repeat_count": 1,
-            "is_nested": false,
+            "is_nested": true,
             "items": [
                 {
                     "order": 1,
-                    "type": "logic",
-                    "display_text": "메뉴 클릭 (3176, 115)",
-                    "logic_id": "df21278e-14ff-42e1-ba7c-07b053196607",
-                    "logic_name": "메뉴 클릭 (3176, 115)",
-                    "repeat_count": 1
-                }
-            ]
-        },
-        "f999f6fc-3558-4b5e-bd4f-ee81997dd866": {
-            "order": 37,
-            "name": "마우스 클릭 테스트",
-            "created_at": "2024-12-11T12:07:56.166054",
-            "updated_at": "2024-12-11T12:07:56.178074",
-            "trigger_key": {
-                "key_code": "Space",
-                "modifiers": 0,
-                "scan_code": 57,
-                "virtual_key": 32
-            },
-            "repeat_count": 1,
-            "is_nested": false,
-            "items": [
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
                 {
-                    "order": 1,
-                    "type": "logic",
-                    "display_text": "메뉴 클릭 (3176, 115)",
-                    "logic_id": "df21278e-14ff-42e1-ba7c-07b053196607",
-                    "logic_name": "메뉴 클릭 (3176, 115)",
-                    "repeat_count": 1
+                    "order": 2,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
                 }
             ]
         }

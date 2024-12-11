@@ -109,6 +109,7 @@ class LogicManager(QObject):
             tuple: (성공 여부, 로직 ID 또는 에러 메시지)
         """
         try:
+            print(f"[DEBUG] LogicManager.save_logic 시작 - logic_id: {logic_id}")
             self.validate_logic(logic_data)
             
             settings = self.settings_manager._load_settings()
@@ -121,38 +122,58 @@ class LogicManager(QObject):
                     if (existing_logic['name'] == logic_name and 
                         existing_id != logic_id and  # 자기 자신은 제외
                         not existing_logic.get('is_nested', False)):  # 중첩 로직은 제외
+                        print(f"[DEBUG] 이름 중복 발견: {logic_name}")
                         return False, "동일한 이름의 로직이 이미 존재합니다."
             
             # 중첩 로직인 경우 중복 생성 방지 및 원본 ID 유지
             if logic_data.get('is_nested', False):
-                for existing_id, existing_logic in logics.items():
-                    if (existing_logic['name'] == logic_name and 
-                        existing_logic['is_nested'] == True):
-                        # 기존 로직의 ID를 유지하면서 내용만 업데이트
-                        logics[existing_id] = logic_data
-                        settings['logics'] = logics
-                        self.settings_manager._save_settings(settings)
-                        return True, existing_id
+                print(f"[DEBUG] 중첩 로직 처리 시작 - 이름: {logic_name}")
+                # 새 로직 저장
+                if not logic_id:  # 새 로직인 경우
+                    print(f"[DEBUG] 새 로직 저장 - ID: {logic_id}")
+                    logics[logic_id] = logic_data
+                    settings['logics'] = logics
+                    self.settings_manager._save_settings(settings)
+                    return True, logic_id
+                
+                # 기존 로직 업데이트
+                print(f"[DEBUG] 기존 로직 업데이트 - ID: {logic_id}")
+                logics[logic_id] = logic_data
+                settings['logics'] = logics
+                self.settings_manager._save_settings(settings)
+                return True, logic_id
             
             # 새 로직 저장 또는 기존 로직 업데이트
+            print(f"[DEBUG] 일반 로직 저장 처리 시작")
             if logic_id in logics:  # 기존 로직 업데이트
+                print(f"[DEBUG] 기존 로직 업데이트 - ID: {logic_id}")
                 logics[logic_id] = logic_data
             else:  # 새 로직 저장
+                print(f"[DEBUG] 새 로직 저장 - ID: {logic_id}")
                 # 이름 중복 한번 더 검사
                 for existing_logic in logics.values():
                     if (existing_logic['name'] == logic_name and 
                         not existing_logic.get('is_nested', False)):
+                        print(f"[DEBUG] 새 로직 저장 시 이름 중복 발견: {logic_name}")
                         return False, "동일한 이름의 로직이 이미 존재합니다."
                 logics[logic_id] = logic_data
             
             settings['logics'] = logics
+            print(f"[DEBUG] settings_manager._save_settings 호출 전")
             self.settings_manager._save_settings(settings)
+            print(f"[DEBUG] settings_manager._save_settings 호출 후")
             
             # 현재 로직 업데이트
             if self.current_logic_name == logic_name:
                 self.current_logic = logic_data
                 self.logic_changed.emit(self.current_logic)
             
+            print(f"[DEBUG] LogicManager.save_logic 완료 - ID: {logic_id}")
             return True, logic_id
+            
         except ValueError as e:
+            print(f"[DEBUG] LogicManager.save_logic 에러 발생: {str(e)}")
             return False, str(e)
+    
+    def __del__(self):
+        pass
