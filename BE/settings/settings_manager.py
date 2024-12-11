@@ -28,7 +28,7 @@ class SettingsManager:
     def _save_settings(self, settings):
         """설정 파일에 현재 설정을 저장합니다."""
         try:
-            # 로직 데이터에서 uuid 필드 제거 및 ���드 순서 정리
+            # 로직 데이터에서 uuid 필드 제거 및 필드 순서 정리
             if 'logics' in settings:
                 ordered_logics = {}
                 for logic_id, logic_data in settings['logics'].items():
@@ -42,6 +42,10 @@ class SettingsManager:
                                 ordered_item = self._create_ordered_key_input_item(item)
                             elif item['type'] == 'logic':
                                 ordered_item = self._create_ordered_logic_item(item)
+                            elif item['type'] == 'mouse_input':
+                                ordered_item = self._create_ordered_mouse_input_item(item)
+                            else:
+                                ordered_item = item  # 알 수 없는 타입은 그대로 유지
                         else:
                             ordered_item = {
                                 'content': item.get('content', ''),
@@ -88,7 +92,7 @@ class SettingsManager:
                     "height": 600
                 }
             },
-            "logics": {}  # UUID를 키로 사용하는 ��직 저장소
+            "logics": {}  # UUID를 키로 사용하는 로직 저장소
         }
     
     def _migrate_to_uuid(self, settings):
@@ -190,6 +194,21 @@ class SettingsManager:
             'modifiers': trigger_key.get('modifiers', 0),
             'scan_code': trigger_key.get('scan_code', 0),
             'virtual_key': trigger_key.get('virtual_key', 0)
+        }
+
+    def _create_ordered_mouse_input_item(self, item):
+        """마우스 입력 아이템의 필드 순서를 정렬"""
+        return {
+            'order': item.get('order', 0),
+            'type': 'mouse_input',
+            'display_text': item.get('display_text', ''),
+            'name': item.get('name', ''),
+            'action': item.get('action', '클릭'),
+            'button': item.get('button', '왼쪽 버튼'),
+            'coordinates_x': item.get('coordinates_x', 0),
+            'coordinates_y': item.get('coordinates_y', 0),
+            'ratios_x': item.get('ratios_x', 0),
+            'ratios_y': item.get('ratios_y', 0)
         }
 
     def get_window_settings(self):
