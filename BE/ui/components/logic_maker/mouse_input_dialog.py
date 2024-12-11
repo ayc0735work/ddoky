@@ -13,7 +13,7 @@ class MouseInputDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("마우스 입력")
-        self.setFixedSize(300, 600)
+        self.setFixedSize(400, 600)
         self.setWindowFlags(
             self.windowFlags() 
             & ~Qt.WindowContextHelpButtonHint 
