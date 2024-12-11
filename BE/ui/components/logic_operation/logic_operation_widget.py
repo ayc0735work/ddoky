@@ -9,7 +9,6 @@ from ...constants.styles import (FRAME_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from BE.ui.components.process_selector.process_selector_dialog import ProcessSelectorDialog
 from BE.settings import Settings
-from BE.utils.mouse_data_handler import MouseDataHandler
 
 class LogicOperationWidget(QFrame):
     """로직 동작 온오프 위젯"""
@@ -292,7 +291,7 @@ class LogicOperationWidget(QFrame):
             
             copied_items.append(copied_item)
         
-        # 복사된 아이템들을 클립보드에 저장
+        # 복사된 아이템들을 립보드에 저장
         self._clipboard = copied_items
 
     def _add_logic_item(self, item_info):
@@ -335,7 +334,7 @@ class LogicOperationWidget(QFrame):
                 )
                 return
             
-            # 찾은 ���직 정보로 업데이트
+            # 찾은 로직 정보로 업데이트
             item_info['logic_id'] = logic_id
             item_info['logic_name'] = logic_name
             item_info['display_text'] = logic_name

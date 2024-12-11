@@ -110,6 +110,17 @@ class LogicManager(QObject):
         """
         try:
             print(f"[DEBUG] LogicManager.save_logic 시작 - logic_id: {logic_id}")
+            print(f"[DEBUG] 저장할 로직 데이터: {logic_data}")
+            
+            # 아이템 목록 검사
+            items = logic_data.get('items', [])
+            print(f"[DEBUG] 아이템 목록 개수: {len(items)}")
+            for idx, item in enumerate(items):
+                print(f"[DEBUG] 아이템 {idx + 1} 정보:")
+                print(f"  - type: {item.get('type')}")
+                print(f"  - order: {item.get('order')}")
+                print(f"  - display_text: {item.get('display_text')}")
+            
             self.validate_logic(logic_data)
             
             settings = self.settings_manager._load_settings()
@@ -140,6 +151,13 @@ class LogicManager(QObject):
                 print(f"[DEBUG] 기존 로직 업데이트 - ID: {logic_id}")
                 logics[logic_id] = logic_data
                 settings['logics'] = logics
+                
+                # 저장 직전 데이터 확인
+                print(f"[DEBUG] 저장 직전 로직 데이터:")
+                print(f"  - 아이템 개수: {len(logic_data.get('items', []))}")
+                for idx, item in enumerate(logic_data.get('items', [])):
+                    print(f"  - 아이템 {idx + 1}: type={item.get('type')}, order={item.get('order')}")
+                
                 self.settings_manager._save_settings(settings)
                 return True, logic_id
             
@@ -160,6 +178,12 @@ class LogicManager(QObject):
             
             settings['logics'] = logics
             print(f"[DEBUG] settings_manager._save_settings 호출 전")
+            print(f"[DEBUG] 최종 저장 데이터:")
+            print(f"  - 로직 ID: {logic_id}")
+            print(f"  - 아이템 개수: {len(logic_data.get('items', []))}")
+            for idx, item in enumerate(logic_data.get('items', [])):
+                print(f"  - 아이템 {idx + 1}: type={item.get('type')}, order={item.get('order')}")
+            
             self.settings_manager._save_settings(settings)
             print(f"[DEBUG] settings_manager._save_settings 호출 후")
             

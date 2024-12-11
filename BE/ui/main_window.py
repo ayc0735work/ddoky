@@ -23,7 +23,6 @@ from BE.ui.utils.error_handler import ErrorHandler
 from BE.logic.logic_manager import LogicManager
 from BE.logic.logic_executor import LogicExecutor
 from BE.ui.components.process.process_manager import ProcessManager
-from BE.utils.mouse_data_handler import MouseDataHandler
 
 from BE.ui.constants.dimensions import (MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, BASIC_SECTION_HEIGHT,
                                MIDDLE_SPACE, ADVANCED_SECTION_HEIGHT)
@@ -229,22 +228,36 @@ class MainWindow(QMainWindow):
         self.logic_detail_widget.add_item(display_text)
         
     def _on_mouse_input(self, mouse_info):
-        """마우스 입력이 추가되었을 때"""
+        """마우스 입력 정보를 받아서 처리"""
         try:
-            # 마우스 입력 정보를 직렬화
-            serialized_data = MouseDataHandler.serialize(mouse_info)
-            deserialized_data = MouseDataHandler.deserialize(serialized_data)
-            
-            # LogicDetailWidget의 아이템 목록에 추가
-            display_text = deserialized_data.get('display_text', '')
-            item = QListWidgetItem(display_text)
-            item.setData(Qt.UserRole, serialized_data)
-            self.logic_detail_widget.LogicItemList__QListWidget.addItem(item)
-            
             # 로그 메시지 출력
-            print(f"마우스 입력이 추가되었습니다: {display_text}")
+            display_text = mouse_info.get('display_text', '') if isinstance(mouse_info, dict) else str(mouse_info)
+            self.log_widget.append(f"마우스 입력이 추가되었습니다: {display_text}")
+            
+            # 로직 상세 위젯에 마우스 입력 추가
+            if self.logic_detail_widget:
+                # mouse_info가 문자열인 경우 기본 데이터 구조로 변환
+                if isinstance(mouse_info, str):
+                    mouse_data = {
+                        'type': 'mouse_input',
+                        'display_text': mouse_info,
+                        'coordinates_x': 0,
+                        'coordinates_y': 0,
+                        'ratios_x': 0,
+                        'ratios_y': 0,
+                        'action': '클릭',
+                        'button': '왼쪽 버튼',
+                        'name': ''
+                    }
+                else:
+                    mouse_data = mouse_info
+                
+                self.logic_detail_widget.add_item(mouse_data)
+                
         except Exception as e:
-            print(f"에러 발생: {str(e)}\n\n스택 트레이스:\n{traceback.format_exc()}")
+            import traceback
+            self.log_widget.append(f"마우스 입력 처리 중 오류 발생: {str(e)}")
+            self.log_widget.append(f"스택 트레이스:\n{traceback.format_exc()}")
         
     def _on_delay_input(self, delay_info):
         """지연시간이 추가되었을 때 호출"""
@@ -271,7 +284,7 @@ class MainWindow(QMainWindow):
                 self._append_log("로직 불러오기가 취소되었습니다")
                 return
         
-        # 로직 데이터 로드
+        # ��직 데이터 로드
         self.logic_detail_widget.load_logic(logic_info)
         self._append_log(f"로직 '{logic_info['name']}'을(를) 수정합니다")
 

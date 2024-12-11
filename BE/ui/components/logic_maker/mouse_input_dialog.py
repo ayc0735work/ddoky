@@ -581,9 +581,10 @@ class MouseInputDialog(QDialog):
             'name': name,
             'action': action,
             'button': button,
-            'coordinates': {'x': x, 'y': y},
-            'ratios': self.click_ratios,
-            'process': self.selected_process,
+            'coordinates_x': x,
+            'coordinates_y': y,
+            'ratios_x': self.click_ratios['x'] if self.click_ratios else 0,
+            'ratios_y': self.click_ratios['y'] if self.click_ratios else 0,
             'display_text': f"마우스 입력: {name} ({x}, {y})"
         }
         
