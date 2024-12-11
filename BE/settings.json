@@ -60,7 +60,7 @@
             "order": 1,
             "name": "체력 회복 - 8회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-11T20:16:28.845759",
+            "updated_at": "2024-12-11T20:34:36.127711",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 /",
@@ -68,7 +68,7 @@
                 "scan_code": 53,
                 "virtual_key": 111
             },
-            "repeat_count": 5,
+            "repeat_count": 8,
             "is_nested": false,
             "items": [
                 {
@@ -766,7 +766,7 @@
             "order": 7,
             "name": "공력증강 - 연속1회 - 사냥용",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-11T20:13:11.251974",
+            "updated_at": "2024-12-11T20:42:21.346670",
             "trigger_key": {
                 "key_code": "숫자패드 6",
                 "modifiers": 0,
@@ -4293,7 +4293,7 @@
             "order": 38,
             "name": "마우스 클릭 테스트",
             "created_at": "2024-12-11T20:07:53.038693",
-            "updated_at": "2024-12-11T20:23:13.364526",
+            "updated_at": "2024-12-11T20:42:21.373250",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -4327,31 +4327,9 @@
                 {
                     "order": 4,
                     "type": "logic",
-                    "display_text": "보호 무장 힘",
-                    "logic_id": "b8796333-e8d6-4ae2-9fec-801a713517d8",
-                    "logic_name": "보호 무장 힘",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.01초",
-                    "duration": 0.01,
-                    "order": 5
-                },
-                {
-                    "order": 6,
-                    "type": "logic",
-                    "display_text": "공력증강 - 5회",
-                    "logic_id": "ba00b4b7-4268-4138-a424-d1e9353d7743",
-                    "logic_name": "공력증강 - 5회",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 6,
-                    "type": "logic",
-                    "display_text": "공력증강 - 5회",
-                    "logic_id": "ba00b4b7-4268-4138-a424-d1e9353d7743",
-                    "logic_name": "공력증강 - 5회",
+                    "display_text": "공력증강 - 연속1회 - 사냥용",
+                    "logic_id": "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7",
+                    "logic_name": "공력증강 - 연속1회 - 사냥용",
                     "repeat_count": 1
                 }
             ]

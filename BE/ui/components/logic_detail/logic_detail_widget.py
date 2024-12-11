@@ -317,12 +317,19 @@ class LogicDetailWidget(QFrame):
         """현재 로직의 아이템 목록을 반환"""
         items = []
         logics = self.settings_manager.load_logics()  # 모든 로직 정보 로드
+        self.log_message.emit("[DEBUG] get_items() 시작 - 아이템 정보 수집")
         
         for i in range(self.LogicItemList__QListWidget.count()):
             item = self.LogicItemList__QListWidget.item(i)
+            if not item:
+                continue
+                
             item_text = item.text()
             user_data = item.data(Qt.UserRole) or {}
             order = user_data.get('order', i + 1)
+            
+            self.log_message.emit(f"[DEBUG] 아이템 {i+1} 처리 시작 - 텍스트: {item_text}")
+            self.log_message.emit(f"[DEBUG] 아이템 {i+1} 원본 데이터: {user_data}")
             
             # 로직 타입 아이템인 경우
             if item_text.startswith("로직:") or not any(item_text.startswith(prefix) for prefix in ["키 입력:", "지연시간", "마우스 입력:"]):
@@ -366,6 +373,7 @@ class LogicDetailWidget(QFrame):
                         'repeat_count': repeat_count
                     }
                 })
+                
             # 키 입력 아이템인 경우
             elif item_text.startswith("키 입력:"):
                 key_parts = item_text.split(" --- ")
@@ -392,7 +400,7 @@ class LogicDetailWidget(QFrame):
                         '왼쪽 쉬프트': win32con.VK_LSHIFT,
                         '오른쪽 쉬프트': win32con.VK_RSHIFT,
                         '왼쪽 컨트롤': win32con.VK_LCONTROL,
-                        '오른쪽 컨��롤': win32con.VK_RCONTROL,
+                        '오른쪽 컨트롤': win32con.VK_RCONTROL,
                         '왼쪽 알트': win32con.VK_LMENU,
                         '오른쪽 알트': win32con.VK_RMENU,
                         'Home': win32con.VK_HOME,
@@ -472,20 +480,38 @@ class LogicDetailWidget(QFrame):
                     items.append(item_data)
                 else:
                     items.append({"type": "text", "content": item_text, "order": order})
+                    
             # 마우스 입력 아이템인 경우
             elif item_text.startswith("마우스 입력:"):
-                mouse_data = user_data.get('mouse_data', {})
-                items.append({
-                    'type': 'mouse_input',
-                    'name': mouse_data.get('name', ''),
-                    'action': mouse_data.get('action', '클릭'),
-                    'button': mouse_data.get('button', '왼쪽 버튼'),
-                    'coordinates': mouse_data.get('coordinates', {'x': 0, 'y': 0}),
-                    'ratios': mouse_data.get('ratios', {'x': 0, 'y': 0}),
-                    'process': mouse_data.get('process', None),
-                    'display_text': item_text,
-                    'order': order
-                })
+                mouse_data = user_data.copy()
+                mouse_data['order'] = i + 1
+                mouse_data['type'] = 'mouse_input'
+                
+                # 프로세스 정보가 있는지 확인하고 복원
+                if 'process' not in mouse_data or not mouse_data['process']:
+                    mouse_data['process'] = user_data.get('process', {})
+                    
+                # 좌표와 비율 정보가 있는지 확인하고 복원
+                if not mouse_data.get('coordinates', {}).get('x'):
+                    coords = user_data.get('coordinates', {})
+                    mouse_data['coordinates'] = coords
+                    
+                if not mouse_data.get('ratios', {}).get('x'):
+                    ratios = user_data.get('ratios', {})
+                    mouse_data['ratios'] = ratios
+
+                # 액션과 버튼 정보 복원
+                if 'action' not in mouse_data:
+                    mouse_data['action'] = user_data.get('action', '클릭')
+                if 'button' not in mouse_data:
+                    mouse_data['button'] = user_data.get('button', '왼쪽 버튼')
+                if 'name' not in mouse_data:
+                    mouse_data['name'] = user_data.get('name', '')
+
+                self.log_message.emit(f"[DEBUG] 마우스 입력 처리 - 원본 데이터: {user_data}")
+                self.log_message.emit(f"[DEBUG] 마우스 입력 처리 - 처리된 데이터: {mouse_data}")
+                items.append(mouse_data)
+                
             # 지연시간 아이템인 경우
             elif item_text.startswith("지연시간"):
                 items.append({
@@ -496,7 +522,7 @@ class LogicDetailWidget(QFrame):
                 })
             # 기타 아이템
             else:
-                # 반 텍스트 아이템을 로직 타입으로 변환
+                # 일반 텍스트 아이템을 로직 타입으로 변환
                 items.append({
                     'type': 'logic',
                     'logic_name': item_text,
@@ -506,6 +532,7 @@ class LogicDetailWidget(QFrame):
                     'order': order
                 })
         
+        self.log_message.emit(f"[DEBUG] get_items() 완료 - 최종 아이템 목록: {items}")
         # order 값으로 정렬
         return sorted(items, key=lambda x: x.get('order', float('inf')))
 
@@ -650,7 +677,7 @@ class LogicDetailWidget(QFrame):
                     self.log_message.emit(f"로직 '{name}'이(가) 업데이트되었습니다.")
                 else:  # 새 로직
                     self.logic_saved.emit(logic_info)
-                    self.log_message.emit(f"새 로직 '{name}'이(가) 저��되었습니다.")
+                    self.log_message.emit(f"새 로직 '{name}'이(가) 저장되었습니다.")
                 
                 self.clear_all()
                 return True
@@ -660,7 +687,7 @@ class LogicDetailWidget(QFrame):
                 return False
 
         except Exception as e:
-            print(f"[DEBUG] LogicDetailWidget._save_logic 에러 발생: {str(e)}")
+            print(f"[DEBUG] LogicDetailWidget._save_logic ���러 발생: {str(e)}")
             self.log_message.emit(f"로직 저장 중 오류 발생: {str(e)}")
             return False
 
@@ -890,7 +917,7 @@ class LogicDetailWidget(QFrame):
             self.LogicItemList__QListWidget.setCurrentItem(last_inserted_item)
             
         items_count = len(self.copied_items)
-        self.log_message.emit(f"{items_count}개의 로직 구성 아이템이 붙���넣기되었습니다")
+        self.log_message.emit(f"{items_count}개의 로직 구성 아이템이 붙여넣기되었습니다")
 
     def eventFilter(self, obj, event):
         """이벤트 필터"""
@@ -918,7 +945,7 @@ class LogicDetailWidget(QFrame):
     def _check_data_entered(self, *args):
         """입력된 데이터가 있는지 확인하고 새 로직 버튼 상태를 업데이트"""
         # 새 로직 버튼 활성화 조건:
-        # 1. 직 이름이 입력되어 있는 경우
+        # 1. 직 이름이 입력되어 는 경우
         # 2. 트리거 키가 설정되어 있는 경우
         # 3. 아이템 목록에 하나 이상의 아이템이 있는 경우
         # 4. 반복 횟수가 1이 아닌 경우
@@ -1035,7 +1062,7 @@ class LogicDetailWidget(QFrame):
                 item_data = item.data(Qt.UserRole) or {}
                 item_data['order'] = i + 1
                 item.setData(Qt.UserRole, item_data)
-            self.log_message.emit(f"{len(selected_items)}개의 로직 구성 아이템이 삭제되습니다")
+            self.log_message.emit(f"{len(selected_items)}개의 로직 구성 아이템이 삭제되었습니다")
 
     def _on_nested_checkbox_changed(self, state):
         """중첩로직용 체크박스 상태 변경 시 호출"""
