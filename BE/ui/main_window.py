@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
 from PySide6.QtCore import Qt, QPoint, QSize, QSettings
 from PySide6.QtGui import QFont
 import sys
+import traceback
 
 from BE.ui.components.logic_list.logic_list_widget import LogicListWidget
 from BE.ui.components.logic_list.logic_list_controller import LogicListController
@@ -229,16 +230,24 @@ class MainWindow(QMainWindow):
         
     def _on_mouse_input(self, mouse_info):
         """마우스 입력이 추가되었을 때"""
-        # 마우스 입력 정보를 직렬화
-        serialized_data = MouseDataHandler.serialize(mouse_info)
-        
-        # LogicDetailWidget의 아이템 목록에 추가
-        item = QListWidgetItem(mouse_info.get('display_text', ''))
-        item.setData(Qt.UserRole, serialized_data)
-        self.logic_detail_widget.LogicItemList__QListWidget.addItem(item)
-        
-        # 로그 메시지 출력
-        self._append_log(f"마우스 입력이 추가되었습니다: {mouse_info.get('display_text', '')}")
+        try:
+            # mouse_info가 문자열인 경우 딕셔너리로 변환
+            if isinstance(mouse_info, str):
+                display_text = mouse_info
+                mouse_info = {'display_text': display_text}
+            
+            # 마우스 입력 정보를 직렬화
+            serialized_data = MouseDataHandler.serialize(mouse_info)
+            
+            # LogicDetailWidget의 아이템 목록에 추가
+            item = QListWidgetItem(mouse_info.get('display_text', ''))
+            item.setData(Qt.UserRole, serialized_data)
+            self.logic_detail_widget.LogicItemList__QListWidget.addItem(item)
+            
+            # 로그 메시지 출력
+            print(f"마우스 입력이 추가되었습니다: {mouse_info.get('display_text', '')}")
+        except Exception as e:
+            print(f"에러 발생: {str(e)}\n\n스택 트레이스:\n{traceback.format_exc()}")
         
     def _on_delay_input(self, delay_info):
         """지연시간이 추가되었을 때 호출"""
@@ -252,7 +261,7 @@ class MainWindow(QMainWindow):
     def _handle_edit_logic(self, logic_info):
         """로직 불러오기 처리"""
         if self.logic_detail_widget.has_items():
-            # 확인 모달 ��시
+            # 확인 모달 시그널
             reply = QMessageBox.question(
                 self,
                 "로직 불러오기",
@@ -267,7 +276,7 @@ class MainWindow(QMainWindow):
         
         # 로직 데이터 로드
         self.logic_detail_widget.load_logic(logic_info)
-        self._append_log(f"���직 '{logic_info['name']}'을(를) 수정합니다")
+        self._append_log(f"로직 '{logic_info['name']}'을(를) 수정합니다")
 
     def _load_window_settings(self):
         """윈도우 설정 로드"""
