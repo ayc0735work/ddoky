@@ -118,7 +118,7 @@ class LogicMakerWidget(QFrame):
         """키의 키보드 위치 정보 반환"""
         if scan_code in [42, 29, 56, 91]:  # 왼쪽 Shift, Ctrl, Alt, Win
             return "키보드 왼쪽"
-        elif scan_code in [54, 285, 312, 92]:  # 오른쪽 Shift, Ctrl, Alt, Win
+        elif scan_code in [54, 285, 312, 92]:  # 오른�� Shift, Ctrl, Alt, Win
             return "키보드 오른쪽"
         elif 71 <= scan_code <= 83:  # 숫자패드 영역
             return "숫자패드"
@@ -141,6 +141,7 @@ class LogicMakerWidget(QFrame):
         """마우스 입력 추가"""
         dialog = MouseInputDialog(self)
         dialog.mouse_input_selected.connect(self._on_mouse_input_selected)
+        dialog.log_message.connect(self.log_message.emit)
         dialog.exec()
         
     def _on_mouse_input_selected(self, mouse_info):

@@ -60,7 +60,7 @@
             "order": 1,
             "name": "체력 회복 - 8회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.164945",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 /",
@@ -149,7 +149,7 @@
             "order": 2,
             "name": "체력 회복 - 5회",
             "created_at": "2024-12-08T13:40:39.094231",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.164945",
             "trigger_key": null,
             "repeat_count": 4,
             "is_nested": true,
@@ -232,7 +232,7 @@
             "order": 3,
             "name": "체력 회복 - 3회",
             "created_at": "2024-12-08T14:28:34.950624",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.164945",
             "trigger_key": null,
             "repeat_count": 4,
             "is_nested": true,
@@ -315,7 +315,7 @@
             "order": 4,
             "name": "체력 회복 - 1회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.164945",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "키 코드 192",
@@ -392,7 +392,7 @@
             "order": 5,
             "name": "보호 무장 힘",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.164945",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 .",
@@ -709,7 +709,7 @@
             "order": 6,
             "name": "모두 줍기",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.164945",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "키 코드 190",
@@ -766,7 +766,7 @@
             "order": 7,
             "name": "공력증강 - 연속1회 - 사냥용",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": {
                 "key_code": "숫자패드 6",
                 "modifiers": 0,
@@ -818,7 +818,7 @@
             "order": 8,
             "name": "공력증강 - 연속5회",
             "created_at": "2024-12-08T20:41:36.805524",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T18:07:22.281111",
             "trigger_key": null,
             "repeat_count": 5,
             "is_nested": true,
@@ -865,7 +865,7 @@
             "order": 9,
             "name": "공력증강 - 5회",
             "created_at": "2024-11-30T16:57:51.034740",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "",
@@ -924,7 +924,7 @@
             "order": 10,
             "name": "동동주 마시기 - 1회",
             "created_at": "2024-11-30T07:08:49.271692",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -987,7 +987,7 @@
             "order": 11,
             "name": "첨 중독, 저주, 마비 - 1회",
             "created_at": "2024-11-30T10:25:06.438732",
-            "updated_at": "2024-12-09T20:41:29.567010",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -1306,7 +1306,7 @@
             "order": 12,
             "name": "중독, 마비 첨 사냥 - 무한반복",
             "created_at": "2024-12-08T21:25:24.196785",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": {
                 "key_code": "숫자패드 *",
                 "modifiers": 0,
@@ -1319,17 +1319,17 @@
                 {
                     "order": 1,
                     "type": "logic",
-                    "display_text": "첨 중독, 저주, 마비 - 1회",
-                    "logic_id": "970a1723-88f9-4a50-8bb4-4f8c8f8199fe",
-                    "logic_name": "첨 중독, 저주, 마비 - 1회",
+                    "display_text": "보호 무장 힘",
+                    "logic_id": "b8796333-e8d6-4ae2-9fec-801a713517d8",
+                    "logic_name": "보호 무장 힘",
                     "repeat_count": 1
                 },
                 {
                     "order": 2,
                     "type": "logic",
-                    "display_text": "보호 무장 힘",
-                    "logic_id": "b8796333-e8d6-4ae2-9fec-801a713517d8",
-                    "logic_name": "보호 무장 힘",
+                    "display_text": "첨 중독, 저주, 마비 - 1회",
+                    "logic_id": "970a1723-88f9-4a50-8bb4-4f8c8f8199fe",
+                    "logic_name": "첨 중독, 저주, 마비 - 1회",
                     "repeat_count": 1
                 },
                 {
@@ -1386,7 +1386,7 @@
             "order": 13,
             "name": "첨, 중독 - 9999회",
             "created_at": "2024-12-02T02:03:00.957188",
-            "updated_at": "2024-12-09T20:44:01.807706",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": {
                 "key_code": "숫자패드 9",
                 "modifiers": 0,
@@ -1430,7 +1430,7 @@
             "order": 14,
             "name": "중독, 공격 - 8회",
             "created_at": "2024-12-01T02:24:21.834711",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": {
                 "key_code": "키 코드 220",
                 "modifiers": 0,
@@ -1576,7 +1576,7 @@
             "order": 15,
             "name": "중독, 공격 - 9999회 - 테스트",
             "created_at": "2024-12-08T20:50:23.839286",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": {
                 "key_code": "숫자패드 3",
                 "modifiers": 0,
@@ -1646,7 +1646,7 @@
             "order": 16,
             "name": "중독, 공격 - 3회",
             "created_at": "2024-12-09T20:32:32.427082",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": null,
             "repeat_count": 3,
             "is_nested": true,
@@ -1711,7 +1711,7 @@
             "order": 17,
             "name": "중독만 - 1회",
             "created_at": "2024-12-01T21:24:52.849277",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "",
@@ -1806,7 +1806,7 @@
             "order": 18,
             "name": "중독만 - 4회 (일반이랑 딱 맞음)",
             "created_at": "2024-12-09T20:31:25.048097",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": null,
             "repeat_count": 4,
             "is_nested": true,
@@ -1895,7 +1895,7 @@
             "order": 19,
             "name": "중독만 - 5회 (첨이랑 딱 맞음)",
             "created_at": "2024-12-08T20:39:14.995922",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": null,
             "repeat_count": 5,
             "is_nested": true,
@@ -1984,7 +1984,7 @@
             "order": 20,
             "name": "중독만 - 90회 - 하이픈",
             "created_at": "2024-12-04T00:08:13.574278",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 -",
@@ -2079,7 +2079,7 @@
             "order": 21,
             "name": "중독만 - 55회 - 우컨트롤",
             "created_at": "2024-11-30T14:19:30.464189",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "키 코드 25",
@@ -2174,7 +2174,7 @@
             "order": 22,
             "name": "절망만 - 20회",
             "created_at": "2024-12-01T02:22:23.843289",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 0",
@@ -2269,7 +2269,7 @@
             "order": 23,
             "name": "저주만 - 20회",
             "created_at": "2024-11-30T16:06:26.318706",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 4",
@@ -2364,7 +2364,7 @@
             "order": 24,
             "name": "마비만 - 20회",
             "created_at": "2024-11-30T14:35:32.801674",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "숫자패드 5",
@@ -2459,7 +2459,7 @@
             "order": 25,
             "name": "마비 상하좌우 - 3회",
             "created_at": "2024-12-06T16:29:20.641646",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "오른쪽 쉬프트",
@@ -2722,7 +2722,7 @@
             "order": 26,
             "name": "마비 상하좌우 - 1회",
             "created_at": "2024-12-08T21:20:41.834544",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -2979,7 +2979,7 @@
             "order": 27,
             "name": "마비 상하 - 1회",
             "created_at": "2024-12-09T13:55:26.337819",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -3113,10 +3113,10 @@
             ]
         },
         "c01c73a1-4971-4952-abdf-a3217b12fdb6": {
-            "order": 27,
+            "order": 28,
             "name": "마비 좌우 - 1회",
             "created_at": "2024-12-09T13:56:02.913186",
-            "updated_at": "2024-12-09T20:38:25.446781",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -3253,7 +3253,7 @@
             "order": 29,
             "name": "저주 상하좌우 - 1회",
             "created_at": "2024-12-08T20:06:53.978518",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -3510,7 +3510,7 @@
             "order": 30,
             "name": "저주 상하 - 1회",
             "created_at": "2024-12-09T14:29:26.182552",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -3647,7 +3647,7 @@
             "order": 31,
             "name": "저주 좌우 - 1회",
             "created_at": "2024-12-09T14:29:33.887956",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -3784,7 +3784,7 @@
             "order": 32,
             "name": "중독 상하좌우 - 1회",
             "created_at": "2024-12-08T20:07:54.536620",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -4041,7 +4041,7 @@
             "order": 33,
             "name": "마비 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "",
@@ -4110,7 +4110,7 @@
             "order": 34,
             "name": "저주 - 홈 클릭",
             "created_at": "2024-12-08T20:06:10.101017",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -4173,7 +4173,7 @@
             "order": 35,
             "name": "중독 - 홈 클릭",
             "created_at": "2024-12-08T20:06:34.044749",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -4233,10 +4233,10 @@
             ]
         },
         "c390e91a-ed44-4416-b3c9-1b5e089b98e9": {
-            "order": 38,
+            "order": 36,
             "name": "중독, 공격 - 1회",
             "created_at": "2024-12-09T20:33:02.065308",
-            "updated_at": "2024-12-11T14:06:14.994307",
+            "updated_at": "2024-12-11T17:36:26.165949",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -4297,11 +4297,11 @@
                 }
             ]
         },
-        "7f8b344c-1c82-42c9-bd8a-a155d024a5ec": {
-            "order": 48,
+        "31a9898a-a628-4942-831d-77d65da88daf": {
+            "order": 37,
             "name": "테스트",
-            "created_at": "2024-12-11T15:33:14.356286",
-            "updated_at": "2024-12-11T15:45:07.800075",
+            "created_at": "2024-12-11T18:07:22.279110",
+            "updated_at": "2024-12-11T19:58:46.818824",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -4327,45 +4327,26 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 2,
-                    "display_text": "키 입력: 엔터 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                }
-            ]
-        },
-        "ae5c06de-9e2d-43da-b4f4-151c0300572b": {
-            "order": 49,
-            "name": "ㅇㅇㅇ",
-            "created_at": "2024-12-11T15:45:39.171246",
-            "updated_at": "2024-12-11T15:45:39.171246",
-            "trigger_key": null,
-            "repeat_count": 1,
-            "is_nested": true,
-            "items": [
-                {
-                    "order": 1,
-                    "display_text": "키 입력: 엔터 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.01초",
+                    "duration": 0.01,
+                    "order": 3
                 },
                 {
-                    "order": 2,
-                    "display_text": "키 입력: 엔터 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
+                    "order": 4,
+                    "type": "logic",
+                    "display_text": "공력증강 - 연속5회",
+                    "logic_id": "53ff5f5a-747a-4ebf-9f58-8adb8026eb9f",
+                    "logic_name": "공력증강 - 연속5회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 4,
+                    "type": "logic",
+                    "display_text": "공력증강 - 연속5회",
+                    "logic_id": "53ff5f5a-747a-4ebf-9f58-8adb8026eb9f",
+                    "logic_name": "공력증강 - 연속5회",
+                    "repeat_count": 1
                 }
             ]
         }

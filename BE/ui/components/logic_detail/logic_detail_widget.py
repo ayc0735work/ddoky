@@ -407,7 +407,7 @@ class LogicDetailWidget(QFrame):
                         'End': win32con.VK_END,
                         'Page Up': win32con.VK_PRIOR,
                         'Page Down': win32con.VK_NEXT,
-                        '방향키 왼쪽 ←': win32con.VK_LEFT,
+                        '방향키 왼쪽 ��': win32con.VK_LEFT,
                         '방향키 오른쪽 →': win32con.VK_RIGHT,
                         '방향키 위쪽 ↑': win32con.VK_UP,
                         '방향키 아래쪽 ↓': win32con.VK_DOWN,
@@ -584,6 +584,7 @@ class LogicDetailWidget(QFrame):
     def _save_logic(self):
         """로직 저장"""
         try:
+            self.log_message.emit("[로직 저장 시작]")
             print(f"[DEBUG] LogicDetailWidget._save_logic 시작")
             name = self.LogicNameInput__QLineEdit.text().strip()
             if not name:
@@ -591,6 +592,7 @@ class LogicDetailWidget(QFrame):
                 return False
 
             is_nested = self.is_nested_checkbox.isChecked()
+            self.log_message.emit(f"로직 정보 - 이름: {name}, 중첩여부: {is_nested}")
             print(f"[DEBUG] 로직 정보 - 이름: {name}, 중첩여부: {is_nested}")
 
             # 중첩로직용이 아닐 경우에만 트리거 키 검사
@@ -604,6 +606,7 @@ class LogicDetailWidget(QFrame):
 
             # 이름 중복 검사 (수정 모드가 아닐 때만)
             if not self.edit_mode:
+                self.log_message.emit("새 로직 저장 - 이름 중복 검사 중...")
                 print(f"[DEBUG] 새 로직 저장 - 이름 중복 검사")
                 logics = self.settings_manager.load_logics()
                 for logic in logics.values():
@@ -618,6 +621,7 @@ class LogicDetailWidget(QFrame):
                         self.log_message.emit(f"오류: 이미 '{name}' 이름의 로직이 존재합니다.")
                         return False
 
+            self.log_message.emit("로직 정보 구성 중...")
             print(f"[DEBUG] 로직 정보 구성 시작")
             # 현재 로직 정보 구성
             logic_info = {
@@ -630,11 +634,14 @@ class LogicDetailWidget(QFrame):
                 'is_nested': is_nested,
                 'trigger_key': self.trigger_key_info if not is_nested else None
             }
+            self.log_message.emit(f"구성된 로직 정보: {logic_info}")
             print(f"[DEBUG] 로직 정보: {logic_info}")
 
+            self.log_message.emit(f"LogicManager.save_logic 호출 - ID: {self.current_logic_id}")
             print(f"[DEBUG] LogicManager.save_logic 호출 전 - ID: {self.current_logic_id}")
             # LogicManager를 통해 저장
             success, result = self.logic_manager.save_logic(self.current_logic_id, logic_info)
+            self.log_message.emit(f"LogicManager.save_logic 결과: {success}, {result}")
             print(f"[DEBUG] LogicManager.save_logic 호출 후 - 결과: {success}, {result}")
             
             if success:
@@ -793,13 +800,17 @@ class LogicDetailWidget(QFrame):
     
     def _add_logic_item(self, item_info):
         """로직 아이템을 리스트에 추가"""
+        self.log_message.emit(f"[로직 아이템 추가 시작] 아이템 정보: {item_info}")
+        
         if not isinstance(item_info, dict):
+            self.log_message.emit("오류: 잘못된 아이템 정보 형식")
             return
             
         # 이미 변환된 형식인 경우 (로직 타입)
         if item_info.get('type') == 'logic':
             logic_name = item_info.get('logic_name')
             logic_id = item_info.get('logic_id')
+            self.log_message.emit(f"로직 타입 아이템 처리 - 이름: {logic_name}, ID: {logic_id}")
             
             # 공통 메서드 사용
             item, success = self._create_nested_logic_item(logic_name, logic_id)
@@ -813,13 +824,15 @@ class LogicDetailWidget(QFrame):
             item.setData(Qt.UserRole, item_data)
             
             self.LogicItemList__QListWidget.addItem(item)
+            self.log_message.emit(f"로직 아이템 추가 완료 - 순서: {current_count + 1}")
         else:
-            # 일반 아이템 처리 (기존 코드 유지)
+            # 일반 아이템 처리
             current_count = self.LogicItemList__QListWidget.count()
             item = QListWidgetItem(item_info.get('display_text', ''))
             item_info['order'] = current_count + 1
             item.setData(Qt.UserRole, item_info)
             self.LogicItemList__QListWidget.addItem(item)
+            self.log_message.emit(f"일반 아이템 추가 완료 - 타입: {item_info.get('type')}, 순서: {current_count + 1}")
     
     def _paste_item(self):
         """복사된 아이템들을 현재 선택된 아이템 아래에 붙여넣기"""
@@ -1133,7 +1146,7 @@ class LogicDetailWidget(QFrame):
         """선택된 아이템들을 복사"""
         selected_items = self.LogicItemList__QListWidget.selectedItems()
         if selected_items:
-            # 텍스트와 함께 전체 데이터를 복사
+            # 텍스트와 함께 전체 데이터를 ���사
             self.copied_items = []
             for item in selected_items:
                 item_data = {

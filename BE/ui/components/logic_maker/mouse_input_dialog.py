@@ -20,6 +20,7 @@ class CaptureOverlay(QDialog):
         self.client_rect = None
         self.magnifier_size = QSize(150, 150)
         self.magnifier_scale = 2
+        self.parent = parent
         
         # 반투명 오버레이 설정
         self.setAttribute(Qt.WA_TranslucentBackground)
@@ -42,15 +43,18 @@ class CaptureOverlay(QDialog):
     def _capture_window(self):
         """프로세스 창 캡처"""
         if not self.process_info or 'hwnd' not in self.process_info:
+            self.parent._append_log("오류: 프로세스 정보가 없거나 잘못되었습니다.")
             self.reject()
             return
             
         hwnd = self.process_info['hwnd']
+        self.parent._append_log(f"창 캡처 시작 - HWND: {hwnd}")
         
         try:
             # 창이 최소화되어 있다면 복원
             if win32gui.IsIconic(hwnd):
                 win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+                self.parent._append_log("최소화된 창을 복원했습니다.")
             
             # 창을 활성화
             win32gui.SetForegroundWindow(hwnd)
@@ -66,6 +70,8 @@ class CaptureOverlay(QDialog):
             self.client_width = client_rect[2]
             self.client_height = client_rect[3]
             
+            self.parent._append_log(f"창 정보 - 클라이언트 영역: ({self.client_width}x{self.client_height}), 위치: ({self.client_x}, {self.client_y})")
+            
             # 창 이미지 캡처
             screen = QApplication.primaryScreen()
             self.window_image = screen.grabWindow(0, self.client_x, self.client_y, 
@@ -75,8 +81,10 @@ class CaptureOverlay(QDialog):
             self.setGeometry(QRect(self.client_x, self.client_y, 
                                  self.client_width, self.client_height))
             
+            self.parent._append_log("창 캡처 및 오버레이 설정 완료")
+            
         except Exception as e:
-            print(f"창 캡처 중 오류 발생: {str(e)}")
+            self.parent._append_log(f"창 캡처 중 오류 발생: {str(e)}")
             import traceback
             traceback.print_exc()
             self.reject()
@@ -183,6 +191,10 @@ class CaptureOverlay(QDialog):
             x_ratio = relative_x / self.client_width
             y_ratio = relative_y / self.client_height
             
+            self.parent._append_log(f"마우스 클릭 감지 - 상대좌표: ({relative_x}, {relative_y})")
+            self.parent._append_log(f"클라이언트 영역 크기: {self.client_width}x{self.client_height}")
+            self.parent._append_log(f"계산된 비율 - X: {x_ratio:.3f}, Y: {y_ratio:.3f}")
+            
             self.click_info = {
                 'coordinates': {
                     'x': relative_x,
@@ -194,6 +206,7 @@ class CaptureOverlay(QDialog):
                 }
             }
             
+            self.parent._append_log(f"클릭 정보 생성 완료: {self.click_info}")
             self.accept()
             
     def get_click_info(self):
@@ -210,7 +223,8 @@ class CaptureOverlay(QDialog):
 class MouseInputDialog(QDialog):
     """마우스 입력을 받는 다이얼로그"""
     
-    mouse_input_selected = Signal(dict)  # 선택된 마우스 입력 정보를 전달하는 시그널
+    mouse_input_selected = Signal(dict)  # 선택된 마우스 입력 정보를 전송하는 시그널
+    log_message = Signal(str)  # 로그 메시지 시그널
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -223,7 +237,13 @@ class MouseInputDialog(QDialog):
         )
         
         self.selected_process = None
+        self.click_ratios = None
         self.init_ui()
+        
+    def _append_log(self, message):
+        """로그 메시지를 출력합니다."""
+        formatted_message = f"<span style='color: #666666;'>[MouseInputDialog]</span> {message}"
+        self.log_message.emit(formatted_message)
         
     def init_ui(self):
         """UI 초기화"""
@@ -492,26 +512,48 @@ class MouseInputDialog(QDialog):
     def _select_coordinates(self):
         """마우스 좌표 선택"""
         if not self.selected_process:
+            self._append_log("프로세스가 선택되지 않았습니다.")
             return
             
+        self._append_log(f"좌표 선택 시작 - 선택된 프로세스: {self.selected_process}")
         overlay = CaptureOverlay(self, self.selected_process)
+        
         if overlay.exec() == QDialog.Accepted:
             click_info = overlay.get_click_info()
+            self._append_log(f"클릭 정보 수신: {click_info}")
+            
             if click_info:
-                self.x_spinbox.setValue(click_info['coordinates']['x'])
-                self.y_spinbox.setValue(click_info['coordinates']['y'])
-                self.click_ratios = click_info['ratios']
+                # 좌표 정보 저장
+                coordinates = click_info['coordinates']
+                self._append_log(f"좌표 정보 저장 시도 - X: {coordinates['x']}, Y: {coordinates['y']}")
+                self.x_spinbox.setValue(coordinates['x'])
+                self.y_spinbox.setValue(coordinates['y'])
+                
+                # 비율 정보 저장
+                ratios = click_info['ratios']
+                self._append_log(f"비율 정보 저장 시도 - X비율: {ratios['x']:.3f}, Y비율: {ratios['y']:.3f}")
+                self.click_ratios = ratios
+                
+                self._append_log("좌표 및 비율 정보 저장 완료")
+            else:
+                self._append_log("오류: 클릭 정보가 없습니다.")
+        else:
+            self._append_log("좌표 선택이 취소되었습니다.")
                 
     def _reset_coordinates(self):
         """좌표 입력 초기화"""
+        self._append_log("좌표 입력 초기화 시작")
         self.x_spinbox.setValue(0)
         self.y_spinbox.setValue(0)
         self.click_ratios = None
+        self._append_log("좌표 및 비율 정보 초기화 완료")
         
     def _on_confirm(self):
         """확인 버튼 클릭 시 호출"""
+        self._append_log("마우스 입력 정보 저장 시작")
+        
         if not self.name_input.text().strip():
-            # 이름이 입력되지 않았을 경우
+            self._append_log("오류: 이름이 입력되지 않았습니다.")
             return
             
         # 선택된 정보 수집
@@ -524,6 +566,15 @@ class MouseInputDialog(QDialog):
         y = self.y_spinbox.value()
         name = self.name_input.text().strip()
         
+        self._append_log(f"수집된 정보 - 동작: {action}, 버튼: {button}, 좌표: ({x}, {y}), 이름: {name}")
+        self._append_log(f"선택된 프로세스 정보: {self.selected_process}")
+        
+        if not hasattr(self, 'click_ratios') or self.click_ratios is None:
+            self._append_log("경고: 비율 정보가 없습니다.")
+            self.click_ratios = {'x': 0, 'y': 0}
+        else:
+            self._append_log(f"비율 정보: {self.click_ratios}")
+        
         # 마우스 입력 정보 생성
         mouse_info = {
             'type': 'mouse_input',
@@ -533,9 +584,14 @@ class MouseInputDialog(QDialog):
             'coordinates': {'x': x, 'y': y},
             'ratios': self.click_ratios,
             'process': self.selected_process,
-            'display_text': f"마우스 입력: {name} ({x}, {y})"
+            'display_text': f"마우스 입력: {name} ({x}, {y})",
+            'order': 0  # 순서는 LogicDetailWidget에서 설정됨
         }
         
+        self._append_log(f"생성된 마우스 입력 정보: {mouse_info}")
+        
         # 시그널 발생
+        self._append_log("마우스 입력 정보 전송 시작")
         self.mouse_input_selected.emit(mouse_info)
+        self._append_log("마우스 입력 정보 전송 완료")
         self.accept() 
