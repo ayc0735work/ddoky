@@ -141,7 +141,7 @@ class CaptureOverlay(QDialog):
             self.magnifier_size.width(), self.magnifier_size.height()
         )
         
-        # 십자선 ���리기
+        # 십자선 그리기
         center_x = magnifier_x + self.magnifier_size.width() / 2
         center_y = magnifier_y + self.magnifier_size.height() / 2
         

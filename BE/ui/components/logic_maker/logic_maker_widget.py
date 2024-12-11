@@ -122,7 +122,7 @@ class LogicMakerWidget(QFrame):
             return "키보드 오른쪽"
         elif 71 <= scan_code <= 83:  # 숫자패드 영역
             return "숫자패드"
-        return "메�� 키보드"
+        return "메인 키보드"
             
     def _get_modifier_text(self, modifiers):
         """수정자 키 텍스트 생성"""
