@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QPushButton,
-                             QLabel, QInputDialog, QDialog)
+                             QLabel, QInputDialog)
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
 
@@ -20,6 +20,7 @@ class LogicMakerWidget(QFrame):
     record_mode = Signal(bool)  # 기록 모드가 토글되었을 때
     log_message = Signal(str)  # 로그 메시지를 전달하는 시그널
     add_logic = Signal(str)  # 만든 로직 추가 시그널 (로직 이름)
+    item_added = Signal(dict)  # 아이템이 추가되었을 때
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -138,13 +139,35 @@ class LogicMakerWidget(QFrame):
     def _add_mouse_input(self):
         """마우스 입력 추가"""
         dialog = MouseInputDialog(self)
-        dialog.mouse_input_selected.connect(self._on_mouse_input_selected)
+        dialog.mouse_input_selected.connect(self._on_mouse_selected)
         dialog.exec()
         
-    def _on_mouse_input_selected(self, mouse_info):
-        """마우스 입력이 선택되었을 때"""
-        self.mouse_input.emit(mouse_info['display_text'])
-        self.log_message.emit(f"마우스 입력이 추가되었습니다: {mouse_info['display_text']}")
+    def _on_mouse_selected(self, click_info):
+        """마우스 클릭이 선택되었을 때"""
+        # 로그 메시지 생성
+        log_msg = (
+            f"마우스 입력이 추가되었습니다 [ "
+            f"이름: {click_info['name']}, "
+            f"좌표: ({click_info['coordinates']['x']}, {click_info['coordinates']['y']}) ]"
+        )
+        
+        # 로그 메시지 전달
+        self.log_message.emit(log_msg)
+        
+        # 마우스 클릭 정보
+        mouse_info = {
+            'type': 'mouse_input',
+            'name': click_info['name'],
+            'coordinates': click_info['coordinates'],
+            'display_text': f"마우스 클릭: {click_info['name']} ({click_info['coordinates']['x']}, {click_info['coordinates']['y']})",
+            'order': len(self.items) + 1
+        }
+        
+        # 아이템 추가
+        self.items.append(mouse_info)
+        
+        # 시그널 발생
+        self.item_added.emit(mouse_info)
             
     def _add_delay(self):
         """지연시간 추가"""

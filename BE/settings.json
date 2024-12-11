@@ -4236,7 +4236,7 @@
             "order": 36,
             "name": "중독, 공격 - 1회",
             "created_at": "2024-12-09T20:33:02.065308",
-            "updated_at": "2024-12-09T20:38:18.908499",
+            "updated_at": "2024-12-10T22:17:32.072069",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,

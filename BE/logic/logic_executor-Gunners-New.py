@@ -3,7 +3,6 @@ import win32api
 import win32con
 from PySide6.QtCore import QObject, Signal, QTimer
 from ..utils.key_handler import KeyboardHook
-from ..utils.mouse_handler import MouseHandler
 import threading
 from ..settings.settings import Settings
 
@@ -248,31 +247,71 @@ class LogicExecutor(QObject):
     
     def _execute_step(self, step):
         """실제로 해당 스텝이 가지고 있는 어떤 동작을 수행하는 작업자 함수"""
+        if self.execution_state['is_stopping']:
+            return
+        
         try:
-            step_type = step.get('type')
-            
-            if step_type == 'key_input':
-                self._execute_key_input(step)
-            elif step_type == 'delay':
-                self._execute_delay(step)
-            elif step_type == 'logic':
-                self._execute_nested_logic(step)
-            elif step_type == 'mouse_input':
-                self._execute_mouse_input(step)
-            else:
-                self._log_with_time(f"[오류] 알 수 없는 스텝 타입: {step_type}")
+            if step['type'] == 'key_input':
+                # 키 입력 관련 정보 미리 계산
+                virtual_key = step['virtual_key']
+                scan_code = step['scan_code']
+                flags = 0
                 
-            # 다음 스텝 실행을 위해 비동기 호출
-            QTimer.singleShot(0, self._execute_next_step)
-            
+                # 확장 키 플래그 설정
+                if step['key_code'] == '숫자패드 엔터' or scan_code > 0xFF:
+                    flags |= win32con.KEYEVENTF_EXTENDEDKEY
+                
+                # 쉼표 키 특별 처리
+                if step['key_code'] == ',':
+                    virtual_key = win32api.VkKeyScan(',') & 0xFF
+                    
+                # 통합된 로그 메시지
+                self._log_with_time("[로직 스텝] 스텝-{} 실행: {} -----키정보 (키: {}, 가상키: {}, 스캔코드: {}, 플래그: {})".format(
+                    self.execution_state['current_step'], 
+                    step['display_text'],
+                    step['key_code'],
+                    virtual_key,
+                    scan_code,
+                    flags
+                ))
+                
+                self._execute_key_input(step)
+                # 키 입력 동작에 따른 딜레이 적용
+                delay = self.KEY_DELAYS.get(step['action'], self.KEY_DELAYS['기본'])
+                timer = QTimer()
+                timer.setSingleShot(True)
+                timer.timeout.connect(lambda: self._schedule_next_step())
+                timer.start(int(delay * 1000))
+                self._active_timers.append(timer)
+            else:
+                # 키 입력이 아닌 경우는 기존 로그 형식 유지
+                self._log_with_time("[로직 스텝] 스텝-{} 실행: {}".format(
+                    self.execution_state['current_step'], 
+                    step['display_text']
+                ))
+                
+                if step['type'] == 'delay':
+                    duration = float(step['duration'])
+                    timer = QTimer()
+                    timer.setSingleShot(True)
+                    timer.timeout.connect(lambda: self._schedule_next_step())
+                    timer.start(int(duration * 1000))
+                    self._active_timers.append(timer)
+                elif step['type'] == 'logic':
+                    self._execute_nested_logic(step)
+                    
         except Exception as e:
-            self._log_with_time(f"[오류] 스텝 실행 중 오류 발생: {str(e)}")
+            self._log_with_time("[오류] 스텝 실행 중 오류 발생: {}".format(str(e)))
             self._safe_cleanup()
+    
+    def _schedule_next_step(self):
+        """다음 스텝 실행을 예약"""
+        if not self.execution_state['is_stopping']:
+            QTimer.singleShot(0, self._execute_next_step)
     
     def _execute_key_input(self, step):
         """키 입력 실행"""
         try:
-            # 키 입력 관련 정보 미리 계산
             virtual_key = step['virtual_key']
             scan_code = step['scan_code']
             flags = 0
@@ -285,87 +324,68 @@ class LogicExecutor(QObject):
             if step['key_code'] == ',':
                 virtual_key = win32api.VkKeyScan(',') & 0xFF
                 
-            # 키 입력 실행
             if step['action'] == '누르기':
                 win32api.keybd_event(virtual_key, scan_code, flags, 0)
             else:  # 떼기
                 win32api.keybd_event(virtual_key, scan_code, flags | win32con.KEYEVENTF_KEYUP, 0)
                 
-            # 키 입력 후 지연
-            time.sleep(self.KEY_DELAYS.get(step['action'], self.KEY_DELAYS['기본']))
-            
-            self._log_with_time(f"[키 입력] {step['display_text']} 실행 완료")
-            
         except Exception as e:
-            self._log_with_time(f"[오류] 키 입력 실행 중 오류 발생: {str(e)}")
-            raise
-
-    def _execute_delay(self, step):
-        """지연시간 실행"""
-        try:
-            duration = float(step['duration'])
-            time.sleep(duration)
-            self._log_with_time(f"[지연시간] {duration}초 대기 완료")
-        except Exception as e:
-            self._log_with_time(f"[오류] 지연시간 실행 중 오류 발생: {str(e)}")
-            raise
+            raise Exception("키 입력 실행 실패: {}".format(str(e)))
 
     def _execute_nested_logic(self, step):
         """중첩 로직 실행"""
         try:
             logic_id = step.get('logic_id')
-            if not logic_id:
-                raise Exception("중첩 로직의 ID가 없습니다.")
+            logic_name = step.get('logic_name')
             
-            # 현재 상태를 스택에 저장
-            self._logic_stack.append((
-                self.selected_logic,
-                {
-                    'current_step': self.execution_state['current_step'],
-                    'current_repeat': self.execution_state['current_repeat']
-                }
-            ))
-            
-            # 중첩 로직 로드 및 실행
+            # UUID로 로직 찾기
             nested_logic = self.logic_manager.get_all_logics().get(logic_id)
-            if not nested_logic:
-                raise Exception(f"중첩 로직을 찾을 수 없습니다: {logic_id}")
             
+            # 로직을 찾지 못한 경우
+            if not nested_logic:
+                self._log_with_time(f"[로그] 실행할 수 있는 로직을 찾을 수 없습니다: {logic_name}")
+                # 다음 스텝으로 진행
+                self._schedule_next_step()
+                return
+
+            # 순환 참조 검사
+            if any(logic.get('id') == logic_id for logic, _ in self._logic_stack):
+                self._log_with_time(f"[로그] 로직 '{logic_name}'의 순환 참조가 감지되었습니다.")
+                self._schedule_next_step()
+                return
+
+            # 로직 실행
+            current_state = {
+                'current_step': self.execution_state['current_step'],
+                'current_repeat': self.execution_state['current_repeat'],
+                'is_stopping': self.execution_state['is_stopping']
+            }
+            self._logic_stack.append((self.selected_logic, current_state))
+
+            nested_logic = dict(nested_logic)
             self.selected_logic = nested_logic
+
+            # 부모 로직 정보
+            parent_name = self._logic_stack[-1][0].get('name', '')
+            parent_id = self._logic_stack[-1][0].get('id', '')
+            parent_step = current_state['current_step']
+
+            # 중첩 로직 정보
+            logic_id = nested_logic.get('id', '')
+
             self._update_state(
                 current_step=0,
-                current_repeat=1
+                current_repeat=1,
+                is_executing=True,
+                is_stopping=False
             )
-            
-            self._log_with_time(f"[중첩 로직] {nested_logic.get('name')} 실행 시작")
+
+            self._log_with_time(f"[로직-중첩로직] {parent_name}({parent_id})의 {parent_step}번 스텝 중첩로직 '{logic_name}({logic_id})' 실행 시작 (총 {nested_logic.get('repeat_count', 1)}회 반복)")
+            QTimer.singleShot(0, self._execute_next_step)
             
         except Exception as e:
             self._log_with_time(f"[오류] 중첩 로직 실행 중 오류 발생: {str(e)}")
-            raise
-
-    def _execute_mouse_input(self, step):
-        """마우스 입력 실행"""
-        try:
-            # 현재 선택된 프로세스의 핸들 가져오기
-            hwnd = self.process_manager.get_selected_process().get('hwnd')
-            if not hwnd:
-                raise Exception("선택된 프로세스가 없습니다.")
-
-            # 마우스 클릭 실행
-            coordinates = step.get('coordinates', {})
-            x = coordinates.get('x', 0)
-            y = coordinates.get('y', 0)
-            
-            # 클릭 실행
-            success = MouseHandler.click(x, y)
-            if not success:
-                raise Exception("마우스 클릭 실행 실패")
-            
-            self._log_with_time(f"[마우스 입력] {step.get('name')} 실행 완료")
-            
-        except Exception as e:
-            self._log_with_time(f"[오류] 마우스 입력 실행 중 오류 발생: {str(e)}")
-            raise
+            self._schedule_next_step()
 
     def stop_all_logic(self):
         """모든 실행 중인 로직을 강제로 중지"""
