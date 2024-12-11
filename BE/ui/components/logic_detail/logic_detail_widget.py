@@ -250,15 +250,32 @@ class LogicDetailWidget(QFrame):
     def add_item(self, item_info):
         """아이템을 리스트에 추가"""
         try:
+            self.log_message.emit(f"[DEBUG] add_item 시작 - 입력받은 데이터: {item_info}")
+            
             # 딕셔너리인 경우
             if isinstance(item_info, dict):
+                self.log_message.emit("[DEBUG] 딕셔너리 형식의 데이터 처리 시작")
                 display_text = item_info.get('display_text', '')
+                self.log_message.emit(f"[DEBUG] 추출된 display_text: {display_text}")
+                
                 item = QListWidgetItem(display_text)
-                item.setData(Qt.UserRole, item_info)
+                self.log_message.emit(f"[DEBUG] QListWidgetItem 생성 완료")
+                
+                # UserRole에 설정할 데이터 준비
+                user_data = item_info.copy()  # 데이터 복사
+                self.log_message.emit(f"[DEBUG] UserRole 데이터 복사: {user_data}")
+                
+                item.setData(Qt.UserRole, user_data)
+                self.log_message.emit(f"[DEBUG] UserRole 데이터 설정 완료")
+            
             # 문자열인 경우
             else:
+                self.log_message.emit("[DEBUG] 문자열 형식의 데이터 처리 시작")
                 item = QListWidgetItem(str(item_info))
-                item.setData(Qt.UserRole, {
+                self.log_message.emit(f"[DEBUG] QListWidgetItem 생성 완료: {str(item_info)}")
+                
+                # 기본 데이터 구조 생성
+                default_data = {
                     'type': 'mouse_input',
                     'display_text': str(item_info),
                     'coordinates_x': 0,
@@ -268,19 +285,31 @@ class LogicDetailWidget(QFrame):
                     'action': '클릭',
                     'button': '왼쪽 버튼',
                     'name': ''
-                })
+                }
+                self.log_message.emit(f"[DEBUG] 생성된 기본 데이터: {default_data}")
+                
+                item.setData(Qt.UserRole, default_data)
+                self.log_message.emit("[DEBUG] UserRole 데이터 설정 완료")
             
             # 현재 선택된 아이템 위치 확인
             current_row = self.LogicItemList__QListWidget.currentRow()
+            self.log_message.emit(f"[DEBUG] 현재 선택된 행: {current_row}")
             
             # 선택된 아이템이 없거나 마지막 아이템인 경우 마지막에 추가
             if current_row < 0:
+                self.log_message.emit("[DEBUG] 마지막 위치에 아이템 추가")
                 self.LogicItemList__QListWidget.addItem(item)
             else:
+                self.log_message.emit(f"[DEBUG] {current_row + 1} 위치에 아이템 추가")
                 self.LogicItemList__QListWidget.insertItem(current_row + 1, item)
                 
             # 새로 추가된 아이템 선택
             self.LogicItemList__QListWidget.setCurrentItem(item)
+            self.log_message.emit("[DEBUG] 새 아이템 선택 완료")
+            
+            # 최종 확인
+            final_data = item.data(Qt.UserRole)
+            self.log_message.emit(f"[DEBUG] 최종 저장된 데이터: {final_data}")
             
         except Exception as e:
             import traceback
@@ -713,7 +742,7 @@ class LogicDetailWidget(QFrame):
                 'trigger_key': self.trigger_key_info if not is_nested else None
             }
             self.log_message.emit(f"구성된 로직 정보: {logic_info}")
-            print(f"[DEBUG] 로��� 정보: {logic_info}")
+            print(f"[DEBUG] 로직 정보: {logic_info}")
 
             self.log_message.emit(f"LogicManager.save_logic 호출 - ID: {self.current_logic_id}")
             print(f"[DEBUG] LogicManager.save_logic 호출 전 - ID: {self.current_logic_id}")
@@ -869,7 +898,7 @@ class LogicDetailWidget(QFrame):
             }
             
             item.setData(Qt.UserRole, item_data)
-            self.log_message.emit(f"중첩 로��� '{logic_name}'이(가) UUID {logic_id}로 처리되었습니다.")
+            self.log_message.emit(f"중첩 로직 '{logic_name}'이(가) UUID {logic_id}로 처리되었습니다.")
             return item, True
             
         except Exception as e:
@@ -899,7 +928,7 @@ class LogicDetailWidget(QFrame):
             if not success:
                 return
             
-            # ���서 설정
+            # 순서 설정
             current_count = self.LogicItemList__QListWidget.count()
             item_data = item.data(Qt.UserRole)
             item_data['order'] = current_count + 1
@@ -1063,7 +1092,7 @@ class LogicDetailWidget(QFrame):
                 key_parts = item_text.split(" --- ")
                 if len(key_parts) == 2:
                     key_text = key_parts[0]
-                    current_action = key_parts[1]  # 현재 액션 ("누���기" 또는 "떼기")
+                    current_action = key_parts[1]  # 현재 액션 ("누르기" 또는 "떼기")
                     
                     # 액션 선택 대화상
                     dialog = QMessageBox(self)
