@@ -135,6 +135,18 @@ class LogicOperationWidget(QFrame):
         key_release_layout.addWidget(self.key_release_input)
         inputs_layout.addLayout(key_release_layout)
         
+        # 마우스 입력 후 지연시간 입력
+        mouse_input_layout = QVBoxLayout()
+        mouse_input_label = QLabel("마우스 입력 전\n지연시간")
+        mouse_input_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.mouse_input_delay = QLineEdit()
+        self.mouse_input_delay.setFixedWidth(80)
+        self.mouse_input_delay.setEnabled(False)
+        self.mouse_input_delay.setValidator(QDoubleValidator(0.0000, 9.9999, 4))
+        mouse_input_layout.addWidget(mouse_input_label)
+        mouse_input_layout.addWidget(self.mouse_input_delay)
+        inputs_layout.addLayout(mouse_input_layout)
+        
         # 기타 동작 후 지연시간 입력
         default_delay_layout = QVBoxLayout()
         default_delay_label = QLabel("기타 동작 후\n지연시간")
@@ -365,6 +377,7 @@ class LogicOperationWidget(QFrame):
         """지연 시간 수정 버튼 클릭 시 호출"""
         self.key_press_input.setEnabled(True)
         self.key_release_input.setEnabled(True)
+        self.mouse_input_delay.setEnabled(True)
         self.default_delay_input.setEnabled(True)
         self.save_delays_btn.setEnabled(True)
         self.edit_delays_btn.setEnabled(False)
@@ -375,6 +388,7 @@ class LogicOperationWidget(QFrame):
             # 입력값 가져오기
             key_press = float(self.key_press_input.text())
             key_release = float(self.key_release_input.text())
+            mouse_input_delay = float(self.mouse_input_delay.text())
             default_delay = float(self.default_delay_input.text())
             
             # 로직 실행기의 딜레이 값 업데이트
@@ -382,6 +396,7 @@ class LogicOperationWidget(QFrame):
                 self.logic_executor.KEY_DELAYS = {
                     '누르기': key_press,
                     '떼기': key_release,
+                    '마우스 입력': mouse_input_delay,
                     '기본': default_delay
                 }
             
@@ -390,12 +405,14 @@ class LogicOperationWidget(QFrame):
             settings.set('key_delays', {
                 'press': key_press,
                 'release': key_release,
+                'mouse_input': mouse_input_delay,
                 'default': default_delay
             })
             
             # UI 상태 업데이트
             self.key_press_input.setEnabled(False)
             self.key_release_input.setEnabled(False)
+            self.mouse_input_delay.setEnabled(False)
             self.default_delay_input.setEnabled(False)
             self.save_delays_btn.setEnabled(False)
             self.edit_delays_btn.setEnabled(True)
@@ -411,12 +428,14 @@ class LogicOperationWidget(QFrame):
         delays = settings.get('key_delays', {
             'press': 0.0205,
             'release': 0.0205,
+            'mouse_input': 0.0205,
             'default': 0.0205
         })
         
         # 입력 필드에 값 설정
         self.key_press_input.setText(f"{delays['press']:.4f}")
         self.key_release_input.setText(f"{delays['release']:.4f}")
+        self.mouse_input_delay.setText(f"{delays['mouse_input']:.4f}")
         self.default_delay_input.setText(f"{delays['default']:.4f}")
 
     def _on_reset_delays(self):
@@ -426,6 +445,7 @@ class LogicOperationWidget(QFrame):
         # 입력 필드에 기본값 설정
         self.key_press_input.setText(f"{DEFAULT_DELAY:.4f}")
         self.key_release_input.setText(f"{DEFAULT_DELAY:.4f}")
+        self.mouse_input_delay.setText(f"{DEFAULT_DELAY:.4f}")
         self.default_delay_input.setText(f"{DEFAULT_DELAY:.4f}")
         
         # 설정 파일에 저장
@@ -433,6 +453,7 @@ class LogicOperationWidget(QFrame):
         settings.set('key_delays', {
             'press': DEFAULT_DELAY,
             'release': DEFAULT_DELAY,
+            'mouse_input': DEFAULT_DELAY,
             'default': DEFAULT_DELAY
         })
         
@@ -441,6 +462,7 @@ class LogicOperationWidget(QFrame):
             self.logic_executor.KEY_DELAYS = {
                 '누르기': DEFAULT_DELAY,
                 '떼기': DEFAULT_DELAY,
+                '마우스 입력': DEFAULT_DELAY,
                 '기본': DEFAULT_DELAY
             }
         

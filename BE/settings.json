@@ -10,9 +10,10 @@
         }
     },
     "key_delays": {
-        "press": 0.02,
-        "release": 0.02,
-        "default": 0.02
+        "press": 0.0205,
+        "release": 0.0205,
+        "mouse_input": 0.0205,
+        "default": 0.0205
     },
     "gauge_monitor": {
         "hp_gauge": {
@@ -4301,7 +4302,7 @@
             "order": 39,
             "name": "테스트",
             "created_at": "2024-12-11T21:30:39.063045",
-            "updated_at": "2024-12-12T00:46:44.034144",
+            "updated_at": "2024-12-12T07:49:00.069627",
             "trigger_key": {
                 "key_code": "1",
                 "modifiers": 0,
@@ -4312,13 +4313,7 @@
             "is_nested": false,
             "items": [
                 {
-                    "type": "delay",
-                    "display_text": "지연시간 : 1.0초",
-                    "duration": 1.0,
-                    "order": 1
-                },
-                {
-                    "order": 2,
+                    "order": 1,
                     "type": "mouse_input",
                     "display_text": "마우스 입력: 메뉴 (3180, 117)",
                     "name": "메뉴",

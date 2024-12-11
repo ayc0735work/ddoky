@@ -1,6 +1,7 @@
 import win32api
 import win32con
 import win32gui
+import time
 
 class MouseHandler:
     """마우스 입력을 처리하는 클래스"""
@@ -80,9 +81,21 @@ class MouseHandler:
                 screen_x = x
                 screen_y = y
             
+            # Settings에서 마우스 입력 지연시간 가져오기
+            from ..settings.settings import Settings
+            settings = Settings()
+            delays = settings.get('key_delays', {})
+            
+            # 기본값 설정
+            DEFAULT_DELAY = 0.0205
+            mouse_delay = DEFAULT_DELAY
+            
+            # 설정에서 값을 가져오되, 없으면 기본값 사용
+            if isinstance(delays, dict):
+                mouse_delay = delays.get('mouse_input', DEFAULT_DELAY)
+            
             # 잠시 대기 후 마우스 이동 및 클릭 
-            import time
-            time.sleep(0.02)
+            time.sleep(mouse_delay)
             win32api.SetCursorPos((screen_x, screen_y))
             
             # 클릭 이벤트 처리
@@ -90,8 +103,7 @@ class MouseHandler:
             win32api.mouse_event(up_flag | win32con.MOUSEEVENTF_ABSOLUTE, 0, 0, 0, 0)
             
             # 잠시 대기 후 원래 위치로 복귀
-            import time
-            time.sleep(0.02)
+            time.sleep(mouse_delay)
             win32api.SetCursorPos((current_x, current_y))
             
             return True

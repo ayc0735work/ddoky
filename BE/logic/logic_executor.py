@@ -43,17 +43,33 @@ class LogicExecutor(QObject):
         
         # 설정에서 딜레이 값 로드
         settings = Settings()
-        delays = settings.get('key_delays', {
-            'press': 0.0205,
-            'release': 0.0205,
-            'default': 0.0205
-        })
+        DEFAULT_DELAY = 0.0205
+        
+        # 기본 딜레이 값 설정
+        default_delays = {
+            'press': DEFAULT_DELAY,
+            'release': DEFAULT_DELAY,
+            'mouse_input': DEFAULT_DELAY,
+            'default': DEFAULT_DELAY
+        }
+        
+        # 설정에서 값을 가져오되, 없으면 기본값 사용
+        saved_delays = settings.get('key_delays', {})
+        delays = default_delays.copy()
+        if isinstance(saved_delays, dict):
+            for key in default_delays:
+                if key in saved_delays:
+                    delays[key] = saved_delays[key]
         
         self.KEY_DELAYS = {
             '누르기': delays['press'],
             '떼기': delays['release'],
+            '마우스 입력': delays['mouse_input'],
             '기본': delays['default']
         }
+        
+        # 새로운 설정을 저장
+        settings.set('key_delays', delays)
         
         # 리소스 관리
         self.keyboard_hook = None
