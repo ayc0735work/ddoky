@@ -227,7 +227,7 @@ class LogicListWidget(QFrame):
                 # settings_manager를 통해 로직 업데이트
                 updated_logic = self.settings_manager.save_logic(logic_id, logic_info)
                 
-                # 목록 아이템 업데이트
+                # 목록 아이�� 업데이트
                 self._update_logic_in_list(updated_logic)
                 
                 # 저장된 로직 목록 다시 로드
@@ -271,56 +271,46 @@ class LogicListWidget(QFrame):
     def save_logics_to_settings(self):
         """현재 로직 목록을 설정에 저장"""
         try:
-            # 현재 설정을 다시 로드하여 최신 상태 유지
-            self.settings_manager.reload_settings()
+            self.log_message.emit("[로직 저장 시작] 현재 로직 목록을 설정에 저장합니다.")
+            logics = {}
             
-            # 백업 생성
-            settings_backup = self.settings_manager.settings.copy()
-            saved_logics_backup = self.saved_logics.copy()
+            # 모든 로직 정보 수집
+            for i in range(self.SavedLogicList__QListWidget.count()):
+                item = self.SavedLogicList__QListWidget.item(i)
+                if not item:
+                    continue
+                    
+                logic_id = item.data(Qt.UserRole)
+                if not logic_id:
+                    self.log_message.emit(f"[경고] 아이템 {i}에 로직 ID가 없습니다.")
+                    continue
+                
+                self.log_message.emit(f"[로직 처리] 로직 ID: {logic_id} 처리 시작")
+                
+                # 로직 정보 가져오기
+                logic_info = self.settings_manager.load_logics().get(logic_id)
+                if not logic_info:
+                    self.log_message.emit(f"[경고] 로직 ID {logic_id}에 해당하는 로직 정보를 찾을 수 없습니다.")
+                    continue
+                
+                self.log_message.emit(f"[로직 정보] 로직 '{logic_info.get('name')}' 정보: {logic_info}")
+                
+                # 순서 업데이트
+                logic_info['order'] = i
+                logics[logic_id] = logic_info
             
-            try:
-                # 로직 목록을 순회하면서 order 값 업데이트
-                updated_logics = {}
-                for i in range(self.SavedLogicList__QListWidget.count()):
-                    item = self.SavedLogicList__QListWidget.item(i)
-                    if item:
-                        logic_id = item.data(Qt.UserRole)
-                        if not logic_id:
-                            raise Exception(f"아이템 {i}의 logic_id가 없습니다.")
-                        
-                        if logic_id in self.settings_manager.settings.get('logics', {}):
-                            logic_info = self.settings_manager.settings['logics'][logic_id].copy()
-                            
-                            # 첫 번째 아이템의 order는 1로 설정하고, 나머지는 2부터 순적으로 증가
-                            logic_info['order'] = 1 if i == 0 else i + 1
-                            logic_info['updated_at'] = datetime.now().isoformat()
-                            updated_logics[logic_id] = logic_info
-                        else:
-                            raise Exception(f"logic_id {logic_id}를 찾을 수 없습니다.")
-                
-                # settings_manager의 settings 업데이트
-                settings = self.settings_manager.settings.copy()
-                settings['logics'] = updated_logics
-                
-                # 설정 저장
-                self.settings_manager._save_settings(settings)
-                
-                # saved_logics 업데이트
-                self.saved_logics = updated_logics
-                
-                self.log_message.emit("로직이 성공적으로 저장되었습니다.")
-                
-            except Exception as update_error:
-                # 업데이트 실패 시 백업에서 복원
-                self.settings_manager.settings = settings_backup
-                self.saved_logics = saved_logics_backup
-                raise Exception(f"로직 업데이트 실패: {str(update_error)}")
-                
+            # 설정에 저장
+            self.log_message.emit("[설정 저장] 수집된 로직 정보를 설정에 저장합니다.")
+            settings = self.settings_manager.load_settings() or {}
+            settings['logics'] = logics
+            self.settings_manager.save_settings(settings)
+            self.log_message.emit("[설정 저장 완료] 로직 정보가 성공적으로 저장되었습니다.")
+            
         except Exception as e:
-            self.log_message.emit(f"로직 저장 중 오류 발생: {str(e)}")
-            # 오류 발생 시 저장된 로직 다시 불러오기
-            self.load_saved_logics()
-            
+            self.log_message.emit(f"[오류] 로직 저장 중 오류 발생: {str(e)}")
+            import traceback
+            self.log_message.emit(f"[오류 상세] {traceback.format_exc()}")
+
     def _format_logic_item_text(self, logic_info):
         """로직 아이템의 표시 텍스트를 생성하는 메서드"""
         if not logic_info:  # logic_info가 None인 경우 처리

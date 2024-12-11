@@ -28,7 +28,7 @@ class SettingsManager:
     def _save_settings(self, settings):
         """설정 파일에 현재 설정을 저장합니다."""
         try:
-            # 로직 데이터에서 uuid 필드 제거 및 필드 순서 정리
+            # 로직 데이터에서 uuid 필드 제거 및 ���드 순서 정리
             if 'logics' in settings:
                 ordered_logics = {}
                 for logic_id, logic_data in settings['logics'].items():
@@ -88,7 +88,7 @@ class SettingsManager:
                     "height": 600
                 }
             },
-            "logics": {}  # UUID를 키로 사용하는 로직 저장소
+            "logics": {}  # UUID를 키로 사용하는 ��직 저장소
         }
     
     def _migrate_to_uuid(self, settings):
@@ -333,46 +333,68 @@ class SettingsManager:
 
     def save_logics(self, logics):
         """모든 로직을 저장합니다."""
-        ordered_logics = {}
-        for logic_id, logic_data in logics.items():
-            # 아이템 순서 정렬
-            ordered_items = []
-            for item in logic_data.get('items', []):
-                if 'type' in item:
-                    if item['type'] == 'delay':
-                        # 딜레이 아이템의 경우
-                        ordered_item = {
-                            'type': 'delay',
-                            'display_text': item.get('display_text', f"지연시간 : {item.get('duration', 0)}초"),
-                            'duration': item.get('duration', 0),
-                            'order': item.get('order', 0)
-                        }
-                    elif item['type'] == 'key_input':
-                        # 키 입력 아이템의 경우
-                        ordered_item = self._create_ordered_key_input_item(item)
-                    elif item['type'] == 'logic':
-                        ordered_item = self._create_ordered_logic_item(item)
-                else:
-                    # 이전 형식의 아이템의 경우
-                    ordered_item = {
-                        'content': item.get('content', ''),
-                        'order': item.get('order', 0)
-                    }
-                ordered_items.append(ordered_item)
-                
-            ordered_logic = {
-                'name': logic_data.get('name', ''),
-                'order': logic_data.get('order', 0),
-                'created_at': logic_data.get('created_at', ''),
-                'updated_at': logic_data.get('updated_at', ''),
-                'trigger_key': logic_data.get('trigger_key', {}),
-                'repeat_count': logic_data.get('repeat_count', 1),
-                'items': ordered_items
-            }
-            ordered_logics[logic_id] = ordered_logic
-        
-        self.settings['logics'] = ordered_logics
-        self._save_settings(self.settings)
-        
-        # 캐시 갱신
-        self.reload_settings(force=True)
+        try:
+            self.log_message.emit("[로직 저장] 로직 저장 시작")
+            ordered_logics = {}
+            for logic_id, logic_data in logics.items():
+                self.log_message.emit(f"[로직 처리] 로직 ID: {logic_id} 처리 시작")
+                # 아이템 순서 정렬
+                ordered_items = []
+                for item in logic_data.get('items', []):
+                    self.log_message.emit(f"[아이템 처리] 아이템 데이터: {item}")
+                    try:
+                        if 'type' in item:
+                            if item['type'] == 'delay':
+                                # 딜레이 아이템의 경우
+                                ordered_item = {
+                                    'type': 'delay',
+                                    'display_text': item.get('display_text', f"지연시간 : {item.get('duration', 0)}초"),
+                                    'duration': item.get('duration', 0),
+                                    'order': item.get('order', 0)
+                                }
+                                self.log_message.emit(f"[딜레이 아이템] 처리된 데이터: {ordered_item}")
+                            elif item['type'] == 'key_input':
+                                # 키 입력 아이템의 경우
+                                ordered_item = self._create_ordered_key_input_item(item)
+                                self.log_message.emit(f"[키 입력 아이템] 처리된 데이터: {ordered_item}")
+                            elif item['type'] == 'logic':
+                                ordered_item = self._create_ordered_logic_item(item)
+                                self.log_message.emit(f"[로직 타입 아이템] 처리된 데이터: {ordered_item}")
+                        else:
+                            # 이전 형식의 아이템의 경우
+                            ordered_item = {
+                                'content': item.get('content', ''),
+                                'order': item.get('order', 0)
+                            }
+                            self.log_message.emit(f"[이전 형식 아이템] 처리된 데이터: {ordered_item}")
+                        ordered_items.append(ordered_item)
+                    except Exception as e:
+                        self.log_message.emit(f"[오류] 아이템 처리 중 오류 발생: {str(e)}")
+                        import traceback
+                        self.log_message.emit(f"[오류 상세] {traceback.format_exc()}")
+                        continue
+                    
+                ordered_logic = {
+                    'name': logic_data.get('name', ''),
+                    'order': logic_data.get('order', 0),
+                    'created_at': logic_data.get('created_at', ''),
+                    'updated_at': logic_data.get('updated_at', ''),
+                    'trigger_key': logic_data.get('trigger_key', {}),
+                    'repeat_count': logic_data.get('repeat_count', 1),
+                    'items': ordered_items
+                }
+                self.log_message.emit(f"[로직 정보] 처리된 로직 데이터: {ordered_logic}")
+                ordered_logics[logic_id] = ordered_logic
+            
+            # 설정에 저장
+            self.log_message.emit("[설정 저장] 수집된 로직 정보를 설정에 저장합니다.")
+            settings = self.load_settings() or {}
+            settings['logics'] = ordered_logics
+            self.save_settings(settings)
+            self.log_message.emit("[설정 저장 완료] 로직 정보가 성공적으로 저장되었습니다.")
+            
+        except Exception as e:
+            self.log_message.emit(f"[오류] 로직 저장 중 오류 발생: {str(e)}")
+            import traceback
+            self.log_message.emit(f"[오류 상세] {traceback.format_exc()}")
+            raise

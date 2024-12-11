@@ -16,9 +16,10 @@ from ...constants.dimensions import (LOGIC_DETAIL_WIDTH, BASIC_SECTION_HEIGHT,
 from ....utils.key_handler import (KeyboardHook, get_key_display_text, get_key_location,
                                 get_modifier_text, format_key_info)
 from ..common.key_input_widget import KeyInputWidget
+from ....utils.mouse_data_handler import MouseDataHandler
 
 class LogicDetailWidget(QFrame):
-    """로직 상세 내용을 표시하고 관리하는 위젯"""
+    """로직 상��� 내용을 표시하고 관리하는 위젯"""
     
     item_moved = Signal()
     item_edited = Signal(str)
@@ -350,7 +351,7 @@ class LogicDetailWidget(QFrame):
                         matching_logics.sort(key=lambda x: x[1].get('created_at', ''))
                         logic_id = matching_logics[0][0]
                         
-                        # 다른 모든 일치하는 로직들도 같은 UUID로 업데이트
+                        # 다른 모든 일치하는 로직들도 같은 UUID로 업데��트
                         for other_id, other_logic in logics.items():
                             if other_logic.get('name') == logic_name:
                                 other_logic['id'] = logic_id
@@ -495,47 +496,65 @@ class LogicDetailWidget(QFrame):
                     
             # 마우스 입력 아이템인 경우
             elif item_text.startswith("마우스 입력:"):
-                # 마우스 입력 데이터가 직렬화된 문자열인 경우 역직렬화
-                if isinstance(user_data, str):
-                    try:
-                        mouse_data = MouseDataHandler.deserialize(user_data)
-                    except:
-                        mouse_data = {}
-                else:
-                    mouse_data = user_data.copy()
-                    
-                if not mouse_data:
-                    mouse_data = {}
-                    
-                mouse_data['order'] = i + 1
-                mouse_data['type'] = 'mouse_input'
+                self.log_message.emit("[DEBUG] 마우스 입력 아이템 처리 시작")
+                from ....utils.mouse_data_handler import MouseDataHandler
                 
-                # 프로세스 정보가 있는지 확인하고 복원
-                if 'process' not in mouse_data or not mouse_data['process']:
-                    mouse_data['process'] = user_data.get('process', {})
-                    
-                # 좌표와 비율 정보가 있는지 확인하고 복원
-                if not mouse_data.get('coordinates', {}).get('x'):
-                    coords = user_data.get('coordinates', {})
-                    mouse_data['coordinates'] = coords
-                    
-                if not mouse_data.get('ratios', {}).get('x'):
-                    ratios = user_data.get('ratios', {})
-                    mouse_data['ratios'] = ratios
-                    
-                # 액션과 버튼 정보 복원
-                if 'action' not in mouse_data:
-                    mouse_data['action'] = user_data.get('action', '클릭')
-                if 'button' not in mouse_data:
-                    mouse_data['button'] = user_data.get('button', '왼쪽 버튼')
-                if 'name' not in mouse_data:
-                    mouse_data['name'] = user_data.get('name', '')
-                if 'display_text' not in mouse_data:
-                    mouse_data['display_text'] = item_text
-                    
-                self.log_message.emit(f"[DEBUG] 마우스 입력 처리 - 원본 데이터: {user_data}")
-                self.log_message.emit(f"[DEBUG] 마우스 입력 처리 - 처리된 데이터: {mouse_data}")
-                items.append(mouse_data)
+                # 마우스 입력 데이터 처리
+                try:
+                    mouse_data = {}
+                    # user_data가 문자열인 경우 역직렬화
+                    if isinstance(user_data, str):
+                        self.log_message.emit("[DEBUG] 문자열 형식의 마우스 데이터 역직렬화")
+                        mouse_data = MouseDataHandler.deserialize(user_data)
+                    else:
+                        self.log_message.emit("[DEBUG] 딕셔너리 형식의 마우스 데이터 처리")
+                        if isinstance(user_data, dict):
+                            mouse_data = user_data.copy()
+                        else:
+                            mouse_data = {'display_text': str(user_data)}
+                        
+                    # 기본 필드 확인 및 추가
+                    mouse_data['type'] = 'mouse_input'
+                    mouse_data['order'] = order
+                    if 'display_text' not in mouse_data:
+                        mouse_data['display_text'] = item_text
+                        
+                    # 프로세스 정보가 있는지 확인하고 복원
+                    if 'process' not in mouse_data or not mouse_data['process']:
+                        process_data = user_data.get('process', {}) if isinstance(user_data, dict) else {}
+                        mouse_data['process'] = process_data
+                        
+                    # 좌표와 비율 정보가 있는지 확인하고 복원
+                    if 'coordinates' not in mouse_data or not mouse_data['coordinates']:
+                        coords = user_data.get('coordinates', {}) if isinstance(user_data, dict) else {}
+                        mouse_data['coordinates'] = coords
+                        
+                    if 'ratios' not in mouse_data or not mouse_data['ratios']:
+                        ratios = user_data.get('ratios', {}) if isinstance(user_data, dict) else {}
+                        mouse_data['ratios'] = ratios
+                        
+                    # 액션과 버튼 정보 복원
+                    if 'action' not in mouse_data:
+                        mouse_data['action'] = user_data.get('action', '클릭') if isinstance(user_data, dict) else '클릭'
+                    if 'button' not in mouse_data:
+                        mouse_data['button'] = user_data.get('button', '왼쪽 버튼') if isinstance(user_data, dict) else '왼쪽 버튼'
+                    if 'name' not in mouse_data:
+                        mouse_data['name'] = user_data.get('name', '') if isinstance(user_data, dict) else ''
+                        
+                    self.log_message.emit(f"[DEBUG] 마우스 입력 처리 - 원본 데이터: {user_data}")
+                    self.log_message.emit(f"[DEBUG] 마우스 입력 처리 - 처리된 데이터: {mouse_data}")
+                        
+                    items.append(mouse_data)
+                except Exception as e:
+                    self.log_message.emit(f"[오류] 마우스 입력 데이터 처리 중 오류 발생: {str(e)}")
+                    import traceback
+                    self.log_message.emit(f"[오류 상세] {traceback.format_exc()}")
+                    # 기본 데이터로 저장
+                    items.append({
+                        'type': 'mouse_input',
+                        'display_text': item_text,
+                        'order': order
+                    })
                 
             # 지연시간 아이템인 경우
             elif item_text.startswith("지연시간"):
@@ -968,7 +987,7 @@ class LogicDetailWidget(QFrame):
         return super().eventFilter(obj, event)
 
     def _check_data_entered(self, *args):
-        """입력된 데이터가 있는지 확인하고 새 로직 버튼 상태를 업데이트"""
+        """입력된 데이터가 는지 확인하고 새 로직 버튼 상태를 업데이트"""
         # 새 로직 버튼 활성화 조건:
         # 1. 직 이름이 입력되어 는 경우
         # 2. 트리거 키가 설정되어 있는 경우
