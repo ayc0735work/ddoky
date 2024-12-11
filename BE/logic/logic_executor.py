@@ -1,6 +1,7 @@
 import time
 import win32api
 import win32con
+import win32gui
 from PySide6.QtCore import QObject, Signal, QTimer
 from ..utils.key_handler import KeyboardHook
 from ..utils.mouse_handler import MouseHandler
@@ -347,18 +348,49 @@ class LogicExecutor(QObject):
         """마우스 입력 실행"""
         try:
             # 현재 선택된 프로세스의 핸들 가져오기
-            hwnd = self.process_manager.get_selected_process().get('hwnd')
-            if not hwnd:
+            process = self.process_manager.get_selected_process()
+            if not process or not process.get('hwnd'):
+                self._log_with_time("[마우스 입력 상세] 선택된 프로세스가 없음")
                 raise Exception("선택된 프로세스가 없습니다.")
 
-            # 마우스 클릭 실행
-            coordinates = step.get('coordinates', {})
-            x = coordinates.get('x', 0)
-            y = coordinates.get('y', 0)
+            hwnd = process['hwnd']
+            
+            # DPI 스케일링 고려
+            try:
+                dpi = win32gui.GetDpiForWindow(hwnd)
+                scale_factor = dpi / 96.0  # 기본 DPI는 96
+            except AttributeError:
+                scale_factor = 1.0
+            
+            # 클라이언트 영역의 크기와 화면상 시작점 가져오기
+            client_rect = win32gui.GetClientRect(hwnd)
+            client_width = int(client_rect[2] * scale_factor)
+            client_height = int(client_rect[3] * scale_factor)
+            client_point = win32gui.ClientToScreen(hwnd, (0, 0))
+            
+            # 저장된 비율 가져오기
+            x_ratio = step.get('ratios_x', 0)
+            y_ratio = step.get('ratios_y', 0)
+            
+            # 클라이언트 영역 크기를 기준으로 상대 좌표 계산
+            client_x = int(client_width * x_ratio)
+            client_y = int(client_height * y_ratio)
+            
+            # 클라이언트 영역의 화면상 좌표 계산
+            screen_x = client_point[0] + client_x
+            screen_y = client_point[1] + client_y
+            
+            self._log_with_time(f"[마우스 입력 상세] DPI 배율 - {scale_factor:.2f}")
+            self._log_with_time(f"[마우스 입력 상세] 클라이언트 크기 - 너비: {client_width}, 높이: {client_height}")
+            self._log_with_time(f"[마우스 입력 상세] 클라이언트 시작점 - X: {client_point[0]}, Y: {client_point[1]}")
+            self._log_with_time(f"[마우스 입력 상세] 저장된 비율 - X: {x_ratio:.3f}, Y: {y_ratio:.3f}")
+            self._log_with_time(f"[마우스 입력 상세] 클라이언트 내 좌표 - X: {client_x}, Y: {client_y}")
+            self._log_with_time(f"[마우스 입력 상세] 화면 좌표 - X: {screen_x}, Y: {screen_y}")
             
             # 클릭 실행
-            success = MouseHandler.click(x, y)
+            success = MouseHandler.click(screen_x, screen_y)
             if not success:
+                self._log_with_time("[마우스 입력 상세] 마우스 클릭 실행 실패")
                 raise Exception("마우스 클릭 실행 실패")
             
             self._log_with_time(f"[마우스 입력] {step.get('name')} 실행 완료")
@@ -418,7 +450,7 @@ class LogicExecutor(QObject):
         QTimer.singleShot(0, clear_timer_group)
 
     def _clear_keyboard_state(self):
-        """키보드 상태 정리"""
+        """키보드 상태 정"""
         if self.selected_logic and 'items' in self.selected_logic:
             pressed_keys = set()
             for item in self.selected_logic['items']:
@@ -442,13 +474,13 @@ class LogicExecutor(QObject):
             # 먼저 stopping 상태로 설정
             self._update_state(is_stopping=True)
             
-            # 모든 로직 중지 (이 함수 내에서 reset_execution_state()도 호출됨)
+            # 모든 로직 중지 (이 수 내에��� reset_execution_state()도 호출됨)
             self.stop_all_logic()
             
             # 키 입력 모니터링 다시 시작
             if self.is_logic_enabled:
                 self.start_monitoring()
-                self._log_with_time("[로그] 키 입력 모니터링 다시 작")
+                self._log_with_time("[로그] 키 입력 니터링 다시 작")
             
             self._log_with_time("[로그] 강제 중지 완료")
             
@@ -482,7 +514,7 @@ class LogicExecutor(QObject):
 
     def _is_trigger_key_matched(self, logic, key_info):
         """트리거 키 매칭 확인"""
-        # 중첩 로직인 경우 매칭하지 않음
+        # 중첩 로인 경우 매칭하지 않음
         if logic.get('is_nested', False):
             return False
         
@@ -505,7 +537,7 @@ class LogicExecutor(QObject):
             "키 입력 도",
             "키 입력 감지",
             "로직 실행 조건이 맞지 않습니다",
-            "상태 업데이트 시작",
+            "상태 업데이트 작",
             "상태 락 획득",
             "새로운 상태",
             "상태 변경 알림 완료"
@@ -515,7 +547,7 @@ class LogicExecutor(QObject):
         if any(pattern in message for pattern in ignore_patterns):
             return
 
-        # 시간 정보를 포함할 로그 패턴
+        # 시간 정보를 포함할 로 패턴
         time_patterns = [
             "로직 실행 시작",
             "로직 실행 완료",
@@ -538,16 +570,16 @@ class LogicExecutor(QObject):
         # 메시지 스타일 적용
         if "[오류]" in message:
             # 오류 메시지 - 어두운 빨간색
-            formatted_message = f"<span style='color: #8B0000; font-size: 12px;'>{time_info}</span> <span style='color: #8B0000; font-size: 12px;'>{message}</span>"
+            formatted_message = f"<span style='color: #8B0000; font-size: 14px;'>{time_info}</span> <span style='color: #8B0000; font-size: 12px;'>{message}</span>"
         
         elif "ESC 키 감지" in message or "강제 중지" in message:
-            formatted_message = f"<span style='color: #FFA500; font-size: 18px; font-weight: bold;'>{time_info}</span> <span style='color: #FFA500; font-size: 18px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #FFA500; font-size: 20px; font-weight: bold;'>{time_info}</span> <span style='color: #FFA500; font-size: 18px; font-weight: bold;'>{message}</span>"
         
-        elif "중첩로직" in message:
-            formatted_message = f"<span style='color: #008000; font-size: 18px; font-weight: bold;'>{time_info}</span> <span style='color: #008000; font-size: 18px; font-weight: bold;'>{message}</span>"
+        elif "중로직" in message:
+            formatted_message = f"<span style='color: #008000; font-size: 24px; font-weight: bold;'>{time_info}</span> <span style='color: #008000; font-size: 18px; font-weight: bold;'>{message}</span>"
         
         elif "로직 실행" in message and ("실행 시작" in message or "반복 완료" in message):
-            formatted_message = f"<span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{time_info}</span> <span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #0000FF; font-size: 30px; font-weight: bold;'>{time_info}</span> <span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{message}</span>"
         else:
             # 기본 메시지 - 기본 스타일
             formatted_message = f"<span style='color: #666666;'>{time_info}</span> {message}"
@@ -604,7 +636,7 @@ class LogicExecutor(QObject):
                     if logic_id in self.settings_manager.settings.get('logics', {}):
                         logic_info = self.settings_manager.settings['logics'][logic_id]
                         
-                        # 첫 번째 아이템의 order는 1로 설정하고, 나머지는 2부터 순차적으로 증가
+                        # 첫 번째 아이템의 order는 1로 설정하고, 나머지 2부터 순차적으로 증가
                         logic_info['order'] = 1 if i == 0 else i + 1
                         logic_info['updated_at'] = datetime.now().isoformat()
                         
@@ -624,11 +656,11 @@ class LogicExecutor(QObject):
             
         except Exception as e:
             self.log_message.emit(f"로직 저장 중 오류 발생: {str(e)}")
-            # 오류 발생 시 저장된 로직 다시 불러오기
+            # 오류 발생 시 저장된 로직 다시 불러기
             self.load_saved_logics()
 
     def execute_logic(self, logic_id, repeat_count=None):
-        """로직 실행"""
+        """로 실행"""
         try:
             # 실행 시점에 최신 로직 데이터 로드
             logics = self.settings_manager.load_logics(force=True)
@@ -658,7 +690,7 @@ class LogicExecutor(QObject):
                         if nested_logic_id:
                             nested_repeat = item.get('repeat_count', 1)
                             self.execute_logic(nested_logic_id, nested_repeat)
-                    # ... 나머지 실행 로직 ...
+                    # ... 나지 실행 로직 ...
                     
         except Exception as e:
             print(f"로직 실행 중 오류 발생: {str(e)}")
