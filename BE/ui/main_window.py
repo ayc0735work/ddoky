@@ -232,7 +232,7 @@ class MainWindow(QMainWindow):
         try:
             # 로그 메시지 출력
             display_text = mouse_info.get('display_text', '') if isinstance(mouse_info, dict) else str(mouse_info)
-            self.log_widget.append(f"마우스 입력이 추가되었습니다: {display_text}")
+            self.log_widget.append(f"(main_window--_on_mouse_input)마우스 입력이 추가되었습니다: {display_text}")
             
             # 로직 상세 위젯에 마우스 입력 추가
             if self.logic_detail_widget:

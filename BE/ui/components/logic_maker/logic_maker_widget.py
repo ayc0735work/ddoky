@@ -148,7 +148,7 @@ class LogicMakerWidget(QFrame):
         """마우스 입력이 선택되었을 때"""
         # 로그 메시지 출력
         self.mouse_input.emit(mouse_info['display_text'])
-        self.log_message.emit(f"마우스 입력이 추가되었습니다: {mouse_info['display_text']}")
+        self.log_message.emit(f"(logic_maker_widget--_on_mouse_input_selected)마우스 입력이 추가되었습니다: {mouse_info['display_text']}")
             
     def _add_delay(self):
         """지연시간 추가"""

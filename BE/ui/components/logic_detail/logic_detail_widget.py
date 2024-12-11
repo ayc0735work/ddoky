@@ -261,10 +261,15 @@ class LogicDetailWidget(QFrame):
                 item = QListWidgetItem(display_text)
                 self.log_message.emit(f"[DEBUG] QListWidgetItem 생성 완료")
                 
-                # UserRole에 설정할 데이터 준비
-                user_data = item_info.copy()  # 데이터 복사
-                self.log_message.emit(f"[DEBUG] UserRole 데이터 복사: {user_data}")
+                # 마우스 입력 데이터인 경우 원본 데이터를 그대로 사용
+                if item_info.get('type') == 'mouse_input':
+                    self.log_message.emit("[DEBUG] 마우스 입력 데이터 처리")
+                    user_data = item_info  # 원본 데이터 그대로 사용
+                else:
+                    # 다른 타입의 데이터는 복사본 사용
+                    user_data = item_info.copy()
                 
+                self.log_message.emit(f"[DEBUG] UserRole 데이터: {user_data}")
                 item.setData(Qt.UserRole, user_data)
                 self.log_message.emit(f"[DEBUG] UserRole 데이터 설정 완료")
             
@@ -274,7 +279,6 @@ class LogicDetailWidget(QFrame):
                 item = QListWidgetItem(str(item_info))
                 self.log_message.emit(f"[DEBUG] QListWidgetItem 생성 완료: {str(item_info)}")
                 
-                # 기본 데이터 구조 생성
                 default_data = {
                     'type': 'mouse_input',
                     'display_text': str(item_info),
@@ -570,7 +574,7 @@ class LogicDetailWidget(QFrame):
                 except Exception as e:
                     self.log_message.emit(f"[오류] 마우스 입력 데이터 처리 중 오류 발생: {str(e)}")
                     import traceback
-                    self.log_message.emit(f"[오류 상세] {traceback.format_exc()}")
+                    self.log_message.emit(f"[오류 ���세] {traceback.format_exc()}")
                     # 기본 데이터로 저장
                     items.append({
                         'type': 'mouse_input',
@@ -627,7 +631,7 @@ class LogicDetailWidget(QFrame):
         self.original_name = None         # 원래 이름 초기화
         self.current_logic_id = None     # UUID도 초기화
         self.RepeatCountInput__QSpinBox.setValue(1)    # 반복 횟수를 기본값(1)으로 초기화
-        self.current_logic = None         # 현재 로직 정보 초기화
+        self.current_logic = None         # 현재 ��직 정보 초기화
         self.copied_items = []            # 복사된 아이템 초기화
         self.is_nested_checkbox.setChecked(True)      # 중첩로직용 체크박스를 선택된 상태로 초기화
 
@@ -713,7 +717,7 @@ class LogicDetailWidget(QFrame):
 
             # 이름 중복 검사 (수정 모드가 아닐 때만)
             if not self.edit_mode:
-                self.log_message.emit("새 로직 저장 - 이름 중복 검사 중...")
+                self.log_message.emit("�� 로직 저장 - 이름 중복 검사 중...")
                 print(f"[DEBUG] 새 로직 저장 - 이름 중복 검사")
                 logics = self.settings_manager.load_logics()
                 for logic in logics.values():
@@ -836,7 +840,7 @@ class LogicDetailWidget(QFrame):
                             item['display_text'] = display_text
                         self._add_logic_item(item)
             
-            self.log_message.emit(f"로직 '{logic_info.get('name')}'이(가) 로드되었습니다.")
+            self.log_message.emit(f"로직 '{logic_info.get('name')}'이(가) ��드되었습니다.")
 
         except Exception as e:
             self.log_message.emit(f"로직 로드 중 오류 발생: {str(e)}")

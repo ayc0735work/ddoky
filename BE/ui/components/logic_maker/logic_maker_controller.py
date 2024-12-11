@@ -31,7 +31,7 @@ class LogicMakerController:
         Args:
             mouse_text (str): 마우스 입력 텍스트
         """
-        log_msg = f"마우스 입력이 추가되었습니다: {mouse_text}"
+        log_msg = f"(logic_maker_controller--_handle_mouse_input)마우스 입력이 추가되었습니다: {mouse_text}"
         self.widget.log_message.emit(log_msg)
         
     def _handle_delay_input(self, delay_text):
