@@ -646,13 +646,13 @@ class LogicDetailWidget(QFrame):
             key_info['modifiers'] = key_info['modifiers'].value
         
         # 트리 키 중복 체크
-        logics = self.settings_manager.load_logics()
+        logics = self.settings_manager.load_logics(force=True)  # force=True 추가
         duplicate_logics = []
         
         for logic_id, logic in logics.items():
             # 자기 자신은 제외하고 중첩로직이 아닌 것들만 체크
             if (logic_id != self.current_logic_id and 
-                not logic.get('is_nested', False)):
+                not logic.get('is_nested', False)):  # 중첩 로직은 제외
                 trigger_key = logic.get('trigger_key', {})
                 if (trigger_key.get('virtual_key') == key_info.get('virtual_key') and 
                     trigger_key.get('modifiers') == key_info.get('modifiers')):

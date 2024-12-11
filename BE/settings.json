@@ -58,15 +58,15 @@
     },
     "logics": {
         "0dfa1418-cab1-4439-ae8a-b0c971471c99": {
-            "order": 1,
+            "order": 0,
             "name": "체력 회복 - 8회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-12T08:35:31.269863",
+            "updated_at": "2024-12-12T08:41:48.026957",
             "trigger_key": {
-                "key_code": "1",
+                "key_code": "숫자패드 7",
                 "modifiers": 0,
-                "scan_code": 2,
-                "virtual_key": 49
+                "scan_code": 71,
+                "virtual_key": 103
             },
             "repeat_count": 8,
             "is_nested": false,
@@ -146,7 +146,7 @@
             ]
         },
         "28cfef76-fb38-426a-a935-b288fd32d6ed": {
-            "order": 2,
+            "order": 1,
             "name": "체력 회복 - 5회",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-11T17:36:26.164945",
@@ -229,7 +229,7 @@
             ]
         },
         "7b2f3dc5-4713-4964-a691-402d78c069dd": {
-            "order": 3,
+            "order": 2,
             "name": "체력 회복 - 3회",
             "created_at": "2024-12-08T14:28:34.950624",
             "updated_at": "2024-12-11T23:01:17.231554",
@@ -312,16 +312,15 @@
             ]
         },
         "ed0d7b48-c7ac-4397-8ce5-360143efa401": {
-            "order": 4,
+            "order": 3,
             "name": "체력 회복 - 1회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-12T00:04:05.377041",
+            "updated_at": "2024-12-12T08:42:08.858223",
             "trigger_key": {
-                "display_text": "",
-                "key_code": "키 코드 192",
+                "key_code": "숫자패드 .",
                 "modifiers": 0,
-                "scan_code": 41,
-                "virtual_key": 192
+                "scan_code": 83,
+                "virtual_key": 110
             },
             "repeat_count": 1,
             "is_nested": false,
@@ -389,10 +388,10 @@
             ]
         },
         "b8796333-e8d6-4ae2-9fec-801a713517d8": {
-            "order": 5,
+            "order": 4,
             "name": "보호 무장 힘",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-12-12T08:35:26.538192",
+            "updated_at": "2024-12-12T08:41:26.493178",
             "trigger_key": {
                 "key_code": "숫자패드 +",
                 "modifiers": 0,
@@ -705,7 +704,7 @@
             ]
         },
         "9ed591e4-b227-448b-9d0f-b90c76d1f662": {
-            "order": 6,
+            "order": 5,
             "name": "모두 줍기",
             "created_at": "2024-11-26T10:58:29.227835",
             "updated_at": "2024-12-11T21:30:39.069555",
@@ -762,7 +761,7 @@
             ]
         },
         "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7": {
-            "order": 7,
+            "order": 6,
             "name": "공력증강 - 연속1회 - 사냥용",
             "created_at": "2024-12-08T13:23:32.528363",
             "updated_at": "2024-12-11T21:42:01.759101",
@@ -814,7 +813,7 @@
             ]
         },
         "53ff5f5a-747a-4ebf-9f58-8adb8026eb9f": {
-            "order": 8,
+            "order": 7,
             "name": "공력증강 - 연속5회",
             "created_at": "2024-12-08T20:41:36.805524",
             "updated_at": "2024-12-11T20:04:02.819832",
@@ -861,7 +860,7 @@
             ]
         },
         "ba00b4b7-4268-4138-a424-d1e9353d7743": {
-            "order": 9,
+            "order": 8,
             "name": "공력증강 - 5회",
             "created_at": "2024-11-30T16:57:51.034740",
             "updated_at": "2024-12-11T20:22:45.622335",
@@ -920,7 +919,7 @@
             ]
         },
         "9614e85c-3ceb-423b-97ea-e17bfc0101fc": {
-            "order": 10,
+            "order": 9,
             "name": "동동주 마시기 - 1회",
             "created_at": "2024-11-30T07:08:49.271692",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -983,7 +982,7 @@
             ]
         },
         "970a1723-88f9-4a50-8bb4-4f8c8f8199fe": {
-            "order": 11,
+            "order": 10,
             "name": "첨 중독, 저주, 마비 - 1회",
             "created_at": "2024-11-30T10:25:06.438732",
             "updated_at": "2024-12-11T23:06:19.092408",
@@ -1310,7 +1309,7 @@
             ]
         },
         "a97732be-77f0-474c-96f0-7b4f825f9036": {
-            "order": 12,
+            "order": 11,
             "name": "중독, 마비 첨 사냥 - 무한반복",
             "created_at": "2024-12-08T21:25:24.196785",
             "updated_at": "2024-12-11T20:13:11.284049",
@@ -1319,6 +1318,78 @@
                 "modifiers": 0,
                 "scan_code": 55,
                 "virtual_key": 106
+            },
+            "repeat_count": 1,
+            "is_nested": false,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "첨 중독, 저주, 마비 - 1회",
+                    "logic_id": "970a1723-88f9-4a50-8bb4-4f8c8f8199fe",
+                    "logic_name": "첨 중독, 저주, 마비 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 2,
+                    "type": "logic",
+                    "display_text": "공력증강 - 연속1회 - 사냥용",
+                    "logic_id": "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7",
+                    "logic_name": "공력증강 - 연속1회 - 사냥용",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 3,
+                    "type": "logic",
+                    "display_text": "공력증강 - 연속1회 - 사냥용",
+                    "logic_id": "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7",
+                    "logic_name": "공력증강 - 연속1회 - 사냥용",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 4,
+                    "type": "logic",
+                    "display_text": "공력증강 - 연속1회 - 사냥용",
+                    "logic_id": "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7",
+                    "logic_name": "공력증강 - 연속1회 - 사냥용",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 5,
+                    "type": "logic",
+                    "display_text": "공력증강 - 연속1회 - 사냥용",
+                    "logic_id": "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7",
+                    "logic_name": "공력증강 - 연속1회 - 사냥용",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 6,
+                    "type": "logic",
+                    "display_text": "공력증강 - 연속1회 - 사냥용",
+                    "logic_id": "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7",
+                    "logic_name": "공력증강 - 연속1회 - 사냥용",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 7,
+                    "type": "logic",
+                    "display_text": "공력증강 - 연속1회 - 사냥용",
+                    "logic_id": "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7",
+                    "logic_name": "공력증강 - 연속1회 - 사냥용",
+                    "repeat_count": 1
+                }
+            ]
+        },
+        "22b1ce84-7d6a-4d56-ba3e-f73eb12051bf": {
+            "order": 12,
+            "name": "중독, 마비 첨 사냥 - 무한반복 - 복제",
+            "created_at": "2024-12-12T08:34:33.775036",
+            "updated_at": "2024-12-12T08:47:33.549800",
+            "trigger_key": {
+                "key_code": "키 코드 192",
+                "modifiers": 0,
+                "scan_code": 41,
+                "virtual_key": 192
             },
             "repeat_count": 1,
             "is_nested": false,
@@ -4297,7 +4368,7 @@
             ]
         },
         "0ceb5d7f-00bb-48b5-95ba-0b204d99da44": {
-            "order": 39,
+            "order": 37,
             "name": "월드 재입장",
             "created_at": "2024-12-11T21:30:39.063045",
             "updated_at": "2024-12-12T08:29:51.485172",
@@ -4361,7 +4432,7 @@
             ]
         },
         "0b82b6a5-4c4a-497b-8f19-842e24d4e24e": {
-            "order": 40,
+            "order": 38,
             "name": "캐릭터 선택",
             "created_at": "2024-12-12T08:29:17.016286",
             "updated_at": "2024-12-12T08:29:42.638594",
@@ -4421,73 +4492,6 @@
                     "coordinates_y": 930,
                     "ratios_x": 0.49710982658959535,
                     "ratios_y": 0.8172231985940246
-                }
-            ]
-        },
-        "22b1ce84-7d6a-4d56-ba3e-f73eb12051bf": {
-            "order": 41,
-            "name": "중독, 마비 첨 사냥 - 무한반복 - 복제",
-            "created_at": "2024-12-12T08:34:33.775036",
-            "updated_at": "2024-12-12T08:34:43.310045",
-            "trigger_key": null,
-            "repeat_count": 1,
-            "is_nested": true,
-            "items": [
-                {
-                    "order": 1,
-                    "type": "logic",
-                    "display_text": "첨 중독, 저주, 마비 - 1회",
-                    "logic_id": "970a1723-88f9-4a50-8bb4-4f8c8f8199fe",
-                    "logic_name": "첨 중독, 저주, 마비 - 1회",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 2,
-                    "type": "logic",
-                    "display_text": "공력증강 - 연속1회 - 사냥용",
-                    "logic_id": "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7",
-                    "logic_name": "공력증강 - 연속1회 - 사냥용",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 3,
-                    "type": "logic",
-                    "display_text": "공력증강 - 연속1회 - 사냥용",
-                    "logic_id": "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7",
-                    "logic_name": "공력증강 - 연속1회 - 사냥용",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 4,
-                    "type": "logic",
-                    "display_text": "공력증강 - 연속1회 - 사냥용",
-                    "logic_id": "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7",
-                    "logic_name": "공력증강 - 연속1회 - 사냥용",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 5,
-                    "type": "logic",
-                    "display_text": "공력증강 - 연속1회 - 사냥용",
-                    "logic_id": "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7",
-                    "logic_name": "공력증강 - 연속1회 - 사냥용",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 6,
-                    "type": "logic",
-                    "display_text": "공력증강 - 연속1회 - 사냥용",
-                    "logic_id": "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7",
-                    "logic_name": "공력증강 - 연속1회 - 사냥용",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 7,
-                    "type": "logic",
-                    "display_text": "공력증강 - 연속1회 - 사냥용",
-                    "logic_id": "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7",
-                    "logic_name": "공력증강 - 연속1회 - 사냥용",
-                    "repeat_count": 1
                 }
             ]
         }

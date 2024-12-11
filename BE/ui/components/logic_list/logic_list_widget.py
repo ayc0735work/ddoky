@@ -227,7 +227,7 @@ class LogicListWidget(QFrame):
                 # settings_manager를 통해 로직 업데이트
                 updated_logic = self.settings_manager.save_logic(logic_id, logic_info)
                 
-                # 목록 아이�� 업데이트
+                # 목록 아이템 업데이트
                 self._update_logic_in_list(updated_logic)
                 
                 # 저장된 로직 목록 다시 로드
@@ -256,7 +256,7 @@ class LogicListWidget(QFrame):
             # order 값으로 정렬
             sorted_logics = sorted(logics.items(), key=lambda x: x[1].get('order', 0))
             
-            # 순서대로 리스에 추가만 하고 order는 변경하지 않음
+            # 순서대로 리스트에 추가만 하고 order는 변경하지 않음
             for logic_id, logic_info in sorted_logics:
                 self._add_logic_to_list(logic_info, logic_id)
                 
@@ -288,7 +288,7 @@ class LogicListWidget(QFrame):
                 self.log_message.emit(f"[로직 처리] 로직 ID: {logic_id} 처리 시작")
                 
                 # 로직 정보 가져오기
-                logic_info = self.settings_manager.load_logics().get(logic_id)
+                logic_info = self.settings_manager.load_logics(force=True).get(logic_id)
                 if not logic_info:
                     self.log_message.emit(f"[경고] 로직 ID {logic_id}에 해당하는 로직 정보를 찾을 수 없습니다.")
                     continue
@@ -301,9 +301,9 @@ class LogicListWidget(QFrame):
             
             # 설정에 저장
             self.log_message.emit("[설정 저장] 수집된 로직 정보를 설정에 저장합니다.")
-            settings = self.settings_manager.load_settings() or {}
+            settings = self.settings_manager._load_settings() or {}
             settings['logics'] = logics
-            self.settings_manager.save_settings(settings)
+            self.settings_manager._save_settings(settings)
             self.log_message.emit("[설정 저장 완료] 로직 정보가 성공적으로 저장되었습니다.")
             
         except Exception as e:
