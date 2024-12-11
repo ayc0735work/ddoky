@@ -392,7 +392,7 @@ class LogicDetailWidget(QFrame):
                         '왼쪽 쉬프트': win32con.VK_LSHIFT,
                         '오른쪽 쉬프트': win32con.VK_RSHIFT,
                         '왼쪽 컨트롤': win32con.VK_LCONTROL,
-                        '오른쪽 컨트롤': win32con.VK_RCONTROL,
+                        '오른쪽 컨��롤': win32con.VK_RCONTROL,
                         '왼쪽 알트': win32con.VK_LMENU,
                         '오른쪽 알트': win32con.VK_RMENU,
                         'Home': win32con.VK_HOME,
@@ -407,7 +407,7 @@ class LogicDetailWidget(QFrame):
                         'End': win32con.VK_END,
                         'Page Up': win32con.VK_PRIOR,
                         'Page Down': win32con.VK_NEXT,
-                        '방향키 왼쪽 ��': win32con.VK_LEFT,
+                        '방향키 왼쪽 →': win32con.VK_LEFT,
                         '방향키 오른쪽 →': win32con.VK_RIGHT,
                         '방향키 위쪽 ↑': win32con.VK_UP,
                         '방향키 아래쪽 ↓': win32con.VK_DOWN,
@@ -650,7 +650,7 @@ class LogicDetailWidget(QFrame):
                     self.log_message.emit(f"로직 '{name}'이(가) 업데이트되었습니다.")
                 else:  # 새 로직
                     self.logic_saved.emit(logic_info)
-                    self.log_message.emit(f"새 로직 '{name}'이(가) 저장되었습니다.")
+                    self.log_message.emit(f"새 로직 '{name}'이(가) 저��되었습니다.")
                 
                 self.clear_all()
                 return True
@@ -806,6 +806,10 @@ class LogicDetailWidget(QFrame):
             self.log_message.emit("오류: 잘못된 아이템 정보 형식")
             return
             
+        # 현재 리스트의 아이템 개수로 order 설정
+        current_order = self.LogicItemList__QListWidget.count() + 1
+        item_info['order'] = current_order
+        
         # 이미 변환된 형식인 경우 (로직 타입)
         if item_info.get('type') == 'logic':
             logic_name = item_info.get('logic_name')
@@ -886,7 +890,7 @@ class LogicDetailWidget(QFrame):
             self.LogicItemList__QListWidget.setCurrentItem(last_inserted_item)
             
         items_count = len(self.copied_items)
-        self.log_message.emit(f"{items_count}개의 로직 구성 아이템이 붙여넣기되었습니다")
+        self.log_message.emit(f"{items_count}개의 로직 구성 아이템이 붙���넣기되었습니다")
 
     def eventFilter(self, obj, event):
         """이벤트 필터"""
@@ -1146,7 +1150,7 @@ class LogicDetailWidget(QFrame):
         """선택된 아이템들을 복사"""
         selected_items = self.LogicItemList__QListWidget.selectedItems()
         if selected_items:
-            # 텍스트와 함께 전체 데이터를 ���사
+            # 텍스트와 함께 전체 데이터를 사
             self.copied_items = []
             for item in selected_items:
                 item_data = {

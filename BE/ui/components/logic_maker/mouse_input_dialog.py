@@ -584,8 +584,7 @@ class MouseInputDialog(QDialog):
             'coordinates': {'x': x, 'y': y},
             'ratios': self.click_ratios,
             'process': self.selected_process,
-            'display_text': f"마우스 입력: {name} ({x}, {y})",
-            'order': 0  # 순서는 LogicDetailWidget에서 설정됨
+            'display_text': f"마우스 입력: {name} ({x}, {y})"
         }
         
         self._append_log(f"생성된 마우스 입력 정보: {mouse_info}")
