@@ -262,8 +262,8 @@ class LogicOperationWidget(QFrame):
             if copied_item.get('type') == 'logic':
                 logic_name = copied_item.get('logic_name')
                 
-                # settings.json에서 로직 정보 가져오기
-                logics = self.settings_manager.load_logics(force=False)
+                # 최신 로직 정보 가져오기
+                logics = self.settings_manager.load_logics(force=True)
                 
                 # 이름으로 찾기
                 found = False
@@ -273,23 +273,13 @@ class LogicOperationWidget(QFrame):
                         found = True
                         break
                 
-                # 못 찾은 경우 캐시 갱신 후 다시 시도
-                if not found:
-                    logics = self.settings_manager.load_logics(force=True)
-                    for existing_id, existing_logic in logics.items():
-                        if existing_logic.get('name') == logic_name:
-                            logic_id = existing_id
-                            found = True
-                            break
-                
-                # 전히 못 찾은 경우
+                # 로직을 찾지 못한 경우
                 if not found:
                     QMessageBox.critical(
                         self,
                         "오류",
                         f"로직 '{logic_name}'을(를) 찾을 수 없습니다.\n"
-                        "해당 로직이 삭제되었거나 이름이 변경되었을 수 있습니다.\n"
-                        "캐시를 갱신했지만 여전히 로직을 찾을 수 없습니다."
+                        "해당 로직이 삭제되었거나 이름이 변경되었을 수 있습니다."
                     )
                     return
                 
@@ -303,7 +293,7 @@ class LogicOperationWidget(QFrame):
             
             copied_items.append(copied_item)
         
-        # 복사된 아이템들을 립보드에 저장
+        # 복사된 아이템들을 클립보드에 저장
         self._clipboard = copied_items
 
     def _add_logic_item(self, item_info):
@@ -315,8 +305,8 @@ class LogicOperationWidget(QFrame):
         if item_info.get('type') == 'logic':
             logic_name = item_info.get('logic_name')
             
-            # 1. 첫 번째 시도: settings.json에서 로직 정보 가져오기
-            logics = self.settings_manager.load_logics(force=False)
+            # 최신 로직 정보 가져오기
+            logics = self.settings_manager.load_logics(force=True)
             
             # 이름으로 찾기
             found = False
@@ -326,23 +316,13 @@ class LogicOperationWidget(QFrame):
                     found = True
                     break
             
-            # 2. 찾지 못한 경우 캐시를 강제로 갱신하고 다시 시도
-            if not found:
-                logics = self.settings_manager.load_logics(force=True)  # 캐시 강제 갱신
-                for existing_id, existing_logic in logics.items():
-                    if existing_logic.get('name') == logic_name:
-                        logic_id = existing_id
-                        found = True
-                        break
-            
-            # 3. 여전히 찾지 못한 경우 오류 메시지 표시
+            # 로직을 찾지 못한 경우
             if not found:
                 QMessageBox.critical(
                     self,
                     "오류",
                     f"로직 '{logic_name}'을(를) 찾을 수 없습니다.\n"
-                    "해당 로직이 삭제되었거나 이름이 변경되었을 수 있습니다.\n"
-                    "캐시를 갱신했지만 여전히 로직을 찾을 수 없습니다."
+                    "해당 로직이 삭제되었거나 이름이 변경되었을 수 있습니다."
                 )
                 return
             
@@ -353,7 +333,7 @@ class LogicOperationWidget(QFrame):
             if 'logic_data' in item_info:
                 item_info['logic_data']['logic_id'] = logic_id
                 item_info['logic_data']['logic_name'] = logic_name
-            
+        
         # 리스트에 아이템 추가
         self._add_item_to_list(item_info)
             

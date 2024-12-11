@@ -169,17 +169,20 @@ class LogicExecutor(QObject):
             self._log_with_time("[로그] 로직 실행 조건이 맞지 않습니다.")
             return
             
-        # 로직 찾기 및 실행
+        # 최신 로직 정보로 로직 찾기 및 실행
         found_matching_logic = False
-        for logic_name, logic in self.logic_manager.get_all_logics().items():
+        logics = self.logic_manager.get_all_logics(force=True)
+        
+        for logic_id, logic in logics.items():
             if self._is_trigger_key_matched(logic, key_info):
                 found_matching_logic = True
                 if self.execution_state['is_executing']:
-                    self._log_with_time("[로그] 현재 다른 로직이 실행 중이므로 '{}' 로직을 실행할 수 없습니다.".format(logic_name))
+                    self._log_with_time("다른 로직이 실행 중입니다.")
                     return
                     
                 try:
                     self.selected_logic = logic
+                    self.selected_logic['id'] = logic_id  # ID 정보 추가
                     self._update_state(
                         is_executing=True,
                         current_step=0,
@@ -187,7 +190,7 @@ class LogicExecutor(QObject):
                     )
                     # 로직 실행 시작 시간 초기화
                     self._start_time = time.time()
-                    self._log_with_time(f"[로직 실행] 로직 '{logic.get('name')}({logic.get('id')})' 실행 시작")
+                    self._log_with_time(f"[로직 실행] 로직 '{logic.get('name')}({logic_id})' 실행 시작")
                     
                     self.execution_started.emit()
                     
@@ -343,11 +346,13 @@ class LogicExecutor(QObject):
                 }
             ))
             
-            # 중첩 로직 로드 및 실행
-            nested_logic = self.logic_manager.get_all_logics().get(logic_id)
+            # 최신 로직 정보로 중첩 로직 로드 및 실행
+            logics = self.logic_manager.get_all_logics(force=True)
+            nested_logic = logics.get(logic_id)
             if not nested_logic:
                 raise Exception(f"중첩 로직을 찾을 수 없습니다: {logic_id}")
             
+            nested_logic['id'] = logic_id  # ID 정보 추가
             self.selected_logic = nested_logic
             self._update_state(
                 current_step=0,
@@ -676,7 +681,7 @@ class LogicExecutor(QObject):
             self.load_saved_logics()
 
     def execute_logic(self, logic_id, repeat_count=None):
-        """로 실행"""
+        """로직을 실행"""
         try:
             # 실행 시점에 최신 로직 데이터 로드
             logics = self.settings_manager.load_logics(force=True)
@@ -706,7 +711,7 @@ class LogicExecutor(QObject):
                         if nested_logic_id:
                             nested_repeat = item.get('repeat_count', 1)
                             self.execute_logic(nested_logic_id, nested_repeat)
-                    # ... 나지 실행 로직 ...
+                    # ... 나머지 실행 로직 ...
                     
         except Exception as e:
             print(f"로직 실행 중 오류 발생: {str(e)}")

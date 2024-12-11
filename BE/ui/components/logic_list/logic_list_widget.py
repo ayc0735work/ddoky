@@ -418,11 +418,14 @@ class LogicListWidget(QFrame):
             )
             
             if reply == QMessageBox.Yes:
+                # 최신 설정 로드
+                settings = self.settings_manager._load_settings()
+                
                 # 삭제할 아이템들의 정보를 미리 저장
                 items_to_delete = []
                 for item in selected_items:
                     logic_id = item.data(Qt.UserRole)
-                    if logic_id and logic_id in self.saved_logics:
+                    if logic_id and logic_id in settings.get('logics', {}):
                         items_to_delete.append({
                             'item': item,
                             'logic_id': logic_id,
@@ -433,18 +436,12 @@ class LogicListWidget(QFrame):
                     self.log_message.emit("삭제할 로직이 없습니다.")
                     return
                 
-                # settings 백업
-                settings_backup = self.settings_manager.settings.copy()
-                saved_logics_backup = self.saved_logics.copy()
-                
                 try:
                     # 선택된 모든 아이템 삭제
                     for item_info in items_to_delete:
-                        # saved_logics에서 삭제
-                        del self.saved_logics[item_info['logic_id']]
-                        # settings에서도 삭제
-                        if item_info['logic_id'] in self.settings_manager.settings.get('logics', {}):
-                            del self.settings_manager.settings['logics'][item_info['logic_id']]
+                        # settings에서 삭제
+                        if item_info['logic_id'] in settings['logics']:
+                            del settings['logics'][item_info['logic_id']]
                         # 리스트에서 아이템 제거
                         self.SavedLogicList__QListWidget.takeItem(
                             self.SavedLogicList__QListWidget.row(item_info['item'])
@@ -453,29 +450,19 @@ class LogicListWidget(QFrame):
                         self.item_deleted.emit(item_info['logic_name'])
                 
                     # 변경사항 저장
-                    try:
-                        settings = self.settings_manager.settings.copy()
-                        self.settings_manager._save_settings(settings)
+                    self.settings_manager._save_settings(settings)
+                    
+                    # 로그 메시지
+                    if len(items_to_delete) == 1:
+                        self.log_message.emit(f'로직 "{items_to_delete[0]["logic_name"]}"이(가) 삭제되었습니다')
+                    else:
+                        self.log_message.emit(f'{len(items_to_delete)}개의 로직이 삭제되었습니다')
                         
-                        # 로그 메시지
-                        if len(items_to_delete) == 1:
-                            self.log_message.emit(f'로직 "{items_to_delete[0]["logic_name"]}"이(가) 삭제되었습니다')
-                        else:
-                            self.log_message.emit(f'{len(items_to_delete)}개의 로직이 삭제되었습니다')
-                            
-                    except Exception as save_error:
-                        # 설정 저장 실패 시 백업에서 복원
-                        self.settings_manager.settings = settings_backup
-                        self.saved_logics = saved_logics_backup
-                        raise Exception(f"설정 저장 실패: {str(save_error)}")
-                        
-                except Exception as delete_error:
-                    # 삭제 작업 실패 시 백업에서 원
-                    self.settings_manager.settings = settings_backup
-                    self.saved_logics = saved_logics_backup
-                    self.load_saved_logics()  # UI 목록 다시 로드
-                    raise Exception(f"삭제 작업 실패: {str(delete_error)}")
-                
+                except Exception as e:
+                    self.log_message.emit(f"로직 삭제 중 오류 발생: {str(e)}")
+                    # 오류 발생 시 저장된 로직 다시 불러오기
+                    self.load_saved_logics()
+            
         except Exception as e:
             self.log_message.emit(f"로직 삭제 중 오류 발생: {str(e)}")
             # 오류 발생 시 저장된 로직 다시 불러오기
@@ -563,91 +550,43 @@ class LogicListWidget(QFrame):
 
     def _copy_logic(self):
         """선택된 로직 복사"""
-        current_item = self.SavedLogicList__QListWidget.currentItem()
-        if not current_item:
+        selected_items = self.SavedLogicList__QListWidget.selectedItems()
+        if not selected_items:
             return
-
-        try:
-            # 원본 로직 정보 가져오기
-            logic_id = current_item.data(Qt.UserRole)
-            if not logic_id or logic_id not in self.saved_logics:
-                return
-
-            # 로직 정보 복사
-            self.copied_logic = self.saved_logics[logic_id].copy()
-            self.log_message.emit(f"로직 '{self.copied_logic['name']}'이(가) 복사되었습니다.")
             
-        except Exception as e:
-            self.log_message.emit(f"로직 복사 중 오류 발생: {str(e)}")
-
+        item = selected_items[0]  # 첫 번째 선택된 아이템만 복사
+        logic_id = item.data(Qt.UserRole)
+        
+        # 최신 로직 정보 로드
+        logics = self.settings_manager.load_logics(force=True)
+        if logic_id in logics:
+            self.copied_logic = logics[logic_id].copy()
+            self.copied_logic['id'] = logic_id  # ID 정보도 복사
+            self.log_message.emit(f"로직 '{self.copied_logic.get('name')}'이(가) 복사되었습니다.")
+            
     def _paste_logic(self):
         """복사된 로직 붙여넣기"""
         if not self.copied_logic:
-            self.log_message.emit("사된 로직이 없습니다.")
             return
-
+            
         try:
-            # 현재 선택된 아이템의 위치 확인
-            current_item = self.SavedLogicList__QListWidget.currentItem()
-            if current_item:
-                insert_position = self.SavedLogicList__QListWidget.row(current_item) + 1
-            else:
-                insert_position = self.SavedLogicList__QListWidget.count()
-
-            # 새 로직 정보 생성
+            # 새로운 UUID 생성
+            new_id = str(uuid.uuid4())
+            
+            # 복사된 로직의 복사본 생성
             new_logic = self.copied_logic.copy()
-            new_logic_id = str(uuid.uuid4())
+            new_logic['name'] = f"{new_logic['name']} (복사본)"
             
-            # 중첩 로직 참조 정보 처리
-            if 'items' in new_logic:
-                for item in new_logic['items']:
-                    if item.get('type') == 'logic':
-                        # 중첩 로직의 원본 참조 정보 유지
-                        original_logic_id = item.get('logic_id')
-                        if original_logic_id:
-                            # 원본 로직의 UUID를 그대로 유지
-                            item['logic_id'] = original_logic_id
-                            # logic_data도 있다면 그 안의 logic_id도 유지
-                            if 'logic_data' in item:
-                                item['logic_data']['logic_id'] = original_logic_id
+            # 최신 설정에 저장
+            self.settings_manager.save_logic(new_id, new_logic)
             
-            # 이름 뒤에 "- 복제" 추가
-            original_name = new_logic['name']
-            new_logic['name'] = f"{original_name} - 복제"
+            # 리스트에 추가
+            self._add_logic_to_list(new_logic, new_id)
             
-            # 생성/수정 시간 업데이트
-            current_time = datetime.now().isoformat()
-            new_logic['created_at'] = current_time
-            new_logic['updated_at'] = current_time
-            
-            # 선택된 아이템 이후의 모든 아이템의 order 값을 1씩 증가
-            for i in range(insert_position, self.SavedLogicList__QListWidget.count()):
-                item = self.SavedLogicList__QListWidget.item(i)
-                if item:
-                    logic_id = item.data(Qt.UserRole)
-                    if logic_id in self.saved_logics:
-                        self.saved_logics[logic_id]['order'] = i + 2
-
-            # 새 로직의 order 값 설
-            new_logic['order'] = insert_position + 1
-            
-            # 새 로직 저장
-            self.settings_manager.save_logic(new_logic_id, new_logic)
-            
-            # 리스트의 특정 위치에 추가
-            self._add_logic_to_list(new_logic, new_logic_id)
-            
-            # 새로 추가된 아이템을 올바른 위치로 이동
-            last_item = self.SavedLogicList__QListWidget.item(self.SavedLogicList__QListWidget.count() - 1)
-            if last_item:
-                self.SavedLogicList__QListWidget.takeItem(self.SavedLogicList__QListWidget.count() - 1)
-                self.SavedLogicList__QListWidget.insertItem(insert_position, last_item)
-                self.SavedLogicList__QListWidget.setCurrentItem(last_item)
-            
-            # 변경사항 저장
+            # 설정 저장
             self.save_logics_to_settings()
             
-            self.log_message.emit(f"로직 '{original_name}'이(가) 붙여넣기되었습니다.")
+            self.log_message.emit(f"로직 '{new_logic['name']}'이(가) 생성되었습니다.")
             
         except Exception as e:
             self.log_message.emit(f"로직 붙여넣기 중 오류 발생: {str(e)}")
