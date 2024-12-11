@@ -533,7 +533,7 @@ class MouseInputDialog(QDialog):
             'coordinates': {'x': x, 'y': y},
             'ratios': self.click_ratios,
             'process': self.selected_process,
-            'display_text': f"{name} ({x}, {y})"
+            'display_text': f"마우스 입력: {name} ({x}, {y})"
         }
         
         # 시그널 발생
