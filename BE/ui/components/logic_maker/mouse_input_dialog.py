@@ -1,9 +1,211 @@
 from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QPushButton, 
                               QLabel, QComboBox, QSpinBox, QFrame, QRadioButton,
-                              QButtonGroup)
-from PySide6.QtCore import Qt, Signal
+                              QButtonGroup, QLineEdit, QApplication)
+from PySide6.QtCore import Qt, Signal, QRect, QPoint, QSize, QTimer
+from PySide6.QtGui import QScreen, QPixmap, QColor, QPainter, QPen, QBrush, QImage
 from win32api import GetCursorPos
+import win32gui
+import win32con
 from ..process_selector.process_selector_dialog import ProcessSelectorDialog
+
+
+class CaptureOverlay(QDialog):
+    """마우스 좌표 선택을 위한 오버레이 다이얼로그"""
+    
+    def __init__(self, parent=None, process_info=None):
+        super().__init__(parent, Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
+        self.process_info = process_info
+        self.mouse_pos = None
+        self.window_image = None
+        self.client_rect = None
+        self.magnifier_size = QSize(150, 150)
+        self.magnifier_scale = 2
+        
+        # 반투명 오버레이 설정
+        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setStyleSheet("background-color: transparent;")
+        
+        # 마우스 추적 활성화
+        self.setMouseTracking(True)
+        
+        # 초기화 타이머 설정
+        self.init_timer = QTimer(self)
+        self.init_timer.setSingleShot(True)
+        self.init_timer.timeout.connect(self._capture_window)
+        
+        self._setup_ui()
+        
+    def _setup_ui(self):
+        """UI 초기화"""
+        self.setCursor(Qt.CrossCursor)
+        
+    def _capture_window(self):
+        """프로세스 창 캡처"""
+        if not self.process_info or 'hwnd' not in self.process_info:
+            self.reject()
+            return
+            
+        hwnd = self.process_info['hwnd']
+        
+        try:
+            # 창이 최소화되어 있다면 복원
+            if win32gui.IsIconic(hwnd):
+                win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+            
+            # 창을 활성화
+            win32gui.SetForegroundWindow(hwnd)
+            
+            # 창의 클라이언트 영역 정보 가져오기
+            rect = win32gui.GetWindowRect(hwnd)
+            client_rect = win32gui.GetClientRect(hwnd)
+            
+            # 스크린 좌표로 변환
+            point = win32gui.ClientToScreen(hwnd, (0, 0))
+            self.client_x = point[0]
+            self.client_y = point[1]
+            self.client_width = client_rect[2]
+            self.client_height = client_rect[3]
+            
+            # 창 이미지 캡처
+            screen = QApplication.primaryScreen()
+            self.window_image = screen.grabWindow(0, self.client_x, self.client_y, 
+                                                self.client_width, self.client_height)
+            
+            # 오버레이 위치 설정
+            self.setGeometry(QRect(self.client_x, self.client_y, 
+                                 self.client_width, self.client_height))
+            
+        except Exception as e:
+            print(f"창 캡처 중 오류 발생: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            self.reject()
+            
+    def paintEvent(self, event):
+        """화면 그리기 이벤트"""
+        if not self.window_image:
+            return
+            
+        painter = QPainter(self)
+        
+        # 배경 이미지 그리기
+        if not self.window_image.isNull():
+            painter.drawPixmap(0, 0, self.window_image)
+            
+            # 반투명 어두운 오버레이
+            overlay = QColor(0, 0, 0, 128)
+            painter.fillRect(self.rect(), overlay)
+            
+            # 마우스 위치에 돋보기 그리기
+            if self.mouse_pos:
+                self._draw_magnifier(painter, self.mouse_pos)
+                
+    def _draw_magnifier(self, painter, pos):
+        """돋보기 그리기"""
+        # 확대경이 표시될 위치 계산
+        magnifier_x = pos.x() + 20
+        magnifier_y = pos.y() - self.magnifier_size.height() - 20
+        
+        # 화면 경계를 벗어나지 않도록 조정
+        if magnifier_x + self.magnifier_size.width() > self.width():
+            magnifier_x = pos.x() - self.magnifier_size.width() - 20
+        if magnifier_y < 0:
+            magnifier_y = pos.y() + 20
+            
+        # 확대할 영역 계산
+        source_rect = QRect(
+            pos.x() - self.magnifier_size.width() / (2 * self.magnifier_scale),
+            pos.y() - self.magnifier_size.height() / (2 * self.magnifier_scale),
+            self.magnifier_size.width() / self.magnifier_scale,
+            self.magnifier_size.height() / self.magnifier_scale
+        )
+        
+        # 확대경 배경
+        painter.fillRect(
+            QRect(magnifier_x, magnifier_y, self.magnifier_size.width(), self.magnifier_size.height()),
+            QColor(255, 255, 255, 200)
+        )
+        
+        # 확대된 이미지 그리기
+        if not source_rect.intersected(self.rect()).isEmpty():
+            painter.drawPixmap(
+                QRect(magnifier_x, magnifier_y, self.magnifier_size.width(), self.magnifier_size.height()),
+                self.window_image,
+                source_rect
+            )
+        
+        # 확대경 테두리
+        painter.setPen(QPen(QColor(0, 120, 215), 2))
+        painter.drawRect(
+            magnifier_x, magnifier_y,
+            self.magnifier_size.width(), self.magnifier_size.height()
+        )
+        
+        # 십자선 ���리기
+        center_x = magnifier_x + self.magnifier_size.width() / 2
+        center_y = magnifier_y + self.magnifier_size.height() / 2
+        
+        painter.setPen(QPen(QColor(255, 0, 0), 1))
+        painter.drawLine(
+            center_x - 10, center_y,
+            center_x + 10, center_y
+        )
+        painter.drawLine(
+            center_x, center_y - 10,
+            center_x, center_y + 10
+        )
+        
+        # 현재 좌표 표시
+        coord_text = f"X: {pos.x()}, Y: {pos.y()}"
+        text_rect = QRect(
+            magnifier_x,
+            magnifier_y + self.magnifier_size.height() + 5,
+            self.magnifier_size.width(),
+            20
+        )
+        painter.setPen(Qt.white)
+        painter.drawText(text_rect, Qt.AlignCenter, coord_text)
+        
+    def mouseMoveEvent(self, event):
+        """마우스 이동 이벤트"""
+        self.mouse_pos = event.pos()
+        self.update()
+        
+    def mousePressEvent(self, event):
+        """마우스 클릭 이벤트"""
+        if event.button() == Qt.LeftButton:
+            # 클릭 위치의 상대 좌표와 비율 계산
+            pos = event.pos()
+            relative_x = pos.x()
+            relative_y = pos.y()
+            
+            # 좌표를 비율로 변환 (0.0 ~ 1.0)
+            x_ratio = relative_x / self.client_width
+            y_ratio = relative_y / self.client_height
+            
+            self.click_info = {
+                'coordinates': {
+                    'x': relative_x,
+                    'y': relative_y
+                },
+                'ratios': {
+                    'x': x_ratio,
+                    'y': y_ratio
+                }
+            }
+            
+            self.accept()
+            
+    def get_click_info(self):
+        """클릭 정보 반환"""
+        return getattr(self, 'click_info', None)
+    
+    def showEvent(self, event):
+        """오버레이가 표시될 때 호출"""
+        super().showEvent(event)
+        # 950ms 후에 캡처 시작
+        self.init_timer.start(950)
+
 
 class MouseInputDialog(QDialog):
     """마우스 입력을 받는 다이얼로그"""
@@ -173,9 +375,14 @@ class MouseInputDialog(QDialog):
         y_layout.addWidget(self.y_spinbox)
         coord_layout.addLayout(y_layout)
         
-        # 현재 마우스 위치 가져오기 버튼
-        get_pos_btn = QPushButton("현재 마우스 위치 가져오기")
-        get_pos_btn.setStyleSheet("""
+        # 좌표 선택/초기화 버튼
+        coord_button_layout = QHBoxLayout()
+        coord_button_layout.setSpacing(10)
+        
+        self.coord_select_btn = QPushButton("마우스 좌표 선택하기")
+        self.coord_reset_btn = QPushButton("좌표 입력 초기화")
+        
+        button_style = """
             QPushButton {
                 background-color: #4a9eff;
                 color: white;
@@ -186,10 +393,38 @@ class MouseInputDialog(QDialog):
             QPushButton:hover {
                 background-color: #3d8ce4;
             }
-        """)
-        coord_layout.addWidget(get_pos_btn)
+        """
+        self.coord_select_btn.setStyleSheet(button_style)
+        self.coord_reset_btn.setStyleSheet(button_style)
+        
+        coord_button_layout.addWidget(self.coord_select_btn)
+        coord_button_layout.addWidget(self.coord_reset_btn)
+        coord_layout.addLayout(coord_button_layout)
         
         layout.addWidget(coord_section)
+        
+        # 마우스 동작 이름 섹션
+        name_section = QFrame()
+        name_section.setStyleSheet("QFrame { background-color: #f5f5f5; border-radius: 5px; padding: 10px; }")
+        name_layout = QVBoxLayout(name_section)
+        
+        name_title = QLabel("마우스 동작 이름")
+        name_title.setStyleSheet("font-weight: bold; font-size: 14px;")
+        name_layout.addWidget(name_title)
+        
+        self.name_input = QLineEdit()
+        self.name_input.setPlaceholderText("마우스 동작 이름을 입력하세요")
+        self.name_input.setStyleSheet("""
+            QLineEdit {
+                padding: 5px;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+                background: white;
+            }
+        """)
+        name_layout.addWidget(self.name_input)
+        
+        layout.addWidget(name_section)
         
         # 버튼 레이아웃
         button_layout = QHBoxLayout()
@@ -235,19 +470,11 @@ class MouseInputDialog(QDialog):
         # 시그널 연결
         confirm_btn.clicked.connect(self._on_confirm)
         cancel_btn.clicked.connect(self.reject)
-        get_pos_btn.clicked.connect(self._get_current_mouse_pos)
+        self.coord_select_btn.clicked.connect(self._select_coordinates)
+        self.coord_reset_btn.clicked.connect(self._reset_coordinates)
         self.process_select_btn.clicked.connect(self._select_process)
         self.process_reset_btn.clicked.connect(self._reset_process)
         
-    def _get_current_mouse_pos(self):
-        """현재 마우스 위치를 가져와서 spinbox에 설정"""
-        try:
-            x, y = GetCursorPos()
-            self.x_spinbox.setValue(x)
-            self.y_spinbox.setValue(y)
-        except Exception as e:
-            print(f"마우스 위치를 가져오는 중 오류 발생: {str(e)}")
-            
     def _select_process(self):
         """프로세스 선택 다이얼로그 표시"""
         dialog = ProcessSelectorDialog(self)
@@ -262,8 +489,31 @@ class MouseInputDialog(QDialog):
         self.selected_process = None
         self.process_info.setText("선택된 프로세스 없음")
         
+    def _select_coordinates(self):
+        """마우스 좌표 선택"""
+        if not self.selected_process:
+            return
+            
+        overlay = CaptureOverlay(self, self.selected_process)
+        if overlay.exec() == QDialog.Accepted:
+            click_info = overlay.get_click_info()
+            if click_info:
+                self.x_spinbox.setValue(click_info['coordinates']['x'])
+                self.y_spinbox.setValue(click_info['coordinates']['y'])
+                self.click_ratios = click_info['ratios']
+                
+    def _reset_coordinates(self):
+        """좌표 입력 초기화"""
+        self.x_spinbox.setValue(0)
+        self.y_spinbox.setValue(0)
+        self.click_ratios = None
+        
     def _on_confirm(self):
         """확인 버튼 클릭 시 호출"""
+        if not self.name_input.text().strip():
+            # 이름이 입력되지 않았을 경우
+            return
+            
         # 선택된 정보 수집
         action_id = self.action_group.checkedId()
         action_map = {1: "클릭", 2: "이동", 3: "드래그"}
@@ -272,15 +522,18 @@ class MouseInputDialog(QDialog):
         button = self.button_combo.currentText()
         x = self.x_spinbox.value()
         y = self.y_spinbox.value()
+        name = self.name_input.text().strip()
         
         # 마우스 입력 정보 생성
         mouse_info = {
             'type': 'mouse_input',
+            'name': name,
             'action': action,
             'button': button,
             'coordinates': {'x': x, 'y': y},
+            'ratios': self.click_ratios,
             'process': self.selected_process,
-            'display_text': f"마우스 {action}: {button} ({x}, {y})"
+            'display_text': f"{name} ({x}, {y})"
         }
         
         # 시그널 발생

@@ -20,10 +20,12 @@ class LogicMakerWidget(QFrame):
     record_mode = Signal(bool)  # 기록 모드가 토글되었을 때
     log_message = Signal(str)  # 로그 메시지를 전달하는 시그널
     add_logic = Signal(str)  # 만든 로직 추가 시그널 (로직 이름)
+    item_added = Signal(dict)  # 아이템이 추가되었을 때
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self.saved_logics = {}  # 저장된 로직들을 관리하는 딕셔너리
+        self.items = []  # 아이템 리스트
         self.init_ui()
         
     def init_ui(self):
@@ -120,7 +122,7 @@ class LogicMakerWidget(QFrame):
             return "키보드 오른쪽"
         elif 71 <= scan_code <= 83:  # 숫자패드 영역
             return "숫자패드"
-        return "메인 키보드"
+        return "메�� 키보드"
             
     def _get_modifier_text(self, modifiers):
         """수정자 키 텍스트 생성"""
@@ -143,6 +145,7 @@ class LogicMakerWidget(QFrame):
         
     def _on_mouse_input_selected(self, mouse_info):
         """마우스 입력이 선택되었을 때"""
+        # 로그 메시지 출력
         self.mouse_input.emit(mouse_info['display_text'])
         self.log_message.emit(f"마우스 입력이 추가되었습니다: {mouse_info['display_text']}")
             

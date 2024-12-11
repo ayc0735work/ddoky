@@ -4296,6 +4296,54 @@
                     "modifiers": 0
                 }
             ]
+        },
+        "32c46cae-bb9b-476a-a69a-30cf0b181b96": {
+            "order": 0,
+            "name": "마우스 클릭 테스트",
+            "created_at": "2024-12-11T12:07:56.166054",
+            "updated_at": "2024-12-11T12:07:56.166054",
+            "trigger_key": {
+                "key_code": "Space",
+                "modifiers": 0,
+                "scan_code": 57,
+                "virtual_key": 32
+            },
+            "repeat_count": 1,
+            "is_nested": false,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "메뉴 클릭 (3176, 115)",
+                    "logic_id": "df21278e-14ff-42e1-ba7c-07b053196607",
+                    "logic_name": "메뉴 클릭 (3176, 115)",
+                    "repeat_count": 1
+                }
+            ]
+        },
+        "f999f6fc-3558-4b5e-bd4f-ee81997dd866": {
+            "order": 37,
+            "name": "마우스 클릭 테스트",
+            "created_at": "2024-12-11T12:07:56.166054",
+            "updated_at": "2024-12-11T12:07:56.178074",
+            "trigger_key": {
+                "key_code": "Space",
+                "modifiers": 0,
+                "scan_code": 57,
+                "virtual_key": 32
+            },
+            "repeat_count": 1,
+            "is_nested": false,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "메뉴 클릭 (3176, 115)",
+                    "logic_id": "df21278e-14ff-42e1-ba7c-07b053196607",
+                    "logic_name": "메뉴 클릭 (3176, 115)",
+                    "repeat_count": 1
+                }
+            ]
         }
     },
     "recovery_detection_enabled": false

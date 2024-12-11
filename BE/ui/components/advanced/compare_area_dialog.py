@@ -70,7 +70,7 @@ class CaptureOverlay(QDialog):
         """오버레이가 표시될 때 호출"""
         super().showEvent(event)
         # 지정된 시간 후에 초기화 함수 호출
-        self.init_timer.start(800)
+        self.init_timer.start(950)
         
     def _initialize_capture(self):
         """캡처 초기화"""

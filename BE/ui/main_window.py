@@ -226,10 +226,19 @@ class MainWindow(QMainWindow):
         display_text = f"키 입력: {modifier_text}{key_text}"
         self.logic_detail_widget.add_item(display_text)
         
-    def _on_mouse_input(self, mouse_info):
-        """마우스 입력이 추가되었을 때 호출"""
-        # TODO: 마우스 입력 처리 로직 구현
-        pass
+    def _on_mouse_input(self, display_text):
+        """마우스 입력이 추가되었을 때"""
+        # LogicDetailWidget의 아이템 목록에 추가
+        item = QListWidgetItem(display_text)
+        item.setData(Qt.UserRole, {
+            'type': 'mouse_input',
+            'display_text': display_text,
+            'order': self.logic_detail_widget.LogicItemList__QListWidget.count() + 1
+        })
+        self.logic_detail_widget.LogicItemList__QListWidget.addItem(item)
+        
+        # 로그 메시지 출력
+        self._append_log(f"마우스 입력이 추가되었습니다: {display_text}")
         
     def _on_delay_input(self, delay_info):
         """지연시간이 추가되었을 때 호출"""
