@@ -1,8 +1,8 @@
 {
     "window": {
         "position": {
-            "x": 3889,
-            "y": 4
+            "x": 3921,
+            "y": 10
         },
         "size": {
             "width": 900,
@@ -10,7 +10,7 @@
         }
     },
     "key_delays": {
-        "press": 0.021,
+        "press": 0.02,
         "release": 0.0,
         "mouse_input": 0.02,
         "default": 0.02
@@ -1865,8 +1865,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 3
                 },
                 {
@@ -1891,8 +1891,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 6
                 },
                 {
@@ -1917,8 +1917,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 9
                 }
             ]
@@ -1954,8 +1954,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 3
                 },
                 {
@@ -1980,8 +1980,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 6
                 },
                 {
@@ -2006,8 +2006,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 9
                 }
             ]
@@ -2043,8 +2043,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0330초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.03650초",
+                    "duration": 0.0365,
                     "order": 3
                 },
                 {
@@ -2069,8 +2069,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0330초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.03650초",
+                    "duration": 0.0365,
                     "order": 6
                 },
                 {
@@ -2095,8 +2095,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0330초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.03650초",
+                    "duration": 0.0365,
                     "order": 9
                 }
             ]
@@ -2138,8 +2138,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 3
                 },
                 {
@@ -2164,8 +2164,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 6
                 },
                 {
@@ -2190,8 +2190,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 9
                 }
             ]
@@ -2233,8 +2233,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 3
                 },
                 {
@@ -2259,8 +2259,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 6
                 },
                 {
@@ -2285,8 +2285,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 9
                 }
             ]
@@ -2328,8 +2328,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 3
                 },
                 {
@@ -2354,8 +2354,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 6
                 },
                 {
@@ -2380,8 +2380,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 9
                 }
             ]
@@ -2423,8 +2423,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 3
                 },
                 {
@@ -2449,8 +2449,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 6
                 },
                 {
@@ -2475,8 +2475,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 9
                 }
             ]
@@ -2518,8 +2518,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 3
                 },
                 {
@@ -2544,8 +2544,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 6
                 },
                 {
@@ -2570,8 +2570,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 9
                 }
             ]
@@ -2593,8 +2593,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 1
                 },
                 {
@@ -2627,8 +2627,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 5
                 },
                 {
@@ -2653,8 +2653,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 8
                 },
                 {
@@ -2687,8 +2687,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 12
                 },
                 {
@@ -2713,8 +2713,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 15
                 },
                 {
@@ -2747,8 +2747,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 19
                 },
                 {
@@ -2773,8 +2773,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 22
                 },
                 {
@@ -2807,8 +2807,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 26
                 },
                 {
@@ -2833,8 +2833,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 29
                 }
             ]
@@ -2850,8 +2850,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 1
                 },
                 {
@@ -2884,8 +2884,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 5
                 },
                 {
@@ -2910,8 +2910,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 8
                 },
                 {
@@ -2944,8 +2944,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 12
                 },
                 {
@@ -2970,8 +2970,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 15
                 },
                 {
@@ -3004,8 +3004,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 19
                 },
                 {
@@ -3030,8 +3030,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 22
                 },
                 {
@@ -3064,8 +3064,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 26
                 },
                 {
@@ -3090,8 +3090,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 29
                 }
             ]
@@ -3107,8 +3107,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 1
                 },
                 {
@@ -3141,8 +3141,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 5
                 },
                 {
@@ -3167,8 +3167,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 8
                 },
                 {
@@ -3201,8 +3201,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 12
                 },
                 {
@@ -3227,8 +3227,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 15
                 }
             ]
@@ -3244,8 +3244,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 1
                 },
                 {
@@ -3278,8 +3278,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 5
                 },
                 {
@@ -3304,8 +3304,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 8
                 },
                 {
@@ -3338,8 +3338,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 12
                 },
                 {
@@ -3364,8 +3364,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 15
                 }
             ]
@@ -3381,8 +3381,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 1
                 },
                 {
@@ -3415,8 +3415,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 5
                 },
                 {
@@ -3441,8 +3441,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 8
                 },
                 {
@@ -3475,8 +3475,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 12
                 },
                 {
@@ -3501,8 +3501,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 15
                 },
                 {
@@ -3535,8 +3535,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 19
                 },
                 {
@@ -3561,8 +3561,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 22
                 },
                 {
@@ -3595,8 +3595,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 26
                 },
                 {
@@ -3621,8 +3621,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 29
                 }
             ]
@@ -3638,8 +3638,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 1
                 },
                 {
@@ -3672,8 +3672,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 5
                 },
                 {
@@ -3698,8 +3698,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 8
                 },
                 {
@@ -3732,8 +3732,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 12
                 },
                 {
@@ -3758,8 +3758,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 15
                 }
             ]
@@ -3775,8 +3775,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 1
                 },
                 {
@@ -3809,8 +3809,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 5
                 },
                 {
@@ -3835,8 +3835,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 8
                 },
                 {
@@ -3869,8 +3869,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 12
                 },
                 {
@@ -3895,8 +3895,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 15
                 }
             ]
@@ -3912,8 +3912,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 1
                 },
                 {
@@ -3946,8 +3946,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 5
                 },
                 {
@@ -3972,8 +3972,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 8
                 },
                 {
@@ -4006,8 +4006,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 12
                 },
                 {
@@ -4032,8 +4032,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 15
                 },
                 {
@@ -4066,8 +4066,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 19
                 },
                 {
@@ -4092,8 +4092,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 22
                 },
                 {
@@ -4126,8 +4126,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 26
                 },
                 {
@@ -4152,8 +4152,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 29
                 }
             ]
@@ -4195,8 +4195,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 3
                 },
                 {
@@ -4221,8 +4221,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 6
                 }
             ]
@@ -4258,8 +4258,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 3
                 },
                 {
@@ -4284,8 +4284,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 6
                 }
             ]
@@ -4321,8 +4321,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 3
                 },
                 {
@@ -4347,8 +4347,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.033초",
-                    "duration": 0.033,
+                    "display_text": "지연시간 : 0.0365초",
+                    "duration": 0.0365,
                     "order": 6
                 }
             ]
