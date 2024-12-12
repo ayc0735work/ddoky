@@ -1,4 +1,6 @@
 from PySide6.QtCore import QObject, Signal
+import uuid
+from datetime import datetime
 
 class LogicManager(QObject):
     """로직 관리를 담당하는 클래스"""
@@ -109,90 +111,45 @@ class LogicManager(QObject):
             tuple: (성공 여부, 로직 ID 또는 에러 메시지)
         """
         try:
-            print(f"[DEBUG] LogicManager.save_logic 시작 - logic_id: {logic_id}")
-            print(f"[DEBUG] 저장할 로직 데이터: {logic_data}")
+            print(f"[로직 저장 시작]")
+            print(f"로직 정보 - 이름: {logic_data.get('name')}, 중첩여부: {logic_data.get('is_nested')}")
             
-            # 아이템 목록 검사
-            items = logic_data.get('items', [])
-            print(f"[DEBUG] 아이템 목록 개수: {len(items)}")
-            for idx, item in enumerate(items):
-                print(f"[DEBUG] 아이템 {idx + 1} 정보:")
-                print(f"  - type: {item.get('type')}")
-                print(f"  - order: {item.get('order')}")
-                print(f"  - display_text: {item.get('display_text')}")
+            # UUID가 없거나 None인 경우 새로 생성
+            if not logic_id:
+                logic_id = str(uuid.uuid4())
+                print(f"새 UUID 생성: {logic_id}")
             
-            self.validate_logic(logic_data)
-            
+            print("로직 저장 - 이름 중복 검사 중...")
             settings = self.settings_manager._load_settings()
             logics = settings.get('logics', {})
             
             # 이름 중복 검사 (중첩 로직은 제외)
-            logic_name = logic_data.get('name')
             if not logic_data.get('is_nested', False):
+                logic_name = logic_data.get('name')
                 for existing_id, existing_logic in logics.items():
                     if (existing_logic['name'] == logic_name and 
                         existing_id != logic_id and  # 자기 자신은 제외
                         not existing_logic.get('is_nested', False)):  # 중첩 로직은 제외
-                        print(f"[DEBUG] 이름 중복 발견: {logic_name}")
                         return False, "동일한 이름의 로직이 이미 존재합니다."
             
-            # 중첩 로직인 경우 중복 생성 방지 및 원본 ID 유지
-            if logic_data.get('is_nested', False):
-                print(f"[DEBUG] 중첩 로직 처리 시작 - 이름: {logic_name}")
-                # 새 로직 저장
-                if not logic_id:  # 새 로직인 경우
-                    print(f"[DEBUG] 새 로직 저장 - ID: {logic_id}")
-                    logics[logic_id] = logic_data
-                    settings['logics'] = logics
-                    self.settings_manager._save_settings(settings)
-                    return True, logic_id
-                
-                # 기존 로직 업데이트
-                print(f"[DEBUG] 기존 로직 업데이트 - ID: {logic_id}")
-                logics[logic_id] = logic_data
-                settings['logics'] = logics
-                
-                # 저장 직전 데이터 확인
-                print(f"[DEBUG] 저장 직전 로직 데이터:")
-                print(f"  - 아이템 개수: {len(logic_data.get('items', []))}")
-                for idx, item in enumerate(logic_data.get('items', [])):
-                    print(f"  - 아이템 {idx + 1}: type={item.get('type')}, order={item.get('order')}")
-                
-                self.settings_manager._save_settings(settings)
-                return True, logic_id
+            print("로직 정보 구성 중...")
+            # 기본 정보 구성
+            current_time = datetime.now().isoformat()
+            if 'created_at' not in logic_data:
+                logic_data['created_at'] = current_time
+            logic_data['updated_at'] = current_time
             
-            # 새 로직 저장 또는 기존 로직 업데이트
-            print(f"[DEBUG] 일반 로직 저장 처리 시작")
-            if logic_id in logics:  # 기존 로직 업데이트
-                print(f"[DEBUG] 기존 로직 업데이트 - ID: {logic_id}")
-                logics[logic_id] = logic_data
-            else:  # 새 로직 저장
-                print(f"[DEBUG] 새 로직 저장 - ID: {logic_id}")
-                # 이름 중복 한번 더 검사
-                for existing_logic in logics.values():
-                    if (existing_logic['name'] == logic_name and 
-                        not existing_logic.get('is_nested', False)):
-                        print(f"[DEBUG] 새 로직 저장 시 이름 중복 발견: {logic_name}")
-                        return False, "동일한 이름의 로직이 이미 존재합니다."
-                logics[logic_id] = logic_data
-            
+            # 로직 저장
+            logics[logic_id] = logic_data
             settings['logics'] = logics
-            print(f"[DEBUG] settings_manager._save_settings 호출 전")
-            print(f"[DEBUG] 최종 저장 데이터:")
-            print(f"  - 로직 ID: {logic_id}")
-            print(f"  - 아이템 개수: {len(logic_data.get('items', []))}")
-            for idx, item in enumerate(logic_data.get('items', [])):
-                print(f"  - 아이템 {idx + 1}: type={item.get('type')}, order={item.get('order')}")
             
+            print(f"구성된 로직 정보: {logic_data}")
+            print(f"LogicManager.save_logic 호출 - ID: {logic_id}")
+            
+            # 설정 저장
             self.settings_manager._save_settings(settings)
-            print(f"[DEBUG] settings_manager._save_settings 호출 후")
             
-            # 현재 로직 업데이트
-            if self.current_logic_name == logic_name:
-                self.current_logic = logic_data
-                self.logic_changed.emit(self.current_logic)
-            
-            print(f"[DEBUG] LogicManager.save_logic 완료 - ID: {logic_id}")
+            print(f"LogicManager.save_logic 결과: True, {logic_id}")
             return True, logic_id
             
         except ValueError as e:

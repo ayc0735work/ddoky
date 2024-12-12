@@ -577,14 +577,40 @@ class LogicListWidget(QFrame):
             new_logic = self.copied_logic.copy()
             new_logic['name'] = f"{new_logic['name']} (복사본)"
             
-            # 최신 설정에 저장
-            self.settings_manager.save_logic(new_id, new_logic)
+            # 현재 선택된 아이템의 위치 확인
+            current_item = self.SavedLogicList__QListWidget.currentItem()
+            if current_item:
+                insert_position = self.SavedLogicList__QListWidget.row(current_item) + 1
+            else:
+                insert_position = self.SavedLogicList__QListWidget.count()
             
-            # 리스트에 추가
-            self._add_logic_to_list(new_logic, new_id)
+            # 최신 설정 로드
+            settings = self.settings_manager._load_settings()
+            logics = settings.get('logics', {})
+            
+            # 선택된 아이템 이후의 모든 아이템의 order 값을 1씩 증가
+            for i in range(insert_position, self.SavedLogicList__QListWidget.count()):
+                item = self.SavedLogicList__QListWidget.item(i)
+                if item:
+                    logic_id = item.data(Qt.UserRole)
+                    if logic_id in logics:
+                        logics[logic_id]['order'] = i + 2
+            
+            # 새 로직의 order 값 설정
+            new_logic['order'] = insert_position + 1
+            logics[new_id] = new_logic
             
             # 설정 저장
-            self.save_logics_to_settings()
+            settings['logics'] = logics
+            self.settings_manager._save_settings(settings)
+            
+            # 리스트의 특정 위치에 추가
+            new_item = QListWidgetItem(self._format_logic_item_text(new_logic))
+            new_item.setData(Qt.UserRole, new_id)  # 로직 ID를 아이템 데이터로 저장
+            self.SavedLogicList__QListWidget.insertItem(insert_position, new_item)
+            
+            # 새로 추가된 아이템 선택
+            self.SavedLogicList__QListWidget.setCurrentItem(new_item)
             
             self.log_message.emit(f"로직 '{new_logic['name']}'이(가) 생성되었습니다.")
             
@@ -701,3 +727,43 @@ class LogicListWidget(QFrame):
                         pass
             
             self.add_logic(new_logic)
+
+    def save_logic(self):
+        """현재 편집 중인 로직 저장"""
+        try:
+            print("[로직 저장 시작]")
+            # 로직 정보 구성
+            logic_data = {
+                'name': self.LogicName__QLineEdit.text(),
+                'order': self.order,
+                'repeat_count': self.RepeatCount__QSpinBox.value(),
+                'items': self.get_items(),
+                'is_nested': self.is_nested,
+                'trigger_key': self.trigger_key
+            }
+            
+            # 로직 저장 및 결과 확인
+            success, result = self.logic_manager.save_logic(self.logic_id, logic_data)
+            
+            if success:
+                # 성공한 경우 result는 로직 ID
+                self.logic_id = result  # 새로 생성된 ID 저장
+                print(f"로직 '{logic_data['name']}'이(가) 저장되었습니다.")
+                self.log_message.emit(f"로직 '{logic_data['name']}'이(가) 저장되었습니다.")
+                self.logic_saved.emit(self.logic_id, logic_data)
+            else:
+                # 실패한 경우 result는 에러 메시지
+                print(f"로직 저장 실패: {result}")
+                QMessageBox.critical(
+                    self,
+                    "저장 실패",
+                    f"로직을 저장하는 중 오류가 발생했습니다:\n{result}"
+                )
+                
+        except Exception as e:
+            print(f"로직 저장 중 오류 발생: {str(e)}")
+            QMessageBox.critical(
+                self,
+                "저장 실패",
+                f"로직을 저장하는 중 오류가 발생했습니다:\n{str(e)}"
+            )

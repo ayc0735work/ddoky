@@ -296,6 +296,94 @@ class LogicOperationWidget(QFrame):
         # 복사된 아이템들을 클립보드에 저장
         self._clipboard = copied_items
 
+    def paste_items(self):
+        """클립보드의 아이템들을 붙여넣기"""
+        if not self._clipboard:
+            return
+            
+        try:
+            # 현재 선택된 아이템의 위치 확인
+            current_item = self.LogicItemList__QListWidget.currentItem()
+            if current_item:
+                insert_position = self.LogicItemList__QListWidget.row(current_item) + 1
+            else:
+                insert_position = self.LogicItemList__QListWidget.count()
+            
+            # 클립보드의 아이템들을 복사
+            pasted_items = []
+            for item in self._clipboard:
+                # 아이템의 딥카피 생성
+                copied_item = copy.deepcopy(item)
+                
+                # type이 'logic'인 경우 이름으로 찾아서 UUID 설정
+                if copied_item.get('type') == 'logic':
+                    logic_name = copied_item.get('logic_name')
+                    
+                    # 최신 로직 정보 가져오기
+                    logics = self.settings_manager.load_logics(force=True)
+                    
+                    # 이름으로 찾기
+                    found = False
+                    for existing_id, existing_logic in logics.items():
+                        if existing_logic.get('name') == logic_name:
+                            logic_id = existing_id
+                            found = True
+                            break
+                    
+                    # 로직을 찾지 못한 경우
+                    if not found:
+                        QMessageBox.critical(
+                            self,
+                            "오류",
+                            f"로직 '{logic_name}'을(를) 찾을 수 없습니다.\n"
+                            "해당 로직이 삭제되었거나 이름이 변경되었을 수 있습니다."
+                        )
+                        return
+                    
+                    # 찾은 로직 정보로 업데이트
+                    copied_item['logic_id'] = logic_id
+                    copied_item['logic_name'] = logic_name
+                    copied_item['display_text'] = logic_name
+                    if 'logic_data' in copied_item:
+                        copied_item['logic_data']['logic_id'] = logic_id
+                        copied_item['logic_data']['logic_name'] = logic_name
+                
+                pasted_items.append(copied_item)
+            
+            # 선택된 위치 이후의 아이템들의 order 값을 조정
+            for i in range(insert_position, self.LogicItemList__QListWidget.count()):
+                item = self.LogicItemList__QListWidget.item(i)
+                if item:
+                    item_data = item.data(Qt.UserRole)
+                    if item_data:
+                        item_data['order'] = i + len(pasted_items) + 1
+                        item.setData(Qt.UserRole, item_data)
+                        item.setText(self._format_item_text(item_data))
+            
+            # 붙여넣을 아이템들의 order 값 설정 및 추가
+            last_selected_item = None
+            for i, item_data in enumerate(pasted_items):
+                item_data['order'] = insert_position + i + 1
+                new_item = QListWidgetItem(self._format_item_text(item_data))
+                new_item.setData(Qt.UserRole, item_data)
+                self.LogicItemList__QListWidget.insertItem(insert_position + i, new_item)
+                last_selected_item = new_item
+            
+            # 마지막으로 붙여넣은 아이템 선택
+            if last_selected_item:
+                self.LogicItemList__QListWidget.setCurrentItem(last_selected_item)
+                last_selected_item.setSelected(True)
+            
+            # 변경 사항 저장
+            self.save_items()
+            
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "오류",
+                f"아이템 붙여넣기 중 오류가 발생했습니다: {str(e)}"
+            )
+
     def _add_logic_item(self, item_info):
         """로직 아이템을 리스트에 추가"""
         if not isinstance(item_info, dict):
