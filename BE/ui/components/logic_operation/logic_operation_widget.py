@@ -23,6 +23,7 @@ class LogicOperationWidget(QFrame):
         super().__init__(parent)
         self.selected_process = None
         self.logic_executor = None  # LogicExecutor 인스턴스를 저장할 속성 추가
+        self.force_stop_key = {'virtual_key': 27, 'key_name': 'ESC'}  # 기본값으로 ESC 키 설정
         self._init_ui()
         self._connect_signals()
         self.load_delay_settings()  # 초기화 시 설정 로드
@@ -187,10 +188,52 @@ class LogicOperationWidget(QFrame):
         
         layout.addLayout(delay_settings_layout)
         
+        # 기본 조작 설정 영역 추가
+        operation_settings_layout = QHBoxLayout()
+        operation_settings_layout.setContentsMargins(0, 10, 0, 0)  # 상단에 여백 추가
+        operation_settings_layout.setSpacing(10)
+        
+        # 로직 강제 중지 키 설정
+        force_stop_key_layout = QHBoxLayout()
+        force_stop_key_layout.setSpacing(5)
+        
+        force_stop_key_label = QLabel("로직 강제 중지 키")
+        force_stop_key_label.setFixedWidth(100)
+        force_stop_key_layout.addWidget(force_stop_key_label)
+        
+        self.force_stop_key_input = QLineEdit()
+        self.force_stop_key_input.setFixedWidth(120)
+        self.force_stop_key_input.setEnabled(False)
+        self.force_stop_key_input.setText('ESC')  # 기본값으로 ESC 키 표시
+        force_stop_key_layout.addWidget(self.force_stop_key_input)
+        
+        # 수정하기 버튼
+        self.edit_force_stop_key_btn = QPushButton("수정하기")
+        self.edit_force_stop_key_btn.setStyleSheet(BUTTON_STYLE)
+        self.edit_force_stop_key_btn.setFixedWidth(80)
+        self.edit_force_stop_key_btn.clicked.connect(self._on_edit_force_stop_key)
+        force_stop_key_layout.addWidget(self.edit_force_stop_key_btn)
+        
+        # 초기화 버튼
+        self.reset_force_stop_key_btn = QPushButton("초기화")
+        self.reset_force_stop_key_btn.setStyleSheet(BUTTON_STYLE)
+        self.reset_force_stop_key_btn.setFixedWidth(80)
+        self.reset_force_stop_key_btn.clicked.connect(self._on_reset_force_stop_key)
+        force_stop_key_layout.addWidget(self.reset_force_stop_key_btn)
+        
+        operation_settings_layout.addLayout(force_stop_key_layout)
+        operation_settings_layout.addStretch()  # 남은 공간을 채움
+        
+        layout.addLayout(operation_settings_layout)
+        
         self.setLayout(layout)
         
     def _connect_signals(self):
-        pass
+        """시그널 연결"""
+        # 기존 시그널 연결
+        # 강제 중지 키 관련 시그널 연결
+        self.edit_force_stop_key_btn.clicked.connect(self._on_edit_force_stop_key)
+        self.reset_force_stop_key_btn.clicked.connect(self._on_reset_force_stop_key)
         
     def _get_process_info_text(self, process):
         """프로세스 정보를 텍스트로 반환"""
@@ -290,7 +333,7 @@ class LogicOperationWidget(QFrame):
                 if 'logic_data' in copied_item:
                     copied_item['logic_data']['logic_id'] = logic_id
                     copied_item['logic_data']['logic_name'] = logic_name
-            
+                
             copied_items.append(copied_item)
         
         # 복사된 아이템들을 클립보드에 저장
@@ -535,3 +578,49 @@ class LogicOperationWidget(QFrame):
             }
         
         self.log_message.emit("지연 시간이 기본값으로 초기화되었습니다.")
+
+    def _on_edit_force_stop_key(self):
+        """강제 중지 키 수정 버튼 클릭 시 호출"""
+        try:
+            # KeyInputDialog를 사용하여 키 입력 받기
+            from ..logic_maker.key_input_dialog import KeyInputDialog
+            dialog = KeyInputDialog(self)
+            if dialog.exec_():
+                key_info = dialog.get_key_info()
+                if key_info:
+                    self.force_stop_key = {
+                        'virtual_key': key_info['virtual_key'],
+                        'key_name': key_info['key_code']
+                    }
+                    self.force_stop_key_input.setText(key_info['key_code'])
+                    
+                    # LogicExecutor에 새로운 강제 중지 키 정보 전달
+                    if self.logic_executor:
+                        self.logic_executor.set_force_stop_key(key_info['virtual_key'])
+                        
+                    # 설정 파일에 저장
+                    settings = Settings()
+                    settings.set('force_stop_key', key_info['key_code'])
+                    
+                    self.log_message.emit(f"로직 강제 중지 키가 '{key_info['key_code']}'(으)로 변경되었습니다.")
+        except Exception as e:
+            self.log_message.emit(f"[오류] 강제 중지 키 수정 중 오류 발생: {str(e)}")
+
+    def _on_reset_force_stop_key(self):
+        """강제 중지 키 초기화 버튼 클릭 시 호출"""
+        try:
+            # ESC 키로 초기화
+            self.force_stop_key = {'virtual_key': 27, 'key_name': 'ESC'}
+            self.force_stop_key_input.setText('ESC')
+            
+            # LogicExecutor에 초기화된 강제 중지 키 정보 전달
+            if self.logic_executor:
+                self.logic_executor.set_force_stop_key(27)
+                
+            # 설정 파일에 저장
+            settings = Settings()
+            settings.set('force_stop_key', 'ESC')
+                
+            self.log_message.emit("로직 강제 중지 키가 'ESC'로 초기화되었습니다.")
+        except Exception as e:
+            self.log_message.emit(f"[오류] 강제 중지 키 초기화 중 오류 발생: {str(e)}")

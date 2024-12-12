@@ -10,9 +10,9 @@
         }
     },
     "key_delays": {
-        "press": 0.02,
+        "press": 0.019,
         "release": 0.0,
-        "mouse_input": 0.02,
+        "mouse_input": 0.025,
         "default": 0.02
     },
     "gauge_monitor": {
@@ -4661,5 +4661,6 @@
             ]
         }
     },
-    "recovery_detection_enabled": false
+    "recovery_detection_enabled": false,
+    "force_stop_key": "ESC"
 }

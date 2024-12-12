@@ -88,6 +88,9 @@ class LogicExecutor(QObject):
         
         # 활성 타이머 추적
         self._active_timers = []
+        
+        # 강제 중지 키 설정
+        self.force_stop_key = 27  # 기본값으로 ESC 키 설정
 
     def _update_state(self, **kwargs):
         """상태 업데이트 및 알림"""
@@ -151,6 +154,15 @@ class LogicExecutor(QObject):
             self._log_with_time("[오류] 안전한 정리 작업 중 오류 발생: {}".format(str(e)))
             self.execution_error.emit("정리 작업 중 오류 발생: {}".format(str(e)))
     
+    def set_force_stop_key(self, virtual_key):
+        """강제 중지 키 설정
+        
+        Args:
+            virtual_key (int): 설정할 가상 키 코드
+        """
+        self.force_stop_key = virtual_key
+        self._log_with_time(f"[설정] 강제 중지 키가 변경되었습니다 (가상 키 코드: {virtual_key})")
+
     def _on_key_released(self, key_info):
         """키를 뗄 때 호출
         
@@ -159,9 +171,9 @@ class LogicExecutor(QObject):
         """
         self._log_with_time("[키 감지 로그] 키 입력 감지: {}".format(key_info))
         
-        # ESC 키 감지 (virtual_key = 27)
-        if key_info.get('virtual_key') == 27:
-            self._log_with_time("[키 감지 로그] ESC 키 감지 - 로직 강제 중지 실행")
+        # 강제 중지 키 감지
+        if key_info.get('virtual_key') == self.force_stop_key:
+            self._log_with_time("[키 감지 로그] 강제 중지 키 감지 - 로직 강제 중지 실행")
             self.force_stop()
             return
         
