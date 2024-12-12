@@ -495,13 +495,13 @@ class LogicExecutor(QObject):
             # 먼저 stopping 상태로 설정
             self._update_state(is_stopping=True)
             
-            # 모든 로직 중지 (이 수 내에��� reset_execution_state()도 호출됨)
+            # 모든 로직 중지 (reset_execution_state()도 호출됨)
             self.stop_all_logic()
             
             # 키 입력 모니터링 다시 시작
             if self.is_logic_enabled:
                 self.start_monitoring()
-                self._log_with_time("[로그] 키 입력 니터링 다시 작")
+                self._log_with_time("[로그] 키 입력 니터링 다시 시작")
             
             self._log_with_time("[로그] 강제 중지 완료")
             
@@ -561,7 +561,9 @@ class LogicExecutor(QObject):
             "상태 업데이트 작",
             "상태 락 획득",
             "새로운 상태",
-            "상태 변경 알림 완료"
+            "상태 변경 알림 완료",
+            "상태 업데이트 시작",
+            "[상태 로그]"
         ]
 
         # 무시할 패턴이 포함된 메시지는 로깅하지 않음
@@ -577,8 +579,9 @@ class LogicExecutor(QObject):
             "강제 중지",
             "타이머 정리",
             "키 상태 정리",
-            "스텝",  # 스텝 실행 로그 추가
-            "지연시간"  # 지연시간 로그 추가
+            "스텝",
+            "지연시간",
+            "키 입력"
         ]
 
         # 시간 정보 포함 패턴이 있는 경우 시간 정보 추가
@@ -591,19 +594,19 @@ class LogicExecutor(QObject):
         # 메시지 스타일 적용
         if "[오류]" in message:
             # 오류 메시지 - 어두운 빨간색
-            formatted_message = f"<span style='color: #8B0000; font-size: 14px;'>{time_info}</span> <span style='color: #8B0000; font-size: 12px;'>{message}</span>"
+            formatted_message = f"<span style='color: #FFA500; font-size: 14px;'>{time_info}</span> <span style='color: #FFA500; font-size: 12px;'>{message}</span>"
         
         elif "ESC 키 감지" in message or "강제 중지" in message:
-            formatted_message = f"<span style='color: #FFA500; font-size: 20px; font-weight: bold;'>{time_info}</span> <span style='color: #FFA500; font-size: 18px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #FF0000; font-size: 24px; font-weight: bold;'>{time_info}</span> <span style='color: #FF0000; font-size: 18px; font-weight: bold;'>{message}</span>"
         
-        elif "중로직" in message:
-            formatted_message = f"<span style='color: #008000; font-size: 24px; font-weight: bold;'>{time_info}</span> <span style='color: #008000; font-size: 18px; font-weight: bold;'>{message}</span>"
+        elif "중첩로직" in message:
+            formatted_message = f"<span style='color: #008000; font-size: 28px; font-weight: bold;'>{time_info}</span> <span style='color: #008000; font-size: 18px; font-weight: bold;'>{message}</span>"
         
         elif "로직 실행" in message and ("실행 시작" in message or "반복 완료" in message):
-            formatted_message = f"<span style='color: #0000FF; font-size: 30px; font-weight: bold;'>{time_info}</span> <span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #0000FF; font-size: 34px; font-weight: bold;'>{time_info}</span> <span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{message}</span>"
         else:
             # 기본 메시지 - 기본 스타일
-            formatted_message = f"<span style='color: #666666;'>{time_info}</span> {message}"
+            formatted_message = f"<span style='color: #000000; font-size: 10px;'>{time_info}</span> {message}"
             
         self.log_message.emit(formatted_message)
 

@@ -631,7 +631,7 @@ class LogicDetailWidget(QFrame):
         self.original_name = None         # 원래 이름 초기화
         self.current_logic_id = None     # UUID도 초기화
         self.RepeatCountInput__QSpinBox.setValue(1)    # 반복 횟수를 기본값(1)으로 초기화
-        self.current_logic = None         # 현재 ��직 정보 초기화
+        self.current_logic = None         # 현재 로직 정보 초기화
         self.copied_items = []            # 복사된 아이템 초기화
         self.is_nested_checkbox.setChecked(True)      # 중첩로직용 체크박스를 선택된 상태로 초기화
 
@@ -717,7 +717,7 @@ class LogicDetailWidget(QFrame):
 
             # 이름 중복 검사 (수정 모드가 아닐 때만)
             if not self.edit_mode:
-                self.log_message.emit("�� 로직 저장 - 이름 중복 검사 중...")
+                self.log_message.emit("새 로직 저장 - 이름 중복 검사 중...")
                 print(f"[DEBUG] 새 로직 저장 - 이름 중복 검사")
                 logics = self.settings_manager.load_logics()
                 for logic in logics.values():
@@ -840,7 +840,7 @@ class LogicDetailWidget(QFrame):
                             item['display_text'] = display_text
                         self._add_logic_item(item)
             
-            self.log_message.emit(f"로직 '{logic_info.get('name')}'이(가) ��드되었습니다.")
+            self.log_message.emit(f"로직 '{logic_info.get('name')}'이(가) 로드되었습니다.")
 
         except Exception as e:
             self.log_message.emit(f"로직 로드 중 오류 발생: {str(e)}")
