@@ -11,7 +11,7 @@
     },
     "key_delays": {
         "press": 0.0205,
-        "release": 0.0205,
+        "release": 0.0005,
         "mouse_input": 0.0205,
         "default": 0.0205
     },
@@ -58,17 +58,17 @@
     },
     "logics": {
         "0dfa1418-cab1-4439-ae8a-b0c971471c99": {
-            "order": 0,
-            "name": "체력 회복 - 8회",
+            "order": 1,
+            "name": "체력 회복 - 9회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-12T08:41:48.026957",
+            "updated_at": "2024-12-12T14:50:08.476152",
             "trigger_key": {
                 "key_code": "숫자패드 7",
                 "modifiers": 0,
                 "scan_code": 71,
                 "virtual_key": 103
             },
-            "repeat_count": 8,
+            "repeat_count": 9,
             "is_nested": false,
             "items": [
                 {
@@ -92,13 +92,7 @@
                     "modifiers": 0
                 },
                 {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0041초",
-                    "duration": 0.0041,
-                    "order": 3
-                },
-                {
-                    "order": 4,
+                    "order": 3,
                     "display_text": "키 입력: Home --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -108,7 +102,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 5,
+                    "order": 4,
                     "display_text": "키 입력: Home --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -118,13 +112,7 @@
                     "modifiers": 0
                 },
                 {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0041초",
-                    "duration": 0.0041,
-                    "order": 6
-                },
-                {
-                    "order": 7,
+                    "order": 5,
                     "display_text": "키 입력: 엔터 --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -134,7 +122,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 8,
+                    "order": 6,
                     "display_text": "키 입력: 엔터 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -142,165 +130,9 @@
                     "scan_code": 28,
                     "virtual_key": 13,
                     "modifiers": 0
-                }
-            ]
-        },
-        "28cfef76-fb38-426a-a935-b288fd32d6ed": {
-            "order": 3,
-            "name": "체력 회복 - 5회",
-            "created_at": "2024-12-08T13:40:39.094231",
-            "updated_at": "2024-12-11T17:36:26.164945",
-            "trigger_key": null,
-            "repeat_count": 4,
-            "is_nested": true,
-            "items": [
-                {
-                    "order": 1,
-                    "display_text": "키 입력: 숫자패드 7 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 7",
-                    "scan_code": 71,
-                    "virtual_key": 103,
-                    "modifiers": 0
-                },
-                {
-                    "order": 2,
-                    "display_text": "키 입력: 숫자패드 7 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 7",
-                    "scan_code": 71,
-                    "virtual_key": 103,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0041초",
-                    "duration": 0.0041,
-                    "order": 3
-                },
-                {
-                    "order": 4,
-                    "display_text": "키 입력: Home --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "Home",
-                    "scan_code": 71,
-                    "virtual_key": 36,
-                    "modifiers": 0
-                },
-                {
-                    "order": 5,
-                    "display_text": "키 입력: Home --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "Home",
-                    "scan_code": 71,
-                    "virtual_key": 36,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0041초",
-                    "duration": 0.0041,
-                    "order": 6
                 },
                 {
                     "order": 7,
-                    "display_text": "키 입력: 엔터 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "order": 8,
-                    "display_text": "키 입력: 엔터 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                }
-            ]
-        },
-        "7b2f3dc5-4713-4964-a691-402d78c069dd": {
-            "order": 4,
-            "name": "체력 회복 - 3회",
-            "created_at": "2024-12-08T14:28:34.950624",
-            "updated_at": "2024-12-11T23:01:17.231554",
-            "trigger_key": null,
-            "repeat_count": 4,
-            "is_nested": true,
-            "items": [
-                {
-                    "order": 1,
-                    "display_text": "키 입력: 숫자패드 7 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 7",
-                    "scan_code": 71,
-                    "virtual_key": 103,
-                    "modifiers": 0
-                },
-                {
-                    "order": 2,
-                    "display_text": "키 입력: 숫자패드 7 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 7",
-                    "scan_code": 71,
-                    "virtual_key": 103,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0041초",
-                    "duration": 0.0041,
-                    "order": 3
-                },
-                {
-                    "order": 4,
-                    "display_text": "키 입력: Home --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "Home",
-                    "scan_code": 71,
-                    "virtual_key": 36,
-                    "modifiers": 0
-                },
-                {
-                    "order": 5,
-                    "display_text": "키 입력: Home --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "Home",
-                    "scan_code": 71,
-                    "virtual_key": 36,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0041초",
-                    "duration": 0.0041,
-                    "order": 6
-                },
-                {
-                    "order": 7,
-                    "display_text": "키 입력: 엔터 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "order": 8,
                     "display_text": "키 입력: 엔터 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -312,7 +144,7 @@
             ]
         },
         "ed0d7b48-c7ac-4397-8ce5-360143efa401": {
-            "order": 5,
+            "order": 3,
             "name": "체력 회복 - 1회",
             "created_at": "2024-11-26T06:51:44.957381",
             "updated_at": "2024-12-12T09:02:36.422944",
@@ -388,7 +220,7 @@
             ]
         },
         "b8796333-e8d6-4ae2-9fec-801a713517d8": {
-            "order": 6,
+            "order": 4,
             "name": "보호 무장 힘",
             "created_at": "2024-11-26T10:58:29.227835",
             "updated_at": "2024-12-12T08:41:26.493178",
@@ -704,7 +536,7 @@
             ]
         },
         "9ed591e4-b227-448b-9d0f-b90c76d1f662": {
-            "order": 7,
+            "order": 5,
             "name": "모두 줍기",
             "created_at": "2024-11-26T10:58:29.227835",
             "updated_at": "2024-12-11T21:30:39.069555",
@@ -761,10 +593,10 @@
             ]
         },
         "d84e2e7b-f0ab-4213-9c39-07b12b94b7f7": {
-            "order": 8,
+            "order": 6,
             "name": "공력증강 - 연속1회 - 사냥용",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-11T21:42:01.759101",
+            "updated_at": "2024-12-12T14:33:36.724105",
             "trigger_key": {
                 "key_code": "숫자패드 6",
                 "modifiers": 0,
@@ -797,9 +629,9 @@
                 {
                     "order": 3,
                     "type": "logic",
-                    "display_text": "체력 회복 - 8회",
+                    "display_text": "체력 회복 - 9회",
                     "logic_id": "0dfa1418-cab1-4439-ae8a-b0c971471c99",
-                    "logic_name": "체력 회복 - 8회",
+                    "logic_name": "체력 회복 - 9회",
                     "repeat_count": 1
                 },
                 {
@@ -809,11 +641,17 @@
                     "logic_id": "9614e85c-3ceb-423b-97ea-e17bfc0101fc",
                     "logic_name": "동동주 마시기 - 1회",
                     "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0200초",
+                    "duration": 0.02,
+                    "order": 5
                 }
             ]
         },
         "53ff5f5a-747a-4ebf-9f58-8adb8026eb9f": {
-            "order": 9,
+            "order": 7,
             "name": "공력증강 - 연속5회",
             "created_at": "2024-12-08T20:41:36.805524",
             "updated_at": "2024-12-11T20:04:02.819832",
@@ -844,9 +682,9 @@
                 {
                     "order": 3,
                     "type": "logic",
-                    "display_text": "체력 회복 - 8회",
+                    "display_text": "체력 회복 - 9회",
                     "logic_id": "0dfa1418-cab1-4439-ae8a-b0c971471c99",
-                    "logic_name": "체력 회복 - 8회",
+                    "logic_name": "체력 회복 - 9회",
                     "repeat_count": 1
                 },
                 {
@@ -856,70 +694,11 @@
                     "logic_id": "9614e85c-3ceb-423b-97ea-e17bfc0101fc",
                     "logic_name": "동동주 마시기 - 1회",
                     "repeat_count": 1
-                }
-            ]
-        },
-        "ba00b4b7-4268-4138-a424-d1e9353d7743": {
-            "order": 10,
-            "name": "공력증강 - 5회",
-            "created_at": "2024-11-30T16:57:51.034740",
-            "updated_at": "2024-12-11T20:22:45.622335",
-            "trigger_key": {
-                "display_text": "",
-                "key_code": "",
-                "modifiers": 0,
-                "scan_code": 0,
-                "virtual_key": 0
-            },
-            "repeat_count": 5,
-            "is_nested": true,
-            "items": [
-                {
-                    "order": 1,
-                    "display_text": "키 입력: 숫자패드 6 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 6",
-                    "scan_code": 77,
-                    "virtual_key": 102,
-                    "modifiers": 0
-                },
-                {
-                    "order": 2,
-                    "display_text": "키 입력: 숫자패드 6 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 6",
-                    "scan_code": 77,
-                    "virtual_key": 102,
-                    "modifiers": 0
-                },
-                {
-                    "order": 3,
-                    "type": "logic",
-                    "display_text": "체력 회복 - 8회",
-                    "logic_id": "0dfa1418-cab1-4439-ae8a-b0c971471c99",
-                    "logic_name": "체력 회복 - 8회",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 4,
-                    "type": "logic",
-                    "display_text": "동동주 마시기 - 1회",
-                    "logic_id": "9614e85c-3ceb-423b-97ea-e17bfc0101fc",
-                    "logic_name": "동동주 마시기 - 1회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.005초",
-                    "duration": 0.005,
-                    "order": 5
                 }
             ]
         },
         "9614e85c-3ceb-423b-97ea-e17bfc0101fc": {
-            "order": 11,
+            "order": 9,
             "name": "동동주 마시기 - 1회",
             "created_at": "2024-11-30T07:08:49.271692",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -982,7 +761,7 @@
             ]
         },
         "970a1723-88f9-4a50-8bb4-4f8c8f8199fe": {
-            "order": 12,
+            "order": 10,
             "name": "첨 중독, 저주, 마비 - 1회",
             "created_at": "2024-11-30T10:25:06.438732",
             "updated_at": "2024-12-11T23:06:19.092408",
@@ -1309,17 +1088,17 @@
             ]
         },
         "a97732be-77f0-474c-96f0-7b4f825f9036": {
-            "order": 13,
+            "order": 11,
             "name": "중독, 마비 첨 사냥 - 무한반복",
             "created_at": "2024-12-08T21:25:24.196785",
-            "updated_at": "2024-12-11T20:13:11.284049",
+            "updated_at": "2024-12-12T14:37:00.626023",
             "trigger_key": {
                 "key_code": "숫자패드 *",
                 "modifiers": 0,
                 "scan_code": 55,
                 "virtual_key": 106
             },
-            "repeat_count": 1,
+            "repeat_count": 9991,
             "is_nested": false,
             "items": [
                 {
@@ -1381,17 +1160,17 @@
             ]
         },
         "22b1ce84-7d6a-4d56-ba3e-f73eb12051bf": {
-            "order": 14,
+            "order": 12,
             "name": "중독, 마비 첨 사냥 - 무한반복 - 복제",
             "created_at": "2024-12-12T08:34:33.775036",
-            "updated_at": "2024-12-12T08:47:33.549800",
+            "updated_at": "2024-12-12T14:36:58.380993",
             "trigger_key": {
                 "key_code": "키 코드 192",
                 "modifiers": 0,
                 "scan_code": 41,
                 "virtual_key": 192
             },
-            "repeat_count": 1,
+            "repeat_count": 9999,
             "is_nested": false,
             "items": [
                 {
@@ -1453,7 +1232,7 @@
             ]
         },
         "0f7febe4-03e2-4e00-bc00-4517a9a33556": {
-            "order": 15,
+            "order": 13,
             "name": "첨, 중독 - 9999회",
             "created_at": "2024-12-02T02:03:00.957188",
             "updated_at": "2024-12-11T23:24:57.650846",
@@ -1497,7 +1276,7 @@
             ]
         },
         "791b01da-34eb-4faf-ac3a-239b37f5749a": {
-            "order": 16,
+            "order": 14,
             "name": "중독, 공격 - 8회",
             "created_at": "2024-12-01T02:24:21.834711",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -1643,7 +1422,7 @@
             ]
         },
         "73c0ac82-d33b-4dce-a9a1-6af5a54dd99b": {
-            "order": 17,
+            "order": 15,
             "name": "중독, 공격 - 9999회 - 테스트",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -1713,7 +1492,7 @@
             ]
         },
         "7d9f8c08-baf0-4c4a-8460-54b710fd198d": {
-            "order": 18,
+            "order": 16,
             "name": "중독, 공격 - 3회",
             "created_at": "2024-12-09T20:32:32.427082",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -1778,7 +1557,7 @@
             ]
         },
         "04ecde56-4e55-45be-8a9d-92e3464adc2e": {
-            "order": 19,
+            "order": 17,
             "name": "중독만 - 1회",
             "created_at": "2024-12-01T21:24:52.849277",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -1873,7 +1652,7 @@
             ]
         },
         "cd4e43fd-6a40-481a-a665-fcdbf1d09ec6": {
-            "order": 20,
+            "order": 18,
             "name": "중독만 - 4회 (일반이랑 딱 맞음)",
             "created_at": "2024-12-09T20:31:25.048097",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -1962,7 +1741,7 @@
             ]
         },
         "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf": {
-            "order": 21,
+            "order": 19,
             "name": "중독만 - 5회 (첨이랑 딱 맞음)",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-11T20:12:40.930043",
@@ -2051,7 +1830,7 @@
             ]
         },
         "69b74254-4313-4546-94c9-313b21ce6e3d": {
-            "order": 22,
+            "order": 20,
             "name": "중독만 - 90회 - 하이픈",
             "created_at": "2024-12-04T00:08:13.574278",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -2146,7 +1925,7 @@
             ]
         },
         "ff47c224-b8e1-4a88-bf03-20850f87e232": {
-            "order": 23,
+            "order": 21,
             "name": "중독만 - 55회 - 우컨트롤",
             "created_at": "2024-11-30T14:19:30.464189",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -2241,7 +2020,7 @@
             ]
         },
         "39e67926-aab9-4b61-bd2f-19797480f4bf": {
-            "order": 24,
+            "order": 22,
             "name": "절망만 - 20회",
             "created_at": "2024-12-01T02:22:23.843289",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -2336,7 +2115,7 @@
             ]
         },
         "753fe62f-775d-4518-9a11-5b0810605183": {
-            "order": 25,
+            "order": 23,
             "name": "저주만 - 20회",
             "created_at": "2024-11-30T16:06:26.318706",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -2431,7 +2210,7 @@
             ]
         },
         "59070f24-4d2d-4c54-8100-f104e4645d06": {
-            "order": 26,
+            "order": 24,
             "name": "마비만 - 20회",
             "created_at": "2024-11-30T14:35:32.801674",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -2526,7 +2305,7 @@
             ]
         },
         "27d1f013-d82b-42f2-87cd-785dad90b052": {
-            "order": 27,
+            "order": 25,
             "name": "마비 상하좌우 - 3회",
             "created_at": "2024-12-06T16:29:20.641646",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -2789,7 +2568,7 @@
             ]
         },
         "85cf8740-010e-4ad5-a03f-2d612ab6fda5": {
-            "order": 28,
+            "order": 26,
             "name": "마비 상하좌우 - 1회",
             "created_at": "2024-12-08T21:20:41.834544",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -3046,7 +2825,7 @@
             ]
         },
         "478ef83b-3734-43ed-9c9b-4f0d5e5488f4": {
-            "order": 29,
+            "order": 27,
             "name": "마비 상하 - 1회",
             "created_at": "2024-12-09T13:55:26.337819",
             "updated_at": "2024-12-11T20:12:40.903470",
@@ -3183,7 +2962,7 @@
             ]
         },
         "c01c73a1-4971-4952-abdf-a3217b12fdb6": {
-            "order": 30,
+            "order": 28,
             "name": "마비 좌우 - 1회",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-11T20:12:40.912492",
@@ -3320,7 +3099,7 @@
             ]
         },
         "64891b6b-1b46-439e-8ee0-a2c4d722f514": {
-            "order": 31,
+            "order": 29,
             "name": "저주 상하좌우 - 1회",
             "created_at": "2024-12-08T20:06:53.978518",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -3577,7 +3356,7 @@
             ]
         },
         "d112c815-7b6d-4300-8faa-d103dec6b7bd": {
-            "order": 32,
+            "order": 30,
             "name": "저주 상하 - 1회",
             "created_at": "2024-12-09T14:29:26.182552",
             "updated_at": "2024-12-11T20:12:40.886901",
@@ -3714,7 +3493,7 @@
             ]
         },
         "4f0137c2-a6b5-47b2-84af-041bb3230d01": {
-            "order": 33,
+            "order": 31,
             "name": "저주 좌우 - 1회",
             "created_at": "2024-12-09T14:29:33.887956",
             "updated_at": "2024-12-11T20:12:40.895439",
@@ -3851,7 +3630,7 @@
             ]
         },
         "911c9bc1-ef06-48c4-b844-ee503014386d": {
-            "order": 34,
+            "order": 32,
             "name": "중독 상하좌우 - 1회",
             "created_at": "2024-12-08T20:07:54.536620",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -4108,7 +3887,7 @@
             ]
         },
         "e1c7d791-2f2c-48ec-991f-be44ce9c29ab": {
-            "order": 35,
+            "order": 33,
             "name": "마비 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -4177,7 +3956,7 @@
             ]
         },
         "c4de3c75-5bd3-4451-8be7-6795586c24b9": {
-            "order": 36,
+            "order": 34,
             "name": "저주 - 홈 클릭",
             "created_at": "2024-12-08T20:06:10.101017",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -4240,7 +4019,7 @@
             ]
         },
         "dfef51e9-e9c6-4689-a0d7-824d36943241": {
-            "order": 37,
+            "order": 35,
             "name": "중독 - 홈 클릭",
             "created_at": "2024-12-08T20:06:34.044749",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -4303,7 +4082,7 @@
             ]
         },
         "c390e91a-ed44-4416-b3c9-1b5e089b98e9": {
-            "order": 38,
+            "order": 36,
             "name": "중독, 공격 - 1회",
             "created_at": "2024-12-09T20:33:02.065308",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -4368,10 +4147,10 @@
             ]
         },
         "0ceb5d7f-00bb-48b5-95ba-0b204d99da44": {
-            "order": 39,
+            "order": 37,
             "name": "월드 재입장",
             "created_at": "2024-12-11T21:30:39.063045",
-            "updated_at": "2024-12-12T09:41:51.235352",
+            "updated_at": "2024-12-12T14:54:18.359697",
             "trigger_key": {
                 "key_code": "F2",
                 "modifiers": 0,
@@ -4395,8 +4174,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.5초",
-                    "duration": 0.5,
+                    "display_text": "지연시간 : 0.4000초",
+                    "duration": 0.4,
                     "order": 2
                 },
                 {
@@ -4413,8 +4192,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.5초",
-                    "duration": 0.5,
+                    "display_text": "지연시간 : 0.4000초",
+                    "duration": 0.4,
                     "order": 4
                 },
                 {
@@ -4431,11 +4210,11 @@
                 }
             ]
         },
-        "0b82b6a5-4c4a-497b-8f19-842e24d4e24e": {
-            "order": 40,
+        "b09ec1d7-4e80-49c0-a1b5-480a888e5b16": {
+            "order": 39,
             "name": "캐릭터 선택",
             "created_at": "2024-12-12T08:29:17.016286",
-            "updated_at": "2024-12-12T09:41:48.813806",
+            "updated_at": "2024-12-12T14:54:11.517472",
             "trigger_key": {
                 "key_code": "F3",
                 "modifiers": 0,
@@ -4447,51 +4226,107 @@
             "items": [
                 {
                     "order": 1,
-                    "type": "mouse_input",
-                    "display_text": "마우스 입력: 이어하기 버튼 클릭 (1566, 837)",
-                    "name": "이어하기 버튼 클릭",
-                    "action": "클릭",
-                    "button": "왼쪽 버튼",
-                    "coordinates_x": 1566,
-                    "coordinates_y": 837,
-                    "ratios_x": 0.7543352601156069,
-                    "ratios_y": 0.7355008787346221
+                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 아래쪽 ↓",
+                    "scan_code": 80,
+                    "virtual_key": 40,
+                    "modifiers": 0
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 아래쪽 ↓",
+                    "scan_code": 80,
+                    "virtual_key": 40,
+                    "modifiers": 0
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.5초",
-                    "duration": 0.5,
-                    "order": 2
+                    "display_text": "지연시간 : 0.1000초",
+                    "duration": 0.1,
+                    "order": 3
                 },
                 {
-                    "order": 3,
-                    "type": "mouse_input",
-                    "display_text": "마우스 입력: 첫번째 캐릭터 클릭 (926, 342)",
-                    "name": "첫번째 캐릭터 클릭",
-                    "action": "클릭",
-                    "button": "왼쪽 버튼",
-                    "coordinates_x": 926,
-                    "coordinates_y": 342,
-                    "ratios_x": 0.4460500963391137,
-                    "ratios_y": 0.30052724077328646
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.5초",
-                    "duration": 0.5,
-                    "order": 4
+                    "order": 4,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
                 },
                 {
                     "order": 5,
-                    "type": "mouse_input",
-                    "display_text": "마우스 입력: OK버튼 클릭 (1032, 930)",
-                    "name": "OK버튼 클릭",
-                    "action": "클릭",
-                    "button": "왼쪽 버튼",
-                    "coordinates_x": 1032,
-                    "coordinates_y": 930,
-                    "ratios_x": 0.49710982658959535,
-                    "ratios_y": 0.8172231985940246
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.1000초",
+                    "duration": 0.1,
+                    "order": 6
+                },
+                {
+                    "order": 7,
+                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 아래쪽 ↓",
+                    "scan_code": 80,
+                    "virtual_key": 40,
+                    "modifiers": 0
+                },
+                {
+                    "order": 8,
+                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 아래쪽 ↓",
+                    "scan_code": 80,
+                    "virtual_key": 40,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.1000초",
+                    "duration": 0.1,
+                    "order": 9
+                },
+                {
+                    "order": 10,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 11,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.1000초",
+                    "duration": 0.1,
+                    "order": 12
                 }
             ]
         }
