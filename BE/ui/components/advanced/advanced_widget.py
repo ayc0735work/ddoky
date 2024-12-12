@@ -530,7 +530,7 @@ class AdvancedWidget(QWidget):
         """현재 설정을 저장"""
         try:
             # 설정 파일 경로
-            self.settings_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'settings.json')
+            self.settings_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'settings', 'setting files', 'settings.json')
             
             # 현재 settings.json 파일 읽기
             with open(self.settings_path, 'r', encoding='utf-8') as f:
@@ -573,7 +573,7 @@ class AdvancedWidget(QWidget):
         """저장된 설정 불러오기"""
         try:
             # 설정 파일 경로
-            self.settings_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'settings.json')
+            self.settings_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'settings', 'setting files', 'settings.json')
             
             # settings.json 파일 로드
             with open(self.settings_path, 'r', encoding='utf-8') as f:

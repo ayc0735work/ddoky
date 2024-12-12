@@ -10,7 +10,7 @@ class SettingsManager:
     def __init__(self):
         # BE 폴더 경로를 기준으로 설정 파일 경로 지정
         current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        self.settings_file = Path(current_dir) / "settings.json"
+        self.settings_file = Path(current_dir) / "settings" / "setting files" / "settings.json"
         self.settings = self._load_settings()
     
     def _load_settings(self):

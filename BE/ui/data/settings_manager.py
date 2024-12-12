@@ -5,7 +5,7 @@ class SettingsManager:
     def __init__(self):
         # BE 디렉토리 경로 계산
         self.be_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-        self.settings_path = os.path.join(self.be_dir, 'settings.json')
+        self.settings_path = os.path.join(self.be_dir, 'settings', 'setting files', 'settings.json')
         self.advanced_settings_path = os.path.join(self.be_dir, 'advanced_settings.json')
         
         # settings 디렉토리가 없으면 생성

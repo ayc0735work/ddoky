@@ -288,7 +288,7 @@ class CompareAreaDialog(QDialog):
         
         # 설정 파일 경로
         self.base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-        self.settings_path = os.path.join(self.base_path, 'settings.json')
+        self.settings_path = os.path.join(self.base_path, 'settings', 'setting files', 'settings.json')
         self.captures_dir = os.path.join(self.base_path, 'captures')
         os.makedirs(self.captures_dir, exist_ok=True)
         

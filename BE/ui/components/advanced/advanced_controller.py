@@ -48,7 +48,7 @@ class AdvancedController(QObject):
         
         # settings.json에서 설정 로드
         base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-        settings_path = os.path.join(base_path, 'settings.json')
+        settings_path = os.path.join(base_path, 'settings', 'setting files', 'settings.json')
         
         try:
             with open(settings_path, 'r', encoding='utf-8') as f:

@@ -11,7 +11,7 @@ class Settings:
         return cls._instance
     
     def _initialize(self):
-        self.settings_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'settings.json')
+        self.settings_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'settings', 'setting files', 'settings.json')
         self._load_settings()
     
     def _load_settings(self):
