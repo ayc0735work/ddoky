@@ -73,18 +73,18 @@ class LogicListController:
         new_logic = copy.deepcopy(logic_data)
         # ID는 원본 그대로 유지 (새로 생성하지 않음)
         
-        # 중첩 로직의 참조 관계도 그대로 유지
+        # 중첩로직의 참조 관계도 그대로 유지
         if 'items' in new_logic:
             for item in new_logic['items']:
                 if item['type'] == 'logic':
-                    # 중첩 로직의 logic_id와 참조 관계 유지
+                    # 중첩로직의 logic_id와 참조 관계 유지
                     continue
                 
         return new_logic
 
     def paste_logic(self, copied_logic):
         """로직 붙여넣기"""
-        # 중첩 로직 참조 검증
+        # 중첩로직 참조 검증
         if 'items' in copied_logic:
             for item in copied_logic['items']:
                 if item['type'] == 'logic':

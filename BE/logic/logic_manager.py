@@ -123,13 +123,13 @@ class LogicManager(QObject):
             settings = self.settings_manager._load_settings()
             logics = settings.get('logics', {})
             
-            # 이름 중복 검사 (중첩 로직은 제외)
+            # 이름 중복 검사 (중첩로직은 제외)
             if not logic_data.get('is_nested', False):
                 logic_name = logic_data.get('name')
                 for existing_id, existing_logic in logics.items():
                     if (existing_logic['name'] == logic_name and 
                         existing_id != logic_id and  # 자기 자신은 제외
-                        not existing_logic.get('is_nested', False)):  # 중첩 로직은 제외
+                        not existing_logic.get('is_nested', False)):  # 중첩로직은 제외
                         return False, "동일한 이름의 로직이 이미 존재합니다."
             
             print("로직 정보 구성 중...")

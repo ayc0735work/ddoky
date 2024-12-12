@@ -708,7 +708,7 @@ class LogicListWidget(QFrame):
             if 'items' in copied_logic:
                 for item in copied_logic['items']:
                     if item.get('type') == 'logic':
-                        # 중첩 로직의 UUID는 원본 유지
+                        # 중첩로직의 UUID는 원본 유지
                         item['logic_id'] = item['logic_id']  # 원본 UUID 유지
                         
             self._clipboard = copied_logic
@@ -719,11 +719,11 @@ class LogicListWidget(QFrame):
             new_logic = copy.deepcopy(self._clipboard)
             # 붙여넣기 시에는 새로운 UUID 생성
             new_logic['uuid'] = str(uuid.uuid4())
-            # 중첩 로직의 UUID는 원본 유지
+            # 중첩로직의 UUID는 원본 유지
             if 'items' in new_logic:
                 for item in new_logic['items']:
                     if item.get('type') == 'logic':
-                        # 중첩 로직의 UUID는 그대로 유지
+                        # 중첩로직의 UUID는 그대로 유지
                         pass
             
             self.add_logic(new_logic)

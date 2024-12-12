@@ -80,7 +80,7 @@ class LogicExecutor(QObject):
         self._state_lock = threading.Lock()
         self._cleanup_lock = threading.Lock()
         
-        # 로직 스택 (중첩 로직 처리용)
+        # 로직 스택 (중첩로직 처리용)
         self._logic_stack = []
         
         # 시작 시간 저장
@@ -223,7 +223,7 @@ class LogicExecutor(QObject):
                 current_logic_name = self.selected_logic.get('name', '')
                 current_logic_id = self.selected_logic.get('id', '')
                 
-                # 부모 로직이 있는 경우 (중첩 로직인 경우)
+                # 부모 로직이 있는 경우 (중첩로직인 경우)
                 if self._logic_stack:
                     parent_logic, parent_state = self._logic_stack[-1]
                     parent_name = parent_logic.get('name', '')
@@ -331,11 +331,11 @@ class LogicExecutor(QObject):
             raise
 
     def _execute_nested_logic(self, step):
-        """중첩 로직 실행"""
+        """중첩로직 실행"""
         try:
             logic_id = step.get('logic_id')
             if not logic_id:
-                raise Exception("중첩 로직의 ID가 없습니다.")
+                raise Exception("중첩로직의 ID가 없습니다.")
             
             # 현재 상태를 스택에 저장
             self._logic_stack.append((
@@ -346,11 +346,11 @@ class LogicExecutor(QObject):
                 }
             ))
             
-            # 최신 로직 정보로 중첩 로직 로드 및 실행
+            # 최신 로직 정보로 중첩로직 로드 및 실행
             logics = self.logic_manager.get_all_logics(force=True)
             nested_logic = logics.get(logic_id)
             if not nested_logic:
-                raise Exception(f"중첩 로직을 찾을 수 없습니다: {logic_id}")
+                raise Exception(f"중첩로직을 찾을 수 없습니다: {logic_id}")
             
             nested_logic['id'] = logic_id  # ID 정보 추가
             self.selected_logic = nested_logic
@@ -359,10 +359,10 @@ class LogicExecutor(QObject):
                 current_repeat=1
             )
             
-            self._log_with_time(f"[중첩 로직] {nested_logic.get('name')} 실행 시작")
+            self._log_with_time(f"[중첩로직] {nested_logic.get('name')} 실행 시작")
             
         except Exception as e:
-            self._log_with_time(f"[오류] 중첩 로직 실행 중 오류 발생: {str(e)}")
+            self._log_with_time(f"[오류] 중첩로직 실행 중 오류 발생: {str(e)}")
             raise
 
     def _execute_mouse_input(self, step):
@@ -574,7 +574,7 @@ class LogicExecutor(QObject):
         time_patterns = [
             "로직 실행 시작",
             "로직 실행 완료",
-            "중첩 로직",
+            "중첩로직",
             "반복 완료",
             "강제 중지",
             "타이머 정리",
@@ -606,7 +606,7 @@ class LogicExecutor(QObject):
             formatted_message = f"<span style='color: #0000FF; font-size: 34px; font-weight: bold;'>{time_info}</span> <span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{message}</span>"
         else:
             # 기본 메시지 - 기본 스타일
-            formatted_message = f"<span style='color: #000000; font-size: 10px;'>{time_info}</span> {message}"
+            formatted_message = f"<span style='color: #000000;'>{time_info}</span> {message}"
             
         self.log_message.emit(formatted_message)
 
@@ -709,7 +709,7 @@ class LogicExecutor(QObject):
                         break
                         
                     if item.get('type') == 'logic':
-                        # 중첩 로직 실행 시에도 최신 데이터 사용
+                        # 중첩로직 실행 시에도 최신 데이터 사용
                         nested_logic_id = item.get('logic_id')
                         if nested_logic_id:
                             nested_repeat = item.get('repeat_count', 1)

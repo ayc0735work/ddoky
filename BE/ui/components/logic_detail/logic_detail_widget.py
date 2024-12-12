@@ -652,7 +652,7 @@ class LogicDetailWidget(QFrame):
         for logic_id, logic in logics.items():
             # 자기 자신은 제외하고 중첩로직이 아닌 것들만 체크
             if (logic_id != self.current_logic_id and 
-                not logic.get('is_nested', False)):  # 중첩 로직은 제외
+                not logic.get('is_nested', False)):  # 중첩로직은 제외
                 trigger_key = logic.get('trigger_key', {})
                 if (trigger_key.get('virtual_key') == key_info.get('virtual_key') and 
                     trigger_key.get('modifiers') == key_info.get('modifiers')):
@@ -722,7 +722,7 @@ class LogicDetailWidget(QFrame):
                 logics = self.settings_manager.load_logics()
                 for logic in logics.values():
                     if (logic.get('name') == name and 
-                        not logic.get('is_nested', False)):  # 중첩 로직은 제외
+                        not logic.get('is_nested', False)):  # 중첩로직은 제외
                         QMessageBox.warning(
                             self,
                             "저장 실패",
@@ -847,7 +847,7 @@ class LogicDetailWidget(QFrame):
             self.clear_all()
 
     def _create_nested_logic_item(self, logic_name, logic_id=None, original_data=None):
-        """중첩 로직 아이템 생성을 위한 공통 메서드
+        """중첩로직 아이템 생성을 위한 공통 메서드
         
         Args:
             logic_name (str): 로직 이름
@@ -902,11 +902,11 @@ class LogicDetailWidget(QFrame):
             }
             
             item.setData(Qt.UserRole, item_data)
-            self.log_message.emit(f"중첩 로직 '{logic_name}'이(가) UUID {logic_id}로 처리되었습니다.")
+            self.log_message.emit(f"중첩로직 '{logic_name}'이(가) UUID {logic_id}로 처리되었습니다.")
             return item, True
             
         except Exception as e:
-            self.log_message.emit(f"중첩 로직 처리 중 오류 발생: {str(e)}")
+            self.log_message.emit(f"중첩로직 처리 중 오류 발생: {str(e)}")
             return None, False
     
     def _add_logic_item(self, item_info):
@@ -966,7 +966,7 @@ class LogicDetailWidget(QFrame):
             current_insert_position = insert_position + idx
             
             if copied_item['data'] and copied_item['data'].get('type') == 'logic':
-                # 중첩 로직인 경우 공통 메서드 사용
+                # 중첩로직인 경우 공통 메서드 사용
                 item, success = self._create_nested_logic_item(
                     copied_item['text'],
                     original_data=copied_item['data']
@@ -1206,7 +1206,7 @@ class LogicDetailWidget(QFrame):
             # 반복 횟수 초기화
             self.RepeatCountInput__QSpinBox.setValue(1)
             
-            # 중첩 로직용 체크박스 초기화
+            # 중첩로직용 체크박스 초기화
             self.IsNestedCheckBox__QCheckBox.setChecked(False)
             
             # 로직 아이템 목록 초기화

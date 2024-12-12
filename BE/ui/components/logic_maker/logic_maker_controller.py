@@ -55,11 +55,11 @@ class LogicMakerController:
         
     def save_logic(self, logic_data):
         """로직 저장"""
-        # 중첩 로직 참조 정보 유지
+        # 중첩로직 참조 정보 유지
         if 'items' in logic_data:
             for item in logic_data['items']:
                 if item['type'] == 'logic':
-                    # 중첩 로직의 logic_id는 수정하지 않음
+                    # 중첩로직의 logic_id는 수정하지 않음
                     continue
         
         # 나머지 저장 로직 수행
