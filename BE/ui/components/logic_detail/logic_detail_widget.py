@@ -325,13 +325,25 @@ class LogicDetailWidget(QFrame):
         current_row = self.LogicItemList__QListWidget.currentRow()
         if current_row > 0:
             current_item = self.LogicItemList__QListWidget.takeItem(current_row)
-            # 아이템 이동 시 order 값 업데이트
             prev_item = self.LogicItemList__QListWidget.item(current_row - 1)
+            
+            # 현재 order 값 가져오기 (없으면 현재 위치 + 1 사용)
             current_data = current_item.data(Qt.UserRole) or {}
             prev_data = prev_item.data(Qt.UserRole) or {}
-            current_data['order'], prev_data['order'] = prev_data.get('order', current_row), current_data.get('order', current_row + 1)
+            
+            # order 값이 1 미만인 경우 새로운 order 값 할당
+            current_order = max(1, current_data.get('order', current_row + 1))
+            prev_order = max(1, prev_data.get('order', (current_row - 1) + 1))
+            
+            # order 값 교환 (최소값 1 보장)
+            current_data['order'] = prev_order
+            prev_data['order'] = current_order
+            
+            # 데이터 업데이트
             current_item.setData(Qt.UserRole, current_data)
             prev_item.setData(Qt.UserRole, prev_data)
+            
+            # 위치 이동
             self.LogicItemList__QListWidget.insertItem(current_row - 1, current_item)
             self.LogicItemList__QListWidget.setCurrentItem(current_item)
             self.item_moved.emit()
@@ -341,13 +353,25 @@ class LogicDetailWidget(QFrame):
         current_row = self.LogicItemList__QListWidget.currentRow()
         if current_row < self.LogicItemList__QListWidget.count() - 1:
             current_item = self.LogicItemList__QListWidget.takeItem(current_row)
-            # 아이템 이동 시 order 값 업데이트
             next_item = self.LogicItemList__QListWidget.item(current_row)
+            
+            # 현재 order 값 가져오기 (없으면 현재 위치 + 1 사용)
             current_data = current_item.data(Qt.UserRole) or {}
             next_data = next_item.data(Qt.UserRole) or {}
-            current_data['order'], next_data['order'] = next_data.get('order', current_row + 2), current_data.get('order', current_row + 1)
+            
+            # order 값이 1 미만인 경우 새로운 order 값 할당
+            current_order = max(1, current_data.get('order', current_row + 1))
+            next_order = max(1, next_data.get('order', (current_row + 1) + 1))
+            
+            # order 값 교환 (최소값 1 보장)
+            current_data['order'] = next_order
+            next_data['order'] = current_order
+            
+            # 데이터 업데이트
             current_item.setData(Qt.UserRole, current_data)
             next_item.setData(Qt.UserRole, next_data)
+            
+            # 위치 이동
             self.LogicItemList__QListWidget.insertItem(current_row + 1, current_item)
             self.LogicItemList__QListWidget.setCurrentItem(current_item)
             self.item_moved.emit()

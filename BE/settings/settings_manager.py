@@ -31,6 +31,18 @@ class SettingsManager:
             # 로직 데이터에서 uuid 필드 제거 및 필드 순서 정리
             if 'logics' in settings:
                 ordered_logics = {}
+                
+                # 현재 order 값들을 모두 수집하고 정렬
+                logic_orders = [(logic_id, logic_data.get('order', 0)) 
+                              for logic_id, logic_data in settings['logics'].items()]
+                logic_orders.sort(key=lambda x: x[1])
+                
+                # 순서 재할당 (1부터 시작)
+                new_order = 1
+                for logic_id, _ in logic_orders:
+                    settings['logics'][logic_id]['order'] = new_order
+                    new_order += 1
+
                 for logic_id, logic_data in settings['logics'].items():
                     # items 리스트 내부의 아이템들도 필드 순서 정렬
                     ordered_items = []
@@ -282,14 +294,12 @@ class SettingsManager:
             # 중첩로직용 여부 저장
             is_nested = logic_data.get('is_nested', False)
             
-            # order 값 처리
-            if logic_id in settings['logics']:
-                # 기존 로직인 경우 order 값 유지
-                current_order = settings['logics'][logic_id].get('order', 0)
-                if current_order == 0:  # order가 0인 경우 새로운 order 할당
-                    current_order = max([l.get('order', 0) for l in settings['logics'].values() if l.get('order', 0) > 0], default=0) + 1
+            # order 값 처리 - 항상 1 이상의 값 보장
+            if 'order' in logic_data:
+                # 입력된 order 값이 있는 경우
+                current_order = max(1, logic_data['order'])  # 최소값 1 보장
             else:
-                # 새 로직인 경우 마지막 order + 1
+                # order 값이 없는 경우 새로운 order 할당
                 current_order = max([l.get('order', 0) for l in settings['logics'].values() if l.get('order', 0) > 0], default=0) + 1
             
             # 기본 로직 정보 구성
@@ -324,7 +334,7 @@ class SettingsManager:
                                 item['display_text'] = logic_info['name']
                             updated_items.append(item)
                         existing_logic['items'] = updated_items
-            
+        
             # 로직 저장
             settings['logics'][logic_id] = logic_info
             

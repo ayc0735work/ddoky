@@ -58,10 +58,10 @@
     },
     "logics": {
         "c4a8abec-8857-43b8-9086-427ec16be1b9": {
-            "order": 0,
+            "order": 1,
             "name": "공력증강 - 1회",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-13T14:32:45.934663",
+            "updated_at": "2024-12-13T15:18:59.009300",
             "trigger_key": {
                 "key_code": "숫자패드 6",
                 "modifiers": 0,
@@ -100,9 +100,9 @@
                 {
                     "order": 4,
                     "type": "logic",
-                    "display_text": "체력 회복 - 탭탭 - 10회",
+                    "display_text": "체력 회복 - 탭탭 - 9회",
                     "logic_id": "7c591192-f82b-4497-a1b3-e4beab60be58",
-                    "logic_name": "체력 회복 - 탭탭 - 10회",
+                    "logic_name": "체력 회복 - 탭탭 - 9회",
                     "repeat_count": 1
                 },
                 {
@@ -118,17 +118,11 @@
                     "logic_id": "9614e85c-3ceb-423b-97ea-e17bfc0101fc",
                     "logic_name": "동동주 마시기 - 1회",
                     "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.02초",
-                    "duration": 0.02,
-                    "order": 7
                 }
             ]
         },
         "19057d4b-bcd4-48ee-a2f0-f7de91dc085f": {
-            "order": 1,
+            "order": 2,
             "name": "공력증강 - 1회 - 2222",
             "created_at": "2024-12-08T13:23:32.528363",
             "updated_at": "2024-12-13T14:33:49.147120",
@@ -170,9 +164,9 @@
                 {
                     "order": 4,
                     "type": "logic",
-                    "display_text": "체력 회복 - 탭탭 - 10회",
+                    "display_text": "체력 회복 - 탭탭 - 9회",
                     "logic_id": "7c591192-f82b-4497-a1b3-e4beab60be58",
-                    "logic_name": "체력 회복 - 탭탭 - 10회",
+                    "logic_name": "체력 회복 - 탭탭 - 9회",
                     "repeat_count": 1
                 },
                 {
@@ -198,7 +192,7 @@
             ]
         },
         "9614e85c-3ceb-423b-97ea-e17bfc0101fc": {
-            "order": 2,
+            "order": 3,
             "name": "동동주 마시기 - 1회",
             "created_at": "2024-11-30T07:08:49.271692",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -261,7 +255,7 @@
             ]
         },
         "0dfa1418-cab1-4439-ae8a-b0c971471c99": {
-            "order": 3,
+            "order": 4,
             "name": "체력 회복 (과거 버전) - 9회",
             "created_at": "2024-11-26T06:51:44.957381",
             "updated_at": "2024-12-13T14:37:27.128500",
@@ -355,10 +349,10 @@
             ]
         },
         "7c591192-f82b-4497-a1b3-e4beab60be58": {
-            "order": 4,
-            "name": "체력 회복 - 탭탭 - 10회",
+            "order": 5,
+            "name": "체력 회복 - 탭탭 - 9회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-13T15:05:18.484369",
+            "updated_at": "2024-12-13T15:34:12.277497",
             "trigger_key": {
                 "key_code": "F2",
                 "modifiers": 0,
@@ -370,8 +364,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0900초",
-                    "duration": 0.09,
+                    "display_text": "지연시간 : 0.1초",
+                    "duration": 0.1,
                     "order": 1
                 },
                 {
@@ -383,38 +377,44 @@
                     "repeat_count": 1
                 },
                 {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0900초",
-                    "duration": 0.09,
-                    "order": 3
+                    "order": 3,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
                 },
                 {
                     "order": 4,
                     "type": "logic",
-                    "display_text": "탭탭용 체력회복 - 5회",
-                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
-                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "display_text": "탭탭용 체력회복 - 1회",
+                    "logic_id": "c2d74069-f5b3-420b-8c62-bc2cc17346e4",
+                    "logic_name": "탭탭용 체력회복 - 1회",
                     "repeat_count": 1
                 },
                 {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0900초",
-                    "duration": 0.09,
-                    "order": 5
+                    "order": 5,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 1회",
+                    "logic_id": "c2d74069-f5b3-420b-8c62-bc2cc17346e4",
+                    "logic_name": "탭탭용 체력회복 - 1회",
+                    "repeat_count": 1
                 },
                 {
                     "order": 6,
                     "type": "logic",
-                    "display_text": "탭탭용 체력회복 - 5회",
-                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
-                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "display_text": "탭탭용 체력회복 - 1회",
+                    "logic_id": "c2d74069-f5b3-420b-8c62-bc2cc17346e4",
+                    "logic_name": "탭탭용 체력회복 - 1회",
                     "repeat_count": 1
                 },
                 {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0900초",
-                    "duration": 0.09,
-                    "order": 7
+                    "order": 7,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 1회",
+                    "logic_id": "c2d74069-f5b3-420b-8c62-bc2cc17346e4",
+                    "logic_name": "탭탭용 체력회복 - 1회",
+                    "repeat_count": 1
                 },
                 {
                     "order": 8,
@@ -435,20 +435,14 @@
                     "scan_code": 15,
                     "virtual_key": 9,
                     "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0900초",
-                    "duration": 0.09,
-                    "order": 10
                 }
             ]
         },
         "ed0d7b48-c7ac-4397-8ce5-360143efa401": {
-            "order": 4,
+            "order": 6,
             "name": "체력 회복 - 탭탭 - 2회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-13T15:06:29.703021",
+            "updated_at": "2024-12-13T15:26:02.677069",
             "trigger_key": {
                 "key_code": "숫자패드 .",
                 "modifiers": 0,
@@ -467,10 +461,12 @@
                     "repeat_count": 1
                 },
                 {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0150초",
-                    "duration": 0.015,
-                    "order": 2
+                    "order": 2,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 1회",
+                    "logic_id": "c2d74069-f5b3-420b-8c62-bc2cc17346e4",
+                    "logic_name": "탭탭용 체력회복 - 1회",
+                    "repeat_count": 1
                 },
                 {
                     "order": 3,
@@ -481,27 +477,7 @@
                     "repeat_count": 1
                 },
                 {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0150초",
-                    "duration": 0.015,
-                    "order": 4
-                },
-                {
-                    "order": 5,
-                    "type": "logic",
-                    "display_text": "탭탭용 체력회복 - 1회",
-                    "logic_id": "c2d74069-f5b3-420b-8c62-bc2cc17346e4",
-                    "logic_name": "탭탭용 체력회복 - 1회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0150초",
-                    "duration": 0.015,
-                    "order": 6
-                },
-                {
-                    "order": 7,
+                    "order": 4,
                     "display_text": "키 입력: Tab --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -511,7 +487,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 8,
+                    "order": 5,
                     "display_text": "키 입력: Tab --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -519,20 +495,14 @@
                     "scan_code": 15,
                     "virtual_key": 9,
                     "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0150초",
-                    "duration": 0.015,
-                    "order": 9
                 }
             ]
         },
         "380ff6a2-b515-4ff5-9e1a-829f95bda0c4": {
-            "order": 6,
+            "order": 7,
             "name": "탭탭 고정",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-13T14:38:05.695929",
+            "updated_at": "2024-12-13T15:25:57.235164",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -608,11 +578,17 @@
                     "scan_code": 15,
                     "virtual_key": 9,
                     "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
+                    "order": 9
                 }
             ]
         },
         "941b7b40-aa69-4954-a513-c730122f58bd": {
-            "order": 7,
+            "order": 8,
             "name": "탭탭용 체력회복 - 5회",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-13T14:37:55.431375",
@@ -649,10 +625,10 @@
             ]
         },
         "c2d74069-f5b3-420b-8c62-bc2cc17346e4": {
-            "order": 8,
+            "order": 9,
             "name": "탭탭용 체력회복 - 1회",
             "created_at": "2024-12-08T13:40:39.094231",
-            "updated_at": "2024-12-13T14:37:58.860507",
+            "updated_at": "2024-12-13T15:23:46.274238",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -686,7 +662,7 @@
             ]
         },
         "b8796333-e8d6-4ae2-9fec-801a713517d8": {
-            "order": 9,
+            "order": 10,
             "name": "보호 무장 힘",
             "created_at": "2024-11-26T10:58:29.227835",
             "updated_at": "2024-12-12T08:41:26.493178",
@@ -1002,7 +978,7 @@
             ]
         },
         "9ed591e4-b227-448b-9d0f-b90c76d1f662": {
-            "order": 10,
+            "order": 11,
             "name": "모두 줍기",
             "created_at": "2024-11-26T10:58:29.227835",
             "updated_at": "2024-12-11T21:30:39.069555",
@@ -1059,7 +1035,7 @@
             ]
         },
         "970a1723-88f9-4a50-8bb4-4f8c8f8199fe": {
-            "order": 11,
+            "order": 12,
             "name": "첨 중독, 저주, 마비 - 1회",
             "created_at": "2024-11-30T10:25:06.438732",
             "updated_at": "2024-12-12T19:44:57.083961",
@@ -1466,7 +1442,7 @@
             ]
         },
         "a97732be-77f0-474c-96f0-7b4f825f9036": {
-            "order": 12,
+            "order": 13,
             "name": "중독, 마비 첨 사냥 - 무한반복",
             "created_at": "2024-12-08T21:25:24.196785",
             "updated_at": "2024-12-13T14:32:19.267756",
@@ -1554,7 +1530,7 @@
             ]
         },
         "22b1ce84-7d6a-4d56-ba3e-f73eb12051bf": {
-            "order": 13,
+            "order": 14,
             "name": "중독, 마비 첨 사냥 - 무한반복 - 2222",
             "created_at": "2024-12-12T08:34:33.775036",
             "updated_at": "2024-12-13T14:33:40.329967",
@@ -1642,7 +1618,7 @@
             ]
         },
         "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf": {
-            "order": 14,
+            "order": 15,
             "name": "ㄴ 중독만 - 5회 (첨이랑 딱 맞음)",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-13T14:41:21.220940",
@@ -1731,7 +1707,7 @@
             ]
         },
         "0f7febe4-03e2-4e00-bc00-4517a9a33556": {
-            "order": 15,
+            "order": 16,
             "name": "첨 중독 - 조합본 - 9999회",
             "created_at": "2024-12-02T02:03:00.957188",
             "updated_at": "2024-12-13T14:39:32.795977",
@@ -1775,7 +1751,7 @@
             ]
         },
         "73c0ac82-d33b-4dce-a9a1-6af5a54dd99b": {
-            "order": 16,
+            "order": 17,
             "name": "공격 중독 - 조합본 - 9999회",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-13T14:39:29.071221",
@@ -1845,7 +1821,7 @@
             ]
         },
         "cd4e43fd-6a40-481a-a665-fcdbf1d09ec6": {
-            "order": 17,
+            "order": 18,
             "name": "ㄴ 중독만 - 4회 (일반이랑 딱 맞음)",
             "created_at": "2024-12-09T20:31:25.048097",
             "updated_at": "2024-12-13T14:42:08.076888",
@@ -1934,7 +1910,7 @@
             ]
         },
         "69b74254-4313-4546-94c9-313b21ce6e3d": {
-            "order": 18,
+            "order": 19,
             "name": "중독만 - 90회",
             "created_at": "2024-12-04T00:08:13.574278",
             "updated_at": "2024-12-13T14:50:27.204620",
@@ -2028,7 +2004,7 @@
             ]
         },
         "39e67926-aab9-4b61-bd2f-19797480f4bf": {
-            "order": 19,
+            "order": 20,
             "name": "절망만 - 20회",
             "created_at": "2024-12-01T02:22:23.843289",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -2123,7 +2099,7 @@
             ]
         },
         "753fe62f-775d-4518-9a11-5b0810605183": {
-            "order": 20,
+            "order": 21,
             "name": "저주만 - 20회",
             "created_at": "2024-11-30T16:06:26.318706",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -2218,7 +2194,7 @@
             ]
         },
         "59070f24-4d2d-4c54-8100-f104e4645d06": {
-            "order": 21,
+            "order": 22,
             "name": "마비만 - 20회",
             "created_at": "2024-11-30T14:35:32.801674",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -2313,7 +2289,7 @@
             ]
         },
         "27d1f013-d82b-42f2-87cd-785dad90b052": {
-            "order": 22,
+            "order": 23,
             "name": "디버프 상하좌우 - 1회",
             "created_at": "2024-12-06T16:29:20.641646",
             "updated_at": "2024-12-13T15:10:44.036013",
@@ -2476,7 +2452,7 @@
             ]
         },
         "478ef83b-3734-43ed-9c9b-4f0d5e5488f4": {
-            "order": 23,
+            "order": 24,
             "name": "마비 상하 - 1회",
             "created_at": "2024-12-09T13:55:26.337819",
             "updated_at": "2024-12-13T14:48:59.784645",
@@ -2613,7 +2589,7 @@
             ]
         },
         "c01c73a1-4971-4952-abdf-a3217b12fdb6": {
-            "order": 24,
+            "order": 25,
             "name": "마비 좌우 - 1회",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-13T14:48:59.805740",
@@ -2750,7 +2726,7 @@
             ]
         },
         "d112c815-7b6d-4300-8faa-d103dec6b7bd": {
-            "order": 25,
+            "order": 26,
             "name": "저주 상하 - 1회",
             "created_at": "2024-12-09T14:29:26.182552",
             "updated_at": "2024-12-13T14:48:59.821866",
@@ -2887,7 +2863,7 @@
             ]
         },
         "4f0137c2-a6b5-47b2-84af-041bb3230d01": {
-            "order": 26,
+            "order": 27,
             "name": "저주 좌우 - 1회",
             "created_at": "2024-12-09T14:29:33.887956",
             "updated_at": "2024-12-13T14:48:59.839591",
@@ -3024,7 +3000,7 @@
             ]
         },
         "e6fc846b-0a11-4ba7-b03b-36fd4e5d7113": {
-            "order": 27,
+            "order": 28,
             "name": "중독 상하 - 1회",
             "created_at": "2024-12-09T14:29:26.182552",
             "updated_at": "2024-12-13T15:01:46.734795",
@@ -3161,7 +3137,7 @@
             ]
         },
         "dcebf7ad-7bb4-46ef-8efc-2caa5a2661c9": {
-            "order": 28,
+            "order": 29,
             "name": "중독 좌우 - 1회",
             "created_at": "2024-12-09T14:29:33.887956",
             "updated_at": "2024-12-13T15:01:46.751789",
@@ -3298,7 +3274,7 @@
             ]
         },
         "e1c7d791-2f2c-48ec-991f-be44ce9c29ab": {
-            "order": 29,
+            "order": 30,
             "name": "마비 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -3367,7 +3343,7 @@
             ]
         },
         "c4de3c75-5bd3-4451-8be7-6795586c24b9": {
-            "order": 30,
+            "order": 31,
             "name": "저주 - 홈 클릭",
             "created_at": "2024-12-08T20:06:10.101017",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -3430,7 +3406,7 @@
             ]
         },
         "dfef51e9-e9c6-4689-a0d7-824d36943241": {
-            "order": 31,
+            "order": 32,
             "name": "중독 - 홈 클릭",
             "created_at": "2024-12-08T20:06:34.044749",
             "updated_at": "2024-12-13T15:01:16.904562",
@@ -3493,7 +3469,7 @@
             ]
         },
         "c390e91a-ed44-4416-b3c9-1b5e089b98e9": {
-            "order": 32,
+            "order": 33,
             "name": "중독, 공격 - 1회",
             "created_at": "2024-12-09T20:33:02.065308",
             "updated_at": "2024-12-11T17:36:26.165949",
@@ -3558,7 +3534,7 @@
             ]
         },
         "0ceb5d7f-00bb-48b5-95ba-0b204d99da44": {
-            "order": 33,
+            "order": 34,
             "name": "월드 재입장",
             "created_at": "2024-12-11T21:30:39.063045",
             "updated_at": "2024-12-13T14:16:18.848598",
@@ -3622,7 +3598,7 @@
             ]
         },
         "b09ec1d7-4e80-49c0-a1b5-480a888e5b16": {
-            "order": 34,
+            "order": 35,
             "name": "캐릭터 선택",
             "created_at": "2024-12-12T08:29:17.016286",
             "updated_at": "2024-12-13T14:16:15.706736",
