@@ -1,33 +1,22 @@
 import os
 import json
+from .settings_manager import SettingsManager
 
 class Settings:
+    """싱글톤 설정 클래스"""
+    
     _instance = None
     
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(Settings, cls).__new__(cls)
-            cls._instance._initialize()
+            cls._instance.settings_manager = SettingsManager()
         return cls._instance
     
-    def _initialize(self):
-        self.settings_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'settings', 'setting files', 'settings.json')
-        self._load_settings()
-    
-    def _load_settings(self):
-        try:
-            with open(self.settings_path, 'r', encoding='utf-8') as f:
-                self.settings = json.load(f)
-        except FileNotFoundError:
-            self.settings = {}
-    
     def get(self, key, default=None):
-        return self.settings.get(key, default)
+        """설정값을 가져옵니다."""
+        return self.settings_manager.get(key, default)
     
     def set(self, key, value):
-        self.settings[key] = value
-        self._save_settings()
-    
-    def _save_settings(self):
-        with open(self.settings_path, 'w', encoding='utf-8') as f:
-            json.dump(self.settings, f, indent=4, ensure_ascii=False) 
+        """설정값을 저장합니다."""
+        return self.settings_manager.set(key, value)

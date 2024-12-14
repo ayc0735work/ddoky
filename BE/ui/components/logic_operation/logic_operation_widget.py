@@ -8,7 +8,8 @@ import copy
 from ...constants.styles import (FRAME_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from BE.ui.components.process_selector.process_selector_dialog import ProcessSelectorDialog
-from BE.settings import Settings
+from BE.settings.settings import Settings
+from BE.settings.settings_manager import SettingsManager  # SettingsManager 추가
 
 class LogicOperationWidget(QFrame):
     """로직 동작 온오프 위젯"""
@@ -24,6 +25,7 @@ class LogicOperationWidget(QFrame):
         self.selected_process = None
         self.logic_executor = None  # LogicExecutor 인스턴스를 저장할 속성 추가
         self.force_stop_key = {'virtual_key': 27, 'key_name': 'ESC'}  # 기본값으로 ESC 키 설정
+        self.settings_manager = SettingsManager()  # SettingsManager 인스턴스 추가
         self._init_ui()
         self._connect_signals()
         self.load_delay_settings()  # 초기화 시 설정 로드
@@ -512,8 +514,7 @@ class LogicOperationWidget(QFrame):
                 }
             
             # 설정 파일에 저장
-            settings = Settings()
-            settings.set('key_delays', {
+            self.settings_manager.set('key_delays', {
                 'press': key_press,
                 'release': key_release,
                 'mouse_input': mouse_input_delay,
@@ -535,8 +536,7 @@ class LogicOperationWidget(QFrame):
     
     def load_delay_settings(self):
         """저장된 지연 시간 설정 로드"""
-        settings = Settings()
-        delays = settings.get('key_delays', {
+        delays = self.settings_manager.get('key_delays', {
             'press': 0.0205,
             'release': 0.0205,
             'mouse_input': 0.0205,
@@ -560,8 +560,7 @@ class LogicOperationWidget(QFrame):
         self.default_delay_input.setText(f"{DEFAULT_DELAY:.4f}")
         
         # 설정 파일에 저장
-        settings = Settings()
-        settings.set('key_delays', {
+        self.settings_manager.set('key_delays', {
             'press': DEFAULT_DELAY,
             'release': DEFAULT_DELAY,
             'mouse_input': DEFAULT_DELAY,
@@ -599,8 +598,7 @@ class LogicOperationWidget(QFrame):
                         self.logic_executor.set_force_stop_key(key_info['virtual_key'])
                         
                     # 설정 파일에 저장
-                    settings = Settings()
-                    settings.set('force_stop_key', key_info['key_code'])
+                    self.settings_manager.set('force_stop_key', key_info['key_code'])
                     
                     self.log_message.emit(f"로직 강제 중지 키가 '{key_info['key_code']}'(으)로 변경되었습니다.")
         except Exception as e:
@@ -618,8 +616,7 @@ class LogicOperationWidget(QFrame):
                 self.logic_executor.set_force_stop_key(27)
                 
             # 설정 파일에 저장
-            settings = Settings()
-            settings.set('force_stop_key', 'ESC')
+            self.settings_manager.set('force_stop_key', 'ESC')
                 
             self.log_message.emit("로직 강제 중지 키가 'ESC'로 초기화되었습니다.")
         except Exception as e:

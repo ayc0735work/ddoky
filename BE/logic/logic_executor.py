@@ -53,8 +53,10 @@ class LogicExecutor(QObject):
             'default': DEFAULT_DELAY
         }
         
-        # 설정에서 값을 가져오되, 없으면 기본값 사용
+        # 키 딜레이 설정 로드
         saved_delays = settings.get('key_delays', {})
+        
+        # 설정에서 값을 가져오되, 없으면 기본값 사용
         delays = default_delays.copy()
         if isinstance(saved_delays, dict):
             for key in default_delays:

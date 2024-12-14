@@ -9,12 +9,6 @@
             "height": 2000
         }
     },
-    "key_delays": {
-        "press": 0.0192,
-        "release": 0.0,
-        "mouse_input": 0.025,
-        "default": 0.02
-    },
     "gauge_monitor": {
         "hp_gauge": {
             "coordinates": {
@@ -3752,6 +3746,5 @@
             ]
         }
     },
-    "recovery_detection_enabled": false,
-    "force_stop_key": "ESC"
+    "recovery_detection_enabled": false
 }

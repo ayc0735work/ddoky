@@ -11,7 +11,14 @@ class SettingsManager:
         # BE 폴더 경로를 기준으로 설정 파일 경로 지정
         current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.settings_file = Path(current_dir) / "settings" / "setting files" / "settings.json"
+        self.key_delays_file = Path(current_dir) / "settings" / "setting files" / "key_delays.json"
+        
+        # 먼저 key_delays.json 파일이 없다면 생성
+        if not self.key_delays_file.exists():
+            self.save_key_delays(self._get_default_key_delays())
+            
         self.settings = self._load_settings()
+        self.key_delays = self._load_key_delays()
     
     def _load_settings(self):
         """설정 파일 로드"""
@@ -427,3 +434,54 @@ class SettingsManager:
             import traceback
             self.log_message.emit(f"[오류 상세] {traceback.format_exc()}")
             raise
+
+    def _load_key_delays(self):
+        """키 딜레이 설정 파일 로드"""
+        # settings.json에 key_delays가 있다면 key_delays.json으로 이동
+        if 'key_delays' in self.settings:
+            old_delays = self.settings.pop('key_delays')
+            self._save_settings(self.settings)
+            self.save_key_delays(old_delays)
+            
+        try:
+            with open(self.key_delays_file, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except (json.JSONDecodeError, FileNotFoundError):
+            default_delays = self._get_default_key_delays()
+            self.save_key_delays(default_delays)
+            return default_delays
+
+    def _get_default_key_delays(self):
+        """기본 키 딜레이 설정 반환"""
+        return {
+            "press": 0.0192,
+            "release": 0.0,
+            "mouse_input": 0.025,
+            "default": 0.02
+        }
+
+    def get_key_delays(self):
+        """키 딜레이 설정 반환"""
+        return self.key_delays
+
+    def save_key_delays(self, key_delays):
+        """키 딜레이 설정 저장"""
+        try:
+            with open(self.key_delays_file, 'w', encoding='utf-8') as f:
+                json.dump(key_delays, f, indent=4)
+            self.key_delays = key_delays
+        except Exception as e:
+            print(f"키 딜레이 설정 저장 중 오류 발생: {e}")
+
+    def get(self, key, default=None):
+        """설정값을 가져옵니다."""
+        if key == 'key_delays':
+            return self.get_key_delays()
+        return self.settings.get(key, default)
+
+    def set(self, key, value):
+        """설정값을 저장합니다."""
+        if key == 'key_delays':
+            return self.save_key_delays(value)
+        self.settings[key] = value
+        self._save_settings(self.settings)
