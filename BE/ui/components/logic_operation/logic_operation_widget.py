@@ -112,9 +112,9 @@ class LogicOperationWidget(QFrame):
         inputs_layout = QHBoxLayout()
         inputs_layout.setSpacing(5)
         
-        # 키 누르기 후 지연시간 입력
+        # 키 누르기 후 공통 지연시간 입력
         key_press_layout = QVBoxLayout()
-        key_press_label = QLabel("키 누르기 후\n지연시간")
+        key_press_label = QLabel("키 누르기 후\n공통 지연시간")
         key_press_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.key_press_input = QLineEdit()
         self.key_press_input.setFixedWidth(80)
@@ -124,9 +124,9 @@ class LogicOperationWidget(QFrame):
         key_press_layout.addWidget(self.key_press_input)
         inputs_layout.addLayout(key_press_layout)
         
-        # 키 떼기 후 지연시간 입력
+        # 키 떼기 후 공통 지연시간 입력
         key_release_layout = QVBoxLayout()
-        key_release_label = QLabel("키 떼기 후\n지연시간")
+        key_release_label = QLabel("키 떼기 후\n공통 지연시간")
         key_release_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.key_release_input = QLineEdit()
         self.key_release_input.setFixedWidth(80)
@@ -136,9 +136,9 @@ class LogicOperationWidget(QFrame):
         key_release_layout.addWidget(self.key_release_input)
         inputs_layout.addLayout(key_release_layout)
         
-        # 마우스 입력 후 지연시간 입력
+        # 마우스 입력 후 공통 지연시간 입력
         mouse_input_layout = QVBoxLayout()
-        mouse_input_label = QLabel("마우스 입력 전\n지연시간")
+        mouse_input_label = QLabel("마우스 입력 전\n공통 지연시간")
         mouse_input_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.mouse_input_delay = QLineEdit()
         self.mouse_input_delay.setFixedWidth(80)
@@ -148,9 +148,9 @@ class LogicOperationWidget(QFrame):
         mouse_input_layout.addWidget(self.mouse_input_delay)
         inputs_layout.addLayout(mouse_input_layout)
         
-        # 기타 동작 후 지연시간 입력
+        # 기타 동작 후 공통 지연시간 입력
         default_delay_layout = QVBoxLayout()
-        default_delay_label = QLabel("기타 동작 후\n지연시간")
+        default_delay_label = QLabel("기타 동작 후\n공통 지연시간")
         default_delay_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.default_delay_input = QLineEdit()
         self.default_delay_input.setFixedWidth(80)

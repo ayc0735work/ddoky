@@ -84,7 +84,7 @@ class LogicExecutor(QObject):
         self._logic_stack = []
         
         # 시작 시간 저장
-        self._start_time = time.time()
+        self._start_time = 0
         
         # 활성 타이머 추적
         self._active_timers = []
@@ -201,7 +201,7 @@ class LogicExecutor(QObject):
                         current_repeat=1
                     )
                     # 로직 실행 시작 시간 초기화
-                    self._start_time = time.time()
+                    # self._start_time = time.time()
                     self._log_with_time(f"[로직 실행] 로직 '{logic.get('name')}({logic_id})' 실행 시작")
                     
                     self.execution_started.emit()
@@ -582,7 +582,7 @@ class LogicExecutor(QObject):
         if any(pattern in message for pattern in ignore_patterns):
             return
 
-        # 시간 정보를 포함할 로 패턴
+        # 시간 정보를 포함할 로그 패턴
         time_patterns = [
             "로직 실행 시작",
             "로직 실행 완료",
@@ -598,8 +598,8 @@ class LogicExecutor(QObject):
 
         # 시간 정보 포함 패턴이 있는 경우 시간 정보 추가
         if any(pattern in message for pattern in time_patterns):
-            elapsed = int((time.time() - self._start_time) * 1000)
-            time_info = f"[{elapsed}ms]"
+            elapsed = time.time() - self._start_time
+            time_info = f"[{elapsed:.4f}초]"
         else:
             time_info = ""
 
@@ -613,7 +613,10 @@ class LogicExecutor(QObject):
         
         elif "중첩로직" in message:
             formatted_message = f"<span style='color: #008000; font-size: 28px; font-weight: bold;'>{time_info}</span> <span style='color: #008000; font-size: 18px; font-weight: bold;'>{message}</span>"
-        
+
+        elif "키 입력: 숫자패드 9" in message or "키 입력: 숫자패드 8" in message:
+            formatted_message = f"<span style='color: #FF00FF; font-size: 12px; font-weight: bold;'>{time_info}</span> <span style='color: #FF00FF; font-size: 12px; font-weight: bold;'>{message}</span>"
+
         elif "로직 실행" in message and ("실행 시작" in message or "반복 완료" in message):
             formatted_message = f"<span style='color: #0000FF; font-size: 34px; font-weight: bold;'>{time_info}</span> <span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{message}</span>"
         else:
@@ -638,7 +641,7 @@ class LogicExecutor(QObject):
             # 선택된 로직 초기화
             self.selected_logic = None
             # 시작 시간 초기화
-            self._start_time = time.time()
+            self._start_time = 0
             
             self.execution_state_changed.emit(self.execution_state.copy())
 
@@ -734,3 +737,57 @@ class LogicExecutor(QObject):
         finally:
             self.running = False
             self.stop_requested = False
+
+    def _on_key_released(self, key_info):
+        """키를 뗄 때 호출
+        
+        Args:
+            key_info (dict): 입력된 키 정보
+        """
+        self._log_with_time("[키 감지 로그] 키 입력 감지: {}".format(key_info))
+        
+        # 강제 중지 키 감지
+        if key_info.get('virtual_key') == self.force_stop_key:
+            self._log_with_time("[키 감지 로그] 강제 중지 키 감지 - 로직 강제 중지 실행")
+            self.force_stop()
+            return
+        
+        if not self._should_execute_logic():
+            self._log_with_time("[로그] 로직 실행 조건이 맞지 않습니다.")
+            return
+            
+        # 최신 로직 정보로 로직 찾기 및 실행
+        found_matching_logic = False
+        logics = self.logic_manager.get_all_logics(force=True)
+        
+        for logic_id, logic in logics.items():
+            if self._is_trigger_key_matched(logic, key_info):
+                found_matching_logic = True
+                if self.execution_state['is_executing']:
+                    self._log_with_time("다른 로직이 실행 중입니다.")
+                    return
+                    
+                try:
+                    self.selected_logic = logic
+                    self.selected_logic['id'] = logic_id  # ID 정보 추가
+                    self._update_state(
+                        is_executing=True,
+                        current_step=0,
+                        current_repeat=1
+                    )
+                    # 로직 실행 시작 시간 초기화
+                    self._start_time = time.time()
+                    self._log_with_time(f"[로직 실행] 로직 '{logic.get('name')}({logic_id})' 실행 시작")
+                    
+                    self.execution_started.emit()
+                    
+                    # 비동기적으로 첫 번째 스텝 실행
+                    QTimer.singleShot(0, self._execute_next_step)
+                    return
+                    
+                except Exception as e:
+                    self._log_with_time("[오류] 로직 시작 중 오류 발생: {}".format(str(e)))
+                    self._safe_cleanup()
+                    
+        if not found_matching_logic:
+            self._log_with_time("[로그] 일치하는 트리거 키를 찾을 수 없습니다.")
