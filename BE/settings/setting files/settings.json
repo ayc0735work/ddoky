@@ -683,8 +683,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0305초",
-                    "duration": 0.0305,
+                    "display_text": "지연시간 : 0.0352초",
+                    "duration": 0.0352,
                     "order": 1
                 },
                 {
@@ -697,8 +697,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0305초",
-                    "duration": 0.0305,
+                    "display_text": "지연시간 : 0.0352초",
+                    "duration": 0.0352,
                     "order": 3
                 },
                 {
@@ -713,8 +713,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0305초",
-                    "duration": 0.0305,
+                    "display_text": "지연시간 : 0.0352초",
+                    "duration": 0.0352,
                     "order": 5
                 },
                 {
@@ -729,8 +729,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0305초",
-                    "duration": 0.0305,
+                    "display_text": "지연시간 : 0.0352초",
+                    "duration": 0.0352,
                     "order": 7
                 },
                 {
@@ -755,8 +755,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0305초",
-                    "duration": 0.0305,
+                    "display_text": "지연시간 : 0.0352초",
+                    "duration": 0.0352,
                     "order": 10
                 },
                 {
@@ -781,8 +781,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0305초",
-                    "duration": 0.0305,
+                    "display_text": "지연시간 : 0.0352초",
+                    "duration": 0.0352,
                     "order": 13
                 },
                 {
@@ -807,8 +807,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0305초",
-                    "duration": 0.0305,
+                    "display_text": "지연시간 : 0.0352초",
+                    "duration": 0.0352,
                     "order": 16
                 },
                 {
@@ -833,8 +833,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0305초",
-                    "duration": 0.0305,
+                    "display_text": "지연시간 : 0.0352초",
+                    "duration": 0.0352,
                     "order": 19
                 },
                 {
@@ -859,8 +859,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0305초",
-                    "duration": 0.0305,
+                    "display_text": "지연시간 : 0.0352초",
+                    "duration": 0.0352,
                     "order": 22
                 },
                 {
@@ -875,8 +875,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0305초",
-                    "duration": 0.0305,
+                    "display_text": "지연시간 : 0.0352초",
+                    "duration": 0.0352,
                     "order": 24
                 },
                 {
@@ -889,8 +889,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0305초",
-                    "duration": 0.0305,
+                    "display_text": "지연시간 : 0.0352초",
+                    "duration": 0.0352,
                     "order": 26
                 }
             ]
@@ -1022,8 +1022,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0385초",
-                    "duration": 0.0385,
+                    "display_text": "지연시간 : 0.0444초",
+                    "duration": 0.0444,
                     "order": 8
                 },
                 {
@@ -1036,8 +1036,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0385초",
-                    "duration": 0.0385,
+                    "display_text": "지연시간 : 0.0444초",
+                    "duration": 0.0444,
                     "order": 10
                 },
                 {
@@ -1062,8 +1062,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0385초",
-                    "duration": 0.0385,
+                    "display_text": "지연시간 : 0.0444초",
+                    "duration": 0.0444,
                     "order": 13
                 },
                 {
@@ -1076,8 +1076,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0385초",
-                    "duration": 0.0385,
+                    "display_text": "지연시간 : 0.0444초",
+                    "duration": 0.0444,
                     "order": 15
                 },
                 {
@@ -1102,8 +1102,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0385초",
-                    "duration": 0.0385,
+                    "display_text": "지연시간 : 0.0444초",
+                    "duration": 0.0444,
                     "order": 18
                 },
                 {
@@ -1116,8 +1116,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0385초",
-                    "duration": 0.0385,
+                    "display_text": "지연시간 : 0.0444초",
+                    "duration": 0.0444,
                     "order": 20
                 },
                 {
@@ -1142,8 +1142,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0385초",
-                    "duration": 0.0385,
+                    "display_text": "지연시간 : 0.0444초",
+                    "duration": 0.0444,
                     "order": 23
                 },
                 {
@@ -1156,8 +1156,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0385초",
-                    "duration": 0.0385,
+                    "display_text": "지연시간 : 0.0444초",
+                    "duration": 0.0444,
                     "order": 25
                 },
                 {
@@ -1182,8 +1182,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0385초",
-                    "duration": 0.0385,
+                    "display_text": "지연시간 : 0.0444초",
+                    "duration": 0.0444,
                     "order": 28
                 },
                 {
@@ -1196,8 +1196,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0385초",
-                    "duration": 0.0385,
+                    "display_text": "지연시간 : 0.0444초",
+                    "duration": 0.0444,
                     "order": 30
                 },
                 {
@@ -1222,8 +1222,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0385초",
-                    "duration": 0.0385,
+                    "display_text": "지연시간 : 0.0444초",
+                    "duration": 0.0444,
                     "order": 33
                 },
                 {
@@ -1236,8 +1236,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0385초",
-                    "duration": 0.0385,
+                    "display_text": "지연시간 : 0.0444초",
+                    "duration": 0.0444,
                     "order": 35
                 },
                 {
@@ -1262,8 +1262,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0385초",
-                    "duration": 0.0385,
+                    "display_text": "지연시간 : 0.0444초",
+                    "duration": 0.0444,
                     "order": 38
                 },
                 {
@@ -1276,8 +1276,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0385초",
-                    "duration": 0.0385,
+                    "display_text": "지연시간 : 0.0444초",
+                    "duration": 0.0444,
                     "order": 40
                 },
                 {
@@ -1302,8 +1302,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0385초",
-                    "duration": 0.0385,
+                    "display_text": "지연시간 : 0.0444초",
+                    "duration": 0.0444,
                     "order": 43
                 },
                 {
@@ -1316,8 +1316,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0385초",
-                    "duration": 0.0385,
+                    "display_text": "지연시간 : 0.0444초",
+                    "duration": 0.0444,
                     "order": 45
                 },
                 {
@@ -1342,8 +1342,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0385초",
-                    "duration": 0.0385,
+                    "display_text": "지연시간 : 0.0444초",
+                    "duration": 0.0444,
                     "order": 48
                 },
                 {
@@ -1356,8 +1356,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0385초",
-                    "duration": 0.0385,
+                    "display_text": "지연시간 : 0.0444초",
+                    "duration": 0.0444,
                     "order": 50
                 },
                 {
@@ -1386,8 +1386,9 @@
             "order": 15,
             "name": "중독, 마비 첨 사냥 - 무한반복",
             "created_at": "2024-12-08T21:25:24.196785",
-            "updated_at": "2024-12-15T07:12:46.182838",
+            "updated_at": "2024-12-15T08:19:22.412362",
             "trigger_key": {
+                "is_system_key": false,
                 "key_code": "숫자패드 *",
                 "modifiers": 0,
                 "scan_code": 55,
@@ -1422,7 +1423,7 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.0222초",
                     "duration": 0.0222,
-                    "order": 3
+                    "order": 4
                 }
             ]
         },
@@ -1430,8 +1431,9 @@
             "order": 16,
             "name": "중독, 마비 첨 사냥 - 무한반복 - 2222",
             "created_at": "2024-12-12T08:34:33.775036",
-            "updated_at": "2024-12-15T07:15:07.924341",
+            "updated_at": "2024-12-15T08:19:42.992836",
             "trigger_key": {
+                "is_system_key": false,
                 "key_code": "백쿼트(`)",
                 "modifiers": 0,
                 "scan_code": 41,
@@ -1466,7 +1468,7 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.0222초",
                     "duration": 0.0222,
-                    "order": 3
+                    "order": 4
                 }
             ]
         },
@@ -2224,8 +2226,9 @@
             "order": 25,
             "name": "마비 상하 - 1회",
             "created_at": "2024-12-09T13:55:26.337819",
-            "updated_at": "2024-12-15T07:18:43.100464",
+            "updated_at": "2024-12-15T08:22:17.891520",
             "trigger_key": {
+                "is_system_key": false,
                 "key_code": "왼쪽 컨트롤",
                 "modifiers": 0,
                 "scan_code": 29,
@@ -2236,8 +2239,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 1
                 },
                 {
@@ -2250,8 +2253,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 3
                 },
                 {
@@ -2276,8 +2279,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 6
                 },
                 {
@@ -2302,8 +2305,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 9
                 },
                 {
@@ -2316,8 +2319,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 11
                 },
                 {
@@ -2342,8 +2345,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 14
                 },
                 {
@@ -2368,8 +2371,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 17
                 }
             ]
@@ -2378,15 +2381,15 @@
             "order": 26,
             "name": "마비 좌우 - 1회",
             "created_at": "2024-12-09T13:56:02.913186",
-            "updated_at": "2024-12-15T07:18:00.979642",
+            "updated_at": "2024-12-15T08:20:07.990753",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 1
                 },
                 {
@@ -2399,8 +2402,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 3
                 },
                 {
@@ -2425,8 +2428,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 6
                 },
                 {
@@ -2451,8 +2454,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 9
                 },
                 {
@@ -2465,8 +2468,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 11
                 },
                 {
@@ -2491,8 +2494,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 14
                 },
                 {
@@ -2517,8 +2520,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 17
                 }
             ]
@@ -2534,8 +2537,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 1
                 },
                 {
@@ -2548,8 +2551,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 3
                 },
                 {
@@ -2574,8 +2577,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 6
                 },
                 {
@@ -2600,8 +2603,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 9
                 },
                 {
@@ -2614,8 +2617,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 11
                 },
                 {
@@ -2640,8 +2643,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 14
                 },
                 {
@@ -2666,8 +2669,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 17
                 }
             ]
@@ -2683,8 +2686,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 1
                 },
                 {
@@ -2697,8 +2700,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 3
                 },
                 {
@@ -2723,8 +2726,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 6
                 },
                 {
@@ -2749,8 +2752,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 9
                 },
                 {
@@ -2763,8 +2766,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 11
                 },
                 {
@@ -2789,8 +2792,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 14
                 },
                 {
@@ -2815,8 +2818,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 17
                 }
             ]
@@ -2832,8 +2835,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 1
                 },
                 {
@@ -2846,8 +2849,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 3
                 },
                 {
@@ -2872,8 +2875,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 6
                 },
                 {
@@ -2898,8 +2901,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 9
                 },
                 {
@@ -2912,8 +2915,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 11
                 },
                 {
@@ -2938,8 +2941,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 14
                 },
                 {
@@ -2964,8 +2967,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 17
                 }
             ]
@@ -2981,8 +2984,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 1
                 },
                 {
@@ -2995,8 +2998,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 3
                 },
                 {
@@ -3021,8 +3024,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 6
                 },
                 {
@@ -3047,8 +3050,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 9
                 },
                 {
@@ -3061,8 +3064,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 11
                 },
                 {
@@ -3087,8 +3090,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 14
                 },
                 {
@@ -3113,8 +3116,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.04초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 17
                 }
             ]
@@ -3123,15 +3126,15 @@
             "order": 31,
             "name": "마비 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
-            "updated_at": "2024-12-15T06:59:41.702213",
+            "updated_at": "2024-12-15T08:18:49.488246",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0400초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 1
                 },
                 {
@@ -3156,8 +3159,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0400초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 4
                 },
                 {
@@ -3182,8 +3185,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0400초",
-                    "duration": 0.04,
+                    "display_text": "지연시간 : 0.0412초",
+                    "duration": 0.0412,
                     "order": 7
                 }
             ]
@@ -3200,7 +3203,7 @@
                 {
                     "type": "delay",
                     "display_text": "지연시간 : 0.0400초",
-                    "duration": 0.04,
+                    "duration": 0.0412,
                     "order": 1
                 },
                 {
@@ -3226,7 +3229,7 @@
                 {
                     "type": "delay",
                     "display_text": "지연시간 : 0.0400초",
-                    "duration": 0.04,
+                    "duration": 0.0412,
                     "order": 4
                 },
                 {
@@ -3252,7 +3255,7 @@
                 {
                     "type": "delay",
                     "display_text": "지연시간 : 0.0400초",
-                    "duration": 0.04,
+                    "duration": 0.0412,
                     "order": 7
                 }
             ]
@@ -3269,7 +3272,7 @@
                 {
                     "type": "delay",
                     "display_text": "지연시간 : 0.0400초",
-                    "duration": 0.04,
+                    "duration": 0.0412,
                     "order": 1
                 },
                 {
@@ -3295,7 +3298,7 @@
                 {
                     "type": "delay",
                     "display_text": "지연시간 : 0.0400초",
-                    "duration": 0.04,
+                    "duration": 0.0412,
                     "order": 4
                 },
                 {
@@ -3321,7 +3324,7 @@
                 {
                     "type": "delay",
                     "display_text": "지연시간 : 0.0400초",
-                    "duration": 0.04,
+                    "duration": 0.0412,
                     "order": 7
                 }
             ]

@@ -251,6 +251,8 @@ class KeyboardHook(QObject):
                 kb = lParam.contents
                 # 확장 키 플래그 (0x1)
                 is_extended = (kb.flags & 0x1) == 0x1
+                # ALT 키 플래그 (0x20)
+                is_alt_down = (kb.flags & 0x20) == 0x20
                 
                 # 가상 키와 스캔 코드
                 vk_code = kb.vkCode
@@ -288,10 +290,21 @@ class KeyboardHook(QObject):
                     'key_code': get_key_name(vk_code, kb.flags),
                     'scan_code': scan_code,
                     'virtual_key': vk_code,
-                    'modifiers': get_qt_modifiers()
+                    'modifiers': get_qt_modifiers(),
+                    'is_system_key': is_alt_down
                 }
                 
-                # 키 누름/뗌 이벤트 구분
+                # 시스템 키(알트) 처리
+                if wParam in [WM_SYSKEYDOWN, WM_SYSKEYUP]:
+                    if vk_code == win32con.VK_MENU or vk_code in [win32con.VK_LMENU, win32con.VK_RMENU]:
+                        # ALT 키 자체의 이벤트
+                        if wParam == WM_SYSKEYDOWN:
+                            self.key_pressed.emit(key_info)
+                        else:
+                            self.key_released.emit(key_info)
+                        return user32.CallNextHookEx(self.hook_id, nCode, wParam, lParam)
+                
+                # 일반 키 이벤트 처리
                 if wParam in [WM_KEYDOWN, WM_SYSKEYDOWN]:
                     self.key_pressed.emit(key_info)
                 elif wParam in [WM_KEYUP, WM_SYSKEYUP]:
