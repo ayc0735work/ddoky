@@ -727,10 +727,9 @@
             "order": 12,
             "name": "모두 줍기",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-12-11T21:30:39.069555",
+            "updated_at": "2024-12-15T06:34:46.477002",
             "trigger_key": {
-                "display_text": "",
-                "key_code": "키 코드 190",
+                "key_code": "마침표(.)",
                 "modifiers": 0,
                 "scan_code": 52,
                 "virtual_key": 190
@@ -1317,9 +1316,9 @@
             "order": 15,
             "name": "중독, 마비 첨 사냥 - 무한반복 - 2222",
             "created_at": "2024-12-12T08:34:33.775036",
-            "updated_at": "2024-12-14T15:03:44.304320",
+            "updated_at": "2024-12-15T06:34:32.849265",
             "trigger_key": {
-                "key_code": "키 코드 192",
+                "key_code": "백쿼트(`)",
                 "modifiers": 0,
                 "scan_code": 41,
                 "virtual_key": 192
@@ -1743,9 +1742,9 @@
             "order": 20,
             "name": "중독만 - 90회",
             "created_at": "2024-12-04T00:08:13.574278",
-            "updated_at": "2024-12-15T06:24:45.215835",
+            "updated_at": "2024-12-15T06:34:37.927820",
             "trigger_key": {
-                "key_code": "키 코드 25",
+                "key_code": "오른쪽 컨트롤(한영 전환)",
                 "modifiers": 0,
                 "scan_code": 29,
                 "virtual_key": 25
