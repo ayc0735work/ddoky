@@ -1645,7 +1645,7 @@
             "order": 15,
             "name": "첨 중독 - 조합본 - 9999회",
             "created_at": "2024-12-02T02:03:00.957188",
-            "updated_at": "2024-12-14T18:11:30.382027",
+            "updated_at": "2024-12-14T18:18:52.204957",
             "trigger_key": {
                 "key_code": "숫자패드 9",
                 "modifiers": 0,
@@ -1665,8 +1665,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0521초",
-                    "duration": 0.0521,
+                    "display_text": "지연시간 : 0.0491초",
+                    "duration": 0.0491,
                     "order": 2
                 },
                 {
