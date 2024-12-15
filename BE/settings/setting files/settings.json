@@ -1854,15 +1854,15 @@
             "order": 25,
             "name": "ㄴ 중독만 - 5회 (첨이랑 딱 맞음)",
             "created_at": "2024-12-08T20:39:14.995922",
-            "updated_at": "2024-12-15T13:12:13.880213",
+            "updated_at": "2024-12-15T14:44:33.894713",
             "trigger_key": null,
             "repeat_count": 5,
             "is_nested": true,
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0176초",
-                    "duration": 0.0176,
+                    "display_text": "지연시간 : 0.0186초",
+                    "duration": 0.0186,
                     "order": 1
                 },
                 {
@@ -1887,8 +1887,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0176초",
-                    "duration": 0.0176,
+                    "display_text": "지연시간 : 0.0186초",
+                    "duration": 0.0186,
                     "order": 4
                 },
                 {
@@ -1913,8 +1913,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0176초",
-                    "duration": 0.0176,
+                    "display_text": "지연시간 : 0.0186초",
+                    "duration": 0.0186,
                     "order": 7
                 },
                 {
@@ -1939,8 +1939,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0176초",
-                    "duration": 0.0176,
+                    "display_text": "지연시간 : 0.0186초",
+                    "duration": 0.0186,
                     "order": 10
                 }
             ]
