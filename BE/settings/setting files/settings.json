@@ -1618,20 +1618,20 @@
             "order": 19,
             "name": "ㄴ 중독만 - 4회 (첨이랑 딱 맞음)",
             "created_at": "2024-12-08T20:39:14.995922",
-            "updated_at": "2024-12-15T09:39:42.666899",
+            "updated_at": "2024-12-15T12:34:36.487551",
             "trigger_key": {
                 "key_code": "Space",
                 "modifiers": 0,
                 "scan_code": 57,
                 "virtual_key": 32
             },
-            "repeat_count": 4,
+            "repeat_count": 5,
             "is_nested": false,
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0228초",
-                    "duration": 0.0228,
+                    "display_text": "지연시간 : 0.0185초",
+                    "duration": 0.0185,
                     "order": 1
                 },
                 {
@@ -1656,8 +1656,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0228초",
-                    "duration": 0.0228,
+                    "display_text": "지연시간 : 0.0185초",
+                    "duration": 0.0185,
                     "order": 4
                 },
                 {
@@ -1682,8 +1682,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0228초",
-                    "duration": 0.0228,
+                    "display_text": "지연시간 : 0.0185초",
+                    "duration": 0.0185,
                     "order": 7
                 },
                 {
@@ -1708,8 +1708,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0228초",
-                    "duration": 0.0228,
+                    "display_text": "지연시간 : 0.0185초",
+                    "duration": 0.0185,
                     "order": 10
                 }
             ]
@@ -2519,7 +2519,7 @@
             ]
         },
         "d112c815-7b6d-4300-8faa-d103dec6b7bd": {
-            "order": 27,
+            "order": 28,
             "name": "저주 상하 - 1회",
             "created_at": "2024-12-09T14:29:26.182552",
             "updated_at": "2024-12-15T07:18:54.169940",
@@ -2668,7 +2668,7 @@
             ]
         },
         "4f0137c2-a6b5-47b2-84af-041bb3230d01": {
-            "order": 28,
+            "order": 29,
             "name": "저주 좌우 - 1회",
             "created_at": "2024-12-09T14:29:33.887956",
             "updated_at": "2024-12-15T08:55:00.190476",
@@ -2817,7 +2817,7 @@
             ]
         },
         "e6fc846b-0a11-4ba7-b03b-36fd4e5d7113": {
-            "order": 29,
+            "order": 30,
             "name": "중독 상하 - 1회",
             "created_at": "2024-12-09T14:29:26.182552",
             "updated_at": "2024-12-15T07:19:07.230770",
@@ -2966,7 +2966,7 @@
             ]
         },
         "dcebf7ad-7bb4-46ef-8efc-2caa5a2661c9": {
-            "order": 30,
+            "order": 31,
             "name": "중독 좌우 - 1회",
             "created_at": "2024-12-09T14:29:33.887956",
             "updated_at": "2024-12-15T08:55:08.465416",
@@ -3115,7 +3115,7 @@
             ]
         },
         "e1c7d791-2f2c-48ec-991f-be44ce9c29ab": {
-            "order": 31,
+            "order": 32,
             "name": "마비 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-15T09:03:15.487640",
@@ -3184,7 +3184,7 @@
             ]
         },
         "c4de3c75-5bd3-4451-8be7-6795586c24b9": {
-            "order": 32,
+            "order": 34,
             "name": "저주 - 홈 클릭",
             "created_at": "2024-12-08T20:06:10.101017",
             "updated_at": "2024-12-15T09:03:18.999648",
@@ -3253,7 +3253,7 @@
             ]
         },
         "dfef51e9-e9c6-4689-a0d7-824d36943241": {
-            "order": 33,
+            "order": 35,
             "name": "중독 - 홈 클릭",
             "created_at": "2024-12-08T20:06:34.044749",
             "updated_at": "2024-12-15T09:03:22.890388",
@@ -3322,7 +3322,7 @@
             ]
         },
         "0ceb5d7f-00bb-48b5-95ba-0b204d99da44": {
-            "order": 34,
+            "order": 36,
             "name": "월드 재입장",
             "created_at": "2024-12-11T21:30:39.063045",
             "updated_at": "2024-12-13T14:16:18.848598",
@@ -3386,7 +3386,7 @@
             ]
         },
         "b09ec1d7-4e80-49c0-a1b5-480a888e5b16": {
-            "order": 35,
+            "order": 37,
             "name": "캐릭터 선택",
             "created_at": "2024-12-12T08:29:17.016286",
             "updated_at": "2024-12-13T14:16:15.706736",
@@ -3502,6 +3502,308 @@
                     "display_text": "지연시간 : 0.15초",
                     "duration": 0.15,
                     "order": 12
+                }
+            ]
+        },
+        "728ffa37-127b-40f3-a9b6-70dbc5b882db": {
+            "order": 27,
+            "name": "마비 상하좌우 - 테스트",
+            "created_at": "2024-12-09T13:56:02.913186",
+            "updated_at": "2024-12-15T12:33:17.591646",
+            "trigger_key": {
+                "is_system_key": false,
+                "key_code": "왼쪽 컨트롤",
+                "modifiers": 0,
+                "scan_code": 29,
+                "virtual_key": 162
+            },
+            "repeat_count": 1,
+            "is_nested": false,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "마비 - 홈 클릭 - 테스트",
+                    "logic_id": "eed1f76c-ac9d-4856-9714-86b5fd581d24",
+                    "logic_name": "마비 - 홈 클릭 - 테스트",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 방향키 위쪽 ↑ --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 위쪽 ↑",
+                    "scan_code": 72,
+                    "virtual_key": 38,
+                    "modifiers": 0
+                },
+                {
+                    "order": 3,
+                    "display_text": "키 입력: 방향키 위쪽 ↑ --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 위쪽 ↑",
+                    "scan_code": 72,
+                    "virtual_key": 38,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0050초",
+                    "duration": 0.005,
+                    "order": 4
+                },
+                {
+                    "order": 5,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 6,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 7,
+                    "type": "logic",
+                    "display_text": "마비 - 홈 클릭 - 테스트",
+                    "logic_id": "eed1f76c-ac9d-4856-9714-86b5fd581d24",
+                    "logic_name": "마비 - 홈 클릭 - 테스트",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 8,
+                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 아래쪽 ↓",
+                    "scan_code": 80,
+                    "virtual_key": 40,
+                    "modifiers": 0
+                },
+                {
+                    "order": 9,
+                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 아래쪽 ↓",
+                    "scan_code": 80,
+                    "virtual_key": 40,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0050초",
+                    "duration": 0.005,
+                    "order": 10
+                },
+                {
+                    "order": 11,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 12,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 13,
+                    "type": "logic",
+                    "display_text": "마비 - 홈 클릭 - 테스트",
+                    "logic_id": "eed1f76c-ac9d-4856-9714-86b5fd581d24",
+                    "logic_name": "마비 - 홈 클릭 - 테스트",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 14,
+                    "display_text": "키 입력: 방향키 왼쪽 ← --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 왼쪽 ←",
+                    "scan_code": 75,
+                    "virtual_key": 37,
+                    "modifiers": 0
+                },
+                {
+                    "order": 15,
+                    "display_text": "키 입력: 방향키 왼쪽 ← --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 왼쪽 ←",
+                    "scan_code": 75,
+                    "virtual_key": 37,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0050초",
+                    "duration": 0.005,
+                    "order": 16
+                },
+                {
+                    "order": 17,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 18,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 19,
+                    "type": "logic",
+                    "display_text": "마비 - 홈 클릭 - 테스트",
+                    "logic_id": "eed1f76c-ac9d-4856-9714-86b5fd581d24",
+                    "logic_name": "마비 - 홈 클릭 - 테스트",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 20,
+                    "display_text": "키 입력: 방향키 오른쪽 → --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 오른쪽 →",
+                    "scan_code": 77,
+                    "virtual_key": 39,
+                    "modifiers": 0
+                },
+                {
+                    "order": 21,
+                    "display_text": "키 입력: 방향키 오른쪽 → --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 오른쪽 →",
+                    "scan_code": 77,
+                    "virtual_key": 39,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0050초",
+                    "duration": 0.005,
+                    "order": 22
+                },
+                {
+                    "order": 23,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 24,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                }
+            ]
+        },
+        "eed1f76c-ac9d-4856-9714-86b5fd581d24": {
+            "order": 33,
+            "name": "마비 - 홈 클릭 - 테스트",
+            "created_at": "2024-12-07T06:09:55.766255",
+            "updated_at": "2024-12-15T12:30:55.793654",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0260초",
+                    "duration": 0.026,
+                    "order": 1
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 숫자패드 5 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 5",
+                    "scan_code": 76,
+                    "virtual_key": 101,
+                    "modifiers": 0
+                },
+                {
+                    "order": 3,
+                    "display_text": "키 입력: 숫자패드 5 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 5",
+                    "scan_code": 76,
+                    "virtual_key": 101,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0260초",
+                    "duration": 0.026,
+                    "order": 4
+                },
+                {
+                    "order": 5,
+                    "display_text": "키 입력: Home --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "Home",
+                    "scan_code": 71,
+                    "virtual_key": 36,
+                    "modifiers": 0
+                },
+                {
+                    "order": 6,
+                    "display_text": "키 입력: Home --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "Home",
+                    "scan_code": 71,
+                    "virtual_key": 36,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0260초",
+                    "duration": 0.026,
+                    "order": 7
                 }
             ]
         }
