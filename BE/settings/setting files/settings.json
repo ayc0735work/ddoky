@@ -55,7 +55,7 @@
             "order": 1,
             "name": "공력증강 - 1회 - 6번키",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-15T09:38:06.041538",
+            "updated_at": "2024-12-15T09:57:17.105504",
             "trigger_key": {
                 "key_code": "숫자패드 6",
                 "modifiers": 0,
@@ -68,17 +68,17 @@
                 {
                     "order": 1,
                     "type": "logic",
-                    "display_text": "체력 회복 - 탭탭 - 3회",
-                    "logic_id": "ed0d7b48-c7ac-4397-8ce5-360143efa401",
-                    "logic_name": "체력 회복 - 탭탭 - 3회",
+                    "display_text": "체력 회복 - 탭탭 - 10회",
+                    "logic_id": "7c591192-f82b-4497-a1b3-e4beab60be58",
+                    "logic_name": "체력 회복 - 탭탭 - 10회",
                     "repeat_count": 1
                 },
                 {
                     "order": 2,
                     "type": "logic",
-                    "display_text": "동동주 마시기 - 1회",
-                    "logic_id": "9614e85c-3ceb-423b-97ea-e17bfc0101fc",
-                    "logic_name": "동동주 마시기 - 1회",
+                    "display_text": "체력 회복 - 탭탭 - 3회",
+                    "logic_id": "ed0d7b48-c7ac-4397-8ce5-360143efa401",
+                    "logic_name": "체력 회복 - 탭탭 - 3회",
                     "repeat_count": 1
                 },
                 {
@@ -89,45 +89,17 @@
                 },
                 {
                     "order": 4,
-                    "display_text": "키 입력: 숫자패드 6 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 6",
-                    "scan_code": 77,
-                    "virtual_key": 102,
-                    "modifiers": 0
-                },
-                {
-                    "order": 5,
-                    "display_text": "키 입력: 숫자패드 6 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 6",
-                    "scan_code": 77,
-                    "virtual_key": 102,
-                    "modifiers": 0
-                },
-                {
-                    "order": 6,
                     "type": "logic",
-                    "display_text": "체력 회복 - 탭탭 - 10회",
-                    "logic_id": "7c591192-f82b-4497-a1b3-e4beab60be58",
-                    "logic_name": "체력 회복 - 탭탭 - 10회",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 7,
-                    "type": "logic",
-                    "display_text": "체력 회복 - 탭탭 - 3회",
-                    "logic_id": "ed0d7b48-c7ac-4397-8ce5-360143efa401",
-                    "logic_name": "체력 회복 - 탭탭 - 3회",
+                    "display_text": "동동주 마시기 - 1회",
+                    "logic_id": "9614e85c-3ceb-423b-97ea-e17bfc0101fc",
+                    "logic_name": "동동주 마시기 - 1회",
                     "repeat_count": 1
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1000초",
+                    "display_text": "지연시간 : 0.1초",
                     "duration": 0.1,
-                    "order": 8
+                    "order": 5
                 }
             ]
         },
@@ -1005,7 +977,7 @@
             "order": 14,
             "name": "첨 중독, 저주, 마비 - 1회",
             "created_at": "2024-11-30T10:25:06.438732",
-            "updated_at": "2024-12-15T09:50:01.488006",
+            "updated_at": "2024-12-15T09:55:37.468363",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -1395,40 +1367,6 @@
                     "display_text": "지연시간 : 0.0433초",
                     "duration": 0.0433,
                     "order": 48
-                },
-                {
-                    "order": 49,
-                    "type": "logic",
-                    "display_text": "ㄴ 중독만 - 4회 (첨이랑 딱 맞음)",
-                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
-                    "logic_name": "ㄴ 중독만 - 4회 (첨이랑 딱 맞음)",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0433초",
-                    "duration": 0.0433,
-                    "order": 50
-                },
-                {
-                    "order": 51,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 52,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
                 }
             ]
         },
