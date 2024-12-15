@@ -55,7 +55,7 @@
             "order": 1,
             "name": "공력증강 - 1회 - 6번키",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-15T09:57:17.105504",
+            "updated_at": "2024-12-15T10:24:40.322164",
             "trigger_key": {
                 "key_code": "숫자패드 6",
                 "modifiers": 0,
@@ -74,21 +74,13 @@
                     "repeat_count": 1
                 },
                 {
-                    "order": 2,
-                    "type": "logic",
-                    "display_text": "체력 회복 - 탭탭 - 3회",
-                    "logic_id": "ed0d7b48-c7ac-4397-8ce5-360143efa401",
-                    "logic_name": "체력 회복 - 탭탭 - 3회",
-                    "repeat_count": 1
-                },
-                {
                     "type": "delay",
                     "display_text": "지연시간 : 0.025초",
                     "duration": 0.025,
-                    "order": 3
+                    "order": 2
                 },
                 {
-                    "order": 4,
+                    "order": 3,
                     "type": "logic",
                     "display_text": "동동주 마시기 - 1회",
                     "logic_id": "9614e85c-3ceb-423b-97ea-e17bfc0101fc",
@@ -97,9 +89,9 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1초",
-                    "duration": 0.1,
-                    "order": 5
+                    "display_text": "지연시간 : 0.0250초",
+                    "duration": 0.025,
+                    "order": 4
                 }
             ]
         },
@@ -107,7 +99,7 @@
             "order": 2,
             "name": "공력증강 - 1회 - 기본",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-15T09:38:11.344773",
+            "updated_at": "2024-12-15T10:24:35.413967",
             "trigger_key": {
                 "key_code": "F1",
                 "modifiers": 0,
@@ -161,8 +153,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1000초",
-                    "duration": 0.1,
+                    "display_text": "지연시간 : 0.0250초",
+                    "duration": 0.025,
                     "order": 6
                 }
             ]
@@ -171,7 +163,7 @@
             "order": 3,
             "name": "공력증강 10회 연속",
             "created_at": "2024-12-15T07:12:03.999632",
-            "updated_at": "2024-12-15T09:38:13.181668",
+            "updated_at": "2024-12-15T10:24:25.840643",
             "trigger_key": null,
             "repeat_count": 10,
             "is_nested": true,
@@ -186,8 +178,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1초",
-                    "duration": 0.1,
+                    "display_text": "지연시간 : 0.2000초",
+                    "duration": 0.2,
                     "order": 2
                 }
             ]
@@ -329,7 +321,7 @@
             "order": 6,
             "name": "체력 회복 - 탭탭 - 10회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-15T09:36:28.928727",
+            "updated_at": "2024-12-15T10:16:42.262483",
             "trigger_key": {
                 "key_code": "F2",
                 "modifiers": 0,
@@ -341,7 +333,7 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0250초",
+                    "display_text": "지연시간 : 0.025초",
                     "duration": 0.025,
                     "order": 1
                 },
@@ -355,7 +347,7 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0250초",
+                    "display_text": "지연시간 : 0.025초",
                     "duration": 0.025,
                     "order": 3
                 },
@@ -369,8 +361,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0250초",
-                    "duration": 0.025,
+                    "display_text": "지연시간 : 0.0555초",
+                    "duration": 0.0555,
                     "order": 5
                 },
                 {
@@ -383,7 +375,7 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0250초",
+                    "display_text": "지연시간 : 0.025초",
                     "duration": 0.025,
                     "order": 7
                 },
@@ -397,7 +389,7 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0250초",
+                    "display_text": "지연시간 : 0.025초",
                     "duration": 0.025,
                     "order": 9
                 }
@@ -499,7 +491,7 @@
             "order": 8,
             "name": "탭탭 고정",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-15T05:34:47.258888",
+            "updated_at": "2024-12-15T10:14:14.926723",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -531,7 +523,13 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 4,
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0100초",
+                    "duration": 0.01,
+                    "order": 4
+                },
+                {
+                    "order": 5,
                     "display_text": "키 입력: Home --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -541,7 +539,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 5,
+                    "order": 6,
                     "display_text": "키 입력: Home --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -551,7 +549,13 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 6,
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0100초",
+                    "duration": 0.01,
+                    "order": 7
+                },
+                {
+                    "order": 8,
                     "display_text": "키 입력: Tab --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -561,7 +565,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 7,
+                    "order": 9,
                     "display_text": "키 입력: Tab --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -569,6 +573,12 @@
                     "scan_code": 15,
                     "virtual_key": 9,
                     "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0100초",
+                    "duration": 0.01,
+                    "order": 10
                 }
             ]
         },
