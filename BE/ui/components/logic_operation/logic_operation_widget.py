@@ -396,28 +396,29 @@ class LogicOperationWidget(QFrame):
                 pasted_items.append(copied_item)
             
             # 선택된 위치 이후의 아이템들의 order 값을 조정
+            next_order = 1
+            # 이전 아이템들의 order 값 가져오기
+            for i in range(insert_position):
+                item = self.LogicItemList__QListWidget.item(i)
+                if item:
+                    item_data = item.data(Qt.UserRole)
+                    next_order = item_data.get('order', next_order) + 1
+
+            # 붙여넣을 아이템들의 order 값 설정
+            for copied_item in pasted_items:
+                copied_item['order'] = next_order
+                next_order += 1
+                self._add_item_at_index(copied_item, insert_position)
+                insert_position += 1
+
+            # 이후 아이템들의 order 값 업데이트
             for i in range(insert_position, self.LogicItemList__QListWidget.count()):
                 item = self.LogicItemList__QListWidget.item(i)
                 if item:
                     item_data = item.data(Qt.UserRole)
-                    if item_data:
-                        item_data['order'] = i + len(pasted_items) + 1
-                        item.setData(Qt.UserRole, item_data)
-                        item.setText(self._format_item_text(item_data))
-            
-            # 붙여넣을 아이템들의 order 값 설정 및 추가
-            last_selected_item = None
-            for i, item_data in enumerate(pasted_items):
-                item_data['order'] = insert_position + i + 1
-                new_item = QListWidgetItem(self._format_item_text(item_data))
-                new_item.setData(Qt.UserRole, item_data)
-                self.LogicItemList__QListWidget.insertItem(insert_position + i, new_item)
-                last_selected_item = new_item
-            
-            # 마지막으로 붙여넣은 아이템 선택
-            if last_selected_item:
-                self.LogicItemList__QListWidget.setCurrentItem(last_selected_item)
-                last_selected_item.setSelected(True)
+                    item_data['order'] = next_order
+                    next_order += 1
+                    item.setData(Qt.UserRole, item_data)
             
             # 변경 사항 저장
             self.save_items()
@@ -621,3 +622,29 @@ class LogicOperationWidget(QFrame):
             self.log_message.emit("로직 강제 중지 키가 'ESC'로 초기화되었습니다.")
         except Exception as e:
             self.log_message.emit(f"[오류] 강제 중지 키 초기화 중 오류 발생: {str(e)}")
+
+    def _add_item_at_index(self, item_data, index):
+        """특정 인덱스에 아이템 추가"""
+        items = self.logic_data.get('items', [])
+        
+        # 새로운 아이템의 order 값 계산
+        if index == 0:
+            new_order = 1
+        elif index >= len(items):
+            new_order = (items[-1].get('order', 0) if items else 0) + 1
+        else:
+            # 삽입 위치의 이전과 다음 아이템의 order 값 사이의 중간값 계산
+            prev_order = items[index - 1].get('order', 0) if index > 0 else 0
+            next_order = items[index].get('order', 0)
+            new_order = prev_order + (next_order - prev_order) / 2
+
+        # 새로운 아이템에 order 값 설정
+        item_data['order'] = new_order
+        
+        # 아이템 삽입
+        items.insert(index, item_data)
+        self.logic_data['items'] = items
+        
+        # UI 업데이트
+        self._update_items_list()
+        self._save_logic()

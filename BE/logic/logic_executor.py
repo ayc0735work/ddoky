@@ -225,7 +225,8 @@ class LogicExecutor(QObject):
             return
             
         try:
-            items = self.selected_logic.get('items', [])
+            # order 필드를 기준으로 정렬된 아이템 목록을 가져옴
+            items = sorted(self.selected_logic.get('items', []), key=lambda x: x.get('order', 0))
             current_step = self.execution_state['current_step']
             
             # 모든 스텝이 완료되었는지 확인

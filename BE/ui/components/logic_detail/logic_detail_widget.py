@@ -485,7 +485,7 @@ class LogicDetailWidget(QFrame):
                         'End': win32con.VK_END,
                         'Page Up': win32con.VK_PRIOR,
                         'Page Down': win32con.VK_NEXT,
-                        '방향키 왼쪽 →': win32con.VK_LEFT,
+                        '방향키 왼쪽 ←': win32con.VK_LEFT,
                         '방향키 오른쪽 →': win32con.VK_RIGHT,
                         '방향키 위쪽 ↑': win32con.VK_UP,
                         '방향키 아래쪽 ↓': win32con.VK_DOWN,
