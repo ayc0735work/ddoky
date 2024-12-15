@@ -1039,9 +1039,9 @@
                 {
                     "order": 6,
                     "type": "logic",
-                    "display_text": "((1초)) 저주 - 상하좌우",
+                    "display_text": "((1초)) 상하좌우 - 저주",
                     "logic_id": "7e4c1fda-4463-4b4b-bee7-343da540e9d3",
-                    "logic_name": "((1초)) 저주 - 상하좌우",
+                    "logic_name": "((1초)) 상하좌우 - 저주",
                     "repeat_count": 1
                 },
                 {
@@ -1067,9 +1067,9 @@
                 {
                     "order": 9,
                     "type": "logic",
-                    "display_text": "((1초)) 마비 - 상하좌우",
+                    "display_text": "((1초)) 상하좌우 - 마비",
                     "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
-                    "logic_name": "((1초)) 마비 - 상하좌우",
+                    "logic_name": "((1초)) 상하좌우 - 마비",
                     "repeat_count": 1
                 },
                 {
@@ -1095,9 +1095,9 @@
                 {
                     "order": 12,
                     "type": "logic",
-                    "display_text": "((1초)) 중독 - 상하좌우",
+                    "display_text": "((1초)) 상하좌우 - 중독",
                     "logic_id": "aa39922c-0b07-4af7-9ccf-69807d682338",
-                    "logic_name": "((1초)) 중독 - 상하좌우",
+                    "logic_name": "((1초)) 상하좌우 - 중독",
                     "repeat_count": 1
                 },
                 {
@@ -1123,9 +1123,9 @@
                 {
                     "order": 15,
                     "type": "logic",
-                    "display_text": "((1초)) 중독 - 상하좌우",
+                    "display_text": "((1초)) 상하좌우 - 중독",
                     "logic_id": "aa39922c-0b07-4af7-9ccf-69807d682338",
-                    "logic_name": "((1초)) 중독 - 상하좌우",
+                    "logic_name": "((1초)) 상하좌우 - 중독",
                     "repeat_count": 1
                 },
                 {
@@ -1151,9 +1151,9 @@
                 {
                     "order": 18,
                     "type": "logic",
-                    "display_text": "((1초)) 마비 - 상하좌우",
+                    "display_text": "((1초)) 상하좌우 - 마비",
                     "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
-                    "logic_name": "((1초)) 마비 - 상하좌우",
+                    "logic_name": "((1초)) 상하좌우 - 마비",
                     "repeat_count": 1
                 },
                 {
@@ -1285,9 +1285,9 @@
                 {
                     "order": 1,
                     "type": "logic",
-                    "display_text": "ㄴ 중독만 - 5회 (첨이랑 딱 맞음)",
+                    "display_text": "((1초)) 전체 돌리기 - 중독",
                     "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
-                    "logic_name": "ㄴ 중독만 - 5회 (첨이랑 딱 맞음)",
+                    "logic_name": "((1초)) 전체 돌리기 - 중독",
                     "repeat_count": 1
                 },
                 {
@@ -1335,9 +1335,9 @@
                 {
                     "order": 2,
                     "type": "logic",
-                    "display_text": "ㄴ 중독만 - 5회 (첨이랑 딱 맞음)",
+                    "display_text": "((1초)) 전체 돌리기 - 중독",
                     "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
-                    "logic_name": "ㄴ 중독만 - 5회 (첨이랑 딱 맞음)",
+                    "logic_name": "((1초)) 전체 돌리기 - 중독",
                     "repeat_count": 1
                 },
                 {
@@ -1850,19 +1850,19 @@
                 }
             ]
         },
-        "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf": {
+        "7b0c844b-3c8d-4e92-aa93-8a28c3faf269": {
             "order": 25,
-            "name": "ㄴ 중독만 - 5회 (첨이랑 딱 맞음)",
+            "name": "((1초)) 전체 돌리기 - 마비",
             "created_at": "2024-12-08T20:39:14.995922",
-            "updated_at": "2024-12-15T14:44:33.894713",
+            "updated_at": "2024-12-15T14:56:47.408175",
             "trigger_key": null,
             "repeat_count": 5,
             "is_nested": true,
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0186초",
-                    "duration": 0.0186,
+                    "display_text": "지연시간 : 0.0262초",
+                    "duration": 0.0262,
                     "order": 1
                 },
                 {
@@ -1887,8 +1887,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0186초",
-                    "duration": 0.0186,
+                    "display_text": "지연시간 : 0.0262초",
+                    "duration": 0.0262,
                     "order": 4
                 },
                 {
@@ -1913,8 +1913,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0186초",
-                    "duration": 0.0186,
+                    "display_text": "지연시간 : 0.0262초",
+                    "duration": 0.0262,
                     "order": 7
                 },
                 {
@@ -1939,17 +1939,207 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0186초",
-                    "duration": 0.0186,
+                    "display_text": "지연시간 : 0.0262초",
+                    "duration": 0.0262,
+                    "order": 10
+                }
+            ]
+        },
+        "8a4d4894-addf-427e-a158-9c59324fec5f": {
+            "order": 26,
+            "name": "((1초)) 전체 돌리기 - 저주",
+            "created_at": "2024-12-08T20:39:14.995922",
+            "updated_at": "2024-12-15T14:56:43.373869",
+            "trigger_key": null,
+            "repeat_count": 5,
+            "is_nested": true,
+            "items": [
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0262초",
+                    "duration": 0.0262,
+                    "order": 1
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 숫자패드 3 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 3",
+                    "scan_code": 81,
+                    "virtual_key": 99,
+                    "modifiers": 0
+                },
+                {
+                    "order": 3,
+                    "display_text": "키 입력: 숫자패드 3 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 3",
+                    "scan_code": 81,
+                    "virtual_key": 99,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0262초",
+                    "duration": 0.0262,
+                    "order": 4
+                },
+                {
+                    "order": 5,
+                    "display_text": "키 입력: 방향키 오른쪽 → --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 오른쪽 →",
+                    "scan_code": 77,
+                    "virtual_key": 39,
+                    "modifiers": 0
+                },
+                {
+                    "order": 6,
+                    "display_text": "키 입력: 방향키 오른쪽 → --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 오른쪽 →",
+                    "scan_code": 77,
+                    "virtual_key": 39,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0262초",
+                    "duration": 0.0262,
+                    "order": 7
+                },
+                {
+                    "order": 8,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 9,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0262초",
+                    "duration": 0.0262,
+                    "order": 10
+                }
+            ]
+        },
+        "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf": {
+            "order": 27,
+            "name": "((1초)) 전체 돌리기 - 중독",
+            "created_at": "2024-12-08T20:39:14.995922",
+            "updated_at": "2024-12-15T14:56:28.283983",
+            "trigger_key": null,
+            "repeat_count": 5,
+            "is_nested": true,
+            "items": [
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0262초",
+                    "duration": 0.0262,
+                    "order": 1
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 숫자패드 3 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 3",
+                    "scan_code": 81,
+                    "virtual_key": 99,
+                    "modifiers": 0
+                },
+                {
+                    "order": 3,
+                    "display_text": "키 입력: 숫자패드 3 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 3",
+                    "scan_code": 81,
+                    "virtual_key": 99,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0262초",
+                    "duration": 0.0262,
+                    "order": 4
+                },
+                {
+                    "order": 5,
+                    "display_text": "키 입력: 방향키 오른쪽 → --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 오른쪽 →",
+                    "scan_code": 77,
+                    "virtual_key": 39,
+                    "modifiers": 0
+                },
+                {
+                    "order": 6,
+                    "display_text": "키 입력: 방향키 오른쪽 → --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 오른쪽 →",
+                    "scan_code": 77,
+                    "virtual_key": 39,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0262초",
+                    "duration": 0.0262,
+                    "order": 7
+                },
+                {
+                    "order": 8,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 9,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0262초",
+                    "duration": 0.0262,
                     "order": 10
                 }
             ]
         },
         "728ffa37-127b-40f3-a9b6-70dbc5b882db": {
-            "order": 26,
-            "name": "((1초)) 마비 - 상하좌우",
+            "order": 28,
+            "name": "((1초)) 상하좌우 - 마비",
             "created_at": "2024-12-09T13:56:02.913186",
-            "updated_at": "2024-12-15T13:12:17.834510",
+            "updated_at": "2024-12-15T14:55:57.621521",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -2173,10 +2363,10 @@
             ]
         },
         "7e4c1fda-4463-4b4b-bee7-343da540e9d3": {
-            "order": 27,
-            "name": "((1초)) 저주 - 상하좌우",
+            "order": 29,
+            "name": "((1초)) 상하좌우 - 저주",
             "created_at": "2024-12-09T13:56:02.913186",
-            "updated_at": "2024-12-15T12:46:00.756842",
+            "updated_at": "2024-12-15T14:56:02.958517",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -2400,10 +2590,10 @@
             ]
         },
         "aa39922c-0b07-4af7-9ccf-69807d682338": {
-            "order": 28,
-            "name": "((1초)) 중독 - 상하좌우",
+            "order": 30,
+            "name": "((1초)) 상하좌우 - 중독",
             "created_at": "2024-12-09T13:56:02.913186",
-            "updated_at": "2024-12-15T12:46:07.920428",
+            "updated_at": "2024-12-15T14:56:07.803975",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -2627,7 +2817,7 @@
             ]
         },
         "eed1f76c-ac9d-4856-9714-86b5fd581d24": {
-            "order": 29,
+            "order": 31,
             "name": "((1초 중첩로직)) - 마비 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-15T12:48:30.174519",
@@ -2696,7 +2886,7 @@
             ]
         },
         "cb1fc7a9-366a-4eea-99a6-37cf45f8ac27": {
-            "order": 30,
+            "order": 32,
             "name": "((1초 중첩로직)) - 저주 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-15T12:48:30.192239",
@@ -2765,7 +2955,7 @@
             ]
         },
         "7c9cd306-f7f1-4bb2-828e-215171f4884e": {
-            "order": 31,
+            "order": 33,
             "name": "((1초 중첩로직)) - 중독 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-15T12:48:30.184054",
@@ -2834,7 +3024,7 @@
             ]
         },
         "7d0d1763-539e-433c-affe-8c2dbbe3a600": {
-            "order": 32,
+            "order": 34,
             "name": "----------사냥----------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T12:53:40.945984",
@@ -2855,7 +3045,7 @@
             ]
         },
         "0ceb5d7f-00bb-48b5-95ba-0b204d99da44": {
-            "order": 33,
+            "order": 35,
             "name": "월드 재입장",
             "created_at": "2024-12-11T21:30:39.063045",
             "updated_at": "2024-12-13T14:16:18.848598",
@@ -2919,7 +3109,7 @@
             ]
         },
         "b09ec1d7-4e80-49c0-a1b5-480a888e5b16": {
-            "order": 34,
+            "order": 36,
             "name": "캐릭터 선택",
             "created_at": "2024-12-12T08:29:17.016286",
             "updated_at": "2024-12-13T14:16:15.706736",
@@ -3039,7 +3229,7 @@
             ]
         },
         "9ed591e4-b227-448b-9d0f-b90c76d1f662": {
-            "order": 35,
+            "order": 37,
             "name": "모두 줍기",
             "created_at": "2024-11-26T10:58:29.227835",
             "updated_at": "2024-12-15T06:34:46.477002",
@@ -3095,7 +3285,7 @@
             ]
         },
         "74c363cc-0452-4786-ae02-49e927baaa31": {
-            "order": 36,
+            "order": 38,
             "name": "----------편의----------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T12:53:09.156723",
