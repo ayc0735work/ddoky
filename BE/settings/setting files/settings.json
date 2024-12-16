@@ -2159,9 +2159,9 @@
                 {
                     "order": 1,
                     "type": "logic",
-                    "display_text": "((1초 중첩로직)) - 마비 - 홈 클릭",
+                    "display_text": "((중첩로직)) - 마비 - 홈 클릭",
                     "logic_id": "eed1f76c-ac9d-4856-9714-86b5fd581d24",
-                    "logic_name": "((1초 중첩로직)) - 마비 - 홈 클릭",
+                    "logic_name": "((중첩로직)) - 마비 - 홈 클릭",
                     "repeat_count": 1
                 },
                 {
@@ -2213,9 +2213,9 @@
                 {
                     "order": 7,
                     "type": "logic",
-                    "display_text": "((1초 중첩로직)) - 마비 - 홈 클릭",
+                    "display_text": "((중첩로직)) - 마비 - 홈 클릭",
                     "logic_id": "eed1f76c-ac9d-4856-9714-86b5fd581d24",
-                    "logic_name": "((1초 중첩로직)) - 마비 - 홈 클릭",
+                    "logic_name": "((중첩로직)) - 마비 - 홈 클릭",
                     "repeat_count": 1
                 },
                 {
@@ -2267,9 +2267,9 @@
                 {
                     "order": 13,
                     "type": "logic",
-                    "display_text": "((1초 중첩로직)) - 마비 - 홈 클릭",
+                    "display_text": "((중첩로직)) - 마비 - 홈 클릭",
                     "logic_id": "eed1f76c-ac9d-4856-9714-86b5fd581d24",
-                    "logic_name": "((1초 중첩로직)) - 마비 - 홈 클릭",
+                    "logic_name": "((중첩로직)) - 마비 - 홈 클릭",
                     "repeat_count": 1
                 },
                 {
@@ -2321,9 +2321,9 @@
                 {
                     "order": 19,
                     "type": "logic",
-                    "display_text": "((1초 중첩로직)) - 마비 - 홈 클릭",
+                    "display_text": "((중첩로직)) - 마비 - 홈 클릭",
                     "logic_id": "eed1f76c-ac9d-4856-9714-86b5fd581d24",
-                    "logic_name": "((1초 중첩로직)) - 마비 - 홈 클릭",
+                    "logic_name": "((중첩로직)) - 마비 - 홈 클릭",
                     "repeat_count": 1
                 },
                 {
@@ -2386,9 +2386,9 @@
                 {
                     "order": 1,
                     "type": "logic",
-                    "display_text": "((1초 중첩로직)) - 저주 - 홈 클릭",
+                    "display_text": "((중첩로직)) - 저주 - 홈 클릭",
                     "logic_id": "cb1fc7a9-366a-4eea-99a6-37cf45f8ac27",
-                    "logic_name": "((1초 중첩로직)) - 저주 - 홈 클릭",
+                    "logic_name": "((중첩로직)) - 저주 - 홈 클릭",
                     "repeat_count": 1
                 },
                 {
@@ -2440,9 +2440,9 @@
                 {
                     "order": 7,
                     "type": "logic",
-                    "display_text": "((1초 중첩로직)) - 저주 - 홈 클릭",
+                    "display_text": "((중첩로직)) - 저주 - 홈 클릭",
                     "logic_id": "cb1fc7a9-366a-4eea-99a6-37cf45f8ac27",
-                    "logic_name": "((1초 중첩로직)) - 저주 - 홈 클릭",
+                    "logic_name": "((중첩로직)) - 저주 - 홈 클릭",
                     "repeat_count": 1
                 },
                 {
@@ -2494,9 +2494,9 @@
                 {
                     "order": 13,
                     "type": "logic",
-                    "display_text": "((1초 중첩로직)) - 저주 - 홈 클릭",
+                    "display_text": "((중첩로직)) - 저주 - 홈 클릭",
                     "logic_id": "cb1fc7a9-366a-4eea-99a6-37cf45f8ac27",
-                    "logic_name": "((1초 중첩로직)) - 저주 - 홈 클릭",
+                    "logic_name": "((중첩로직)) - 저주 - 홈 클릭",
                     "repeat_count": 1
                 },
                 {
@@ -2548,9 +2548,9 @@
                 {
                     "order": 19,
                     "type": "logic",
-                    "display_text": "((1초 중첩로직)) - 저주 - 홈 클릭",
+                    "display_text": "((중첩로직)) - 저주 - 홈 클릭",
                     "logic_id": "cb1fc7a9-366a-4eea-99a6-37cf45f8ac27",
-                    "logic_name": "((1초 중첩로직)) - 저주 - 홈 클릭",
+                    "logic_name": "((중첩로직)) - 저주 - 홈 클릭",
                     "repeat_count": 1
                 },
                 {
@@ -2613,9 +2613,9 @@
                 {
                     "order": 1,
                     "type": "logic",
-                    "display_text": "((1초 중첩로직)) - 중독 - 홈 클릭",
+                    "display_text": "((중첩로직)) - 중독 - 홈 클릭",
                     "logic_id": "7c9cd306-f7f1-4bb2-828e-215171f4884e",
-                    "logic_name": "((1초 중첩로직)) - 중독 - 홈 클릭",
+                    "logic_name": "((중첩로직)) - 중독 - 홈 클릭",
                     "repeat_count": 1
                 },
                 {
@@ -2667,9 +2667,9 @@
                 {
                     "order": 7,
                     "type": "logic",
-                    "display_text": "((1초 중첩로직)) - 중독 - 홈 클릭",
+                    "display_text": "((중첩로직)) - 중독 - 홈 클릭",
                     "logic_id": "7c9cd306-f7f1-4bb2-828e-215171f4884e",
-                    "logic_name": "((1초 중첩로직)) - 중독 - 홈 클릭",
+                    "logic_name": "((중첩로직)) - 중독 - 홈 클릭",
                     "repeat_count": 1
                 },
                 {
@@ -2721,9 +2721,9 @@
                 {
                     "order": 13,
                     "type": "logic",
-                    "display_text": "((1초 중첩로직)) - 중독 - 홈 클릭",
+                    "display_text": "((중첩로직)) - 중독 - 홈 클릭",
                     "logic_id": "7c9cd306-f7f1-4bb2-828e-215171f4884e",
-                    "logic_name": "((1초 중첩로직)) - 중독 - 홈 클릭",
+                    "logic_name": "((중첩로직)) - 중독 - 홈 클릭",
                     "repeat_count": 1
                 },
                 {
@@ -2775,9 +2775,917 @@
                 {
                     "order": 19,
                     "type": "logic",
-                    "display_text": "((1초 중첩로직)) - 중독 - 홈 클릭",
+                    "display_text": "((중첩로직)) - 중독 - 홈 클릭",
                     "logic_id": "7c9cd306-f7f1-4bb2-828e-215171f4884e",
-                    "logic_name": "((1초 중첩로직)) - 중독 - 홈 클릭",
+                    "logic_name": "((중첩로직)) - 중독 - 홈 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 20,
+                    "display_text": "키 입력: 방향키 오른쪽 → --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 오른쪽 →",
+                    "scan_code": 77,
+                    "virtual_key": 39,
+                    "modifiers": 0
+                },
+                {
+                    "order": 21,
+                    "display_text": "키 입력: 방향키 오른쪽 → --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 오른쪽 →",
+                    "scan_code": 77,
+                    "virtual_key": 39,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 22
+                },
+                {
+                    "order": 23,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 24,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                }
+            ]
+        },
+        "3faa2a61-87ff-4f12-8ac8-a7fd7504b7c6": {
+            "order": 32,
+            "name": "((1초)) 상하 두 칸 - 저주",
+            "created_at": "2024-12-09T13:56:02.913186",
+            "updated_at": "2024-12-16T10:32:42.302968",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 저주 - 홈 클릭",
+                    "logic_id": "cb1fc7a9-366a-4eea-99a6-37cf45f8ac27",
+                    "logic_name": "((중첩로직)) - 저주 - 홈 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 방향키 위쪽 ↑ --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 위쪽 ↑",
+                    "scan_code": 72,
+                    "virtual_key": 38,
+                    "modifiers": 0
+                },
+                {
+                    "order": 3,
+                    "display_text": "키 입력: 방향키 위쪽 ↑ --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 위쪽 ↑",
+                    "scan_code": 72,
+                    "virtual_key": 38,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 4
+                },
+                {
+                    "order": 5,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 6,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 7,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 저주만 클릭",
+                    "logic_id": "f63b1a9f-568c-4265-8e61-641add26c4d9",
+                    "logic_name": "((중첩로직)) - 저주만 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 8,
+                    "display_text": "키 입력: 방향키 위쪽 ↑ --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 위쪽 ↑",
+                    "scan_code": 72,
+                    "virtual_key": 38,
+                    "modifiers": 0
+                },
+                {
+                    "order": 9,
+                    "display_text": "키 입력: 방향키 위쪽 ↑ --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 위쪽 ↑",
+                    "scan_code": 72,
+                    "virtual_key": 38,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 10
+                },
+                {
+                    "order": 11,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 12,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 13,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 저주 - 홈 클릭",
+                    "logic_id": "cb1fc7a9-366a-4eea-99a6-37cf45f8ac27",
+                    "logic_name": "((중첩로직)) - 저주 - 홈 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 14,
+                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 아래쪽 ↓",
+                    "scan_code": 80,
+                    "virtual_key": 40,
+                    "modifiers": 0
+                },
+                {
+                    "order": 15,
+                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 아래쪽 ↓",
+                    "scan_code": 80,
+                    "virtual_key": 40,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 16
+                },
+                {
+                    "order": 17,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 18,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 19,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 저주만 클릭",
+                    "logic_id": "f63b1a9f-568c-4265-8e61-641add26c4d9",
+                    "logic_name": "((중첩로직)) - 저주만 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 20,
+                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 아래쪽 ↓",
+                    "scan_code": 80,
+                    "virtual_key": 40,
+                    "modifiers": 0
+                },
+                {
+                    "order": 21,
+                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 아래쪽 ↓",
+                    "scan_code": 80,
+                    "virtual_key": 40,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 22
+                },
+                {
+                    "order": 23,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 24,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                }
+            ]
+        },
+        "c218516d-d3d9-43f3-9fe4-e09da98ec971": {
+            "order": 33,
+            "name": "((1초)) 좌우 두 칸 - 저주",
+            "created_at": "2024-12-09T13:56:02.913186",
+            "updated_at": "2024-12-16T10:33:28.576447",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 저주 - 홈 클릭",
+                    "logic_id": "cb1fc7a9-366a-4eea-99a6-37cf45f8ac27",
+                    "logic_name": "((중첩로직)) - 저주 - 홈 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 방향키 왼쪽 ← --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 왼쪽 ←",
+                    "scan_code": 75,
+                    "virtual_key": 37,
+                    "modifiers": 0
+                },
+                {
+                    "order": 3,
+                    "display_text": "키 입력: 방향키 왼쪽 ← --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 왼쪽 ←",
+                    "scan_code": 75,
+                    "virtual_key": 37,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 4
+                },
+                {
+                    "order": 5,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 6,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 7,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 저주만 클릭",
+                    "logic_id": "f63b1a9f-568c-4265-8e61-641add26c4d9",
+                    "logic_name": "((중첩로직)) - 저주만 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 8,
+                    "display_text": "키 입력: 방향키 왼쪽 ← --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 왼쪽 ←",
+                    "scan_code": 75,
+                    "virtual_key": 37,
+                    "modifiers": 0
+                },
+                {
+                    "order": 9,
+                    "display_text": "키 입력: 방향키 왼쪽 ← --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 왼쪽 ←",
+                    "scan_code": 75,
+                    "virtual_key": 37,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 10
+                },
+                {
+                    "order": 11,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 12,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 13,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 저주 - 홈 클릭",
+                    "logic_id": "cb1fc7a9-366a-4eea-99a6-37cf45f8ac27",
+                    "logic_name": "((중첩로직)) - 저주 - 홈 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 14,
+                    "display_text": "키 입력: 방향키 오른쪽 → --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 오른쪽 →",
+                    "scan_code": 77,
+                    "virtual_key": 39,
+                    "modifiers": 0
+                },
+                {
+                    "order": 15,
+                    "display_text": "키 입력: 방향키 오른쪽 → --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 오른쪽 →",
+                    "scan_code": 77,
+                    "virtual_key": 39,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 16
+                },
+                {
+                    "order": 17,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 18,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 19,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 저주만 클릭",
+                    "logic_id": "f63b1a9f-568c-4265-8e61-641add26c4d9",
+                    "logic_name": "((중첩로직)) - 저주만 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 20,
+                    "display_text": "키 입력: 방향키 오른쪽 → --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 오른쪽 →",
+                    "scan_code": 77,
+                    "virtual_key": 39,
+                    "modifiers": 0
+                },
+                {
+                    "order": 21,
+                    "display_text": "키 입력: 방향키 오른쪽 → --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 오른쪽 →",
+                    "scan_code": 77,
+                    "virtual_key": 39,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 22
+                },
+                {
+                    "order": 23,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 24,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                }
+            ]
+        },
+        "d3462ca4-81cb-4051-8e87-d058ae8ebc4c": {
+            "order": 34,
+            "name": "((1초)) 상하 두 칸 - 중독",
+            "created_at": "2024-12-09T13:56:02.913186",
+            "updated_at": "2024-12-16T10:35:25.372156",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 중독 - 홈 클릭",
+                    "logic_id": "7c9cd306-f7f1-4bb2-828e-215171f4884e",
+                    "logic_name": "((중첩로직)) - 중독 - 홈 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 방향키 위쪽 ↑ --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 위쪽 ↑",
+                    "scan_code": 72,
+                    "virtual_key": 38,
+                    "modifiers": 0
+                },
+                {
+                    "order": 3,
+                    "display_text": "키 입력: 방향키 위쪽 ↑ --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 위쪽 ↑",
+                    "scan_code": 72,
+                    "virtual_key": 38,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 4
+                },
+                {
+                    "order": 5,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 6,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 7,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 중독만 클릭",
+                    "logic_id": "5c08d668-af06-4929-a00a-9ef0eb97d52e",
+                    "logic_name": "((중첩로직)) - 중독만 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 8,
+                    "display_text": "키 입력: 방향키 위쪽 ↑ --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 위쪽 ↑",
+                    "scan_code": 72,
+                    "virtual_key": 38,
+                    "modifiers": 0
+                },
+                {
+                    "order": 9,
+                    "display_text": "키 입력: 방향키 위쪽 ↑ --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 위쪽 ↑",
+                    "scan_code": 72,
+                    "virtual_key": 38,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 10
+                },
+                {
+                    "order": 11,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 12,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 13,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 중독 - 홈 클릭",
+                    "logic_id": "7c9cd306-f7f1-4bb2-828e-215171f4884e",
+                    "logic_name": "((중첩로직)) - 중독 - 홈 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 14,
+                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 아래쪽 ↓",
+                    "scan_code": 80,
+                    "virtual_key": 40,
+                    "modifiers": 0
+                },
+                {
+                    "order": 15,
+                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 아래쪽 ↓",
+                    "scan_code": 80,
+                    "virtual_key": 40,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 16
+                },
+                {
+                    "order": 17,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 18,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 19,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 중독만 클릭",
+                    "logic_id": "5c08d668-af06-4929-a00a-9ef0eb97d52e",
+                    "logic_name": "((중첩로직)) - 중독만 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 20,
+                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 아래쪽 ↓",
+                    "scan_code": 80,
+                    "virtual_key": 40,
+                    "modifiers": 0
+                },
+                {
+                    "order": 21,
+                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 아래쪽 ↓",
+                    "scan_code": 80,
+                    "virtual_key": 40,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 22
+                },
+                {
+                    "order": 23,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 24,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                }
+            ]
+        },
+        "b60b29b5-747d-4188-a5f0-534cb406be43": {
+            "order": 35,
+            "name": "((1초)) 좌우 두 칸 - 중독",
+            "created_at": "2024-12-09T13:56:02.913186",
+            "updated_at": "2024-12-16T10:35:25.392916",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 중독 - 홈 클릭",
+                    "logic_id": "7c9cd306-f7f1-4bb2-828e-215171f4884e",
+                    "logic_name": "((중첩로직)) - 중독 - 홈 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 방향키 왼쪽 ← --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 왼쪽 ←",
+                    "scan_code": 75,
+                    "virtual_key": 37,
+                    "modifiers": 0
+                },
+                {
+                    "order": 3,
+                    "display_text": "키 입력: 방향키 왼쪽 ← --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 왼쪽 ←",
+                    "scan_code": 75,
+                    "virtual_key": 37,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 4
+                },
+                {
+                    "order": 5,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 6,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 7,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 중독만 클릭",
+                    "logic_id": "5c08d668-af06-4929-a00a-9ef0eb97d52e",
+                    "logic_name": "((중첩로직)) - 중독만 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 8,
+                    "display_text": "키 입력: 방향키 왼쪽 ← --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 왼쪽 ←",
+                    "scan_code": 75,
+                    "virtual_key": 37,
+                    "modifiers": 0
+                },
+                {
+                    "order": 9,
+                    "display_text": "키 입력: 방향키 왼쪽 ← --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 왼쪽 ←",
+                    "scan_code": 75,
+                    "virtual_key": 37,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 10
+                },
+                {
+                    "order": 11,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 12,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 13,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 중독 - 홈 클릭",
+                    "logic_id": "7c9cd306-f7f1-4bb2-828e-215171f4884e",
+                    "logic_name": "((중첩로직)) - 중독 - 홈 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 14,
+                    "display_text": "키 입력: 방향키 오른쪽 → --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 오른쪽 →",
+                    "scan_code": 77,
+                    "virtual_key": 39,
+                    "modifiers": 0
+                },
+                {
+                    "order": 15,
+                    "display_text": "키 입력: 방향키 오른쪽 → --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 오른쪽 →",
+                    "scan_code": 77,
+                    "virtual_key": 39,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 16
+                },
+                {
+                    "order": 17,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 18,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 19,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 중독만 클릭",
+                    "logic_id": "5c08d668-af06-4929-a00a-9ef0eb97d52e",
+                    "logic_name": "((중첩로직)) - 중독만 클릭",
                     "repeat_count": 1
                 },
                 {
@@ -2829,10 +3737,10 @@
             ]
         },
         "eed1f76c-ac9d-4856-9714-86b5fd581d24": {
-            "order": 32,
-            "name": "((1초 중첩로직)) - 마비 - 홈 클릭",
+            "order": 36,
+            "name": "((중첩로직)) - 마비 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
-            "updated_at": "2024-12-15T19:24:36.926938",
+            "updated_at": "2024-12-16T10:26:20.686604",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -2898,10 +3806,10 @@
             ]
         },
         "cb1fc7a9-366a-4eea-99a6-37cf45f8ac27": {
-            "order": 33,
-            "name": "((1초 중첩로직)) - 저주 - 홈 클릭",
+            "order": 37,
+            "name": "((중첩로직)) - 저주 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
-            "updated_at": "2024-12-15T19:24:53.139998",
+            "updated_at": "2024-12-16T10:33:28.457354",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -2967,10 +3875,10 @@
             ]
         },
         "7c9cd306-f7f1-4bb2-828e-215171f4884e": {
-            "order": 34,
-            "name": "((1초 중첩로직)) - 중독 - 홈 클릭",
+            "order": 38,
+            "name": "((중첩로직)) - 중독 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
-            "updated_at": "2024-12-15T19:24:16.546124",
+            "updated_at": "2024-12-16T10:28:48.370375",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -3035,8 +3943,137 @@
                 }
             ]
         },
+        "cad0b094-438e-4732-a52c-245fc8cfd1bf": {
+            "order": 39,
+            "name": "((중첩로직)) - 마비만 클릭",
+            "created_at": "2024-12-07T06:09:55.766255",
+            "updated_at": "2024-12-16T10:26:49.177051",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.026초",
+                    "duration": 0.026,
+                    "order": 1
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 숫자패드 5 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 5",
+                    "scan_code": 76,
+                    "virtual_key": 101,
+                    "modifiers": 0
+                },
+                {
+                    "order": 3,
+                    "display_text": "키 입력: 숫자패드 5 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 5",
+                    "scan_code": 76,
+                    "virtual_key": 101,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.026초",
+                    "duration": 0.026,
+                    "order": 4
+                }
+            ]
+        },
+        "f63b1a9f-568c-4265-8e61-641add26c4d9": {
+            "order": 40,
+            "name": "((중첩로직)) - 저주만 클릭",
+            "created_at": "2024-12-07T06:09:55.766255",
+            "updated_at": "2024-12-16T10:33:28.487271",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.026초",
+                    "duration": 0.026,
+                    "order": 1
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 숫자패드 4 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 4",
+                    "scan_code": 75,
+                    "virtual_key": 100,
+                    "modifiers": 0
+                },
+                {
+                    "order": 3,
+                    "display_text": "키 입력: 숫자패드 4 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 4",
+                    "scan_code": 75,
+                    "virtual_key": 100,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.026초",
+                    "duration": 0.026,
+                    "order": 4
+                }
+            ]
+        },
+        "5c08d668-af06-4929-a00a-9ef0eb97d52e": {
+            "order": 41,
+            "name": "((중첩로직)) - 중독만 클릭",
+            "created_at": "2024-12-07T06:09:55.766255",
+            "updated_at": "2024-12-16T10:28:48.439196",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.026초",
+                    "duration": 0.026,
+                    "order": 1
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 숫자패드 3 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 3",
+                    "scan_code": 81,
+                    "virtual_key": 99,
+                    "modifiers": 0
+                },
+                {
+                    "order": 3,
+                    "display_text": "키 입력: 숫자패드 3 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 3",
+                    "scan_code": 81,
+                    "virtual_key": 99,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.026초",
+                    "duration": 0.026,
+                    "order": 4
+                }
+            ]
+        },
         "7d0d1763-539e-433c-affe-8c2dbbe3a600": {
-            "order": 35,
+            "order": 42,
             "name": "---------------디버프---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:10:07.682135",
@@ -3057,7 +4094,7 @@
             ]
         },
         "0ceb5d7f-00bb-48b5-95ba-0b204d99da44": {
-            "order": 36,
+            "order": 43,
             "name": "월드 재입장",
             "created_at": "2024-12-11T21:30:39.063045",
             "updated_at": "2024-12-13T14:16:18.848598",
@@ -3121,7 +4158,7 @@
             ]
         },
         "b09ec1d7-4e80-49c0-a1b5-480a888e5b16": {
-            "order": 37,
+            "order": 44,
             "name": "캐릭터 선택",
             "created_at": "2024-12-12T08:29:17.016286",
             "updated_at": "2024-12-13T14:16:15.706736",
@@ -3241,7 +4278,7 @@
             ]
         },
         "9ed591e4-b227-448b-9d0f-b90c76d1f662": {
-            "order": 38,
+            "order": 45,
             "name": "모두 줍기",
             "created_at": "2024-11-26T10:58:29.227835",
             "updated_at": "2024-12-16T10:19:53.360220",
@@ -3297,7 +4334,7 @@
             ]
         },
         "74c363cc-0452-4786-ae02-49e927baaa31": {
-            "order": 39,
+            "order": 46,
             "name": "---------------편의---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:10:11.762423",
@@ -3314,6 +4351,31 @@
                     "scan_code": 71,
                     "virtual_key": 103,
                     "modifiers": 0
+                }
+            ]
+        },
+        "0ae0ef05-d5c6-461f-9335-4265e4279ff7": {
+            "order": 47,
+            "name": "테스트ㅁ",
+            "created_at": "2024-12-16T10:35:25.364153",
+            "updated_at": "2024-12-16T10:39:49.299798",
+            "trigger_key": {
+                "is_system_key": false,
+                "key_code": "Space",
+                "modifiers": 0,
+                "scan_code": 57,
+                "virtual_key": 32
+            },
+            "repeat_count": 1,
+            "is_nested": false,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "((1초)) 상하 두 칸 - 중독",
+                    "logic_id": "d3462ca4-81cb-4051-8e87-d058ae8ebc4c",
+                    "logic_name": "((1초)) 상하 두 칸 - 중독",
+                    "repeat_count": 1
                 }
             ]
         }

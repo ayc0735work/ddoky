@@ -661,15 +661,19 @@ class LogicDetailWidget(QFrame):
 
     def _on_key_input_changed(self, key_info):
         """키 입력이 변경되었을 때"""
+        self.log_message.emit(f"[DEBUG] 키 입력 변경 - key_info: {key_info}")
+        
         if not key_info:  # 키 정보가 비어있으면 라벨 초기화
             self.TriggerKeyInfoLabel__QLabel.clear()
+            self.trigger_key_info = None
+            self.log_message.emit("[DEBUG] 키 정보가 비어있어 초기화됨")
             return
         
         # modifiers가 이미 정수값인지 확인하고, 아니라면 int() 변환을 건너뜁니다
         if not isinstance(key_info['modifiers'], int):
             key_info['modifiers'] = key_info['modifiers'].value
         
-        # 트리 키 중복 체크
+        # 트리거 키 중복 체크
         logics = self.settings_manager.load_logics(force=True)  # force=True 추가
         duplicate_logics = []
         
@@ -678,7 +682,8 @@ class LogicDetailWidget(QFrame):
             if (logic_id != self.current_logic_id and 
                 not logic.get('is_nested', False)):  # 중첩로직은 제외
                 trigger_key = logic.get('trigger_key', {})
-                if (trigger_key.get('virtual_key') == key_info.get('virtual_key') and 
+                if (trigger_key and  # trigger_key가 None이 아닌 경우에만 체크
+                    trigger_key.get('virtual_key') == key_info.get('virtual_key') and 
                     trigger_key.get('modifiers') == key_info.get('modifiers')):
                     duplicate_logics.append({
                         'name': logic.get('name'),
@@ -705,16 +710,15 @@ class LogicDetailWidget(QFrame):
             self.log_message.emit(f"트리거 키 중복: {len(duplicate_logics)}개의 로직에서 사용 중")
             
             # 키 입력 초기화
-            self.TriggerKeyInputWidget__KeyInputWidget.clear_key()
-            self.TriggerKeyInfoLabel__QLabel.clear()
-            self.trigger_key_info = None
+            self.clear_key()
             
             msg.exec_()
             return
         
         # 중복이 없는 경우 정상적으로 트리거 키 설정
         self.TriggerKeyInfoLabel__QLabel.setText(format_key_info(key_info))
-        self.trigger_key_info = key_info  # 트리거 키 정보 저장
+        self.trigger_key_info = key_info.copy()  # 깊은 복사로 변경
+        self.log_message.emit(f"[DEBUG] 트리거 키가 설정됨: {self.trigger_key_info}")
 
     def _save_logic(self):
         """로직 저장"""
@@ -733,6 +737,7 @@ class LogicDetailWidget(QFrame):
             # 중첩로직용이 아닐 경우에만 트리거 키 검사
             if not is_nested and not self.trigger_key_info:
                 self.log_message.emit("오류: 트리거 키를 정해주세요.")
+                QMessageBox.warning(self, "저장 실패", "트리거 키를 정해주세요.", QMessageBox.Ok)
                 return False
 
             if not self.has_items():
@@ -772,6 +777,9 @@ class LogicDetailWidget(QFrame):
             self.log_message.emit(f"구성된 로직 정보: {logic_info}")
             print(f"[DEBUG] 로직 정보: {logic_info}")
 
+            self.log_message.emit(f"[DEBUG] 저장 시도 - 트리거 키 정보: {self.trigger_key_info}")
+            self.log_message.emit(f"[DEBUG] 중첩로직 여부: {is_nested}")
+            
             self.log_message.emit(f"LogicManager.save_logic 호출 - ID: {self.current_logic_id}")
             print(f"[DEBUG] LogicManager.save_logic 호출 전 - ID: {self.current_logic_id}")
             # LogicManager를 통해 저장
@@ -1224,7 +1232,7 @@ class LogicDetailWidget(QFrame):
             self.LogicNameInput__QLineEdit.clear()
             
             # 트리거 키 초기화
-            self.TriggerKeyInput__QLineEdit.clear()
+            self.TriggerKeyInputWidget__KeyInputWidget.clear_key()
             self.trigger_key_info = {}
             
             # 반복 횟수 초기화
@@ -1295,3 +1303,10 @@ class LogicDetailWidget(QFrame):
                 self.copied_items.append(item_data)
             items_count = len(self.copied_items)
             self.log_message.emit(f"{items_count}개의 로직 구성 아이템이 복사되었습니다")
+
+    def clear_key(self):
+        """트리거 키 정보 초기화"""
+        self.TriggerKeyInputWidget__KeyInputWidget.clear_key()
+        self.TriggerKeyInfoLabel__QLabel.clear()
+        self.trigger_key_info = None
+        self.log_message.emit("[DEBUG] 트리거 키 정보가 초기화되었습니다")

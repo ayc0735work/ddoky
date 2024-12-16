@@ -83,8 +83,7 @@ class KeyInputWidget(QWidget):
             self.modifiers_label.setText(f"수정자 키: {get_modifier_text(key_info['modifiers'])}")
         
         # 키 정보 변경 시그널 발생
-        if self.last_key_info != key_info:
-            self.key_input_changed.emit(key_info)
+        self.key_input_changed.emit(key_info)
         
     def get_key_info(self):
         """현재 입력된 키 정보 반환"""
