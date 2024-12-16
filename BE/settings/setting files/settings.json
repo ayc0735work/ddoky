@@ -253,7 +253,130 @@
             "order": 5,
             "name": "체력 회복 - 탭탭 - 공증용",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-16T18:30:16.155600",
+            "updated_at": "2024-12-16T18:49:34.598121",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
+                    "order": 1
+                },
+                {
+                    "order": 2,
+                    "type": "logic",
+                    "display_text": "탭탭 고정",
+                    "logic_id": "380ff6a2-b515-4ff5-9e1a-829f95bda0c4",
+                    "logic_name": "탭탭 고정",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 3,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 4
+                },
+                {
+                    "order": 5,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 6
+                },
+                {
+                    "order": 7,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 8
+                },
+                {
+                    "order": 9,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 10
+                },
+                {
+                    "order": 11,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 12
+                },
+                {
+                    "order": 13,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 14
+                },
+                {
+                    "order": 15,
+                    "type": "logic",
+                    "display_text": "탭탭 고정 해제",
+                    "logic_id": "3b3431ef-08c5-43e0-bc9f-8f02b9fb96e5",
+                    "logic_name": "탭탭 고정 해제",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
+                    "order": 16
+                }
+            ]
+        },
+        "19f862d8-3df2-456b-afb8-a931a7909939": {
+            "order": 6,
+            "name": "체력 회복 - 탭탭 - 222",
+            "created_at": "2024-11-26T06:51:44.957381",
+            "updated_at": "2024-12-16T18:57:33.083555",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "숫자패드 7",
@@ -266,12 +389,38 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.015초",
-                    "duration": 0.015,
+                    "display_text": "지연시간 : 0.0500초",
+                    "duration": 0.05,
                     "order": 1
                 },
                 {
                     "order": 2,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 3,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
+                    "order": 4
+                },
+                {
+                    "order": 5,
                     "type": "logic",
                     "display_text": "탭탭 고정",
                     "logic_id": "380ff6a2-b515-4ff5-9e1a-829f95bda0c4",
@@ -279,7 +428,7 @@
                     "repeat_count": 1
                 },
                 {
-                    "order": 3,
+                    "order": 6,
                     "type": "logic",
                     "display_text": "탭탭용 체력회복 - 5회",
                     "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
@@ -290,10 +439,10 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.02초",
                     "duration": 0.02,
-                    "order": 4
+                    "order": 7
                 },
                 {
-                    "order": 5,
+                    "order": 8,
                     "type": "logic",
                     "display_text": "탭탭용 체력회복 - 5회",
                     "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
@@ -304,10 +453,10 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.02초",
                     "duration": 0.02,
-                    "order": 6
+                    "order": 9
                 },
                 {
-                    "order": 7,
+                    "order": 10,
                     "type": "logic",
                     "display_text": "탭탭용 체력회복 - 5회",
                     "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
@@ -318,10 +467,10 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.02초",
                     "duration": 0.02,
-                    "order": 8
+                    "order": 11
                 },
                 {
-                    "order": 9,
+                    "order": 12,
                     "type": "logic",
                     "display_text": "탭탭용 체력회복 - 5회",
                     "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
@@ -332,10 +481,10 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.02초",
                     "duration": 0.02,
-                    "order": 10
+                    "order": 13
                 },
                 {
-                    "order": 11,
+                    "order": 14,
                     "type": "logic",
                     "display_text": "탭탭용 체력회복 - 5회",
                     "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
@@ -346,10 +495,10 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.02초",
                     "duration": 0.02,
-                    "order": 12
+                    "order": 15
                 },
                 {
-                    "order": 13,
+                    "order": 16,
                     "type": "logic",
                     "display_text": "탭탭용 체력회복 - 5회",
                     "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
@@ -360,10 +509,10 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.02초",
                     "duration": 0.02,
-                    "order": 14
+                    "order": 17
                 },
                 {
-                    "order": 15,
+                    "order": 18,
                     "type": "logic",
                     "display_text": "탭탭용 체력회복 - 5회",
                     "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
@@ -374,10 +523,10 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.02초",
                     "duration": 0.02,
-                    "order": 16
+                    "order": 19
                 },
                 {
-                    "order": 17,
+                    "order": 20,
                     "type": "logic",
                     "display_text": "탭탭용 체력회복 - 5회",
                     "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
@@ -388,10 +537,10 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.02초",
                     "duration": 0.02,
-                    "order": 18
+                    "order": 21
                 },
                 {
-                    "order": 19,
+                    "order": 22,
                     "type": "logic",
                     "display_text": "탭탭용 체력회복 - 5회",
                     "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
@@ -402,10 +551,10 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.02초",
                     "duration": 0.02,
-                    "order": 20
+                    "order": 23
                 },
                 {
-                    "order": 21,
+                    "order": 24,
                     "type": "logic",
                     "display_text": "탭탭용 체력회복 - 5회",
                     "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
@@ -416,10 +565,10 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.02초",
                     "duration": 0.02,
-                    "order": 22
+                    "order": 25
                 },
                 {
-                    "order": 23,
+                    "order": 26,
                     "type": "logic",
                     "display_text": "탭탭 고정 해제",
                     "logic_id": "3b3431ef-08c5-43e0-bc9f-8f02b9fb96e5",
@@ -430,192 +579,7 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.015초",
                     "duration": 0.015,
-                    "order": 24
-                }
-            ]
-        },
-        "19f862d8-3df2-456b-afb8-a931a7909939": {
-            "order": 6,
-            "name": "체력 회복 - 탭탭 - 222",
-            "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-16T18:29:55.864936",
-            "trigger_key": {
-                "is_system_key": false,
-                "key_code": "F2",
-                "modifiers": 0,
-                "scan_code": 60,
-                "virtual_key": 113
-            },
-            "repeat_count": 1,
-            "is_nested": false,
-            "items": [
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.015초",
-                    "duration": 0.015,
-                    "order": 1
-                },
-                {
-                    "order": 2,
-                    "type": "logic",
-                    "display_text": "탭탭 고정",
-                    "logic_id": "380ff6a2-b515-4ff5-9e1a-829f95bda0c4",
-                    "logic_name": "탭탭 고정",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 3,
-                    "type": "logic",
-                    "display_text": "탭탭용 체력회복 - 5회",
-                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
-                    "logic_name": "탭탭용 체력회복 - 5회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.02초",
-                    "duration": 0.02,
-                    "order": 4
-                },
-                {
-                    "order": 5,
-                    "type": "logic",
-                    "display_text": "탭탭용 체력회복 - 5회",
-                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
-                    "logic_name": "탭탭용 체력회복 - 5회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.02초",
-                    "duration": 0.02,
-                    "order": 6
-                },
-                {
-                    "order": 7,
-                    "type": "logic",
-                    "display_text": "탭탭용 체력회복 - 5회",
-                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
-                    "logic_name": "탭탭용 체력회복 - 5회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.02초",
-                    "duration": 0.02,
-                    "order": 8
-                },
-                {
-                    "order": 9,
-                    "type": "logic",
-                    "display_text": "탭탭용 체력회복 - 5회",
-                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
-                    "logic_name": "탭탭용 체력회복 - 5회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.02초",
-                    "duration": 0.02,
-                    "order": 10
-                },
-                {
-                    "order": 11,
-                    "type": "logic",
-                    "display_text": "탭탭용 체력회복 - 5회",
-                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
-                    "logic_name": "탭탭용 체력회복 - 5회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.02초",
-                    "duration": 0.02,
-                    "order": 12
-                },
-                {
-                    "order": 13,
-                    "type": "logic",
-                    "display_text": "탭탭용 체력회복 - 5회",
-                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
-                    "logic_name": "탭탭용 체력회복 - 5회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.02초",
-                    "duration": 0.02,
-                    "order": 14
-                },
-                {
-                    "order": 15,
-                    "type": "logic",
-                    "display_text": "탭탭용 체력회복 - 5회",
-                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
-                    "logic_name": "탭탭용 체력회복 - 5회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.02초",
-                    "duration": 0.02,
-                    "order": 16
-                },
-                {
-                    "order": 17,
-                    "type": "logic",
-                    "display_text": "탭탭용 체력회복 - 5회",
-                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
-                    "logic_name": "탭탭용 체력회복 - 5회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.02초",
-                    "duration": 0.02,
-                    "order": 18
-                },
-                {
-                    "order": 19,
-                    "type": "logic",
-                    "display_text": "탭탭용 체력회복 - 5회",
-                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
-                    "logic_name": "탭탭용 체력회복 - 5회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.02초",
-                    "duration": 0.02,
-                    "order": 20
-                },
-                {
-                    "order": 21,
-                    "type": "logic",
-                    "display_text": "탭탭용 체력회복 - 5회",
-                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
-                    "logic_name": "탭탭용 체력회복 - 5회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.02초",
-                    "duration": 0.02,
-                    "order": 22
-                },
-                {
-                    "order": 23,
-                    "type": "logic",
-                    "display_text": "탭탭 고정 해제",
-                    "logic_id": "3b3431ef-08c5-43e0-bc9f-8f02b9fb96e5",
-                    "logic_name": "탭탭 고정 해제",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.015초",
-                    "duration": 0.015,
-                    "order": 24
+                    "order": 27
                 }
             ]
         },
