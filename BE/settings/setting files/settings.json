@@ -376,7 +376,7 @@
             "order": 7,
             "name": "체력 회복 - 탭탭 - 222",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-16T20:42:41.392455",
+            "updated_at": "2024-12-16T21:20:21.654080",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "숫자패드 7",
@@ -389,7 +389,7 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1000초",
+                    "display_text": "지연시간 : 0.1초",
                     "duration": 0.1,
                     "order": 1
                 },
@@ -570,6 +570,62 @@
                 {
                     "order": 26,
                     "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 27
+                },
+                {
+                    "order": 28,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 29
+                },
+                {
+                    "order": 30,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 31
+                },
+                {
+                    "order": 32,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 33
+                },
+                {
+                    "order": 34,
+                    "type": "logic",
                     "display_text": "탭탭 고정 해제",
                     "logic_id": "3b3431ef-08c5-43e0-bc9f-8f02b9fb96e5",
                     "logic_name": "탭탭 고정 해제",
@@ -579,7 +635,7 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.015초",
                     "duration": 0.015,
-                    "order": 27
+                    "order": 35
                 }
             ]
         },
@@ -5225,7 +5281,7 @@
             "order": 51,
             "name": "헬파이어",
             "created_at": "2024-12-16T20:35:45.182176",
-            "updated_at": "2024-12-16T21:03:11.783446",
+            "updated_at": "2024-12-16T21:40:06.942844",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "숫자패드 -",
@@ -5236,14 +5292,6 @@
             "repeat_count": 1,
             "is_nested": false,
             "items": [
-                {
-                    "order": 0,
-                    "type": "logic",
-                    "display_text": "마우스 왼쪽 버튼 클릭시 다음 단계로 진행",
-                    "logic_id": "e243d4e6-7d94-44f1-b4e3-f6a09e18bfbc",
-                    "logic_name": "마우스 왼쪽 버튼 클릭시 다음 단계로 진행",
-                    "repeat_count": 1
-                },
                 {
                     "order": 1,
                     "display_text": "키 입력: 숫자패드 3 --- 누르기",
