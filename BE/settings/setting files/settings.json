@@ -1068,7 +1068,7 @@
             "order": 17,
             "name": "((1초 중첩로직)) 첨 사냥",
             "created_at": "2024-11-30T10:25:06.438732",
-            "updated_at": "2024-12-16T10:56:39.982538",
+            "updated_at": "2024-12-16T10:50:16.278567",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -1214,7 +1214,7 @@
                     "repeat_count": 1
                 },
                 {
-                    "order": 16,
+                    "order": 15,
                     "display_text": "키 입력: 숫자패드 9 --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -1224,7 +1224,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 17,
+                    "order": 16,
                     "display_text": "키 입력: 숫자패드 9 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -1234,12 +1234,30 @@
                     "modifiers": 0
                 },
                 {
+                    "order": 17,
+                    "type": "logic",
+                    "display_text": "((1초)) 상하좌우 - 마비",
+                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
+                    "logic_name": "((1초)) 상하좌우 - 마비",
+                    "repeat_count": 1
+                },
+                {
                     "order": 18,
                     "type": "logic",
                     "display_text": "((1초)) 좌우 두 칸 - 중독",
                     "logic_id": "b60b29b5-747d-4188-a5f0-534cb406be43",
                     "logic_name": "((1초)) 좌우 두 칸 - 중독",
                     "repeat_count": 1
+                },
+                {
+                    "order": 18,
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
                 },
                 {
                     "order": 19,
@@ -1252,25 +1270,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 20,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 21,
-                    "type": "logic",
-                    "display_text": "((1초)) 상하좌우 - 마비",
-                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
-                    "logic_name": "((1초)) 상하좌우 - 마비",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 22,
+                    "order": 19,
                     "display_text": "키 입력: 숫자패드 9 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -1280,7 +1280,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 23,
+                    "order": 20,
                     "display_text": "키 입력: 숫자패드 9 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -3538,7 +3538,7 @@
             ]
         },
         "b60b29b5-747d-4188-a5f0-534cb406be43": {
-            "order": 36,
+            "order": 35,
             "name": "((1초)) 좌우 두 칸 - 중독",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-16T10:50:16.166387",
@@ -3765,7 +3765,7 @@
             ]
         },
         "eed1f76c-ac9d-4856-9714-86b5fd581d24": {
-            "order": 38,
+            "order": 36,
             "name": "((중첩로직)) - 마비 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-16T10:26:20.686604",
@@ -3834,7 +3834,7 @@
             ]
         },
         "cb1fc7a9-366a-4eea-99a6-37cf45f8ac27": {
-            "order": 39,
+            "order": 37,
             "name": "((중첩로직)) - 저주 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-16T10:33:28.457354",
@@ -3903,7 +3903,7 @@
             ]
         },
         "7c9cd306-f7f1-4bb2-828e-215171f4884e": {
-            "order": 40,
+            "order": 38,
             "name": "((중첩로직)) - 중독 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-16T10:28:48.370375",
@@ -3972,7 +3972,7 @@
             ]
         },
         "cad0b094-438e-4732-a52c-245fc8cfd1bf": {
-            "order": 41,
+            "order": 39,
             "name": "((중첩로직)) - 마비만 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-16T10:55:29.189169",
@@ -3982,8 +3982,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0232초",
-                    "duration": 0.0232,
+                    "display_text": "지연시간 : 0.0234초",
+                    "duration": 0.0234,
                     "order": 1
                 },
                 {
@@ -4008,14 +4008,14 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0232초",
-                    "duration": 0.0232,
+                    "display_text": "지연시간 : 0.0234초",
+                    "duration": 0.0234,
                     "order": 4
                 }
             ]
         },
         "f63b1a9f-568c-4265-8e61-641add26c4d9": {
-            "order": 42,
+            "order": 40,
             "name": "((중첩로직)) - 저주만 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-16T10:55:23.364522",
@@ -4025,8 +4025,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0232초",
-                    "duration": 0.0232,
+                    "display_text": "지연시간 : 0.0234초",
+                    "duration": 0.0234,
                     "order": 1
                 },
                 {
@@ -4051,14 +4051,14 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0232초",
-                    "duration": 0.0232,
+                    "display_text": "지연시간 : 0.0234초",
+                    "duration": 0.0234,
                     "order": 4
                 }
             ]
         },
         "5c08d668-af06-4929-a00a-9ef0eb97d52e": {
-            "order": 43,
+            "order": 41,
             "name": "((중첩로직)) - 중독만 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-16T10:55:07.993370",
@@ -4068,8 +4068,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0232초",
-                    "duration": 0.0232,
+                    "display_text": "지연시간 : 0.0234초",
+                    "duration": 0.0234,
                     "order": 1
                 },
                 {
@@ -4094,14 +4094,14 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0232초",
-                    "duration": 0.0232,
+                    "display_text": "지연시간 : 0.0234초",
+                    "duration": 0.0234,
                     "order": 4
                 }
             ]
         },
         "7d0d1763-539e-433c-affe-8c2dbbe3a600": {
-            "order": 44,
+            "order": 42,
             "name": "---------------디버프---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:10:07.682135",
@@ -4122,7 +4122,7 @@
             ]
         },
         "0ceb5d7f-00bb-48b5-95ba-0b204d99da44": {
-            "order": 45,
+            "order": 43,
             "name": "월드 재입장",
             "created_at": "2024-12-11T21:30:39.063045",
             "updated_at": "2024-12-13T14:16:18.848598",
@@ -4186,7 +4186,7 @@
             ]
         },
         "b09ec1d7-4e80-49c0-a1b5-480a888e5b16": {
-            "order": 46,
+            "order": 44,
             "name": "캐릭터 선택",
             "created_at": "2024-12-12T08:29:17.016286",
             "updated_at": "2024-12-13T14:16:15.706736",
@@ -4306,7 +4306,7 @@
             ]
         },
         "9ed591e4-b227-448b-9d0f-b90c76d1f662": {
-            "order": 47,
+            "order": 45,
             "name": "모두 줍기",
             "created_at": "2024-11-26T10:58:29.227835",
             "updated_at": "2024-12-16T10:19:53.360220",
@@ -4362,7 +4362,7 @@
             ]
         },
         "74c363cc-0452-4786-ae02-49e927baaa31": {
-            "order": 48,
+            "order": 46,
             "name": "---------------편의---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:10:11.762423",
@@ -4383,7 +4383,7 @@
             ]
         },
         "0ae0ef05-d5c6-461f-9335-4265e4279ff7": {
-            "order": 49,
+            "order": 47,
             "name": "테스트ㅁ",
             "created_at": "2024-12-16T10:35:25.364153",
             "updated_at": "2024-12-16T10:40:10.644197",
@@ -4404,460 +4404,6 @@
                     "logic_id": "d3462ca4-81cb-4051-8e87-d058ae8ebc4c",
                     "logic_name": "((1초)) 상하 두 칸 - 중독",
                     "repeat_count": 1
-                }
-            ]
-        },
-        "702e8d2b-af7d-450b-bc03-b91e847cb488": {
-            "order": 35,
-            "name": "((1초)) 상하 두 칸 이어서 - 중독",
-            "created_at": "2024-12-09T13:56:02.913186",
-            "updated_at": "2024-12-16T11:14:25.963427",
-            "trigger_key": null,
-            "repeat_count": 1,
-            "is_nested": true,
-            "items": [
-                {
-                    "order": 1,
-                    "type": "logic",
-                    "display_text": "((중첩로직)) - 중독만 클릭",
-                    "logic_id": "5c08d668-af06-4929-a00a-9ef0eb97d52e",
-                    "logic_name": "((중첩로직)) - 중독만 클릭",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 2,
-                    "display_text": "키 입력: 방향키 위쪽 ↑ --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "방향키 위쪽 ↑",
-                    "scan_code": 72,
-                    "virtual_key": 38,
-                    "modifiers": 0
-                },
-                {
-                    "order": 3,
-                    "display_text": "키 입력: 방향키 위쪽 ↑ --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "방향키 위쪽 ↑",
-                    "scan_code": 72,
-                    "virtual_key": 38,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.005초",
-                    "duration": 0.005,
-                    "order": 4
-                },
-                {
-                    "order": 5,
-                    "display_text": "키 입력: 엔터 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "order": 6,
-                    "display_text": "키 입력: 엔터 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "order": 7,
-                    "type": "logic",
-                    "display_text": "((중첩로직)) - 중독만 클릭",
-                    "logic_id": "5c08d668-af06-4929-a00a-9ef0eb97d52e",
-                    "logic_name": "((중첩로직)) - 중독만 클릭",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 8,
-                    "display_text": "키 입력: 방향키 위쪽 ↑ --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "방향키 위쪽 ↑",
-                    "scan_code": 72,
-                    "virtual_key": 38,
-                    "modifiers": 0
-                },
-                {
-                    "order": 9,
-                    "display_text": "키 입력: 방향키 위쪽 ↑ --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "방향키 위쪽 ↑",
-                    "scan_code": 72,
-                    "virtual_key": 38,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.005초",
-                    "duration": 0.005,
-                    "order": 10
-                },
-                {
-                    "order": 11,
-                    "display_text": "키 입력: 엔터 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "order": 12,
-                    "display_text": "키 입력: 엔터 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "order": 13,
-                    "type": "logic",
-                    "display_text": "((중첩로직)) - 중독만 클릭",
-                    "logic_id": "5c08d668-af06-4929-a00a-9ef0eb97d52e",
-                    "logic_name": "((중첩로직)) - 중독만 클릭",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 14,
-                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "방향키 아래쪽 ↓",
-                    "scan_code": 80,
-                    "virtual_key": 40,
-                    "modifiers": 0
-                },
-                {
-                    "order": 15,
-                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "방향키 아래쪽 ↓",
-                    "scan_code": 80,
-                    "virtual_key": 40,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.005초",
-                    "duration": 0.005,
-                    "order": 16
-                },
-                {
-                    "order": 17,
-                    "display_text": "키 입력: 엔터 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "order": 18,
-                    "display_text": "키 입력: 엔터 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "order": 19,
-                    "type": "logic",
-                    "display_text": "((중첩로직)) - 중독만 클릭",
-                    "logic_id": "5c08d668-af06-4929-a00a-9ef0eb97d52e",
-                    "logic_name": "((중첩로직)) - 중독만 클릭",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 20,
-                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "방향키 아래쪽 ↓",
-                    "scan_code": 80,
-                    "virtual_key": 40,
-                    "modifiers": 0
-                },
-                {
-                    "order": 21,
-                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "방향키 아래쪽 ↓",
-                    "scan_code": 80,
-                    "virtual_key": 40,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.005초",
-                    "duration": 0.005,
-                    "order": 22
-                },
-                {
-                    "order": 23,
-                    "display_text": "키 입력: 엔터 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "order": 24,
-                    "display_text": "키 입력: 엔터 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                }
-            ]
-        },
-        "e43ef9e2-8605-40fb-8386-a8cb62a6e863": {
-            "order": 37,
-            "name": "((1초)) 좌우 두 칸 이어서 - 중독",
-            "created_at": "2024-12-09T13:56:02.913186",
-            "updated_at": "2024-12-16T11:14:47.465918",
-            "trigger_key": null,
-            "repeat_count": 1,
-            "is_nested": true,
-            "items": [
-                {
-                    "order": 1,
-                    "type": "logic",
-                    "display_text": "((중첩로직)) - 중독만 클릭",
-                    "logic_id": "5c08d668-af06-4929-a00a-9ef0eb97d52e",
-                    "logic_name": "((중첩로직)) - 중독만 클릭",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 2,
-                    "display_text": "키 입력: 방향키 왼쪽 ← --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "방향키 왼쪽 ←",
-                    "scan_code": 75,
-                    "virtual_key": 37,
-                    "modifiers": 0
-                },
-                {
-                    "order": 3,
-                    "display_text": "키 입력: 방향키 왼쪽 ← --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "방향키 왼쪽 ←",
-                    "scan_code": 75,
-                    "virtual_key": 37,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.005초",
-                    "duration": 0.005,
-                    "order": 4
-                },
-                {
-                    "order": 5,
-                    "display_text": "키 입력: 엔터 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "order": 6,
-                    "display_text": "키 입력: 엔터 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "order": 7,
-                    "type": "logic",
-                    "display_text": "((중첩로직)) - 중독만 클릭",
-                    "logic_id": "5c08d668-af06-4929-a00a-9ef0eb97d52e",
-                    "logic_name": "((중첩로직)) - 중독만 클릭",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 8,
-                    "display_text": "키 입력: 방향키 왼쪽 ← --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "방향키 왼쪽 ←",
-                    "scan_code": 75,
-                    "virtual_key": 37,
-                    "modifiers": 0
-                },
-                {
-                    "order": 9,
-                    "display_text": "키 입력: 방향키 왼쪽 ← --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "방향키 왼쪽 ←",
-                    "scan_code": 75,
-                    "virtual_key": 37,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.005초",
-                    "duration": 0.005,
-                    "order": 10
-                },
-                {
-                    "order": 11,
-                    "display_text": "키 입력: 엔터 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "order": 12,
-                    "display_text": "키 입력: 엔터 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "order": 13,
-                    "type": "logic",
-                    "display_text": "((중첩로직)) - 중독만 클릭",
-                    "logic_id": "5c08d668-af06-4929-a00a-9ef0eb97d52e",
-                    "logic_name": "((중첩로직)) - 중독만 클릭",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 14,
-                    "display_text": "키 입력: 방향키 오른쪽 → --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "방향키 오른쪽 →",
-                    "scan_code": 77,
-                    "virtual_key": 39,
-                    "modifiers": 0
-                },
-                {
-                    "order": 15,
-                    "display_text": "키 입력: 방향키 오른쪽 → --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "방향키 오른쪽 →",
-                    "scan_code": 77,
-                    "virtual_key": 39,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.005초",
-                    "duration": 0.005,
-                    "order": 16
-                },
-                {
-                    "order": 17,
-                    "display_text": "키 입력: 엔터 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "order": 18,
-                    "display_text": "키 입력: 엔터 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "order": 19,
-                    "type": "logic",
-                    "display_text": "((중첩로직)) - 중독만 클릭",
-                    "logic_id": "5c08d668-af06-4929-a00a-9ef0eb97d52e",
-                    "logic_name": "((중첩로직)) - 중독만 클릭",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 20,
-                    "display_text": "키 입력: 방향키 오른쪽 → --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "방향키 오른쪽 →",
-                    "scan_code": 77,
-                    "virtual_key": 39,
-                    "modifiers": 0
-                },
-                {
-                    "order": 21,
-                    "display_text": "키 입력: 방향키 오른쪽 → --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "방향키 오른쪽 →",
-                    "scan_code": 77,
-                    "virtual_key": 39,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.005초",
-                    "duration": 0.005,
-                    "order": 22
-                },
-                {
-                    "order": 23,
-                    "display_text": "키 입력: 엔터 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "order": 24,
-                    "display_text": "키 입력: 엔터 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
                 }
             ]
         }
