@@ -68,9 +68,9 @@
                 {
                     "order": 1,
                     "type": "logic",
-                    "display_text": "체력 회복 - 탭탭 - 8회",
+                    "display_text": "체력 회복 - 탭탭 - 공증용",
                     "logic_id": "7c591192-f82b-4497-a1b3-e4beab60be58",
-                    "logic_name": "체력 회복 - 탭탭 - 8회",
+                    "logic_name": "체력 회복 - 탭탭 - 공증용",
                     "repeat_count": 1
                 },
                 {
@@ -99,7 +99,7 @@
             "order": 2,
             "name": "공력증강 - 1회 - 기본",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-15T10:24:35.413967",
+            "updated_at": "2024-12-16T17:48:54.446654",
             "trigger_key": {
                 "key_code": "F1",
                 "modifiers": 0,
@@ -146,16 +146,24 @@
                 {
                     "order": 5,
                     "type": "logic",
-                    "display_text": "체력 회복 - 탭탭 - 8회",
+                    "display_text": "동동주 마시기 - 1회",
+                    "logic_id": "9614e85c-3ceb-423b-97ea-e17bfc0101fc",
+                    "logic_name": "동동주 마시기 - 1회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 6,
+                    "type": "logic",
+                    "display_text": "체력 회복 - 탭탭 - 공증용",
                     "logic_id": "7c591192-f82b-4497-a1b3-e4beab60be58",
-                    "logic_name": "체력 회복 - 탭탭 - 8회",
+                    "logic_name": "체력 회복 - 탭탭 - 공증용",
                     "repeat_count": 1
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0250초",
+                    "display_text": "지연시간 : 0.025초",
                     "duration": 0.025,
-                    "order": 6
+                    "order": 7
                 }
             ]
         },
@@ -241,105 +249,196 @@
                 }
             ]
         },
-        "0dfa1418-cab1-4439-ae8a-b0c971471c99": {
+        "7c591192-f82b-4497-a1b3-e4beab60be58": {
             "order": 5,
-            "name": "체력 회복 (과거 버전) - 20회",
+            "name": "체력 회복 - 탭탭 - 공증용",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-16T14:25:24.598469",
+            "updated_at": "2024-12-16T18:30:16.155600",
             "trigger_key": {
+                "is_system_key": false,
                 "key_code": "숫자패드 7",
                 "modifiers": 0,
                 "scan_code": 71,
                 "virtual_key": 103
             },
-            "repeat_count": 20,
+            "repeat_count": 1,
             "is_nested": false,
             "items": [
                 {
-                    "order": 1,
-                    "display_text": "키 입력: 숫자패드 7 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 7",
-                    "scan_code": 71,
-                    "virtual_key": 103,
-                    "modifiers": 0
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
+                    "order": 1
                 },
                 {
                     "order": 2,
-                    "display_text": "키 입력: 숫자패드 7 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 7",
-                    "scan_code": 71,
-                    "virtual_key": 103,
-                    "modifiers": 0
+                    "type": "logic",
+                    "display_text": "탭탭 고정",
+                    "logic_id": "380ff6a2-b515-4ff5-9e1a-829f95bda0c4",
+                    "logic_name": "탭탭 고정",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 3,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0170초",
-                    "duration": 0.017,
-                    "order": 3
-                },
-                {
-                    "order": 4,
-                    "display_text": "키 입력: Home --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "Home",
-                    "scan_code": 71,
-                    "virtual_key": 36,
-                    "modifiers": 0
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 4
                 },
                 {
                     "order": 5,
-                    "display_text": "키 입력: Home --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "Home",
-                    "scan_code": 71,
-                    "virtual_key": 36,
-                    "modifiers": 0
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0170초",
-                    "duration": 0.017,
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
                     "order": 6
                 },
                 {
                     "order": 7,
-                    "display_text": "키 입력: 엔터 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "order": 8,
-                    "display_text": "키 입력: 엔터 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0170초",
-                    "duration": 0.017,
-                    "order": 9
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 8
+                },
+                {
+                    "order": 9,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 10
+                },
+                {
+                    "order": 11,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 12
+                },
+                {
+                    "order": 13,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 14
+                },
+                {
+                    "order": 15,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 16
+                },
+                {
+                    "order": 17,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 18
+                },
+                {
+                    "order": 19,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 20
+                },
+                {
+                    "order": 21,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 22
+                },
+                {
+                    "order": 23,
+                    "type": "logic",
+                    "display_text": "탭탭 고정 해제",
+                    "logic_id": "3b3431ef-08c5-43e0-bc9f-8f02b9fb96e5",
+                    "logic_name": "탭탭 고정 해제",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
+                    "order": 24
                 }
             ]
         },
-        "5054ece1-7033-49bc-a221-e92bf90a6a3d": {
+        "19f862d8-3df2-456b-afb8-a931a7909939": {
             "order": 6,
-            "name": "체력 회복 - 탭탭 - 25회",
+            "name": "체력 회복 - 탭탭 - 222",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-16T14:48:36.703250",
+            "updated_at": "2024-12-16T18:29:55.864936",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "F2",
@@ -374,8 +473,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.7777초",
-                    "duration": 0.7777,
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
                     "order": 4
                 },
                 {
@@ -388,8 +487,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.7777초",
-                    "duration": 0.7777,
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
                     "order": 6
                 },
                 {
@@ -402,8 +501,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.7777초",
-                    "duration": 0.7777,
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
                     "order": 8
                 },
                 {
@@ -416,8 +515,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.7777초",
-                    "duration": 0.7777,
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
                     "order": 10
                 },
                 {
@@ -429,118 +528,99 @@
                     "repeat_count": 1
                 },
                 {
-                    "order": 12,
-                    "type": "logic",
-                    "display_text": "탭탭 고정 해제",
-                    "logic_id": "3b3431ef-08c5-43e0-bc9f-8f02b9fb96e5",
-                    "logic_name": "탭탭 고정 해제",
-                    "repeat_count": 1
-                },
-                {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.015초",
-                    "duration": 0.015,
-                    "order": 13
-                }
-            ]
-        },
-        "7c591192-f82b-4497-a1b3-e4beab60be58": {
-            "order": 7,
-            "name": "체력 회복 - 탭탭 - 8회",
-            "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-16T15:08:54.949186",
-            "trigger_key": null,
-            "repeat_count": 1,
-            "is_nested": true,
-            "items": [
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.015초",
-                    "duration": 0.015,
-                    "order": 1
-                },
-                {
-                    "order": 2,
-                    "type": "logic",
-                    "display_text": "탭탭 고정",
-                    "logic_id": "380ff6a2-b515-4ff5-9e1a-829f95bda0c4",
-                    "logic_name": "탭탭 고정",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 3,
-                    "type": "logic",
-                    "display_text": "탭탭용 체력회복 - 5회",
-                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
-                    "logic_name": "탭탭용 체력회복 - 5회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.7777초",
-                    "duration": 0.7777,
-                    "order": 4
-                },
-                {
-                    "order": 5,
-                    "type": "logic",
-                    "display_text": "탭탭용 체력회복 - 1회",
-                    "logic_id": "c2d74069-f5b3-420b-8c62-bc2cc17346e4",
-                    "logic_name": "탭탭용 체력회복 - 1회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0200초",
+                    "display_text": "지연시간 : 0.02초",
                     "duration": 0.02,
-                    "order": 6
-                },
-                {
-                    "order": 6,
-                    "type": "logic",
-                    "display_text": "탭탭용 체력회복 - 1회",
-                    "logic_id": "c2d74069-f5b3-420b-8c62-bc2cc17346e4",
-                    "logic_name": "탭탭용 체력회복 - 1회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0200초",
-                    "duration": 0.02,
-                    "order": 8
-                },
-                {
-                    "order": 9,
-                    "type": "logic",
-                    "display_text": "탭탭용 체력회복 - 1회",
-                    "logic_id": "c2d74069-f5b3-420b-8c62-bc2cc17346e4",
-                    "logic_name": "탭탭용 체력회복 - 1회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0200초",
-                    "duration": 0.02,
-                    "order": 10
-                },
-                {
-                    "order": 11,
-                    "type": "logic",
-                    "display_text": "탭탭 고정 해제",
-                    "logic_id": "3b3431ef-08c5-43e0-bc9f-8f02b9fb96e5",
-                    "logic_name": "탭탭 고정 해제",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.015초",
-                    "duration": 0.015,
                     "order": 12
+                },
+                {
+                    "order": 13,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 14
+                },
+                {
+                    "order": 15,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 16
+                },
+                {
+                    "order": 17,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 18
+                },
+                {
+                    "order": 19,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 20
+                },
+                {
+                    "order": 21,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
+                    "order": 22
+                },
+                {
+                    "order": 23,
+                    "type": "logic",
+                    "display_text": "탭탭 고정 해제",
+                    "logic_id": "3b3431ef-08c5-43e0-bc9f-8f02b9fb96e5",
+                    "logic_name": "탭탭 고정 해제",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
+                    "order": 24
                 }
             ]
         },
         "29a89518-a378-491d-bb93-adcb2d639847": {
-            "order": 8,
+            "order": 7,
             "name": "((1초)) 체력 회복 - 탭탭 - 4회",
             "created_at": "2024-11-26T06:51:44.957381",
             "updated_at": "2024-12-16T16:15:58.372794",
@@ -623,18 +703,13 @@
             ]
         },
         "ed0d7b48-c7ac-4397-8ce5-360143efa401": {
-            "order": 9,
+            "order": 8,
             "name": "체력 회복 - 탭탭 - 1회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-16T14:51:09.486777",
-            "trigger_key": {
-                "key_code": "숫자패드 .",
-                "modifiers": 0,
-                "scan_code": 83,
-                "virtual_key": 110
-            },
+            "updated_at": "2024-12-16T18:27:05.345967",
+            "trigger_key": null,
             "repeat_count": 1,
-            "is_nested": false,
+            "is_nested": true,
             "items": [
                 {
                     "type": "delay",
@@ -677,6 +752,95 @@
                     "display_text": "지연시간 : 0.025초",
                     "duration": 0.025,
                     "order": 6
+                }
+            ]
+        },
+        "6d916471-b193-47ef-9ae1-8329f241100e": {
+            "order": 9,
+            "name": "체력 회복 (과거 버전) - 20회",
+            "created_at": "2024-11-26T06:51:44.957381",
+            "updated_at": "2024-12-16T18:27:58.542014",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "order": 1,
+                    "display_text": "키 입력: 숫자패드 7 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 7",
+                    "scan_code": 71,
+                    "virtual_key": 103,
+                    "modifiers": 0
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 숫자패드 7 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 7",
+                    "scan_code": 71,
+                    "virtual_key": 103,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.017초",
+                    "duration": 0.017,
+                    "order": 3
+                },
+                {
+                    "order": 4,
+                    "display_text": "키 입력: Home --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "Home",
+                    "scan_code": 71,
+                    "virtual_key": 36,
+                    "modifiers": 0
+                },
+                {
+                    "order": 5,
+                    "display_text": "키 입력: Home --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "Home",
+                    "scan_code": 71,
+                    "virtual_key": 36,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.017초",
+                    "duration": 0.017,
+                    "order": 6
+                },
+                {
+                    "order": 7,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 8,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.017초",
+                    "duration": 0.017,
+                    "order": 9
                 }
             ]
         },
@@ -1513,7 +1677,7 @@
             "order": 20,
             "name": "((1초 중첩로직)) 첨 사냥",
             "created_at": "2024-11-30T10:25:06.438732",
-            "updated_at": "2024-12-16T16:15:04.327549",
+            "updated_at": "2024-12-16T16:37:05.822682",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -1765,9 +1929,9 @@
                 {
                     "order": 27,
                     "type": "logic",
-                    "display_text": "((1초)) 상하 두 칸 - 중독",
-                    "logic_id": "d3462ca4-81cb-4051-8e87-d058ae8ebc4c",
-                    "logic_name": "((1초)) 상하 두 칸 - 중독",
+                    "display_text": "((1초)) 체력 회복 - 탭탭 - 4회",
+                    "logic_id": "29a89518-a378-491d-bb93-adcb2d639847",
+                    "logic_name": "((1초)) 체력 회복 - 탭탭 - 4회",
                     "repeat_count": 1
                 },
                 {
@@ -1793,9 +1957,9 @@
                 {
                     "order": 30,
                     "type": "logic",
-                    "display_text": "((1초)) 좌우 두 칸 - 중독",
-                    "logic_id": "b60b29b5-747d-4188-a5f0-534cb406be43",
-                    "logic_name": "((1초)) 좌우 두 칸 - 중독",
+                    "display_text": "((1초)) 상하 두 칸 - 중독",
+                    "logic_id": "d3462ca4-81cb-4051-8e87-d058ae8ebc4c",
+                    "logic_name": "((1초)) 상하 두 칸 - 중독",
                     "repeat_count": 1
                 },
                 {
@@ -1821,9 +1985,9 @@
                 {
                     "order": 33,
                     "type": "logic",
-                    "display_text": "((1초)) 상하좌우 - 저주",
-                    "logic_id": "7e4c1fda-4463-4b4b-bee7-343da540e9d3",
-                    "logic_name": "((1초)) 상하좌우 - 저주",
+                    "display_text": "((1초)) 좌우 두 칸 - 중독",
+                    "logic_id": "b60b29b5-747d-4188-a5f0-534cb406be43",
+                    "logic_name": "((1초)) 좌우 두 칸 - 중독",
                     "repeat_count": 1
                 },
                 {
@@ -1877,9 +2041,9 @@
                 {
                     "order": 39,
                     "type": "logic",
-                    "display_text": "((1초)) 상하 두 칸 - 중독",
-                    "logic_id": "d3462ca4-81cb-4051-8e87-d058ae8ebc4c",
-                    "logic_name": "((1초)) 상하 두 칸 - 중독",
+                    "display_text": "((1초)) 상하좌우 - 저주",
+                    "logic_id": "7e4c1fda-4463-4b4b-bee7-343da540e9d3",
+                    "logic_name": "((1초)) 상하좌우 - 저주",
                     "repeat_count": 1
                 },
                 {
@@ -1905,9 +2069,9 @@
                 {
                     "order": 42,
                     "type": "logic",
-                    "display_text": "((1초)) 좌우 두 칸 - 중독",
-                    "logic_id": "b60b29b5-747d-4188-a5f0-534cb406be43",
-                    "logic_name": "((1초)) 좌우 두 칸 - 중독",
+                    "display_text": "((1초)) 체력 회복 - 탭탭 - 4회",
+                    "logic_id": "29a89518-a378-491d-bb93-adcb2d639847",
+                    "logic_name": "((1초)) 체력 회복 - 탭탭 - 4회",
                     "repeat_count": 1
                 },
                 {
@@ -1922,62 +2086,6 @@
                 },
                 {
                     "order": 44,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 45,
-                    "type": "logic",
-                    "display_text": "((1초)) 체력 회복 - 탭탭 - 4회",
-                    "logic_id": "29a89518-a378-491d-bb93-adcb2d639847",
-                    "logic_name": "((1초)) 체력 회복 - 탭탭 - 4회",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 46,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 47,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 48,
-                    "type": "logic",
-                    "display_text": "((1초)) 상하좌우 - 중독",
-                    "logic_id": "aa39922c-0b07-4af7-9ccf-69807d682338",
-                    "logic_name": "((1초)) 상하좌우 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 49,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 50,
                     "display_text": "키 입력: 숫자패드 9 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -3400,7 +3508,7 @@
             "order": 34,
             "name": "((1초)) 상하좌우 - 중독",
             "created_at": "2024-12-09T13:56:02.913186",
-            "updated_at": "2024-12-16T14:47:26.216367",
+            "updated_at": "2024-12-16T16:33:01.677303",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
