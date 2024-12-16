@@ -10,7 +10,7 @@ from .key_input_dialog import KeyInputDialog
 from .logic_selector_dialog import LogicSelectorDialog
 from .mouse_input_dialog import MouseInputDialog
 
-class LogicMakerWidget(QFrame):
+class LogicMakerToolWidget(QFrame):
     """로직 메이커 위젯"""
     
     # 시그널 정의
@@ -66,6 +66,11 @@ class LogicMakerWidget(QFrame):
         self.delay_btn.setStyleSheet(BUTTON_STYLE)
         self.delay_btn.clicked.connect(self._add_delay)
         button_layout.addWidget(self.delay_btn)
+        
+        # 왼쪽 버튼 클릭시 다음으로 진행 버튼
+        self.next_on_left_click_btn = QPushButton("왼쪽 버튼 클릭시 다음으로 진행")
+        self.next_on_left_click_btn.setStyleSheet(BUTTON_STYLE)
+        button_layout.addWidget(self.next_on_left_click_btn)
         
         # 기록 모드 버튼
         self.record_btn = QPushButton("기록 모드")

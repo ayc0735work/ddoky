@@ -11,7 +11,7 @@ from BE.ui.components.logic_list.logic_list_widget import LogicListWidget
 from BE.ui.components.logic_list.logic_list_controller import LogicListController
 from BE.ui.components.logic_detail.logic_detail_widget import LogicDetailWidget
 from BE.ui.components.logic_detail.logic_detail_controller import LogicDetailController
-from BE.ui.components.logic_maker.logic_maker_widget import LogicMakerWidget
+from BE.ui.components.logic_maker.logic_maker_widget import LogicMakerToolWidget
 from BE.ui.components.logic_maker.logic_maker_controller import LogicMakerController
 from BE.ui.components.logic_operation.logic_operation_controller import LogicOperationController
 from BE.ui.components.logic_operation.logic_operation_widget import LogicOperationWidget
@@ -127,7 +127,7 @@ class MainWindow(QMainWindow):
         self.basic_features_layout.addWidget(self.logic_detail_widget)
         
         # 로직 메이커
-        self.logic_maker_widget = LogicMakerWidget()
+        self.logic_maker_widget = LogicMakerToolWidget()
         self.logic_maker_controller = LogicMakerController(self.logic_maker_widget)
         
         # 로직 메이커에 저장된 로직 목록 전달

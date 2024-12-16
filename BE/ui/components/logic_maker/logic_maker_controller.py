@@ -5,7 +5,7 @@ class LogicMakerController:
         """초기화
         
         Args:
-            widget (LogicMakerWidget): 로직 메이커 위젯
+            widget (LogicMakerToolWidget): 로직 메이커 위젯
         """
         self.widget = widget
         self._connect_signals()
