@@ -40,7 +40,7 @@ class LogicMakerWidget(QFrame):
         layout.setSpacing(10)
         
         # 타이틀
-        title = QLabel("로직 구성 메이커")
+        title = QLabel("로직 메이커 도구")
         title.setFont(QFont(TITLE_FONT_FAMILY, SECTION_FONT_SIZE, QFont.Weight.Bold))
         layout.addWidget(title)
         
