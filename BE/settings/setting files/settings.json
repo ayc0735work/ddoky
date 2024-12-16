@@ -1817,7 +1817,7 @@
             "order": 25,
             "name": "디버프 상하좌우 - 1회",
             "created_at": "2024-12-06T16:29:20.641646",
-            "updated_at": "2024-12-15T12:48:30.218868",
+            "updated_at": "2024-12-16T05:53:33.913403",
             "trigger_key": {
                 "display_text": "",
                 "key_code": "오른쪽 쉬프트",
@@ -1829,33 +1829,35 @@
             "is_nested": false,
             "items": [
                 {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.045초",
-                    "duration": 0.045,
-                    "order": 1
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "((1초)) 상하좌우 - 마비",
+                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
+                    "logic_name": "((1초)) 상하좌우 - 마비",
+                    "repeat_count": 1
                 },
                 {
                     "order": 2,
                     "type": "logic",
-                    "display_text": "((1초 중첩로직)) - 마비 - 홈 클릭",
-                    "logic_id": "eed1f76c-ac9d-4856-9714-86b5fd581d24",
-                    "logic_name": "((1초 중첩로직)) - 마비 - 홈 클릭",
+                    "display_text": "((1초)) 상하좌우 - 중독",
+                    "logic_id": "aa39922c-0b07-4af7-9ccf-69807d682338",
+                    "logic_name": "((1초)) 상하좌우 - 중독",
                     "repeat_count": 1
                 },
                 {
                     "order": 3,
                     "type": "logic",
-                    "display_text": "((1초 중첩로직)) - 중독 - 홈 클릭",
-                    "logic_id": "7c9cd306-f7f1-4bb2-828e-215171f4884e",
-                    "logic_name": "((1초 중첩로직)) - 중독 - 홈 클릭",
+                    "display_text": "((1초)) 상하좌우 - 저주",
+                    "logic_id": "7e4c1fda-4463-4b4b-bee7-343da540e9d3",
+                    "logic_name": "((1초)) 상하좌우 - 저주",
                     "repeat_count": 1
                 },
                 {
                     "order": 4,
                     "type": "logic",
-                    "display_text": "((1초 중첩로직)) - 저주 - 홈 클릭",
-                    "logic_id": "cb1fc7a9-366a-4eea-99a6-37cf45f8ac27",
-                    "logic_name": "((1초 중첩로직)) - 저주 - 홈 클릭",
+                    "display_text": "((1초)) 상하좌우 - 중독",
+                    "logic_id": "aa39922c-0b07-4af7-9ccf-69807d682338",
+                    "logic_name": "((1초)) 상하좌우 - 중독",
                     "repeat_count": 1
                 }
             ]
@@ -2149,7 +2151,7 @@
             "order": 29,
             "name": "((1초)) 상하좌우 - 마비",
             "created_at": "2024-12-09T13:56:02.913186",
-            "updated_at": "2024-12-15T14:55:57.621521",
+            "updated_at": "2024-12-16T05:53:19.415807",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -2376,7 +2378,7 @@
             "order": 30,
             "name": "((1초)) 상하좌우 - 저주",
             "created_at": "2024-12-09T13:56:02.913186",
-            "updated_at": "2024-12-15T14:56:02.958517",
+            "updated_at": "2024-12-16T05:53:19.467198",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -2603,7 +2605,7 @@
             "order": 31,
             "name": "((1초)) 상하좌우 - 중독",
             "created_at": "2024-12-09T13:56:02.913186",
-            "updated_at": "2024-12-15T19:16:01.813542",
+            "updated_at": "2024-12-16T05:53:19.484750",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -3242,7 +3244,7 @@
             "order": 38,
             "name": "모두 줍기",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-12-15T06:34:46.477002",
+            "updated_at": "2024-12-16T10:19:53.360220",
             "trigger_key": {
                 "key_code": "마침표(.)",
                 "modifiers": 0,
@@ -3316,6 +3318,5 @@
             ]
         }
     },
-    "recovery_detection_enabled": false,
-    "force_stop_key": "ESC"
+    "recovery_detection_enabled": false
 }

@@ -10,6 +10,7 @@ from ...constants.styles import (FRAME_STYLE, BUTTON_STYLE,
 from BE.ui.components.process_selector.process_selector_dialog import ProcessSelectorDialog
 from BE.settings.settings import Settings
 from BE.settings.settings_manager import SettingsManager  # SettingsManager 추가
+from ..logic_maker.key_input_dialog import KeyInputDialog  # KeyInputDialog를 여기로 이동
 
 class LogicOperationWidget(QFrame):
     """로직 동작 온오프 위젯"""
@@ -24,8 +25,8 @@ class LogicOperationWidget(QFrame):
         super().__init__(parent)
         self.selected_process = None
         self.logic_executor = None  # LogicExecutor 인스턴스를 저장할 속성 추가
-        self.force_stop_key = {'virtual_key': 27, 'key_name': 'ESC'}  # 기본값으로 ESC 키 설정
         self.settings_manager = SettingsManager()  # SettingsManager 인스턴스 추가
+        self.force_stop_key = self.settings_manager.get_force_stop_key()  # 강제 중지 키 로드
         self._init_ui()
         self._connect_signals()
         self.load_delay_settings()  # 초기화 시 설정 로드
@@ -582,34 +583,52 @@ class LogicOperationWidget(QFrame):
     def _on_edit_force_stop_key(self):
         """강제 중지 키 수정 버튼 클릭 시 호출"""
         try:
+            # 버튼 비활성화
+            self.edit_force_stop_key_btn.setEnabled(False)
+            
             # KeyInputDialog를 사용하여 키 입력 받기
-            from ..logic_maker.key_input_dialog import KeyInputDialog
             dialog = KeyInputDialog(self)
-            if dialog.exec_():
+            
+            # 다이얼로그를 모달로 실행하고 결과 확인
+            result = dialog.exec()
+            
+            # 다이얼로그가 승인되었을 때만 처리
+            if result == QDialog.Accepted:
                 key_info = dialog.get_key_info()
                 if key_info:
-                    self.force_stop_key = {
-                        'virtual_key': key_info['virtual_key'],
-                        'key_name': key_info['key_code']
-                    }
+                    # modifiers가 KeyboardModifier 객체인 경우 정수로 변환
+                    if 'modifiers' in key_info and hasattr(key_info['modifiers'], 'value'):
+                        key_info['modifiers'] = int(key_info['modifiers'].value)
+                    
+                    self.force_stop_key = key_info
                     self.force_stop_key_input.setText(key_info['key_code'])
                     
                     # LogicExecutor에 새로운 강제 중지 키 정보 전달
                     if self.logic_executor:
                         self.logic_executor.set_force_stop_key(key_info['virtual_key'])
-                        
+                    
                     # 설정 파일에 저장
-                    self.settings_manager.set('force_stop_key', key_info['key_code'])
+                    self.settings_manager.set_force_stop_key(key_info)
                     
                     self.log_message.emit(f"로직 강제 중지 키가 '{key_info['key_code']}'(으)로 변경되었습니다.")
+            
         except Exception as e:
-            self.log_message.emit(f"[오류] 강제 중지 키 수정 중 오류 발생: {str(e)}")
-
+            self.log_message.emit(f"강제 중지 키 설정 중 오류 발생: {str(e)}")
+        finally:
+            # 버튼 다시 활성화
+            self.edit_force_stop_key_btn.setEnabled(True)
+            
     def _on_reset_force_stop_key(self):
         """강제 중지 키 초기화 버튼 클릭 시 호출"""
         try:
             # ESC 키로 초기화
-            self.force_stop_key = {'virtual_key': 27, 'key_name': 'ESC'}
+            self.force_stop_key = {
+                "type": "key_input",
+                "key_code": "ESC",
+                "scan_code": 1,
+                "virtual_key": 27,
+                "modifiers": 0
+            }
             self.force_stop_key_input.setText('ESC')
             
             # LogicExecutor에 초기화된 강제 중지 키 정보 전달
@@ -617,7 +636,7 @@ class LogicOperationWidget(QFrame):
                 self.logic_executor.set_force_stop_key(27)
                 
             # 설정 파일에 저장
-            self.settings_manager.set('force_stop_key', 'ESC')
+            self.settings_manager.set_force_stop_key(self.force_stop_key)
                 
             self.log_message.emit("로직 강제 중지 키가 'ESC'로 초기화되었습니다.")
         except Exception as e:

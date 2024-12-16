@@ -22,10 +22,8 @@ class SettingsManager:
         current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
         self.settings_file = Path(current_dir) / "settings" / "setting files" / "settings.json"
-
         self.key_delays_file = Path(current_dir) / "settings" / "setting files" / "key_delays.json"
-
-        
+        self.force_stop_key_file = Path(current_dir) / "settings" / "setting files" / "Force_Stop_key.json"
 
         # 먼저 key_delays.json 파일이 없다면 생성
 
@@ -38,6 +36,8 @@ class SettingsManager:
         self.settings = self._load_settings()
 
         self.key_delays = self._load_key_delays()
+
+        self.force_stop_key = self._load_force_stop_key()
 
     
 
@@ -222,7 +222,6 @@ class SettingsManager:
                 }
 
             },
-
             "logics": {}  # UUID를 키로 사용하는 로직 저장소
 
         }
@@ -239,7 +238,7 @@ class SettingsManager:
 
             settings (dict): 마이그레이션할 설정 데이터
 
-            
+        
 
         Returns:
 
@@ -421,11 +420,13 @@ class SettingsManager:
 
             'key_code': trigger_key.get('key_code', ''),
 
-            'modifiers': trigger_key.get('modifiers', 0),
-
             'scan_code': trigger_key.get('scan_code', 0),
 
-            'virtual_key': trigger_key.get('virtual_key', 0)
+            'virtual_key': trigger_key.get('virtual_key', 0),
+
+            'modifiers': trigger_key.get('modifiers', 0),
+
+
 
         }
 
@@ -467,7 +468,7 @@ class SettingsManager:
 
         return self.settings.get("window", self._get_default_settings()["window"])
 
-    
+
 
     def set_window_position(self, x, y):
 
@@ -477,7 +478,7 @@ class SettingsManager:
 
         current_settings = self._load_settings()
 
-        
+
 
         # window 설정 업데이트
 
@@ -485,13 +486,13 @@ class SettingsManager:
 
         self.settings = current_settings
 
-        
+
 
         # 업데이트된 설정 저장
 
         self._save_settings(self.settings)
 
-    
+
 
     def set_window_size(self, width, height):
 
@@ -501,7 +502,7 @@ class SettingsManager:
 
         current_settings = self._load_settings()
 
-        
+
 
         # window 설정 업데이트
 
@@ -509,7 +510,7 @@ class SettingsManager:
 
         self.settings = current_settings
 
-        
+
 
         # 업데이트된 설정 저장
 
@@ -521,7 +522,7 @@ class SettingsManager:
 
         """설정을 다시 로드합니다.
 
-        
+
 
         Args:
 
@@ -553,7 +554,7 @@ class SettingsManager:
 
         """로직 저장
 
-        
+
 
         Args:
 
@@ -561,7 +562,7 @@ class SettingsManager:
 
             logic_data (dict): 로직 데이터
 
-            
+
 
         Returns:
 
@@ -575,7 +576,7 @@ class SettingsManager:
 
             settings = self._load_settings()
 
-            
+
 
             # logics 섹션이 없으면 생성
 
@@ -583,7 +584,7 @@ class SettingsManager:
 
                 settings['logics'] = {}
 
-            
+
 
             # 필수 필드 확인
 
@@ -595,13 +596,13 @@ class SettingsManager:
 
                     raise ValueError(f"필수 필드 '{field}'가 누락되었습니다.")
 
-            
+
 
             # 중첩로직용 여부 저장
 
             is_nested = logic_data.get('is_nested', False)
 
-            
+
 
             # order 값 처리 - 항상 1 이상의 값 보장
 
@@ -617,7 +618,7 @@ class SettingsManager:
 
                 current_order = max([l.get('order', 0) for l in settings['logics'].values() if l.get('order', 0) > 0], default=0) + 1
 
-            
+
 
             # 기본 로직 정보 구성
 
@@ -649,13 +650,13 @@ class SettingsManager:
 
             old_name = old_logic.get('name')
 
-            
+
 
             # 이름이나 UUID가 변경되었는지 확인
 
             name_changed = old_name and old_name != logic_info['name']
 
-            
+
 
             # 모든 로직을 순회하면서 중첩된 로직의 UUID와 이름을 업데이트
 
@@ -683,29 +684,29 @@ class SettingsManager:
 
                         existing_logic['items'] = updated_items
 
-        
+
 
             # 로직 저장
 
             settings['logics'][logic_id] = logic_info
 
-            
+
 
             # 설정 파일 저장
 
             self._save_settings(settings)
 
-            
+
 
             # 캐시 갱신
 
             self.settings = settings
 
-            
+
 
             return logic_info
 
-            
+
 
         except Exception as e:
 
@@ -719,7 +720,7 @@ class SettingsManager:
 
         """저장된 로직들을 로드합니다.
 
-        
+
 
         Args:
 
@@ -947,27 +948,110 @@ class SettingsManager:
 
 
 
+    def _load_force_stop_key(self):
+        """강제 중지 키 설정 로드"""
+        if self.force_stop_key_file.exists():
+            try:
+                with open(self.force_stop_key_file, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            except Exception as e:
+                print(f"강제 중지 키 설정 로드 중 오류 발생: {e}")
+                return {
+                    "type": "key_input",
+                    "key_code": "ESC",
+                    "scan_code": 1,
+                    "virtual_key": 27,
+                    "modifiers": 0
+                }  # 기본값
+        return {
+            "type": "key_input",
+            "key_code": "ESC",
+            "scan_code": 1,
+            "virtual_key": 27,
+            "modifiers": 0
+        }  # 기본값
+
+
+
+    def set_force_stop_key(self, key_info):
+        """강제 중지 키 설정 업데이트"""
+        try:
+            if isinstance(key_info, str):  # key_code만 전달된 경우 (이전 버전 호환성)
+                if key_info == 'ESC':
+                    force_stop_key = {
+                        "is_system_key": False,
+                        "key_code": "ESC",
+                        "scan_code": 1,
+                        "virtual_key": 27,
+                        "modifiers": 0
+                    }
+                else:
+                    current_key = self._load_force_stop_key()
+                    current_key['key_code'] = key_info
+                    force_stop_key = current_key
+            else:  # 전체 키 정보가 전달된 경우
+                # modifiers가 KeyboardModifier 객체인 경우 정수로 변환
+                if 'modifiers' in key_info:
+                    try:
+                        if hasattr(key_info['modifiers'], 'value'):
+                            key_info['modifiers'] = int(key_info['modifiers'].value)
+                        elif isinstance(key_info['modifiers'], int):
+                            pass  # 이미 정수인 경우 그대로 사용
+                        else:
+                            key_info['modifiers'] = 0  # 기본값
+                    except Exception:
+                        key_info['modifiers'] = 0  # 변환 실패시 기본값
+                
+                force_stop_key = {
+                    "is_system_key": key_info.get('is_system_key', False),
+                    "key_code": key_info.get('key_code', ''),
+                    "scan_code": key_info.get('scan_code', 0),
+                    "virtual_key": key_info.get('virtual_key', 0),
+                    "modifiers": key_info.get('modifiers', 0)
+                }
+            
+            self._save_force_stop_key(force_stop_key)
+            self.force_stop_key = force_stop_key  # 메모리에도 업데이트
+        except Exception as e:
+            print(f"강제 중지 키 설정 업데이트 중 오류 발생: {e}")
+
+
+
+    def _save_force_stop_key(self, force_stop_key):
+        """강제 중지 키 설정 저장"""
+        try:
+            # KeyboardModifier 객체를 정수로 변환
+            if isinstance(force_stop_key.get('modifiers'), object):
+                force_stop_key['modifiers'] = int(force_stop_key['modifiers'])
+                
+            with open(self.force_stop_key_file, 'w', encoding='utf-8') as f:
+                json.dump(force_stop_key, f, ensure_ascii=False, indent=4)
+        except Exception as e:
+            print(f"강제 중지 키 설정 저장 중 오류 발생: {e}")
+
+
+
+    def get_force_stop_key(self):
+        """강제 중지 키 설정 반환"""
+        return self._load_force_stop_key()
+
+
+
     def get(self, key, default=None):
-
         """설정값을 가져옵니다."""
-
         if key == 'key_delays':
-
             return self.get_key_delays()
-
+        elif key == 'force_stop_key':
+            return self.get_force_stop_key()
         return self.settings.get(key, default)
 
 
 
     def set(self, key, value):
-
         """설정값을 저장합니다."""
-
         if key == 'key_delays':
-
             return self.save_key_delays(value)
-
+        elif key == 'force_stop_key':
+            return self.set_force_stop_key(value)
         self.settings[key] = value
-
         self._save_settings(self.settings)
-

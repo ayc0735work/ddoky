@@ -1,13 +1,11 @@
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QKeyEvent, QGuiApplication
 from ....utils.key_handler import format_key_info
 from ..common.key_input_widget import KeyInputWidget
 
 class KeyInputDialog(QDialog):
     """키 입력을 받는 다이얼로그"""
-    
-    key_selected = Signal(dict)  # 선택된 키 정보를 전달하는 시그널
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -43,14 +41,13 @@ class KeyInputDialog(QDialog):
         
         # 키 입력 위젯
         self.KeyInputWidget__KeyInputWidget = KeyInputWidget(self, show_details=True)
-        self.KeyInputWidget__KeyInputWidget.key_input_changed.connect(self._on_key_input_changed)
         KeyInputLayout__QVBoxLayout.addWidget(self.KeyInputWidget__KeyInputWidget)
         
         # 키 정보 라벨
         self.KeyInfoLabel__QLabel = QLabel()
         self.KeyInfoLabel__QLabel.setWordWrap(True)
-        self.KeyInfoLabel__QLabel.mousePressEvent = self._copy_key_info_to_clipboard # 
-        self.KeyInfoLabel__QLabel.setCursor(Qt.PointingHandCursor)  # 마우스 커서를 손가락 모양으로 변경
+        self.KeyInfoLabel__QLabel.mousePressEvent = self._copy_key_info_to_clipboard
+        self.KeyInfoLabel__QLabel.setCursor(Qt.PointingHandCursor)
         KeyInputLayout__QVBoxLayout.addWidget(self.KeyInfoLabel__QLabel)
         
         # 버튼 레이아웃
@@ -69,22 +66,12 @@ class KeyInputDialog(QDialog):
         KeyInputLayout__QVBoxLayout.addLayout(KeyInputButtonSection__QHBoxLayout)
         self.setLayout(KeyInputLayout__QVBoxLayout)
         
-    def _on_key_input_changed(self, key_info):
-        """키 입력이 변경되었을 때"""
-        # NumLock 키 경고 처리
-        if key_info.get('virtual_key') == 0x90:  # VK_NUMLOCK
-            self.NumLockWarning__QLabel.setText("NumLock 키는 트리거 키로 사용할 수 없습니다.")
-        else:
-            self.NumLockWarning__QLabel.setText("")
-        self.KeyInfoLabel__QLabel.setText(format_key_info(key_info))
-            
     def _on_confirm(self):
         """확인 버튼 클릭 시"""
         key_info = self.KeyInputWidget__KeyInputWidget.get_key_info()
         if key_info:
-            self.key_selected.emit(key_info)
             self.accept()
-            
+        
     def get_key_info(self):
         """현재 입력된 키 정보 반환"""
         return self.KeyInputWidget__KeyInputWidget.get_key_info()

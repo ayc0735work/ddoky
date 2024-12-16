@@ -60,7 +60,15 @@ class KeyInputWidget(QWidget):
             
     def _on_key_pressed(self, key_info):
         """키가 눌렸을 때"""
-        self.last_key_info = key_info
+        # 이전 키 정보와 동일한 경우 무시
+        if (self.last_key_info and 
+            self.last_key_info['key_code'] == key_info['key_code'] and
+            self.last_key_info['modifiers'] == key_info['modifiers'] and
+            self.last_key_info['scan_code'] == key_info['scan_code']):
+            return
+            
+        # 키 정보 업데이트
+        self.last_key_info = key_info.copy()  # 딥 카피로 변경
         
         # 키 표시 텍스트 설정
         display_text = get_key_display_text(key_info)
@@ -75,7 +83,8 @@ class KeyInputWidget(QWidget):
             self.modifiers_label.setText(f"수정자 키: {get_modifier_text(key_info['modifiers'])}")
         
         # 키 정보 변경 시그널 발생
-        self.key_input_changed.emit(key_info)
+        if self.last_key_info != key_info:
+            self.key_input_changed.emit(key_info)
         
     def get_key_info(self):
         """현재 입력된 키 정보 반환"""
@@ -96,9 +105,6 @@ class KeyInputWidget(QWidget):
             self.virtual_key_label.setText(f"가상 키: {key_info['virtual_key']}")
             self.location_label.setText(f"위치: {get_key_location(key_info['scan_code'])}")
             self.modifiers_label.setText(f"수정자 키: {get_modifier_text(key_info['modifiers'])}")
-        
-        # 키 정보 변경 시그널 발생
-        self.key_input_changed.emit(key_info)
 
     def clear_key(self):
         """키 입력 초기화"""
