@@ -68,9 +68,9 @@
                 {
                     "order": 1,
                     "type": "logic",
-                    "display_text": "체력 회복 - 탭탭 - 10회",
+                    "display_text": "체력 회복 - 탭탭 - 5회",
                     "logic_id": "7c591192-f82b-4497-a1b3-e4beab60be58",
-                    "logic_name": "체력 회복 - 탭탭 - 10회",
+                    "logic_name": "체력 회복 - 탭탭 - 5회",
                     "repeat_count": 1
                 },
                 {
@@ -146,9 +146,9 @@
                 {
                     "order": 5,
                     "type": "logic",
-                    "display_text": "체력 회복 - 탭탭 - 10회",
+                    "display_text": "체력 회복 - 탭탭 - 5회",
                     "logic_id": "7c591192-f82b-4497-a1b3-e4beab60be58",
-                    "logic_name": "체력 회복 - 탭탭 - 10회",
+                    "logic_name": "체력 회복 - 탭탭 - 5회",
                     "repeat_count": 1
                 },
                 {
@@ -243,16 +243,16 @@
         },
         "0dfa1418-cab1-4439-ae8a-b0c971471c99": {
             "order": 5,
-            "name": "체력 회복 (과거 버전) - 7회",
+            "name": "체력 회복 (과거 버전) - 20회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-15T08:34:04.121391",
+            "updated_at": "2024-12-16T14:25:24.598469",
             "trigger_key": {
                 "key_code": "숫자패드 7",
                 "modifiers": 0,
                 "scan_code": 71,
                 "virtual_key": 103
             },
-            "repeat_count": 7,
+            "repeat_count": 20,
             "is_nested": false,
             "items": [
                 {
@@ -276,7 +276,13 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 3,
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0170초",
+                    "duration": 0.017,
+                    "order": 3
+                },
+                {
+                    "order": 4,
                     "display_text": "키 입력: Home --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -286,7 +292,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 4,
+                    "order": 5,
                     "display_text": "키 입력: Home --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -296,7 +302,13 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 5,
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0170초",
+                    "duration": 0.017,
+                    "order": 6
+                },
+                {
+                    "order": 7,
                     "display_text": "키 입력: 엔터 --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -306,7 +318,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 6,
+                    "order": 8,
                     "display_text": "키 입력: 엔터 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -314,22 +326,28 @@
                     "scan_code": 28,
                     "virtual_key": 13,
                     "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0170초",
+                    "duration": 0.017,
+                    "order": 9
                 }
             ]
         },
         "7c591192-f82b-4497-a1b3-e4beab60be58": {
             "order": 6,
-            "name": "체력 회복 - 탭탭 - 10회",
+            "name": "체력 회복 - 탭탭 - 5회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-15T19:30:07.665237",
+            "updated_at": "2024-12-16T14:39:42.506172",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.025초",
-                    "duration": 0.025,
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
                     "order": 1
                 },
                 {
@@ -341,41 +359,15 @@
                     "repeat_count": 1
                 },
                 {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.025초",
-                    "duration": 0.025,
-                    "order": 3
+                    "order": 3,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
                 },
                 {
                     "order": 4,
-                    "type": "logic",
-                    "display_text": "탭탭용 체력회복 - 5회",
-                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
-                    "logic_name": "탭탭용 체력회복 - 5회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.1초",
-                    "duration": 0.1,
-                    "order": 5
-                },
-                {
-                    "order": 6,
-                    "type": "logic",
-                    "display_text": "탭탭용 체력회복 - 5회",
-                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
-                    "logic_name": "탭탭용 체력회복 - 5회",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.025초",
-                    "duration": 0.025,
-                    "order": 7
-                },
-                {
-                    "order": 8,
                     "type": "logic",
                     "display_text": "탭탭 고정 해제",
                     "logic_id": "3b3431ef-08c5-43e0-bc9f-8f02b9fb96e5",
@@ -384,14 +376,14 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.025초",
-                    "duration": 0.025,
-                    "order": 9
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
+                    "order": 5
                 }
             ]
         },
         "ed0d7b48-c7ac-4397-8ce5-360143efa401": {
-            "order": 7,
+            "order": 8,
             "name": "체력 회복 - 탭탭 - 3회",
             "created_at": "2024-11-26T06:51:44.957381",
             "updated_at": "2024-12-15T09:36:54.477316",
@@ -483,10 +475,10 @@
             ]
         },
         "380ff6a2-b515-4ff5-9e1a-829f95bda0c4": {
-            "order": 8,
+            "order": 9,
             "name": "탭탭 고정",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-15T10:14:14.926723",
+            "updated_at": "2024-12-16T14:28:14.864641",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -519,7 +511,7 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0100초",
+                    "display_text": "지연시간 : 0.01초",
                     "duration": 0.01,
                     "order": 4
                 },
@@ -545,7 +537,7 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0100초",
+                    "display_text": "지연시간 : 0.01초",
                     "duration": 0.01,
                     "order": 7
                 },
@@ -571,14 +563,14 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0100초",
-                    "duration": 0.01,
+                    "display_text": "지연시간 : 0.02초",
+                    "duration": 0.02,
                     "order": 10
                 }
             ]
         },
         "3b3431ef-08c5-43e0-bc9f-8f02b9fb96e5": {
-            "order": 9,
+            "order": 10,
             "name": "탭탭 고정 해제",
             "created_at": "2024-11-26T06:51:44.957381",
             "updated_at": "2024-12-15T09:47:36.483043",
@@ -621,7 +613,7 @@
             ]
         },
         "941b7b40-aa69-4954-a513-c730122f58bd": {
-            "order": 10,
+            "order": 11,
             "name": "탭탭용 체력회복 - 5회",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T09:37:06.091913",
@@ -658,7 +650,7 @@
             ]
         },
         "c2d74069-f5b3-420b-8c62-bc2cc17346e4": {
-            "order": 11,
+            "order": 12,
             "name": "탭탭용 체력회복 - 1회",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T09:37:08.047710",
@@ -695,7 +687,7 @@
             ]
         },
         "dbbd4afa-6565-4580-b69a-0aad17e600fb": {
-            "order": 12,
+            "order": 13,
             "name": "---------------체력---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:09:50.340247",
@@ -716,7 +708,7 @@
             ]
         },
         "b8796333-e8d6-4ae2-9fec-801a713517d8": {
-            "order": 13,
+            "order": 14,
             "name": "((1초)) 보호 무장 힘",
             "created_at": "2024-11-26T10:58:29.227835",
             "updated_at": "2024-12-15T13:22:55.833327",
@@ -954,7 +946,7 @@
             ]
         },
         "f35f0cf0-60e2-43cb-bc3f-3d9030db4959": {
-            "order": 14,
+            "order": 15,
             "name": "---------------버프---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:09:59.687552",
@@ -975,7 +967,7 @@
             ]
         },
         "a97732be-77f0-474c-96f0-7b4f825f9036": {
-            "order": 15,
+            "order": 16,
             "name": "((1초)) 첨 사냥 - 무한반복 - 111",
             "created_at": "2024-12-08T21:25:24.196785",
             "updated_at": "2024-12-15T19:27:24.519256",
@@ -1020,7 +1012,7 @@
             ]
         },
         "22b1ce84-7d6a-4d56-ba3e-f73eb12051bf": {
-            "order": 16,
+            "order": 17,
             "name": "((1초)) 첨 사냥 - 무한반복 - 222",
             "created_at": "2024-12-12T08:34:33.775036",
             "updated_at": "2024-12-15T19:27:27.895678",
@@ -1065,10 +1057,10 @@
             ]
         },
         "970a1723-88f9-4a50-8bb4-4f8c8f8199fe": {
-            "order": 17,
+            "order": 18,
             "name": "((1초 중첩로직)) 첨 사냥",
             "created_at": "2024-11-30T10:25:06.438732",
-            "updated_at": "2024-12-16T10:50:16.278567",
+            "updated_at": "2024-12-16T14:36:49.502946",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -1214,7 +1206,7 @@
                     "repeat_count": 1
                 },
                 {
-                    "order": 15,
+                    "order": 16,
                     "display_text": "키 입력: 숫자패드 9 --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -1224,7 +1216,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 16,
+                    "order": 17,
                     "display_text": "키 입력: 숫자패드 9 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -1232,14 +1224,6 @@
                     "scan_code": 73,
                     "virtual_key": 105,
                     "modifiers": 0
-                },
-                {
-                    "order": 17,
-                    "type": "logic",
-                    "display_text": "((1초)) 상하좌우 - 마비",
-                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
-                    "logic_name": "((1초)) 상하좌우 - 마비",
-                    "repeat_count": 1
                 },
                 {
                     "order": 18,
@@ -1250,29 +1234,9 @@
                     "repeat_count": 1
                 },
                 {
-                    "order": 18,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
                     "order": 19,
                     "display_text": "키 입력: 숫자패드 9 --- 누르기",
                     "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 19,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1288,11 +1252,207 @@
                     "scan_code": 73,
                     "virtual_key": 105,
                     "modifiers": 0
+                },
+                {
+                    "order": 21,
+                    "type": "logic",
+                    "display_text": "((1초)) 상하좌우 - 마비",
+                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
+                    "logic_name": "((1초)) 상하좌우 - 마비",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 22,
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 23,
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 24,
+                    "type": "logic",
+                    "display_text": "((1초)) 상하 두 칸 - 중독",
+                    "logic_id": "d3462ca4-81cb-4051-8e87-d058ae8ebc4c",
+                    "logic_name": "((1초)) 상하 두 칸 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 25,
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 26,
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 27,
+                    "type": "logic",
+                    "display_text": "((1초)) 좌우 두 칸 - 중독",
+                    "logic_id": "b60b29b5-747d-4188-a5f0-534cb406be43",
+                    "logic_name": "((1초)) 좌우 두 칸 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 28,
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 29,
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 30,
+                    "type": "logic",
+                    "display_text": "((1초)) 상하좌우 - 저주",
+                    "logic_id": "7e4c1fda-4463-4b4b-bee7-343da540e9d3",
+                    "logic_name": "((1초)) 상하좌우 - 저주",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 31,
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 32,
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 33,
+                    "type": "logic",
+                    "display_text": "((1초)) 상하좌우 - 마비",
+                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
+                    "logic_name": "((1초)) 상하좌우 - 마비",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 34,
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 35,
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 36,
+                    "type": "logic",
+                    "display_text": "((1초)) 상하 두 칸 - 중독",
+                    "logic_id": "d3462ca4-81cb-4051-8e87-d058ae8ebc4c",
+                    "logic_name": "((1초)) 상하 두 칸 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 37,
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 38,
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 39,
+                    "type": "logic",
+                    "display_text": "((1초)) 좌우 두 칸 - 중독",
+                    "logic_id": "b60b29b5-747d-4188-a5f0-534cb406be43",
+                    "logic_name": "((1초)) 좌우 두 칸 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 40,
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 41,
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
                 }
             ]
         },
         "0f7febe4-03e2-4e00-bc00-4517a9a33556": {
-            "order": 18,
+            "order": 19,
             "name": "첨 중독 - 조합본 - 9999회",
             "created_at": "2024-12-02T02:03:00.957188",
             "updated_at": "2024-12-15T17:01:07.116942",
@@ -1336,7 +1496,7 @@
             ]
         },
         "73c0ac82-d33b-4dce-a9a1-6af5a54dd99b": {
-            "order": 19,
+            "order": 20,
             "name": "공격 중독 - 조합본 - 9999회",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-15T17:08:34.425827",
@@ -1418,7 +1578,7 @@
             ]
         },
         "fe01d089-03b6-4cec-9fb5-874bac55d783": {
-            "order": 20,
+            "order": 21,
             "name": "---------------사냥---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:10:04.268329",
@@ -1439,7 +1599,7 @@
             ]
         },
         "69b74254-4313-4546-94c9-313b21ce6e3d": {
-            "order": 21,
+            "order": 22,
             "name": "중독만 - 90회",
             "created_at": "2024-12-04T00:08:13.574278",
             "updated_at": "2024-12-15T07:05:17.607641",
@@ -1539,7 +1699,7 @@
             ]
         },
         "39e67926-aab9-4b61-bd2f-19797480f4bf": {
-            "order": 22,
+            "order": 23,
             "name": "절망만 - 20회",
             "created_at": "2024-12-01T02:22:23.843289",
             "updated_at": "2024-12-15T07:05:25.113065",
@@ -1640,7 +1800,7 @@
             ]
         },
         "753fe62f-775d-4518-9a11-5b0810605183": {
-            "order": 23,
+            "order": 24,
             "name": "저주만 - 20회",
             "created_at": "2024-11-30T16:06:26.318706",
             "updated_at": "2024-12-15T07:05:32.488235",
@@ -1741,7 +1901,7 @@
             ]
         },
         "59070f24-4d2d-4c54-8100-f104e4645d06": {
-            "order": 24,
+            "order": 25,
             "name": "마비만 - 20회",
             "created_at": "2024-11-30T14:35:32.801674",
             "updated_at": "2024-12-15T07:05:41.001327",
@@ -1842,7 +2002,7 @@
             ]
         },
         "27d1f013-d82b-42f2-87cd-785dad90b052": {
-            "order": 25,
+            "order": 26,
             "name": "디버프 상하좌우 - 1회",
             "created_at": "2024-12-06T16:29:20.641646",
             "updated_at": "2024-12-16T05:53:33.913403",
@@ -1891,7 +2051,7 @@
             ]
         },
         "7b0c844b-3c8d-4e92-aa93-8a28c3faf269": {
-            "order": 26,
+            "order": 27,
             "name": "((1초)) 전체 돌리기 - 마비",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-15T17:00:24.539190",
@@ -1986,7 +2146,7 @@
             ]
         },
         "8a4d4894-addf-427e-a158-9c59324fec5f": {
-            "order": 27,
+            "order": 28,
             "name": "((1초)) 전체 돌리기 - 저주",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-15T17:00:34.793497",
@@ -2081,10 +2241,10 @@
             ]
         },
         "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf": {
-            "order": 28,
+            "order": 29,
             "name": "((1초)) 전체 돌리기 - 중독",
             "created_at": "2024-12-08T20:39:14.995922",
-            "updated_at": "2024-12-15T17:00:59.063754",
+            "updated_at": "2024-12-16T14:17:22.385396",
             "trigger_key": null,
             "repeat_count": 4,
             "is_nested": true,
@@ -2176,7 +2336,7 @@
             ]
         },
         "728ffa37-127b-40f3-a9b6-70dbc5b882db": {
-            "order": 29,
+            "order": 30,
             "name": "((1초)) 상하좌우 - 마비",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-16T05:53:19.415807",
@@ -2403,10 +2563,10 @@
             ]
         },
         "7e4c1fda-4463-4b4b-bee7-343da540e9d3": {
-            "order": 30,
+            "order": 31,
             "name": "((1초)) 상하좌우 - 저주",
             "created_at": "2024-12-09T13:56:02.913186",
-            "updated_at": "2024-12-16T05:53:19.467198",
+            "updated_at": "2024-12-16T14:33:56.905326",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -2630,10 +2790,10 @@
             ]
         },
         "aa39922c-0b07-4af7-9ccf-69807d682338": {
-            "order": 31,
+            "order": 32,
             "name": "((1초)) 상하좌우 - 중독",
             "created_at": "2024-12-09T13:56:02.913186",
-            "updated_at": "2024-12-16T05:53:19.484750",
+            "updated_at": "2024-12-16T14:17:40.868732",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -2857,7 +3017,7 @@
             ]
         },
         "3faa2a61-87ff-4f12-8ac8-a7fd7504b7c6": {
-            "order": 32,
+            "order": 33,
             "name": "((1초)) 상하 두 칸 - 저주",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-16T10:32:42.302968",
@@ -3084,7 +3244,7 @@
             ]
         },
         "c218516d-d3d9-43f3-9fe4-e09da98ec971": {
-            "order": 33,
+            "order": 34,
             "name": "((1초)) 좌우 두 칸 - 저주",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-16T10:33:28.576447",
@@ -3311,10 +3471,10 @@
             ]
         },
         "d3462ca4-81cb-4051-8e87-d058ae8ebc4c": {
-            "order": 34,
+            "order": 35,
             "name": "((1초)) 상하 두 칸 - 중독",
             "created_at": "2024-12-09T13:56:02.913186",
-            "updated_at": "2024-12-16T10:50:16.141113",
+            "updated_at": "2024-12-16T14:35:29.334001",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -3538,10 +3698,10 @@
             ]
         },
         "b60b29b5-747d-4188-a5f0-534cb406be43": {
-            "order": 35,
+            "order": 36,
             "name": "((1초)) 좌우 두 칸 - 중독",
             "created_at": "2024-12-09T13:56:02.913186",
-            "updated_at": "2024-12-16T10:50:16.166387",
+            "updated_at": "2024-12-16T14:35:29.346417",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -3765,7 +3925,7 @@
             ]
         },
         "eed1f76c-ac9d-4856-9714-86b5fd581d24": {
-            "order": 36,
+            "order": 37,
             "name": "((중첩로직)) - 마비 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-16T10:26:20.686604",
@@ -3834,7 +3994,7 @@
             ]
         },
         "cb1fc7a9-366a-4eea-99a6-37cf45f8ac27": {
-            "order": 37,
+            "order": 38,
             "name": "((중첩로직)) - 저주 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-16T10:33:28.457354",
@@ -3903,7 +4063,7 @@
             ]
         },
         "7c9cd306-f7f1-4bb2-828e-215171f4884e": {
-            "order": 38,
+            "order": 39,
             "name": "((중첩로직)) - 중독 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-16T10:28:48.370375",
@@ -3972,18 +4132,18 @@
             ]
         },
         "cad0b094-438e-4732-a52c-245fc8cfd1bf": {
-            "order": 39,
+            "order": 40,
             "name": "((중첩로직)) - 마비만 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
-            "updated_at": "2024-12-16T10:55:29.189169",
+            "updated_at": "2024-12-16T13:48:20.302593",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0234초",
-                    "duration": 0.0234,
+                    "display_text": "지연시간 : 0.0555초",
+                    "duration": 0.0555,
                     "order": 1
                 },
                 {
@@ -3997,6 +4157,12 @@
                     "modifiers": 0
                 },
                 {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0555초",
+                    "duration": 0.0555,
+                    "order": 2
+                },
+                {
                     "order": 3,
                     "display_text": "키 입력: 숫자패드 5 --- 떼기",
                     "action": "떼기",
@@ -4005,28 +4171,22 @@
                     "scan_code": 76,
                     "virtual_key": 101,
                     "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0234초",
-                    "duration": 0.0234,
-                    "order": 4
                 }
             ]
         },
         "f63b1a9f-568c-4265-8e61-641add26c4d9": {
-            "order": 40,
+            "order": 41,
             "name": "((중첩로직)) - 저주만 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
-            "updated_at": "2024-12-16T10:55:23.364522",
+            "updated_at": "2024-12-16T13:48:07.270719",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0234초",
-                    "duration": 0.0234,
+                    "display_text": "지연시간 : 0.0555초",
+                    "duration": 0.0555,
                     "order": 1
                 },
                 {
@@ -4051,25 +4211,25 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0234초",
-                    "duration": 0.0234,
+                    "display_text": "지연시간 : 0.0555초",
+                    "duration": 0.0555,
                     "order": 4
                 }
             ]
         },
         "5c08d668-af06-4929-a00a-9ef0eb97d52e": {
-            "order": 41,
+            "order": 42,
             "name": "((중첩로직)) - 중독만 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
-            "updated_at": "2024-12-16T10:55:07.993370",
+            "updated_at": "2024-12-16T14:18:03.585819",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0234초",
-                    "duration": 0.0234,
+                    "display_text": "지연시간 : 0.0555초",
+                    "duration": 0.0555,
                     "order": 1
                 },
                 {
@@ -4094,14 +4254,14 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0234초",
-                    "duration": 0.0234,
+                    "display_text": "지연시간 : 0.0555초",
+                    "duration": 0.0555,
                     "order": 4
                 }
             ]
         },
         "7d0d1763-539e-433c-affe-8c2dbbe3a600": {
-            "order": 42,
+            "order": 43,
             "name": "---------------디버프---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:10:07.682135",
@@ -4122,7 +4282,7 @@
             ]
         },
         "0ceb5d7f-00bb-48b5-95ba-0b204d99da44": {
-            "order": 43,
+            "order": 44,
             "name": "월드 재입장",
             "created_at": "2024-12-11T21:30:39.063045",
             "updated_at": "2024-12-13T14:16:18.848598",
@@ -4186,7 +4346,7 @@
             ]
         },
         "b09ec1d7-4e80-49c0-a1b5-480a888e5b16": {
-            "order": 44,
+            "order": 45,
             "name": "캐릭터 선택",
             "created_at": "2024-12-12T08:29:17.016286",
             "updated_at": "2024-12-13T14:16:15.706736",
@@ -4306,7 +4466,7 @@
             ]
         },
         "9ed591e4-b227-448b-9d0f-b90c76d1f662": {
-            "order": 45,
+            "order": 46,
             "name": "모두 줍기",
             "created_at": "2024-11-26T10:58:29.227835",
             "updated_at": "2024-12-16T10:19:53.360220",
@@ -4362,7 +4522,7 @@
             ]
         },
         "74c363cc-0452-4786-ae02-49e927baaa31": {
-            "order": 46,
+            "order": 47,
             "name": "---------------편의---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:10:11.762423",
@@ -4383,16 +4543,16 @@
             ]
         },
         "0ae0ef05-d5c6-461f-9335-4265e4279ff7": {
-            "order": 47,
+            "order": 48,
             "name": "테스트ㅁ",
             "created_at": "2024-12-16T10:35:25.364153",
-            "updated_at": "2024-12-16T10:40:10.644197",
+            "updated_at": "2024-12-16T14:01:26.867899",
             "trigger_key": {
-                "is_system_key": false,
-                "key_code": "Space",
+                "is_system_key": true,
+                "key_code": "왼쪽 알트",
                 "modifiers": 0,
-                "scan_code": 57,
-                "virtual_key": 32
+                "scan_code": 56,
+                "virtual_key": 164
             },
             "repeat_count": 1,
             "is_nested": false,
@@ -4404,6 +4564,115 @@
                     "logic_id": "d3462ca4-81cb-4051-8e87-d058ae8ebc4c",
                     "logic_name": "((1초)) 상하 두 칸 - 중독",
                     "repeat_count": 1
+                }
+            ]
+        },
+        "5054ece1-7033-49bc-a221-e92bf90a6a3d": {
+            "order": 7,
+            "name": "체력 회복 - 탭탭 - 25회",
+            "created_at": "2024-11-26T06:51:44.957381",
+            "updated_at": "2024-12-16T14:40:39.648779",
+            "trigger_key": {
+                "is_system_key": false,
+                "key_code": "F7",
+                "modifiers": 0,
+                "scan_code": 65,
+                "virtual_key": 118
+            },
+            "repeat_count": 1,
+            "is_nested": false,
+            "items": [
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
+                    "order": 1
+                },
+                {
+                    "order": 2,
+                    "type": "logic",
+                    "display_text": "탭탭 고정",
+                    "logic_id": "380ff6a2-b515-4ff5-9e1a-829f95bda0c4",
+                    "logic_name": "탭탭 고정",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 3,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.7777초",
+                    "duration": 0.7777,
+                    "order": 4
+                },
+                {
+                    "order": 5,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.7777초",
+                    "duration": 0.7777,
+                    "order": 6
+                },
+                {
+                    "order": 7,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.7777초",
+                    "duration": 0.7777,
+                    "order": 8
+                },
+                {
+                    "order": 9,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.7777초",
+                    "duration": 0.7777,
+                    "order": 10
+                },
+                {
+                    "order": 11,
+                    "type": "logic",
+                    "display_text": "탭탭용 체력회복 - 5회",
+                    "logic_id": "941b7b40-aa69-4954-a513-c730122f58bd",
+                    "logic_name": "탭탭용 체력회복 - 5회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 12,
+                    "type": "logic",
+                    "display_text": "탭탭 고정 해제",
+                    "logic_id": "3b3431ef-08c5-43e0-bc9f-8f02b9fb96e5",
+                    "logic_name": "탭탭 고정 해제",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.015초",
+                    "duration": 0.015,
+                    "order": 13
                 }
             ]
         }

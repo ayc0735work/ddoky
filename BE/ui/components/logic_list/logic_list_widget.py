@@ -576,6 +576,8 @@ class LogicListWidget(QFrame):
             # 복사된 로직의 복사본 생성
             new_logic = self.copied_logic.copy()
             new_logic['name'] = f"{new_logic['name']} (복사본)"
+            new_logic['trigger_key'] = None  # 트리거 키는 null로 설정
+            new_logic['is_nested'] = True  # 중첩 로직용 체크박스 상태를 True로 설정
             
             # 현재 선택된 아이템의 위치 확인
             current_item = self.SavedLogicList__QListWidget.currentItem()
