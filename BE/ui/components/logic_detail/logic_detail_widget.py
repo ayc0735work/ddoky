@@ -402,12 +402,11 @@ class LogicDetailWidget(QFrame):
             self.log_message.emit(f"[DEBUG] 아이템 {i+1} 원본 데이터: {user_data}")
             
             # 로직 타입 아이템인 경우
-            if item_text.startswith("로직:") or not any(item_text.startswith(prefix) for prefix in ["키 입력:", "지연시간", "마우스 입력:"]):
-                logic_data = user_data.get('logic_data', {})
-                logic_name = logic_data.get('logic_name') or item_text.replace("로직:", "").strip()
+            if item_text.startswith("로직:"):
+                logic_name = item_text.replace("로직:", "").strip()
                 
                 # 기존 로직의 UUID를 우선적으로 사용
-                logic_id = logic_data.get('logic_id')
+                logic_id = user_data.get('logic_id')
                 
                 # UUID가 없거나 유효하지 않은 경우
                 if not logic_id or logic_id not in logics:
@@ -429,7 +428,7 @@ class LogicDetailWidget(QFrame):
                         # 일치하는 로직이 없는 경우 새 UUID 생성
                         logic_id = str(uuid.uuid4())
 
-                repeat_count = logic_data.get('repeat_count', 1)
+                repeat_count = user_data.get('repeat_count', 1)
                 items.append({
                     'type': 'logic',
                     'logic_id': logic_id,
@@ -598,7 +597,7 @@ class LogicDetailWidget(QFrame):
                 except Exception as e:
                     self.log_message.emit(f"[오류] 마우스 입력 데이터 처리 중 오류 발생: {str(e)}")
                     import traceback
-                    self.log_message.emit(f"[오류 ���세] {traceback.format_exc()}")
+                    self.log_message.emit(f"[오류 상세] {traceback.format_exc()}")
                     # 기본 데이터로 저장
                     items.append({
                         'type': 'mouse_input',
@@ -621,17 +620,27 @@ class LogicDetailWidget(QFrame):
                     "display_text": item_text,
                     "order": order
                 })
+            # wait_click 타입인 경우
+            elif user_data.get('type') == 'wait_click':
+                items.append({
+                    'type': 'wait_click',
+                    'button': user_data.get('button', 'left'),
+                    'display_text': item_text,
+                    'order': order
+                })
             # 기타 아이템
             else:
                 # 일반 텍스트 아이템을 로직 타입으로 변환
                 items.append({
-                    'type': 'logic',
+                    'type': 'undefined_type',
                     'logic_name': item_text,
                     'display_text': f"로직: {item_text}",
-                    'logic_id': str(uuid.uuid4()),  # 새로운 UUID 생성
                     'repeat_count': 1,
                     'order': order
                 })
+                self.log_message.emit(f"[오류] 정의되지 않은 아이템 타입: {item_text}")
+                import traceback
+                self.log_message.emit(f"[오류 상세] {traceback.format_exc()}")
         
         # order 값으로 정렬하기 전 로그
         self.log_message.emit(f"[DEBUG] 정렬 전 items: {items}")

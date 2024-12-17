@@ -21,6 +21,7 @@ class LogicMakerToolWidget(QFrame):
     log_message = Signal(str)  # 로그 메시지를 전달하는 시그널
     add_logic = Signal(str)  # 만든 로직 추가 시그널 (로직 이름)
     item_added = Signal(dict)  # 아이템이 추가되었을 때
+    wait_click_input = Signal(dict)  # 클릭 대기 입력이 추가되었을 때
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -67,10 +68,11 @@ class LogicMakerToolWidget(QFrame):
         self.delay_btn.clicked.connect(self._add_delay)
         button_layout.addWidget(self.delay_btn)
         
-        # 왼쪽 버튼 클릭시 다음으로 진행 버튼
-        self.next_on_left_click_btn = QPushButton("왼쪽 버튼 클릭시 다음으로 진행")
-        self.next_on_left_click_btn.setStyleSheet(BUTTON_STYLE)
-        button_layout.addWidget(self.next_on_left_click_btn)
+        # 클릭 대기 버튼
+        self.wait_click_button = QPushButton("왼쪽 버튼 클릭시 다음으로 진행")
+        self.wait_click_button.setStyleSheet(BUTTON_STYLE)
+        self.wait_click_button.clicked.connect(self._add_wait_click)
+        button_layout.addWidget(self.wait_click_button)
         
         # 기록 모드 버튼
         self.record_btn = QPushButton("기록 모드")
@@ -177,6 +179,17 @@ class LogicMakerToolWidget(QFrame):
             delay_text = f"지연시간 : {delay:.4f}초"
             self.delay_input.emit(delay_text)
             self.log_message.emit(f"지연시간 {delay:.4f}초가 추가되었습니다")
+        
+    def _add_wait_click(self):
+        """왼쪽 버튼 클릭시 다음으로 진행 추가"""
+        wait_click_info = {
+            'type': 'wait_click',
+            'display_text': '왼쪽 버튼 클릭시 다음으로 진행',
+            'button': 'left'
+        }
+        self.wait_click_input.emit(wait_click_info)
+        self.item_added.emit(wait_click_info)  # 아이템 목록에 추가
+        self.log_message.emit("왼쪽 버튼 클릭시 다음으로 진행 아이템이 추가되었습니다")
             
     def _toggle_record_mode(self, checked):
         """기록 모드 토글"""
@@ -187,7 +200,6 @@ class LogicMakerToolWidget(QFrame):
         dialog = LogicSelectorDialog(self.saved_logics, self)
         dialog.logic_selected.connect(lambda name: self.add_logic.emit(name))
         dialog.exec()
-        
     def update_saved_logics(self, logics):
         """저장된 로직 정보 업데이트"""
         self.saved_logics = logics

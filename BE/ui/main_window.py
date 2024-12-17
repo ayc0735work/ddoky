@@ -191,6 +191,7 @@ class MainWindow(QMainWindow):
         self.logic_maker_widget.mouse_input.connect(self._on_mouse_input)
         self.logic_maker_widget.delay_input.connect(self._on_delay_input)
         self.logic_maker_widget.add_logic.connect(self._on_add_logic)  # 로직 추가 시그널 연결
+        self.logic_maker_widget.wait_click_input.connect(self._on_wait_click_input)  # 클릭 대기 시그널 연결
         
         # 로직 실행 관련 시그널 연결
         self.logic_operation_widget.operation_toggled.connect(self._on_logic_operation_toggled)
@@ -352,3 +353,16 @@ class MainWindow(QMainWindow):
             display_name = logic_info.get('name', logic_name)
             self.logic_detail_widget.add_item(display_name)
             self._append_log(f"로직 '{display_name}'이(가) 추가되었습니다")
+
+    def _on_wait_click_input(self, wait_click_info):
+        """클릭 대기 입력이 추가되었을 때 호출"""
+        try:
+            display_text = wait_click_info.get('display_text', '')
+            self.log_widget.append(f"클릭 대기 아이템이 추가되었습니다: {display_text}")
+            
+            # 로직 상세 위젯에 클릭 대기 입력 추가
+            if self.logic_detail_widget:
+                self.logic_detail_widget.add_item(wait_click_info)
+                
+        except Exception as e:
+            self.log_widget.append(f"[경고] 클릭 대기 입력 처리 중 오류 발생: {str(e)}")

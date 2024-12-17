@@ -55,7 +55,7 @@
             "order": 1,
             "name": "공력증강 - 1회 - 6번키",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-17T05:34:46.952792",
+            "updated_at": "2024-12-17T12:18:37.669243",
             "trigger_key": {
                 "key_code": "숫자패드 6",
                 "modifiers": 0,
@@ -99,7 +99,7 @@
             "order": 2,
             "name": "공력증강 - 1회 - 기본",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-17T10:53:10.715145",
+            "updated_at": "2024-12-17T12:39:39.955632",
             "trigger_key": {
                 "key_code": "F1",
                 "modifiers": 0,
@@ -119,8 +119,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.025초",
-                    "duration": 0.025,
+                    "display_text": "지연시간 : 0.0550초",
+                    "duration": 0.055,
                     "order": 2
                 },
                 {
@@ -5726,6 +5726,69 @@
                     "display_text": "지연시간 : 0.03초",
                     "duration": 0.03,
                     "order": 11
+                }
+            ]
+        },
+        "7ab27637-b32e-4aa6-9f6d-4cea2997c05a": {
+            "order": 54,
+            "name": "테스트",
+            "created_at": "2024-12-17T12:56:20.885587",
+            "updated_at": "2024-12-17T13:34:58.997039",
+            "trigger_key": {
+                "is_system_key": false,
+                "key_code": "왼쪽 쉬프트",
+                "modifiers": 0,
+                "scan_code": 42,
+                "virtual_key": 160
+            },
+            "repeat_count": 1,
+            "is_nested": false,
+            "items": [
+                {
+                    "order": 1,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "button": "left",
+                    "display_text": "왼쪽 버튼 클릭시 다음으로 진행",
+                    "order": 3,
+                    "type": "wait_click"
+                },
+                {
+                    "order": 4,
+                    "display_text": "키 입력: A --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "A",
+                    "scan_code": 30,
+                    "virtual_key": 65,
+                    "modifiers": 0
+                },
+                {
+                    "order": 5,
+                    "display_text": "키 입력: A --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "A",
+                    "scan_code": 30,
+                    "virtual_key": 65,
+                    "modifiers": 0
                 }
             ]
         }

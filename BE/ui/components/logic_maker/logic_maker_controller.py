@@ -16,6 +16,7 @@ class LogicMakerController:
         self.widget.mouse_input.connect(self._handle_mouse_input)
         self.widget.delay_input.connect(self._handle_delay_input)
         self.widget.record_mode.connect(self._handle_record_mode)
+        self.widget.wait_click_input.connect(self._handle_wait_click_input)
         
     def _handle_key_input(self, key_text):
         """키 입력 처리
@@ -51,6 +52,15 @@ class LogicMakerController:
         """
         status = "시작" if is_recording else "중지"
         log_msg = f"기록 모드가 {status}되었습니다."
+        self.widget.log_message.emit(log_msg)
+        
+    def _handle_wait_click_input(self, wait_click_info):
+        """클릭 대기 입력 처리
+        
+        Args:
+            wait_click_info (dict): 클릭 대기 정보
+        """
+        log_msg = f"클릭 대기 아이템이 추가되었습니다: {wait_click_info['display_text']}"
         self.widget.log_message.emit(log_msg)
         
     def save_logic(self, logic_data):

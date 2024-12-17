@@ -93,6 +93,9 @@ class LogicExecutor(QObject):
         
         # 강제 중지 키 설정
         self.force_stop_key = 27  # 기본값으로 ESC 키 설정
+        
+        # 실행 중지 플래그 추가
+        self._should_stop = False
 
     def _update_state(self, **kwargs):
         """상태 업데이트 및 알림"""
@@ -275,28 +278,34 @@ class LogicExecutor(QObject):
             # 현재 스텝 실행
             step = items[current_step]
             self._update_state(current_step=current_step + 1)
-            self._execute_step(step)
+            self._execute_item(step)
             
         except Exception as e:
             self._log_with_time(f"[오류] 다음 스텝 실행 중 오류 발생: {str(e)}")
             self._safe_cleanup()
     
-    def _execute_step(self, step):
-        """실제로 해당 스텝이 가지고 있는 어떤 동작을 수행하는 작업자 함수"""
+    def _execute_item(self, item):
+        """아이템 실행
+        
+        Args:
+            item (dict): 실행할 아이템
+        """
         try:
-            step_type = step.get('type')
-            
-            if step_type == 'key_input':
-                self._execute_key_input(step)
-            elif step_type == 'delay':
-                self._execute_delay(step)
-            elif step_type == 'logic':
-                self._execute_nested_logic(step)
-            elif step_type == 'mouse_input':
-                self._execute_mouse_input(step)
-            else:
-                self._log_with_time(f"[오류] 알 수 없는 스텝 타입: {step_type}")
+            if not self.is_logic_enabled:
+                return
                 
+            # 아이템 타입에 따라 실행
+            if item['type'] == 'key_input':
+                self._execute_key_input(item)
+            elif item['type'] == 'mouse_input':
+                self._execute_mouse_input(item)
+            elif item['type'] == 'delay':
+                self._execute_delay(item)
+            elif item['type'] == 'logic':
+                self._execute_nested_logic(item)
+            elif item['type'] == 'wait_click':
+                self._execute_wait_click(item)
+            
             # 다음 스텝 실행을 위해 비동기 호출
             QTimer.singleShot(0, self._execute_next_step)
             
@@ -434,6 +443,20 @@ class LogicExecutor(QObject):
         except Exception as e:
             self._log_with_time(f"[오류] 마우스 입력 실행 중 오류 발생: {str(e)}")
             raise
+
+    def _execute_wait_click(self, item):
+        """클릭 대기 실행
+        
+        Args:
+            item (dict): 클릭 대기 아이템
+        """
+        self._log_with_time("[실행 로그] 왼쪽 버튼 클릭 대기 중...")
+        
+        while not self._should_stop:
+            if win32api.GetAsyncKeyState(win32con.VK_LBUTTON) & 0x8000:
+                self._log_with_time("[실행 로그] 왼쪽 버튼 클릭이 감지되어 다음 단계로 진행합니다")
+                break
+            time.sleep(0.001)  # CPU 사용량 감소
 
     def stop_all_logic(self):
         """모든 실행 중인 로직을 강제로 중지"""
