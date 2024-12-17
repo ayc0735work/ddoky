@@ -450,13 +450,13 @@ class LogicExecutor(QObject):
         Args:
             item (dict): 클릭 대기 아이템
         """
-        self._log_with_time("[실행 로그] 왼쪽 버튼 클릭 대기 중...")
+        self._log_with_time("[왼쪽 버튼 클릭 대기] 왼쪽 버튼 클릭 대기 중...")
         
         while not self._should_stop:
             if win32api.GetAsyncKeyState(win32con.VK_LBUTTON) & 0x8000:
-                self._log_with_time("[실행 로그] 왼쪽 버튼 클릭이 감지되어 다음 단계로 진행합니다")
+                self._log_with_time("[왼쪽 버튼 클릭 대기] 왼쪽 버튼 클릭이 감지되어 다음 단계로 진행합니다")
                 break
-            time.sleep(0.001)  # CPU 사용량 감소
+            time.sleep(0.1)  # CPU 사용량 감소
 
     def stop_all_logic(self):
         """모든 실행 중인 로직을 강제로 중지"""
@@ -645,6 +645,8 @@ class LogicExecutor(QObject):
 
         elif "로직 실행" in message and ("실행 시작" in message or "반복 완료" in message):
             formatted_message = f"<span style='color: #0000FF; font-size: 34px; font-weight: bold;'>{time_info}</span> <span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{message}</span>"
+        elif "왼쪽 버튼 클릭 대기" in message:
+            formatted_message = f"<span style='color: #FFD700; font-size: 28px; font-weight: bold;'>{time_info}</span> <span style='color: #FFD700; font-size: 24px; font-weight: bold;'>{message}</span>"
         else:
             # 기본 메시지 - 기본 스타일
             formatted_message = f"<span style='color: #000000;'>{time_info}</span> {message}"

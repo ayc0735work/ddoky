@@ -251,51 +251,108 @@ class LogicDetailWidget(QFrame):
         """아이템을 리스트에 추가"""
         try:
             self.log_message.emit(f"[DEBUG] add_item 시작 - 입력받은 데이터: {item_info}")
+            item = QListWidgetItem()
             
-            # 딕셔너리인 경우
+            # 아이템 타입에 따라 처리
             if isinstance(item_info, dict):
                 self.log_message.emit("[DEBUG] 딕셔너리 형식의 데이터 처리 시작")
-                display_text = item_info.get('display_text', '')
-                self.log_message.emit(f"[DEBUG] 추출된 display_text: {display_text}")
-                
-                item = QListWidgetItem(display_text)
-                self.log_message.emit(f"[DEBUG] QListWidgetItem 생성 완료")
-                
-                # 마우스 입력 데이터인 경우 원본 데이터를 그대로 사용
-                if item_info.get('type') == 'mouse_input':
-                    self.log_message.emit("[DEBUG] 마우스 입력 데이터 처리")
-                    user_data = item_info  # 원본 데이터 그대로 사용
-                else:
-                    # 다른 타입의 데이터는 복사본 사용
-                    user_data = item_info.copy()
-                
-                self.log_message.emit(f"[DEBUG] UserRole 데이터: {user_data}")
-                item.setData(Qt.UserRole, user_data)
-                self.log_message.emit(f"[DEBUG] UserRole 데이터 설정 완료")
-            
-            # 문자열인 경우 (중첩 로직으로 처리)
-            else:
-                self.log_message.emit("[DEBUG] 문자열 형식의 데이터 처리 시작 (중첩 로직)")
-                logic_name = str(item_info)
-                item = QListWidgetItem(logic_name)
-                self.log_message.emit(f"[DEBUG] QListWidgetItem 생성 완료: {logic_name}")
-                
-                # 중첩 로직 데이터 구조 생성 (get_items와 동일한 형식)
-                nested_logic_data = {
-                    'type': 'logic',
-                    'logic_name': logic_name,
-                    'display_text': logic_name,
-                    'repeat_count': 1,
-                    'order': self.LogicItemList__QListWidget.count() + 1,
-                    'logic_data': {
-                        'logic_name': logic_name,
-                        'repeat_count': 1
+                item_type = item_info.get('type')
+                if item_type == 'key':
+                    # 키 입력 처리
+                    user_data = {
+                        "type": "key",
+                        "key": item_info.get('key'),
+                        "display_text": item_info.get('display_text', f"키 입력: {item_info.get('key')}"),
+                        "modifiers": item_info.get('modifiers', []),
+                        "order": self.LogicItemList__QListWidget.count() + 1
                     }
-                }
-                self.log_message.emit(f"[DEBUG] 생성된 중첩 로직 데이터: {nested_logic_data}")
+                elif item_type == 'delay':
+                    # 지연 시간 처리
+                    duration = item_info.get('duration', 0)
+                    user_data = {
+                        "type": "delay",
+                        "duration": duration,
+                        "display_text": f"지연시간: {duration}초",
+                        "order": self.LogicItemList__QListWidget.count() + 1
+                    }
+                elif item_type == 'mouse_input':
+                    # 마우스 입력 처리
+                    user_data = {
+                        "type": "mouse_input",
+                        "action": item_info.get('action'),
+                        "position": item_info.get('position'),
+                        "display_text": item_info.get('display_text', "마우스 입력"),
+                        "order": self.LogicItemList__QListWidget.count() + 1
+                    }
+                elif item_type == 'logic':
+                    # 중첩 로직 처리
+                    user_data = {
+                        'type': 'logic',
+                        'logic_name': item_info.get('logic_name'),
+                        'repeat_count': item_info.get('repeat_count', 1),
+                        'display_text': item_info.get('display_text'),
+                        'order': self.LogicItemList__QListWidget.count() + 1,
+                        'logic_id': item_info.get('logic_id')
+                    }
+                elif item_type == 'wait_click':
+                    # 클릭 대기 처리
+                    user_data = {
+                        "type": "wait_click",
+                        "display_text": item_info.get('display_text', "클릭 대기"),
+                        "order": self.LogicItemList__QListWidget.count() + 1
+                    }
+                else:
+                    self.log_message.emit(f"알 수 없는 아이템 타입입니다: {item_type}")
+                    return
+            else:
+                # 문자열인 경우 (이전 코드와의 호환성을 위해 유지)
+                self.log_message.emit("[DEBUG] 문자열 형식의 데이터 처리 시작")
+                item_text = str(item_info)
                 
-                item.setData(Qt.UserRole, nested_logic_data)
-                self.log_message.emit("[DEBUG] UserRole 데이터 설정 완료")
+                if item_text.startswith("키 입력:"):
+                    key_parts = item_text.split(" --- ")
+                    if len(key_parts) == 2:
+                        key_text = key_parts[0].replace("키 입력: ", "").strip()
+                        action = key_parts[1]  # "누르기" 또는 "떼기"
+                        
+                        # 수정자 키가 있는지 확인
+                        if "+" in key_text:
+                            modifiers_text, key = key_text.rsplit("+", 1)
+                            modifiers = modifiers_text.strip()
+                        else:
+                            modifiers = "없음"
+                            key = key_text.strip()
+                            
+                        user_data = {
+                            "type": "key",
+                            "key": key,
+                            "action": action,
+                            "display_text": item_text,
+                            "modifiers": modifiers,
+                            "order": self.LogicItemList__QListWidget.count() + 1
+                        }
+                elif item_text.startswith("지연시간"):
+                    duration = float(item_text.split(":")[1].replace("초", "").strip())
+                    user_data = {
+                        "type": "delay",
+                        "duration": duration,
+                        "display_text": item_text,
+                        "order": self.LogicItemList__QListWidget.count() + 1
+                    }
+                else:
+                    # 그 외의 경우는 중첩 로직으로 처리
+                    user_data = {
+                        'type': 'logic',
+                        'logic_name': item_text,
+                        'repeat_count': 1,
+                        'display_text': item_text,
+                        'order': self.LogicItemList__QListWidget.count() + 1
+                    }
+                self.log_message.emit(f"[DEBUG] 생성된 데이터: {user_data}")
+
+            # 아이템 설정
+            item.setData(Qt.ItemDataRole.UserRole, user_data)
+            item.setText(user_data['display_text'])
             
             # 현재 선택된 아이템 위치 확인
             current_row = self.LogicItemList__QListWidget.currentRow()
@@ -308,20 +365,23 @@ class LogicDetailWidget(QFrame):
             else:
                 self.log_message.emit(f"[DEBUG] {current_row + 1} 위치에 아이템 추가")
                 self.LogicItemList__QListWidget.insertItem(current_row + 1, item)
-                
+            
             # 새로 추가된 아이템 선택
             self.LogicItemList__QListWidget.setCurrentItem(item)
             self.log_message.emit("[DEBUG] 새 아이템 선택 완료")
             
+            # 데이터 입력 상태 체크
+            self._check_data_entered()
+            
             # 최종 확인
-            final_data = item.data(Qt.UserRole)
+            final_data = item.data(Qt.ItemDataRole.UserRole)
             self.log_message.emit(f"[DEBUG] 최종 저장된 데이터: {final_data}")
             
         except Exception as e:
             import traceback
             self.log_message.emit(f"아이템 추가 중 오류 발생: {str(e)}")
             self.log_message.emit(f"스택 트레이스:\n{traceback.format_exc()}")
-
+            
     def _move_item_up(self):
         """현재 선택된 아이템을 위로 이동"""
         current_row = self.LogicItemList__QListWidget.currentRow()
@@ -1127,7 +1187,7 @@ class LogicDetailWidget(QFrame):
                         delay_text = f"지연시간 : {delay:.4f}초"
                         current_item.setText(delay_text)
                         # 순서 값과 content 유지
-                        current_data = current_item.data(Qt.UserRole) or {}
+                        current_data = current_item.data(Qt.UserRole)
                         current_data['content'] = delay_text  # content 필드 업데이트
                         current_item.setData(Qt.UserRole, current_data)
                         self.item_edited.emit(delay_text)
@@ -1167,7 +1227,7 @@ class LogicDetailWidget(QFrame):
                             new_text = f"{key_text} --- {new_action}"
                             current_item.setText(new_text)
                             # 순서 값과 content 유지
-                            current_data = current_item.data(Qt.UserRole) or {}
+                            current_data = current_item.data(Qt.UserRole)
                             current_data['content'] = new_text  # content 필드 업데이트
                             current_item.setData(Qt.UserRole, current_data)
                             self.item_edited.emit(new_text)
@@ -1186,7 +1246,7 @@ class LogicDetailWidget(QFrame):
             # 아이템 삭제 후 순서 정렬
             for i in range(self.LogicItemList__QListWidget.count()):
                 item = self.LogicItemList__QListWidget.item(i)
-                item_data = item.data(Qt.UserRole) or {}
+                item_data = item.data(Qt.UserRole)
                 item_data['order'] = i + 1
                 item.setData(Qt.UserRole, item_data)
             self.log_message.emit(f"{len(selected_items)}개의 로직 구성 아이템이 제되었습니다")
