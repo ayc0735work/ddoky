@@ -461,6 +461,9 @@ class LogicExecutor(QObject):
         Args:
             item (dict): 클릭 대기 아이템 정보를 담은 딕셔너리
         """
+        # 시작 시간 기록
+        start_time = time.time()
+        
         # 로그 출력으로 현재 상태 알림
         self._log_with_time("[왼쪽 버튼 클릭 대기] 왼쪽 버튼 클릭 대기 중...")
         
@@ -482,10 +485,12 @@ class LogicExecutor(QObject):
             2. 마우스 왼쪽 버튼 상태 확인
             3. 버튼 상태 변화에 따른 처리
             """
-            nonlocal button_pressed
+            nonlocal button_pressed, start_time
             
             # 강제 중지 요청이 있는 경우 타이머 정리
             if self._should_stop:
+                elapsed_time = time.time() - start_time
+                self._log_with_time(f"[{elapsed_time:.4f}초] [왼쪽 버튼 클릭 대기] 강제 중지됨")
                 wait_timer.stop()
                 wait_timer.deleteLater()
                 return
@@ -498,10 +503,12 @@ class LogicExecutor(QObject):
             if is_pressed and not button_pressed:
                 # 버튼이 처음 눌린 순간 감지
                 button_pressed = True
-                self._log_with_time("[왼쪽 버튼 클릭 대기] 왼쪽 버튼이 눌렸습니다")
+                elapsed_time = time.time() - start_time
+                self._log_with_time(f"[{elapsed_time:.4f}초] [왼쪽 버튼 클릭 대기] 왼쪽 버튼이 눌렸습니다")
             elif not is_pressed and button_pressed:
                 # 버튼이 떼진 순간 감지 및 다음 단계 진행
-                self._log_with_time("[왼쪽 버튼 클릭 대기] 왼쪽 버튼이 떼졌습니다. 다음 단계로 진행합니다")
+                elapsed_time = time.time() - start_time
+                self._log_with_time(f"[{elapsed_time:.4f}초] [왼쪽 버튼 클릭 대기] 왼쪽 버튼이 떼졌습니다. 다음 단계로 진행합니다")
                 wait_timer.stop()
                 wait_timer.deleteLater()
         
@@ -705,7 +712,7 @@ class LogicExecutor(QObject):
         elif "로직 실행" in message and ("실행 시작" in message or "반복 완료" in message):
             formatted_message = f"<span style='color: #0000FF; font-size: 34px; font-weight: bold;'>{time_info}</span> <span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{message}</span>"
         elif "왼쪽 버튼 클릭 대기" in message:
-            formatted_message = f"<span style='color: #FFD700; font-size: 28px; font-weight: bold;'>{time_info}</span> <span style='color: #FFD700; font-size: 24px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #E2C000; font-size: 28px; font-weight: bold;'>{time_info}</span> <span style='color: #E2C000; font-size: 24px; font-weight: bold;'>{message}</span>"
         else:
             # 기본 메시지 - 기본 스타일
             formatted_message = f"<span style='color: #000000;'>{time_info}</span> {message}"
@@ -871,7 +878,6 @@ class LogicExecutor(QObject):
                     # 비동기적으로 첫 번째 스텝 실행
                     QTimer.singleShot(0, self._execute_next_step)
                     return
-                    
                     
                 except Exception as e:
                     self._log_with_time("[오류] 로직 시작 중 오류 발생: {}".format(str(e)))
