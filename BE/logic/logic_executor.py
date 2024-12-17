@@ -2,7 +2,8 @@ import time
 import win32api
 import win32con
 import win32gui
-from PySide6.QtCore import QObject, Signal, QTimer
+from PySide6.QtCore import QObject, Signal, QTimer, Qt
+from PySide6.QtWidgets import QApplication
 from ..utils.key_handler import KeyboardHook
 from ..utils.mouse_handler import MouseHandler
 import threading
@@ -447,28 +448,74 @@ class LogicExecutor(QObject):
     def _execute_wait_click(self, item):
         """클릭 대기 실행
         
+        이 메서드는 사용자가 마우스 왼쪽 버튼을 클릭할 때까지 대기합니다.
+        QTimer를 사용하여 주기적으로 마우스 상태를 체크하며,
+        이 과정에서 UI는 계속 반응하며 강제 중지(ESC)도 가능합니다.
+        
+        동작 과정:
+        1. QTimer 생성 및 설정 (200ms 간격)
+        2. 마우스 클릭 감지를 위한 check_click 함수 연결
+        3. 타이머 시작 및 마우스 클릭 대기
+        4. 클릭 감지 시 다음 단계로 진행
+        
         Args:
-            item (dict): 클릭 대기 아이템
+            item (dict): 클릭 대기 아이템 정보를 담은 딕셔너리
         """
+        # 로그 출력으로 현재 상태 알림
         self._log_with_time("[왼쪽 버튼 클릭 대기] 왼쪽 버튼 클릭 대기 중...")
         
-        # 클릭 상태 추적 변수
+        # 마우스 버튼의 눌림/뗌 상태를 추적하기 위한 변수
         button_pressed = False
         
-        while not self._should_stop:
-            # 버튼이 눌려있는지 확인
+        # QTimer 객체 생성 및 설정
+        # setSingleShot(False): 타이머가 반복적으로 실행되도록 설정
+        # setInterval(200): 200밀리초(0.2초) 간격으로 체크
+        wait_timer = QTimer()
+        wait_timer.setSingleShot(False)
+        wait_timer.setInterval(200)
+        
+        def check_click():
+            """마우스 클릭 상태를 확인하는 콜백 함수
+            
+            매 타이머 간격(200ms)마다 실행되며:
+            1. 강제 중지 여부 확인
+            2. 마우스 왼쪽 버튼 상태 확인
+            3. 버튼 상태 변화에 따른 처리
+            """
+            nonlocal button_pressed
+            
+            # 강제 중지 요청이 있는 경우 타이머 정리
+            if self._should_stop:
+                wait_timer.stop()
+                wait_timer.deleteLater()
+                return
+            
+            # win32api를 사용하여 마우스 왼쪽 버튼의 현재 상태 확인
+            # GetAsyncKeyState 반환값에 0x8000 비트 마스크를 적용하여
+            # 버튼이 눌렸는지 확인
             is_pressed = win32api.GetAsyncKeyState(win32con.VK_LBUTTON) & 0x8000
             
             if is_pressed and not button_pressed:
-                # 버튼이 처음 눌렸을 때
+                # 버튼이 처음 눌린 순간 감지
                 button_pressed = True
                 self._log_with_time("[왼쪽 버튼 클릭 대기] 왼쪽 버튼이 눌렸습니다")
             elif not is_pressed and button_pressed:
-                # 버튼이 떼졌을 때
+                # 버튼이 떼진 순간 감지 및 다음 단계 진행
                 self._log_with_time("[왼쪽 버튼 클릭 대기] 왼쪽 버튼이 떼졌습니다. 다음 단계로 진행합니다")
-                break
-            
-            time.sleep(0.2)  # CPU 사용량 감소
+                wait_timer.stop()
+                wait_timer.deleteLater()
+        
+        # 타이머에 체크 함수 연결 및 시작
+        wait_timer.timeout.connect(check_click)
+        self._active_timers.append(wait_timer)  # 메모리 관리를 위해 활성 타이머 목록에 추가
+        wait_timer.start()
+        
+        # 타이머 완료 대기
+        # processEvents()로 UI 반응성 유지하면서
+        # 0.1초 간격으로 타이머 상태 확인
+        while wait_timer.isActive() and not self._should_stop:
+            QApplication.processEvents()  # UI 이벤트 처리 허용
+            time.sleep(0.1)  # CPU 부하 감소를 위한 짧은 대기{{ ... }}
 
     def stop_all_logic(self):
         """모든 실행 중인 로직을 강제로 중지"""
@@ -521,7 +568,7 @@ class LogicExecutor(QObject):
         QTimer.singleShot(0, clear_timer_group)
 
     def _clear_keyboard_state(self):
-        """키보드 상태 정"""
+        """키보드 상태 정리"""
         if self.selected_logic and 'items' in self.selected_logic:
             pressed_keys = set()
             for item in self.selected_logic['items']:
@@ -644,23 +691,21 @@ class LogicExecutor(QObject):
         # 메시지 스타일 적용
         if "[오류]" in message:
             # 오류 메시지 - 어두운 빨간색
-            formatted_message = f"<span style='color: #FF0000; font-size: 18px;'>{time_info}</span> <span style='color: #FF0000; font-size: 18px;'>{message}</span>"
+            formatted_message = f"<span style='color: #FFA500; font-size: 14px;'>{time_info}</span> <span style='color: #FFA500; font-size: 12px;'>{message}</span>"
         
         elif "ESC 키 감지" in message or "강제 중지" in message:
-            formatted_message = f"<span style='color: #FFA500; font-size: 24px; font-weight: bold;'>{time_info}</span> <span style='color: #FFA500; font-size: 24px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #FF0000; font-size: 24px; font-weight: bold;'>{time_info}</span> <span style='color: #FF0000; font-size: 18px; font-weight: bold;'>{message}</span>"
         
         elif "중첩로직" in message:
-            formatted_message = f"<span style='color: #008000; font-size: 28px; font-weight: bold;'>{time_info}</span> <span style='color: #008000; font-size: 28px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #008000; font-size: 28px; font-weight: bold;'>{time_info}</span> <span style='color: #008000; font-size: 18px; font-weight: bold;'>{message}</span>"
 
         elif "키 입력: 숫자패드 9" in message or "키 입력: 숫자패드 8" in message:
-            formatted_message = f"<span style='color: #FF00FF; font-size: 14px; font-weight: bold;'>{time_info}</span> <span style='color: #FF00FF; font-size: 14px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #FF00FF; font-size: 12px; font-weight: bold;'>{time_info}</span> <span style='color: #FF00FF; font-size: 12px; font-weight: bold;'>{message}</span>"
 
         elif "로직 실행" in message and ("실행 시작" in message or "반복 완료" in message):
-            formatted_message = f"<span style='color: #0000FF; font-size: 32px; font-weight: bold;'>{time_info}</span> <span style='color: #0000FF; font-size: 32px; font-weight: bold;'>{message}</span>"
-
+            formatted_message = f"<span style='color: #0000FF; font-size: 34px; font-weight: bold;'>{time_info}</span> <span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{message}</span>"
         elif "왼쪽 버튼 클릭 대기" in message:
-            formatted_message = f"<span style='color: #FFD700; font-size: 28px; font-weight: bold;'>{time_info}</span> <span style='color: #FFD700; font-size: 28px; font-weight: bold;'>{message}</span>"
-            
+            formatted_message = f"<span style='color: #FFD700; font-size: 28px; font-weight: bold;'>{time_info}</span> <span style='color: #FFD700; font-size: 24px; font-weight: bold;'>{message}</span>"
         else:
             # 기본 메시지 - 기본 스타일
             formatted_message = f"<span style='color: #000000;'>{time_info}</span> {message}"
@@ -826,6 +871,7 @@ class LogicExecutor(QObject):
                     # 비동기적으로 첫 번째 스텝 실행
                     QTimer.singleShot(0, self._execute_next_step)
                     return
+                    
                     
                 except Exception as e:
                     self._log_with_time("[오류] 로직 시작 중 오류 발생: {}".format(str(e)))
