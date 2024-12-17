@@ -452,11 +452,23 @@ class LogicExecutor(QObject):
         """
         self._log_with_time("[왼쪽 버튼 클릭 대기] 왼쪽 버튼 클릭 대기 중...")
         
+        # 클릭 상태 추적 변수
+        button_pressed = False
+        
         while not self._should_stop:
-            if win32api.GetAsyncKeyState(win32con.VK_LBUTTON) & 0x8000:
-                self._log_with_time("[왼쪽 버튼 클릭 대기] 왼쪽 버튼 클릭이 감지되어 다음 단계로 진행합니다")
+            # 버튼이 눌려있는지 확인
+            is_pressed = win32api.GetAsyncKeyState(win32con.VK_LBUTTON) & 0x8000
+            
+            if is_pressed and not button_pressed:
+                # 버튼이 처음 눌렸을 때
+                button_pressed = True
+                self._log_with_time("[왼쪽 버튼 클릭 대기] 왼쪽 버튼이 눌렸습니다")
+            elif not is_pressed and button_pressed:
+                # 버튼이 떼졌을 때
+                self._log_with_time("[왼쪽 버튼 클릭 대기] 왼쪽 버튼이 떼졌습니다. 다음 단계로 진행합니다")
                 break
-            time.sleep(0.1)  # CPU 사용량 감소
+            
+            time.sleep(0.2)  # CPU 사용량 감소
 
     def stop_all_logic(self):
         """모든 실행 중인 로직을 강제로 중지"""

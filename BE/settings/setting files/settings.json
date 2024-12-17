@@ -99,7 +99,7 @@
             "order": 2,
             "name": "공력증강 - 1회 - 기본",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-17T16:40:00.553642",
+            "updated_at": "2024-12-17T17:13:18.355827",
             "trigger_key": {
                 "key_code": "F1",
                 "modifiers": 0,
@@ -119,8 +119,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0550초",
-                    "duration": 0.055,
+                    "display_text": "지연시간 : 0.0800초",
+                    "duration": 0.08,
                     "order": 2
                 },
                 {
@@ -1701,7 +1701,7 @@
             "order": 20,
             "name": "헬파이어",
             "created_at": "2024-12-16T20:35:45.182176",
-            "updated_at": "2024-12-17T16:40:23.278872",
+            "updated_at": "2024-12-17T17:13:07.274781",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "숫자패드 -",
@@ -1714,8 +1714,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1843초",
-                    "duration": 0.1843,
+                    "display_text": "지연시간 : 0.0250초",
+                    "duration": 0.025,
                     "order": 1
                 },
                 {
@@ -1766,8 +1766,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1843초",
-                    "duration": 0.1843,
+                    "display_text": "지연시간 : 0.0250초",
+                    "duration": 0.025,
                     "order": 7
                 },
                 {
@@ -1792,8 +1792,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1843초",
-                    "duration": 0.1843,
+                    "display_text": "지연시간 : 0.0250초",
+                    "duration": 0.025,
                     "order": 10
                 },
                 {
@@ -1818,8 +1818,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1843초",
-                    "duration": 0.1843,
+                    "display_text": "지연시간 : 0.0250초",
+                    "duration": 0.025,
                     "order": 13
                 },
                 {
@@ -1844,8 +1844,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1843초",
-                    "duration": 0.1843,
+                    "display_text": "지연시간 : 0.0250초",
+                    "duration": 0.025,
                     "order": 16
                 },
                 {
@@ -1870,8 +1870,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1843초",
-                    "duration": 0.1843,
+                    "display_text": "지연시간 : 0.0250초",
+                    "duration": 0.025,
                     "order": 19
                 },
                 {
@@ -1884,8 +1884,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1843초",
-                    "duration": 0.1843,
+                    "display_text": "지연시간 : 0.0450초",
+                    "duration": 0.045,
                     "order": 21
                 },
                 {
@@ -1898,8 +1898,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1843초",
-                    "duration": 0.1843,
+                    "display_text": "지연시간 : 0.0450초",
+                    "duration": 0.045,
                     "order": 23
                 },
                 {
@@ -1923,7 +1923,13 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 26,
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0450초",
+                    "duration": 0.045,
+                    "order": 26
+                },
+                {
+                    "order": 27,
                     "type": "logic",
                     "display_text": "공력증강 - 1회 - 기본",
                     "logic_id": "2365acf4-06de-4402-8196-444181488fd8",
