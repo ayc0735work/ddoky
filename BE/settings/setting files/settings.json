@@ -1485,7 +1485,7 @@
             "order": 22,
             "name": "((1초 중첩로직)) 첨 사냥",
             "created_at": "2024-11-30T10:25:06.438732",
-            "updated_at": "2024-12-17T11:46:30.216949",
+            "updated_at": "2024-12-17T12:13:28.426844",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -1631,19 +1631,9 @@
                     "repeat_count": 1
                 },
                 {
-                    "order": 15,
+                    "order": 16,
                     "display_text": "키 입력: 숫자패드 9 --- 누르기",
                     "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 16,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1652,16 +1642,8 @@
                 },
                 {
                     "order": 17,
-                    "type": "logic",
-                    "display_text": "((1초)) 상하좌우 - 마비",
-                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
-                    "logic_name": "((1초)) 상하좌우 - 마비",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 18,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1669,9 +1651,17 @@
                     "modifiers": 0
                 },
                 {
+                    "order": 18,
+                    "type": "logic",
+                    "display_text": "((1초)) 상하좌우 - 마비",
+                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
+                    "logic_name": "((1초)) 상하좌우 - 마비",
+                    "repeat_count": 1
+                },
+                {
                     "order": 19,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1680,16 +1670,8 @@
                 },
                 {
                     "order": 20,
-                    "type": "logic",
-                    "display_text": "((1초)) 체력 회복 - 탭탭 - 4회",
-                    "logic_id": "29a89518-a378-491d-bb93-adcb2d639847",
-                    "logic_name": "((1초)) 체력 회복 - 탭탭 - 4회",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 21,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1697,9 +1679,17 @@
                     "modifiers": 0
                 },
                 {
+                    "order": 21,
+                    "type": "logic",
+                    "display_text": "((1초)) 체력 회복 - 탭탭 - 4회",
+                    "logic_id": "29a89518-a378-491d-bb93-adcb2d639847",
+                    "logic_name": "((1초)) 체력 회복 - 탭탭 - 4회",
+                    "repeat_count": 1
+                },
+                {
                     "order": 22,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1708,16 +1698,8 @@
                 },
                 {
                     "order": 23,
-                    "type": "logic",
-                    "display_text": "((1초)) 상하 두 칸 - 중독",
-                    "logic_id": "d3462ca4-81cb-4051-8e87-d058ae8ebc4c",
-                    "logic_name": "((1초)) 상하 두 칸 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 24,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1725,9 +1707,17 @@
                     "modifiers": 0
                 },
                 {
+                    "order": 24,
+                    "type": "logic",
+                    "display_text": "((1초)) 상하 두 칸 - 중독",
+                    "logic_id": "d3462ca4-81cb-4051-8e87-d058ae8ebc4c",
+                    "logic_name": "((1초)) 상하 두 칸 - 중독",
+                    "repeat_count": 1
+                },
+                {
                     "order": 25,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1736,16 +1726,8 @@
                 },
                 {
                     "order": 26,
-                    "type": "logic",
-                    "display_text": "((1초)) 좌우 두 칸 - 중독",
-                    "logic_id": "b60b29b5-747d-4188-a5f0-534cb406be43",
-                    "logic_name": "((1초)) 좌우 두 칸 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 27,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1753,9 +1735,17 @@
                     "modifiers": 0
                 },
                 {
+                    "order": 27,
+                    "type": "logic",
+                    "display_text": "((1초)) 좌우 두 칸 - 중독",
+                    "logic_id": "b60b29b5-747d-4188-a5f0-534cb406be43",
+                    "logic_name": "((1초)) 좌우 두 칸 - 중독",
+                    "repeat_count": 1
+                },
+                {
                     "order": 28,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1764,16 +1754,8 @@
                 },
                 {
                     "order": 29,
-                    "type": "logic",
-                    "display_text": "((1초)) 상하좌우 - 마비",
-                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
-                    "logic_name": "((1초)) 상하좌우 - 마비",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 30,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1781,9 +1763,17 @@
                     "modifiers": 0
                 },
                 {
+                    "order": 30,
+                    "type": "logic",
+                    "display_text": "((1초)) 상하좌우 - 마비",
+                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
+                    "logic_name": "((1초)) 상하좌우 - 마비",
+                    "repeat_count": 1
+                },
+                {
                     "order": 31,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1792,16 +1782,8 @@
                 },
                 {
                     "order": 32,
-                    "type": "logic",
-                    "display_text": "((1초)) 체력 회복 - 탭탭 - 4회",
-                    "logic_id": "29a89518-a378-491d-bb93-adcb2d639847",
-                    "logic_name": "((1초)) 체력 회복 - 탭탭 - 4회",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 33,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1809,9 +1791,17 @@
                     "modifiers": 0
                 },
                 {
+                    "order": 33,
+                    "type": "logic",
+                    "display_text": "((1초)) 체력 회복 - 탭탭 - 4회",
+                    "logic_id": "29a89518-a378-491d-bb93-adcb2d639847",
+                    "logic_name": "((1초)) 체력 회복 - 탭탭 - 4회",
+                    "repeat_count": 1
+                },
+                {
                     "order": 34,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1820,16 +1810,8 @@
                 },
                 {
                     "order": 35,
-                    "type": "logic",
-                    "display_text": "((1초)) 상하 두 칸 - 중독",
-                    "logic_id": "d3462ca4-81cb-4051-8e87-d058ae8ebc4c",
-                    "logic_name": "((1초)) 상하 두 칸 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 36,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1837,9 +1819,17 @@
                     "modifiers": 0
                 },
                 {
+                    "order": 36,
+                    "type": "logic",
+                    "display_text": "((1초)) 상하 두 칸 - 중독",
+                    "logic_id": "d3462ca4-81cb-4051-8e87-d058ae8ebc4c",
+                    "logic_name": "((1초)) 상하 두 칸 - 중독",
+                    "repeat_count": 1
+                },
+                {
                     "order": 37,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1848,16 +1838,8 @@
                 },
                 {
                     "order": 38,
-                    "type": "logic",
-                    "display_text": "((1초)) 좌우 두 칸 - 중독",
-                    "logic_id": "b60b29b5-747d-4188-a5f0-534cb406be43",
-                    "logic_name": "((1초)) 좌우 두 칸 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 39,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1865,9 +1847,17 @@
                     "modifiers": 0
                 },
                 {
+                    "order": 39,
+                    "type": "logic",
+                    "display_text": "((1초)) 좌우 두 칸 - 중독",
+                    "logic_id": "b60b29b5-747d-4188-a5f0-534cb406be43",
+                    "logic_name": "((1초)) 좌우 두 칸 - 중독",
+                    "repeat_count": 1
+                },
+                {
                     "order": 40,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
                     "type": "key_input",
                     "key_code": "숫자패드 9",
                     "scan_code": 73,
@@ -1876,24 +1866,6 @@
                 },
                 {
                     "order": 41,
-                    "type": "logic",
-                    "display_text": "((1초)) 상하좌우 - 마비",
-                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
-                    "logic_name": "((1초)) 상하좌우 - 마비",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 42,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 43,
                     "display_text": "키 입력: 숫자패드 9 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -1903,15 +1875,15 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 44,
+                    "order": 42,
                     "type": "logic",
-                    "display_text": "((1초)) 체력 회복 - 탭탭 - 4회",
-                    "logic_id": "29a89518-a378-491d-bb93-adcb2d639847",
-                    "logic_name": "((1초)) 체력 회복 - 탭탭 - 4회",
+                    "display_text": "((1초)) 상하좌우 - 마비",
+                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
+                    "logic_name": "((1초)) 상하좌우 - 마비",
                     "repeat_count": 1
                 },
                 {
-                    "order": 45,
+                    "order": 43,
                     "display_text": "키 입력: 숫자패드 9 --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -1921,7 +1893,35 @@
                     "modifiers": 0
                 },
                 {
+                    "order": 44,
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 45,
+                    "type": "logic",
+                    "display_text": "((1초)) 체력 회복 - 탭탭 - 4회",
+                    "logic_id": "29a89518-a378-491d-bb93-adcb2d639847",
+                    "logic_name": "((1초)) 체력 회복 - 탭탭 - 4회",
+                    "repeat_count": 1
+                },
+                {
                     "order": 46,
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 47,
                     "display_text": "키 입력: 숫자패드 9 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
