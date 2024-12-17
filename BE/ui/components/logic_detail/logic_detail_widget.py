@@ -273,26 +273,28 @@ class LogicDetailWidget(QFrame):
                 item.setData(Qt.UserRole, user_data)
                 self.log_message.emit(f"[DEBUG] UserRole 데이터 설정 완료")
             
-            # 문자열인 경우
+            # 문자열인 경우 (중첩 로직으로 처리)
             else:
-                self.log_message.emit("[DEBUG] 문자열 형식의 데이터 처리 시작")
-                item = QListWidgetItem(str(item_info))
-                self.log_message.emit(f"[DEBUG] QListWidgetItem 생성 완료: {str(item_info)}")
+                self.log_message.emit("[DEBUG] 문자열 형식의 데이터 처리 시작 (중첩 로직)")
+                logic_name = str(item_info)
+                item = QListWidgetItem(logic_name)
+                self.log_message.emit(f"[DEBUG] QListWidgetItem 생성 완료: {logic_name}")
                 
-                default_data = {
-                    'type': 'mouse_input',
-                    'display_text': str(item_info),
-                    'coordinates_x': 0,
-                    'coordinates_y': 0,
-                    'ratios_x': 0,
-                    'ratios_y': 0,
-                    'action': '클릭',
-                    'button': '왼쪽 버튼',
-                    'name': ''
+                # 중첩 로직 데이터 구조 생성 (get_items와 동일한 형식)
+                nested_logic_data = {
+                    'type': 'logic',
+                    'logic_name': logic_name,
+                    'display_text': logic_name,
+                    'repeat_count': 1,
+                    'order': self.LogicItemList__QListWidget.count() + 1,
+                    'logic_data': {
+                        'logic_name': logic_name,
+                        'repeat_count': 1
+                    }
                 }
-                self.log_message.emit(f"[DEBUG] 생성된 기본 데이터: {default_data}")
+                self.log_message.emit(f"[DEBUG] 생성된 중첩 로직 데이터: {nested_logic_data}")
                 
-                item.setData(Qt.UserRole, default_data)
+                item.setData(Qt.UserRole, nested_logic_data)
                 self.log_message.emit("[DEBUG] UserRole 데이터 설정 완료")
             
             # 현재 선택된 아이템 위치 확인
@@ -402,8 +404,8 @@ class LogicDetailWidget(QFrame):
             self.log_message.emit(f"[DEBUG] 아이템 {i+1} 원본 데이터: {user_data}")
             
             # 로직 타입 아이템인 경우
-            if item_text.startswith("로직:"):
-                logic_name = item_text.replace("로직:", "").strip()
+            if user_data.get('type') == 'logic':
+                logic_name = user_data.get('logic_name')
                 
                 # 기존 로직의 UUID를 우선적으로 사용
                 logic_id = user_data.get('logic_id')
@@ -634,7 +636,7 @@ class LogicDetailWidget(QFrame):
                 items.append({
                     'type': 'undefined_type',
                     'logic_name': item_text,
-                    'display_text': f"로직: {item_text}",
+                    'display_text': f"정의되지 않은 로직: {item_text}",
                     'repeat_count': 1,
                     'order': order
                 })
@@ -1068,9 +1070,9 @@ class LogicDetailWidget(QFrame):
         return super().eventFilter(obj, event)
 
     def _check_data_entered(self, *args):
-        """입력된 데이터가 는지 확인하고 새 로직 버튼 상태를 업데이트"""
+        """입력된 데이터가 있는지 확인하고 새 로직 버튼 상태를 업데이트"""
         # 새 로직 버튼 활성화 조건:
-        # 1. 직 이름이 입력되어 는 경우
+        # 1. 로직 이름이 입력되어 있는 경우
         # 2. 트리거 키가 설정되어 있는 경우
         # 3. 아이템 목록에 하나 이상의 아이템이 있는 경우
         # 4. 반복 횟수가 1이 아닌 경우
