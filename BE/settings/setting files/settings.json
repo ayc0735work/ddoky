@@ -2409,7 +2409,7 @@
             "order": 21,
             "name": "ㄴ 첨사냥 중첩로직용",
             "created_at": "2024-11-30T10:25:06.438732",
-            "updated_at": "2024-12-18T16:11:24.981692",
+            "updated_at": "2024-12-18T19:55:50.421076",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -2436,8 +2436,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.035초",
-                    "duration": 0.035,
+                    "display_text": "지연시간 : 0.031초",
+                    "duration": 0.031,
                     "order": 3
                 },
                 {
@@ -3780,10 +3780,16 @@
             "order": 34,
             "name": "((1초)) 상하좌우 - 마비",
             "created_at": "2024-12-09T13:56:02.913186",
-            "updated_at": "2024-12-18T15:48:48.170861",
-            "trigger_key": null,
+            "updated_at": "2024-12-18T19:55:57.527449",
+            "trigger_key": {
+                "is_system_key": false,
+                "key_code": "N",
+                "modifiers": 0,
+                "scan_code": 49,
+                "virtual_key": 78
+            },
             "repeat_count": 1,
-            "is_nested": true,
+            "is_nested": false,
             "items": [
                 {
                     "order": 1,
@@ -5726,7 +5732,7 @@
             "order": 48,
             "name": "월드 재입장",
             "created_at": "2024-12-11T21:30:39.063045",
-            "updated_at": "2024-12-13T14:16:18.848598",
+            "updated_at": "2024-12-18T20:37:19.985415",
             "trigger_key": {
                 "key_code": "F3",
                 "modifiers": 0,
@@ -5737,7 +5743,13 @@
             "is_nested": false,
             "items": [
                 {
-                    "order": 1,
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.4초",
+                    "duration": 0.4,
+                    "order": 1
+                },
+                {
+                    "order": 2,
                     "type": "mouse_input",
                     "display_text": "마우스 입력: 메뉴 버튼 클릭 (2009, 73)",
                     "name": "메뉴 버튼 클릭",
@@ -5752,10 +5764,10 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.4초",
                     "duration": 0.4,
-                    "order": 2
+                    "order": 3
                 },
                 {
-                    "order": 3,
+                    "order": 4,
                     "type": "mouse_input",
                     "display_text": "마우스 입력: 월드 재입장 버튼 클릭 (616, 860)",
                     "name": "월드 재입장 버튼 클릭",
@@ -5770,10 +5782,10 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.4초",
                     "duration": 0.4,
-                    "order": 4
+                    "order": 5
                 },
                 {
-                    "order": 5,
+                    "order": 6,
                     "type": "mouse_input",
                     "display_text": "마우스 입력: 월드 재입장 확인창 클릭 (915, 669)",
                     "name": "월드 재입장 확인창 클릭",
@@ -5783,6 +5795,12 @@
                     "coordinates_y": 669,
                     "ratios_x": 0.4407514450867052,
                     "ratios_y": 0.5878734622144113
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.4초",
+                    "duration": 0.4,
+                    "order": 7
                 }
             ]
         },
@@ -5790,7 +5808,7 @@
             "order": 49,
             "name": "캐릭터 선택",
             "created_at": "2024-12-12T08:29:17.016286",
-            "updated_at": "2024-12-13T14:16:15.706736",
+            "updated_at": "2024-12-18T20:37:26.699069",
             "trigger_key": {
                 "key_code": "F4",
                 "modifiers": 0,
@@ -5801,59 +5819,13 @@
             "is_nested": false,
             "items": [
                 {
-                    "order": 1,
-                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "방향키 아래쪽 ↓",
-                    "scan_code": 80,
-                    "virtual_key": 40,
-                    "modifiers": 0
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.15초",
+                    "duration": 0.15,
+                    "order": 1
                 },
                 {
                     "order": 2,
-                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "방향키 아래쪽 ↓",
-                    "scan_code": 80,
-                    "virtual_key": 40,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.15초",
-                    "duration": 0.15,
-                    "order": 3
-                },
-                {
-                    "order": 4,
-                    "display_text": "키 입력: 엔터 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "order": 5,
-                    "display_text": "키 입력: 엔터 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.15초",
-                    "duration": 0.15,
-                    "order": 6
-                },
-                {
-                    "order": 7,
                     "display_text": "키 입력: 방향키 아래쪽 ↓ --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -5863,7 +5835,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 8,
+                    "order": 3,
                     "display_text": "키 입력: 방향키 아래쪽 ↓ --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -5876,10 +5848,10 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.15초",
                     "duration": 0.15,
-                    "order": 9
+                    "order": 4
                 },
                 {
-                    "order": 10,
+                    "order": 5,
                     "display_text": "키 입력: 엔터 --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -5889,7 +5861,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 11,
+                    "order": 6,
                     "display_text": "키 입력: 엔터 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -5902,7 +5874,59 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.15초",
                     "duration": 0.15,
-                    "order": 12
+                    "order": 7
+                },
+                {
+                    "order": 8,
+                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 아래쪽 ↓",
+                    "scan_code": 80,
+                    "virtual_key": 40,
+                    "modifiers": 0
+                },
+                {
+                    "order": 9,
+                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 아래쪽 ↓",
+                    "scan_code": 80,
+                    "virtual_key": 40,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.15초",
+                    "duration": 0.15,
+                    "order": 10
+                },
+                {
+                    "order": 11,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 12,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.15초",
+                    "duration": 0.15,
+                    "order": 13
                 }
             ]
         },
@@ -6836,164 +6860,6 @@
                     "display_text": "지연시간 : 0.0299초",
                     "duration": 0.0299,
                     "order": 10
-                }
-            ]
-        },
-        "f57e5df3-cc1a-4216-8747-fdc6331ccc06": {
-            "order": 58,
-            "name": "ESC키 있음",
-            "created_at": "2024-12-18T16:44:37.200693",
-            "updated_at": "2024-12-18T16:49:01.098802",
-            "trigger_key": {
-                "is_system_key": false,
-                "key_code": "N",
-                "modifiers": 0,
-                "scan_code": 49,
-                "virtual_key": 78
-            },
-            "repeat_count": 1,
-            "is_nested": false,
-            "items": [
-                {
-                    "order": 1,
-                    "display_text": "키 입력: 엔터 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "order": 2,
-                    "display_text": "키 입력: 엔터 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.1초",
-                    "duration": 0.1,
-                    "order": 3
-                },
-                {
-                    "order": 4,
-                    "display_text": "키 입력: A --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "A",
-                    "scan_code": 30,
-                    "virtual_key": 65,
-                    "modifiers": 0
-                },
-                {
-                    "order": 5,
-                    "display_text": "키 입력: A --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "A",
-                    "scan_code": 30,
-                    "virtual_key": 65,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.1초",
-                    "duration": 0.1,
-                    "order": 6
-                },
-                {
-                    "order": 7,
-                    "display_text": "키 입력: ESC --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "ESC",
-                    "scan_code": 1,
-                    "virtual_key": 27,
-                    "modifiers": 0
-                },
-                {
-                    "order": 8,
-                    "display_text": "키 입력: ESC --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "ESC",
-                    "scan_code": 1,
-                    "virtual_key": 27,
-                    "modifiers": 0
-                }
-            ]
-        },
-        "5aaa3282-3f12-4e2a-b73a-81148e63554c": {
-            "order": 59,
-            "name": "ESC키 없음",
-            "created_at": "2024-12-18T16:44:37.200693",
-            "updated_at": "2024-12-18T18:01:27.196002",
-            "trigger_key": {
-                "is_system_key": false,
-                "key_code": "M",
-                "modifiers": 0,
-                "scan_code": 50,
-                "virtual_key": 77
-            },
-            "repeat_count": 1,
-            "is_nested": false,
-            "items": [
-                {
-                    "order": 1,
-                    "display_text": "키 입력: A --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "A",
-                    "scan_code": 30,
-                    "virtual_key": 65,
-                    "modifiers": 0
-                },
-                {
-                    "order": 2,
-                    "display_text": "키 입력: A --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "A",
-                    "scan_code": 30,
-                    "virtual_key": 65,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.1초",
-                    "duration": 0.1,
-                    "order": 3
-                },
-                {
-                    "order": 4,
-                    "display_text": "키 입력: A --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "A",
-                    "scan_code": 30,
-                    "virtual_key": 65,
-                    "modifiers": 0
-                },
-                {
-                    "order": 5,
-                    "display_text": "키 입력: A --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "A",
-                    "scan_code": 30,
-                    "virtual_key": 65,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.1초",
-                    "duration": 0.1,
-                    "order": 6
                 }
             ]
         }

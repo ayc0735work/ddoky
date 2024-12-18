@@ -1,6 +1,6 @@
 {
-    "press": 0.0285,
-    "release": 0.001,
+    "press": 0.0221,
+    "release": 0.0008,
     "mouse_input": 0.0205,
     "default": 0.002
 }
