@@ -698,21 +698,23 @@ class LogicExecutor(QObject):
         # 메시지 스타일 적용
         if "[오류]" in message:
             # 오류 메시지 - 어두운 빨간색
-            formatted_message = f"<span style='color: #FFA500; font-size: 14px;'>{time_info}</span> <span style='color: #FFA500; font-size: 12px;'>{message}</span>"
+            formatted_message = f"<span style='color: #FFA500; font-size: 14px;'>{time_info}</span> <span style='color: #FFA500; font-size: 14px;'>{message}</span>"
         
         elif "ESC 키 감지" in message or "강제 중지" in message:
-            formatted_message = f"<span style='color: #FF0000; font-size: 24px; font-weight: bold;'>{time_info}</span> <span style='color: #FF0000; font-size: 18px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #FF0000; font-size: 20px; font-weight: bold;'>{time_info}</span> <span style='color: #FF0000; font-size: 20px; font-weight: bold;'>{message}</span>"
         
         elif "중첩로직" in message:
-            formatted_message = f"<span style='color: #008000; font-size: 28px; font-weight: bold;'>{time_info}</span> <span style='color: #008000; font-size: 18px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #008000; font-size: 24px; font-weight: bold;'>{time_info}</span> <span style='color: #008000; font-size: 24px; font-weight: bold;'>{message}</span>"
 
         elif "키 입력: 숫자패드 9" in message or "키 입력: 숫자패드 8" in message:
-            formatted_message = f"<span style='color: #FF00FF; font-size: 12px; font-weight: bold;'>{time_info}</span> <span style='color: #FF00FF; font-size: 12px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #FF00FF; font-size: 14px; font-weight: bold;'>{time_info}</span> <span style='color: #FF00FF; font-size: 14px; font-weight: bold;'>{message}</span>"
 
         elif "로직 실행" in message and ("실행 시작" in message or "반복 완료" in message):
-            formatted_message = f"<span style='color: #0000FF; font-size: 34px; font-weight: bold;'>{time_info}</span> <span style='color: #0000FF; font-size: 24px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #0000FF; font-size: 28px; font-weight: bold;'>{time_info}</span> <span style='color: #0000FF; font-size: 28px; font-weight: bold;'>{message}</span>"
+
         elif "왼쪽 버튼 클릭 대기" in message:
-            formatted_message = f"<span style='color: #E2C000; font-size: 28px; font-weight: bold;'>{time_info}</span> <span style='color: #E2C000; font-size: 24px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #E2C000; font-size: 24px; font-weight: bold;'>{time_info}</span> <span style='color: #E2C000; font-size: 24px; font-weight: bold;'>{message}</span>"
+
         else:
             # 기본 메시지 - 기본 스타일
             formatted_message = f"<span style='color: #000000;'>{time_info}</span> {message}"
