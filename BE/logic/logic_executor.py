@@ -394,8 +394,8 @@ class LogicExecutor(QObject):
             
             # ESC 키를 떼는 경우 추가 딜레이
             if step['action'] == '떼기' and step['key_code'] == 'ESC':
-                print(f"[DEBUG] ESC 키 떼기 후 추가 대기 시작 - 대기 시간: 0.2초")
-                time.sleep(0.2)  # 200ms 추가 딜레이
+                print(f"[DEBUG] ESC 키 떼기 후 추가 대기 시작 - 대기 시간: 0.006초")
+                time.sleep(0.0060)
                 print(f"[DEBUG] ESC 키 떼기 후 추가 대기 완료")
             
             self._log_with_time(f"[키 입력] {step['display_text']} 실행 완료")
