@@ -37,6 +37,9 @@ class LogicExecutor(QObject):
         # 키 입력 출처 플래그 추가
         self.is_step_input = False
         
+        # 시뮬레이션된 키 입력 플래그 추가
+        self.is_simulated_input = False
+        
         # 상태 관리
         self.execution_state = {
             'is_executing': False,
@@ -178,10 +181,24 @@ class LogicExecutor(QObject):
         Args:
             key_info (dict): 입력된 키 정보
         """
+        print(f"[DEBUG] 키 이벤트 감지 시작 ----")
+        print(f"[DEBUG] 키 정보: {key_info}")
+        print(f"[DEBUG] 현재 스레드 ID: {threading.get_ident()}")
+        print(f"[DEBUG] 이벤트 발생 시간: {time.time()}")
+        print(f"[DEBUG] 플래그 상태 - step_input: {self.is_step_input}, simulated: {self.is_simulated_input}")
+        
         self._log_with_time("[키 감지 로그] 키 입력 감지: {}".format(key_info))
+        
+        # 시뮬레이션된 입력은 무시
+        if self.is_simulated_input:
+            print("[DEBUG] 시뮬레이션된 입력 무시됨")
+            print("[DEBUG] 키 이벤트 감지 종료 ----\n")
+            return
         
         # 스텝 입력이 아닐 때만 강제 중지 키 처리
         if not self.is_step_input and key_info.get('virtual_key') == self.force_stop_key:
+            print("[DEBUG] 강제 중지 키 감지 - 강제 중지 실행")
+            print("[DEBUG] 키 이벤트 감지 종료 ----\n")
             self._log_with_time("[키 감지 로그] 강제 중지 키 감지 - 로직 강제 중지 실행")
             self.force_stop()
             return
@@ -321,6 +338,13 @@ class LogicExecutor(QObject):
         """키 입력 실행"""
         try:
             self.is_step_input = True  # 스텝 입력 플래그 설정
+            self.is_simulated_input = True  # 시뮬레이션 입력 플래그 설정
+            
+            print(f"[DEBUG] 키 입력 실행 시작 ----")
+            print(f"[DEBUG] 스텝 정보: {step}")
+            print(f"[DEBUG] 현재 스레드 ID: {threading.get_ident()}")
+            print(f"[DEBUG] 실행 시작 시간: {time.time()}")
+            print(f"[DEBUG] 플래그 상태 - step_input: {self.is_step_input}, simulated: {self.is_simulated_input}")
             
             # 키 입력 관련 정보 미리 계산
             virtual_key = step['virtual_key']
@@ -337,17 +361,34 @@ class LogicExecutor(QObject):
                 
             # 키 입력 실행
             if step['action'] == '누르기':
+                print(f"[DEBUG] 키 누르기 실행 - virtual_key: {virtual_key}, scan_code: {scan_code}, flags: {flags}")
                 win32api.keybd_event(virtual_key, scan_code, flags, 0)
             else:  # 떼기
+                print(f"[DEBUG] 키 떼기 실행 - virtual_key: {virtual_key}, scan_code: {scan_code}, flags: {flags | win32con.KEYEVENTF_KEYUP}")
                 win32api.keybd_event(virtual_key, scan_code, flags | win32con.KEYEVENTF_KEYUP, 0)
-                
+            
+            print(f"[DEBUG] win32api.keybd_event 호출 완료")
+            
             # 키 입력 후 지연
-            time.sleep(self.KEY_DELAYS.get(step['action'], self.KEY_DELAYS['기본']))
+            delay = self.KEY_DELAYS.get(step['action'], self.KEY_DELAYS['기본'])
+            print(f"[DEBUG] 키 입력 후 대기 시작 - 대기 시간: {delay}초")
+            time.sleep(delay)
+            print(f"[DEBUG] 키 입력 후 대기 완료")
+            
+            # ESC 키를 떼는 경우 추가 딜레이
+            if step['action'] == '떼기' and step['key_code'] == 'ESC':
+                print(f"[DEBUG] ESC 키 떼기 후 추가 대기 시작 - 대기 시간: 0.1초")
+                time.sleep(0.1)  # 100ms 추가 딜레이
+                print(f"[DEBUG] ESC 키 떼기 후 추가 대기 완료")
             
             self._log_with_time(f"[키 입력] {step['display_text']} 실행 완료")
             
         finally:
+            print(f"[DEBUG] 키 입력 실행 종료 ----")
+            print(f"[DEBUG] 종료 시간: {time.time()}")
+            print(f"[DEBUG] 플래그 상태 - step_input: {self.is_step_input}, simulated: {self.is_simulated_input}\n")
             self.is_step_input = False  # 스텝 입력 플래그 해제
+            self.is_simulated_input = False  # 시뮬레이션 입력 플래그 해제
 
     def _execute_delay(self, step):
         """지연시간 실행"""
@@ -844,10 +885,17 @@ class LogicExecutor(QObject):
         Args:
             key_info (dict): 입력된 키 정보
         """
+        print(f"[DEBUG] 키 이벤트 감지 - key_info: {key_info}, step_input: {self.is_step_input}, simulated: {self.is_simulated_input}")
         self._log_with_time("[키 감지 로그] 키 입력 감지: {}".format(key_info))
+        
+        # 시뮬레이션된 입력은 무시
+        if self.is_simulated_input:
+            print("[DEBUG] 시뮬레이션된 입력 무시")
+            return
         
         # 스텝 입력이 아닐 때만 강제 중지 키 처리
         if not self.is_step_input and key_info.get('virtual_key') == self.force_stop_key:
+            print("[DEBUG] 강제 중지 키 감지 - 강제 중지 실행")
             self._log_with_time("[키 감지 로그] 강제 중지 키 감지 - 로직 강제 중지 실행")
             self.force_stop()
             return
