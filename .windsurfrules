@@ -1,90 +1,63 @@
 ddoky 프로젝트
 1. 로직 메이커 도구에서 기능을 추가했을 때 동작하는 코드 로직 흐름
-    1. UI 초기화 및 시작 단계
-    시작점: MainWindow의 init 메서드
 
-    메인 윈도우가 생성되면서 각 컴포넌트들이 초기화됩니다
-    LogicMakerWidget과 LogicDetailWidget이 생성됩니다
-    2. 아이템 추가 흐름
-    시작점: LogicMakerWidget의 버튼 클릭 이벤트
+-- UI 초기화 및 시작 단계
+MainWindow의 init 메서드에서 시작
+LogicDetailWidget 초기화 시:
+SettingsManager와 LogicManager 인스턴스 생성
+UI 컴포넌트 초기화 (로직 이름 입력, 트리거 키 설정, 반복 횟수 등)
+이벤트 필터 설치 및 시그널/슬롯 연결
+중첩 로직 체크박스 초기 상태 설정
 
-    사용자가 키 입력, 마우스 입력, 지연 시간 등의 버튼을 클릭
-    각 버튼에 연결된 슬롯 함수가 호출됨:
-    _on_key_input_button_clicked
-    _on_mouse_input_button_clicked
-    _on_delay_button_clicked
-    _on_wait_click_button_clicked
-    각 슬롯 함수는 해당하는 다이얼로그를 생성하고 표시
-    다이얼로그에서 사용자가 설정을 입력하고 확인을 누르면
-    _add_item_to_list 메서드가 호출되어 아이템이 리스트에 추가됨
-    3. 로직 저장 흐름
-    시작점: LogicMakerWidget의 save_logic 메서드
+-- 로직 실행기(LogicExecutor) 초기화
+프로세스 매니저와 로직 매니저 주입받음
+실행 상태 관리 초기화:
+python
+CopyInsert
+self.execution_state = {
+    'is_executing': False,
+    'is_stopping': False,
+    'current_step': 0,
+    'current_repeat': 1
+}
+키 딜레이 설정 로드 및 관리
+스레드 동기화를 위한 락(Lock) 설정:
+python
+CopyInsert
+self._hook_lock = threading.Lock()
+self._state_lock = threading.Lock()
+self._cleanup_lock = threading.Lock()
 
-    사용자가 저장 버튼 클릭
-    save_logic 메서드 호출
-    현재 입력된 로직 이름과 아이템 목록을 가져옴
-    UUID를 생성하여 고유 ID 부여
-    로직 데이터 구조 생성 (이름, ID, 생성일시, 아이템 목록 등)
-    Settings 클래스의 get과 set 메서드를 사용하여:
-    기존 로직 목록을 불러옴
-    새 로직을 추가하거나 기존 로직을 업데이트
-    변경된 로직 목록을 settings.json에 저장
-    logic_saved 시그널을 발생시켜 UI 업데이트
-    4. 로직 불러오기 흐름
-    시작점: LogicDetailWidget의 load_logics 메서드
+-- 로직 저장 시 추가 동작
+UUID 생성 및 현재 시간 기록
+로직 데이터에 중첩 로직 여부 포함
+트리거 키 정보 저장
+시그널 발생 순서:
+logic_saved 시그널
+logic_updated 시그널 (수정 시)
+log_message 시그널 (로그 기록)
 
-    앱 시작 시 또는 로직 저장 후 자동으로 호출
-    Settings에서 저장된 로직 목록을 불러옴
-    _update_logic_list 메서드를 통해:
-    로직 목록 위젯을 초기화
-    각 로직에 대해 QListWidgetItem 생성
-    아이템에 로직 데이터 설정
-    로직 선택 시 _on_logic_selected 메서드가 호출되어:
-    선택된 로직의 상세 정보 표시
-    트리거 키 설정 UI 업데이트
-    반복 횟수 설정 UI 업데이트
-    5. 로직 실행 흐름
-    시작점: LogicExecutor의 execute_logic 메서드
+-- 로직 실행 시 세부 흐름
+실행 전 상태 체크:
+python
+CopyInsert
+if self.execution_state['is_executing']:
+    return
+실행 시작 시 타이머 및 시간 기록:
+python
+CopyInsert
+self._start_time = time.time()
+각 단계별 실행 시 락(Lock) 사용으로 스레드 안전성 보장
+강제 중지 키(ESC) 모니터링
+실행 중 에러 발생 시 execution_error 시그널 발생
 
-    사용자가 실행 버튼을 클릭하거나 트리거 키를 누름
-    execute_logic 메서드가 호출되어:
-    실행 상태 초기화
-    실행 시작 시그널 발생
-    _execute_next_step 메서드가 각 아이템을 순차적으로 실행:
-    현재 스텝 번호 업데이트
-    아이템 타입에 따라 적절한 실행 메서드 호출
-    각 아이템 타입별 실행 메서드:
-    _execute_key_input: 키보드 입력 실행
-    _execute_mouse_input: 마우스 입력 실행
-    _execute_delay: 지연 시간 실행
-    _execute_wait_click: 클릭 대기 실행
-    _execute_nested_logic: 중첩된 로직 실행
-    각 실행 단계마다:
-    로그 메시지 출력
-    상태 업데이트
-    에러 처리
-    모든 아이템 실행 완료 후:
-    실행 완료 시그널 발생
-    상태 초기화
-    리소스 정리
-    주요 클래스들의 역할
-    MainWindow
-    전체 UI 구조 관리
-    각 컴포넌트 초기화 및 배치
-    전역 이벤트 처리
-    LogicMakerWidget
-    로직 생성 UI 제공
-    아이템 추가 및 관리
-    로직 저장 기능
-    LogicDetailWidget
-    저장된 로직 목록 표시
-    로직 상세 정보 표시
-    트리거 키 및 반복 횟수 설정
-    LogicExecutor
-    로직 실행 관리
-    각 아이템 타입별 실행 구현
-    실행 상태 및 에러 처리
-    Settings
-    설정 파일 관리
-    로직 데이터 저장 및 불러오기
-    설정값 캐싱 및 동기화
+-- 중요한 추가 사항
+스레드 안전성:
+여러 락을 사용하여 동시성 문제 방지
+키보드/마우스 입력 시 적절한 딜레이 적용
+리소스 관리:
+실행 완료 후 cleanup_finished 시그널로 정리
+활성 타이머 추적 및 정리
+에러 처리:
+각 실행 단계마다 예외 처리
+로그 메시지를 통한 상태 추적
