@@ -184,26 +184,26 @@ class LogicExecutor(QObject):
         Args:
             key_info (dict): 입력된 키 정보
         """
-        print(f"[DEBUG] 키 이벤트 감지 시작 ----")
-        print(f"[DEBUG] 키 정보: {key_info}")
-        print(f"[DEBUG] 현재 스레드 ID: {threading.get_ident()}")
-        current_time = time.time()
-        print(f"[DEBUG] 이벤트 발생 시간: {current_time}")
-        print(f"[DEBUG] 플래그 상태 - step_input: {self.is_step_input}, simulated: {self.is_simulated_input}")
-        
-        # ESC 키이고 마지막 시뮬레이션과 너무 가까운 시간이면 무시
-        if (key_info['key_code'] == 'ESC' and 
-            current_time - self.last_simulated_esc_time < 0.5):  # 500ms
-            print(f"[DEBUG] ESC 키 이벤트 무시됨 - 마지막 시뮬레이션으로부터 경과 시간: {current_time - self.last_simulated_esc_time}초")
-            print("[DEBUG] 키 이벤트 감지 종료 ----\n")
-            return
-        
+        print(f"[DEBUG] 키 이벤트 감지 - key_info: {key_info}, step_input: {self.is_step_input}, simulated: {self.is_simulated_input}")
         self._log_with_time("[키 감지 로그] 키 입력 감지: {}".format(key_info))
+        
+        # 시뮬레이션된 입력과 실제 입력을 구분하여 처리
+        if key_info['key_code'] == 'ESC':
+            if self.is_simulated_input:
+                print("[DEBUG] 시뮬레이션된 ESC 입력 무시")
+                return
+            else:
+                print("[DEBUG] 실제 ESC 입력 감지")
+                self._log_with_time("[키 감지 로그] 실제 ESC 키 입력 감지")
+                if self._should_stop:
+                    print("[DEBUG] 이미 중지 상태입니다.")
+                    return
+                self._should_stop = True
+                # 실제 ESC 입력에 대한 추가 처리 로직 필요 시 여기에 추가
         
         # 시뮬레이션된 입력은 무시
         if self.is_simulated_input:
-            print("[DEBUG] 시뮬레이션된 입력 무시됨")
-            print("[DEBUG] 키 이벤트 감지 종료 ----\n")
+            print("[DEBUG] 시뮬레이션된 입력 무시")
             return
         
         # 스텝 입력이 아닐 때만 강제 중지 키 처리
@@ -669,6 +669,10 @@ class LogicExecutor(QObject):
                 self.start_monitoring()
                 self._log_with_time("[로그] 키 입력 니터링 다시 시작")
             
+            # 중지 상태 해제
+            self._should_stop = False
+            self._log_with_time("[로그] 중지 상태 해제 완료")
+            
             self._log_with_time("[로그] 강제 중지 완료")
             
         except Exception as e:
@@ -904,6 +908,20 @@ class LogicExecutor(QObject):
         """
         print(f"[DEBUG] 키 이벤트 감지 - key_info: {key_info}, step_input: {self.is_step_input}, simulated: {self.is_simulated_input}")
         self._log_with_time("[키 감지 로그] 키 입력 감지: {}".format(key_info))
+        
+        # 시뮬레이션된 입력과 실제 입력을 구분하여 처리
+        if key_info['key_code'] == 'ESC':
+            if self.is_simulated_input:
+                print("[DEBUG] 시뮬레이션된 ESC 입력 무시")
+                return
+            else:
+                print("[DEBUG] 실제 ESC 입력 감지")
+                self._log_with_time("[키 감지 로그] 실제 ESC 키 입력 감지")
+                if self._should_stop:
+                    print("[DEBUG] 이미 중지 상태입니다.")
+                    return
+                self._should_stop = True
+                # 실제 ESC 입력에 대한 추가 처리 로직 필요 시 여기에 추가
         
         # 시뮬레이션된 입력은 무시
         if self.is_simulated_input:
