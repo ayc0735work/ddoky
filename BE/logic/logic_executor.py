@@ -34,6 +34,9 @@ class LogicExecutor(QObject):
         # 로직 활성화 상태 추가
         self.is_logic_enabled = True
         
+        # 키 입력 출처 플래그 추가
+        self.is_step_input = False
+        
         # 상태 관리
         self.execution_state = {
             'is_executing': False,
@@ -177,8 +180,8 @@ class LogicExecutor(QObject):
         """
         self._log_with_time("[키 감지 로그] 키 입력 감지: {}".format(key_info))
         
-        # 강제 중지 키 감지
-        if key_info.get('virtual_key') == self.force_stop_key:
+        # 스텝 입력이 아닐 때만 강제 중지 키 처리
+        if not self.is_step_input and key_info.get('virtual_key') == self.force_stop_key:
             self._log_with_time("[키 감지 로그] 강제 중지 키 감지 - 로직 강제 중지 실행")
             self.force_stop()
             return
@@ -317,6 +320,8 @@ class LogicExecutor(QObject):
     def _execute_key_input(self, step):
         """키 입력 실행"""
         try:
+            self.is_step_input = True  # 스텝 입력 플래그 설정
+            
             # 키 입력 관련 정보 미리 계산
             virtual_key = step['virtual_key']
             scan_code = step['scan_code']
@@ -341,9 +346,8 @@ class LogicExecutor(QObject):
             
             self._log_with_time(f"[키 입력] {step['display_text']} 실행 완료")
             
-        except Exception as e:
-            self._log_with_time(f"[오류] 키 입력 실행 중 오류 발생: {str(e)}")
-            raise
+        finally:
+            self.is_step_input = False  # 스텝 입력 플래그 해제
 
     def _execute_delay(self, step):
         """지연시간 실행"""
@@ -842,8 +846,8 @@ class LogicExecutor(QObject):
         """
         self._log_with_time("[키 감지 로그] 키 입력 감지: {}".format(key_info))
         
-        # 강제 중지 키 감지
-        if key_info.get('virtual_key') == self.force_stop_key:
+        # 스텝 입력이 아닐 때만 강제 중지 키 처리
+        if not self.is_step_input and key_info.get('virtual_key') == self.force_stop_key:
             self._log_with_time("[키 감지 로그] 강제 중지 키 감지 - 로직 강제 중지 실행")
             self.force_stop()
             return
