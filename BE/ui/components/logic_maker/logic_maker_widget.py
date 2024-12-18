@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QPushButton,
-                             QLabel, QInputDialog, QDialog)
+                             QLabel, QInputDialog, QDialog, QLineEdit,
+                             QHBoxLayout, QDialogButtonBox)
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
 
@@ -9,6 +10,38 @@ from ...constants.dimensions import LOGIC_MAKER_WIDTH, BASIC_SECTION_HEIGHT
 from .key_input_dialog import KeyInputDialog
 from .logic_selector_dialog import LogicSelectorDialog
 from .mouse_input_dialog import MouseInputDialog
+from .image_search_area_dialog import ImageSearchAreaDialog
+
+class TextInputDialog(QDialog):
+    """텍스트 입력 모달"""
+    
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("텍스트 입력")
+        self.init_ui()
+        
+    def init_ui(self):
+        layout = QVBoxLayout()
+        
+        # 텍스트 입력 필드
+        self.text_input = QLineEdit()
+        layout.addWidget(self.text_input)
+        
+        # 버튼 박스
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.Save | QDialogButtonBox.Cancel
+        )
+        button_box.button(QDialogButtonBox.Save).setText("저장")
+        button_box.button(QDialogButtonBox.Cancel).setText("취소")
+        button_box.accepted.connect(self.accept)
+        button_box.rejected.connect(self.reject)
+        layout.addWidget(button_box)
+        
+        self.setLayout(layout)
+        
+    def get_text(self):
+        """입력된 텍스트 반환"""
+        return self.text_input.text()
 
 class LogicMakerToolWidget(QFrame):
     """로직 메이커 위젯"""
@@ -69,10 +102,22 @@ class LogicMakerToolWidget(QFrame):
         button_layout.addWidget(self.delay_btn)
         
         # 클릭 대기 버튼
-        self.wait_click_button = QPushButton("왼쪽 버튼 클릭시 다음으로 진행")
+        self.wait_click_button = QPushButton("좌클릭시 다음으로 진행")
         self.wait_click_button.setStyleSheet(BUTTON_STYLE)
         self.wait_click_button.clicked.connect(self._add_wait_click)
         button_layout.addWidget(self.wait_click_button)
+        
+        # 이미지 서치 체크 버튼
+        self.image_search_btn = QPushButton("이미지 서치 체크")
+        self.image_search_btn.setStyleSheet(BUTTON_STYLE)
+        self.image_search_btn.clicked.connect(self._add_image_search)
+        button_layout.addWidget(self.image_search_btn)
+        
+        # 텍스트 입력 버튼
+        self.text_input_btn = QPushButton("텍스트 입력")
+        self.text_input_btn.setStyleSheet(BUTTON_STYLE)
+        self.text_input_btn.clicked.connect(self._add_text_input)
+        button_layout.addWidget(self.text_input_btn)
         
         # 기록 모드 버튼
         self.record_btn = QPushButton("기록 모드")
@@ -200,6 +245,29 @@ class LogicMakerToolWidget(QFrame):
         dialog = LogicSelectorDialog(self.saved_logics, self)
         dialog.logic_selected.connect(lambda name: self.add_logic.emit(name))
         dialog.exec()
+        
+    def _add_image_search(self):
+        """이미지 서치 체크 추가"""
+        dialog = ImageSearchAreaDialog(self)
+        if dialog.exec() == QDialog.Accepted:
+            area = dialog.captured_rect
+            if area:
+                self.log_message.emit(f"이미지 서치 체크 영역이 추가되었습니다: {area}")
+                self.item_added.emit({
+                    'type': 'image_search',
+                    'display_text': '이미지 서치 체크',
+                    'area': area
+                })
+
+    def _add_text_input(self):
+        """텍스트 입력 추가"""
+        dialog = TextInputDialog(self)
+        if dialog.exec() == QDialog.Accepted:
+            text = dialog.get_text()
+            if text:
+                self.log_message.emit(f"텍스트 입력이 추가되었습니다: {text}")
+                self.item_added.emit({'type': 'text', 'display_text': text})
+        
     def update_saved_logics(self, logics):
         """저장된 로직 정보 업데이트"""
         self.saved_logics = logics
