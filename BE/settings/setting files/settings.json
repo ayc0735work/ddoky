@@ -6932,7 +6932,7 @@
             "order": 59,
             "name": "ESC키 없음",
             "created_at": "2024-12-18T16:44:37.200693",
-            "updated_at": "2024-12-18T16:49:05.463843",
+            "updated_at": "2024-12-18T18:01:27.196002",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "M",
@@ -6945,22 +6945,22 @@
             "items": [
                 {
                     "order": 1,
-                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "display_text": "키 입력: A --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
+                    "key_code": "A",
+                    "scan_code": 30,
+                    "virtual_key": 65,
                     "modifiers": 0
                 },
                 {
                     "order": 2,
-                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "display_text": "키 입력: A --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
-                    "key_code": "엔터",
-                    "scan_code": 28,
-                    "virtual_key": 13,
+                    "key_code": "A",
+                    "scan_code": 30,
+                    "virtual_key": 65,
                     "modifiers": 0
                 },
                 {

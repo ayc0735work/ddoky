@@ -103,6 +103,9 @@ class LogicExecutor(QObject):
         
         # 실행 중지 플래그 추가
         self._should_stop = False
+        
+        # ESC 키 시뮬레이션 시간 추적
+        self.last_simulated_esc_time = 0
 
     def _update_state(self, **kwargs):
         """상태 업데이트 및 알림"""
@@ -184,8 +187,16 @@ class LogicExecutor(QObject):
         print(f"[DEBUG] 키 이벤트 감지 시작 ----")
         print(f"[DEBUG] 키 정보: {key_info}")
         print(f"[DEBUG] 현재 스레드 ID: {threading.get_ident()}")
-        print(f"[DEBUG] 이벤트 발생 시간: {time.time()}")
+        current_time = time.time()
+        print(f"[DEBUG] 이벤트 발생 시간: {current_time}")
         print(f"[DEBUG] 플래그 상태 - step_input: {self.is_step_input}, simulated: {self.is_simulated_input}")
+        
+        # ESC 키이고 마지막 시뮬레이션과 너무 가까운 시간이면 무시
+        if (key_info['key_code'] == 'ESC' and 
+            current_time - self.last_simulated_esc_time < 0.5):  # 500ms
+            print(f"[DEBUG] ESC 키 이벤트 무시됨 - 마지막 시뮬레이션으로부터 경과 시간: {current_time - self.last_simulated_esc_time}초")
+            print("[DEBUG] 키 이벤트 감지 종료 ----\n")
+            return
         
         self._log_with_time("[키 감지 로그] 키 입력 감지: {}".format(key_info))
         
@@ -227,7 +238,7 @@ class LogicExecutor(QObject):
                         current_repeat=1
                     )
                     # 로직 실행 시작 시간 초기화
-                    # self._start_time = time.time()
+                    self._start_time = time.time()
                     self._log_with_time(f"[로직 실행] 로직 '{logic.get('name')}({logic_id})' 실행 시작")
                     
                     self.execution_started.emit()
@@ -346,6 +357,12 @@ class LogicExecutor(QObject):
             print(f"[DEBUG] 실행 시작 시간: {time.time()}")
             print(f"[DEBUG] 플래그 상태 - step_input: {self.is_step_input}, simulated: {self.is_simulated_input}")
             
+            # ESC 키 입력인 경우 시간 기록
+            if step['key_code'] == 'ESC':
+                if step['action'] == '떼기':
+                    self.last_simulated_esc_time = time.time()
+                    print(f"[DEBUG] ESC 키 시뮬레이션 떼기 시간 기록: {self.last_simulated_esc_time}")
+            
             # 키 입력 관련 정보 미리 계산
             virtual_key = step['virtual_key']
             scan_code = step['scan_code']
@@ -377,8 +394,8 @@ class LogicExecutor(QObject):
             
             # ESC 키를 떼는 경우 추가 딜레이
             if step['action'] == '떼기' and step['key_code'] == 'ESC':
-                print(f"[DEBUG] ESC 키 떼기 후 추가 대기 시작 - 대기 시간: 0.1초")
-                time.sleep(0.1)  # 100ms 추가 딜레이
+                print(f"[DEBUG] ESC 키 떼기 후 추가 대기 시작 - 대기 시간: 0.2초")
+                time.sleep(0.2)  # 200ms 추가 딜레이
                 print(f"[DEBUG] ESC 키 떼기 후 추가 대기 완료")
             
             self._log_with_time(f"[키 입력] {step['display_text']} 실행 완료")
@@ -896,6 +913,7 @@ class LogicExecutor(QObject):
         # 스텝 입력이 아닐 때만 강제 중지 키 처리
         if not self.is_step_input and key_info.get('virtual_key') == self.force_stop_key:
             print("[DEBUG] 강제 중지 키 감지 - 강제 중지 실행")
+            print("[DEBUG] 키 이벤트 감지 종료 ----\n")
             self._log_with_time("[키 감지 로그] 강제 중지 키 감지 - 로직 강제 중지 실행")
             self.force_stop()
             return
