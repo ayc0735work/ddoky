@@ -325,7 +325,7 @@
             "order": 4,
             "name": "동동주 마시기 - 1회",
             "created_at": "2024-11-30T07:08:49.271692",
-            "updated_at": "2024-12-20T12:40:49.713581",
+            "updated_at": "2024-12-20T15:39:31.832128",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -390,8 +390,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0675초",
-                    "duration": 0.0675,
+                    "display_text": "지연시간 : 0.0886초",
+                    "duration": 0.0886,
                     "order": 8
                 }
             ]
@@ -400,7 +400,7 @@
             "order": 5,
             "name": "동동주 마시기 - 2회",
             "created_at": "2024-11-30T07:08:49.271692",
-            "updated_at": "2024-12-20T10:45:27.630974",
+            "updated_at": "2024-12-20T15:39:38.348662",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -491,8 +491,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.2957초",
-                    "duration": 0.2957,
+                    "display_text": "지연시간 : 0.0886초",
+                    "duration": 0.0886,
                     "order": 11
                 }
             ]
@@ -501,7 +501,7 @@
             "order": 6,
             "name": "동동주 마시기 - 4회",
             "created_at": "2024-11-30T07:08:49.271692",
-            "updated_at": "2024-12-20T10:53:32.418615",
+            "updated_at": "2024-12-20T15:39:41.800196",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -644,8 +644,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.2957초",
-                    "duration": 0.2957,
+                    "display_text": "지연시간 : 0.0886초",
+                    "duration": 0.0886,
                     "order": 17
                 }
             ]
