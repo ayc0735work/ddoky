@@ -55,7 +55,7 @@
             "order": 1,
             "name": "공력증강 - 1회 - 6번키",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-21T10:59:10.022706",
+            "updated_at": "2024-12-21T14:08:06.044111",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "숫자패드 6",
@@ -138,7 +138,7 @@
             "order": 2,
             "name": "공력증강 - 1회 - 기본",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-21T10:58:59.494230",
+            "updated_at": "2024-12-21T14:08:02.835692",
             "trigger_key": {
                 "key_code": "F1",
                 "modifiers": 0,
@@ -177,7 +177,13 @@
                     "repeat_count": 1
                 },
                 {
-                    "order": 4,
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0265초",
+                    "duration": 0.0265,
+                    "order": 4
+                },
+                {
+                    "order": 5,
                     "display_text": "키 입력: 숫자패드 6 --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -190,10 +196,10 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.0265초",
                     "duration": 0.0265,
-                    "order": 5
+                    "order": 6
                 },
                 {
-                    "order": 6,
+                    "order": 7,
                     "display_text": "키 입력: 숫자패드 6 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -206,15 +212,7 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.0265초",
                     "duration": 0.0265,
-                    "order": 7
-                },
-                {
-                    "order": 8,
-                    "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
-                    "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
-                    "repeat_count": 1
+                    "order": 8
                 },
                 {
                     "order": 9,
@@ -241,10 +239,18 @@
                     "repeat_count": 1
                 },
                 {
+                    "order": 12,
+                    "type": "logic",
+                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
+                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "repeat_count": 1
+                },
+                {
                     "type": "delay",
                     "display_text": "지연시간 : 0.0265초",
                     "duration": 0.0265,
-                    "order": 12
+                    "order": 13
                 }
             ]
         },
@@ -252,7 +258,7 @@
             "order": 3,
             "name": "공력증강 - 빠르게 버전",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-21T10:59:16.490085",
+            "updated_at": "2024-12-21T14:07:46.998858",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -278,22 +284,18 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 3,
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0265초",
+                    "duration": 0.0265,
+                    "order": 3
+                },
+                {
+                    "order": 4,
                     "type": "logic",
                     "display_text": "동동주 마시기 - 1회",
                     "logic_id": "9614e85c-3ceb-423b-97ea-e17bfc0101fc",
                     "logic_name": "동동주 마시기 - 1회",
                     "repeat_count": 1
-                },
-                {
-                    "order": 4,
-                    "display_text": "키 입력: 숫자패드 6 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 6",
-                    "scan_code": 77,
-                    "virtual_key": 102,
-                    "modifiers": 0
                 },
                 {
                     "type": "delay",
@@ -303,8 +305,8 @@
                 },
                 {
                     "order": 6,
-                    "display_text": "키 입력: 숫자패드 6 --- 떼기",
-                    "action": "떼기",
+                    "display_text": "키 입력: 숫자패드 6 --- 누르기",
+                    "action": "누르기",
                     "type": "key_input",
                     "key_code": "숫자패드 6",
                     "scan_code": 77,
@@ -319,17 +321,33 @@
                 },
                 {
                     "order": 8,
-                    "type": "logic",
-                    "display_text": "((1.4초 꾸욱)) 탭탭 체력회복",
-                    "logic_id": "0d1180f9-64d9-4ac1-a442-3bfce3d30138",
-                    "logic_name": "((1.4초 꾸욱)) 탭탭 체력회복",
-                    "repeat_count": 1
+                    "display_text": "키 입력: 숫자패드 6 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 6",
+                    "scan_code": 77,
+                    "virtual_key": 102,
+                    "modifiers": 0
                 },
                 {
                     "type": "delay",
                     "display_text": "지연시간 : 0.0265초",
                     "duration": 0.0265,
                     "order": 9
+                },
+                {
+                    "order": 10,
+                    "type": "logic",
+                    "display_text": "((1.35초 꾸욱)) 탭탭 체력회복",
+                    "logic_id": "0d1180f9-64d9-4ac1-a442-3bfce3d30138",
+                    "logic_name": "((1.35초 꾸욱)) 탭탭 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0265초",
+                    "duration": 0.0265,
+                    "order": 11
                 }
             ]
         },
@@ -1035,15 +1053,15 @@
             "order": 10,
             "name": "((1초)) 탭탭 체력회복 - 4회",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-21T12:22:58.142985",
+            "updated_at": "2024-12-21T14:08:29.553093",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0243초",
-                    "duration": 0.0243,
+                    "display_text": "지연시간 : 0.0223초",
+                    "duration": 0.0223,
                     "order": 1
                 },
                 {
@@ -1056,8 +1074,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0243초",
-                    "duration": 0.0243,
+                    "display_text": "지연시간 : 0.0223초",
+                    "duration": 0.0223,
                     "order": 3
                 },
                 {
@@ -1082,8 +1100,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0243초",
-                    "duration": 0.0243,
+                    "display_text": "지연시간 : 0.0223초",
+                    "duration": 0.0223,
                     "order": 6
                 },
                 {
@@ -1108,8 +1126,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0243초",
-                    "duration": 0.0243,
+                    "display_text": "지연시간 : 0.0223초",
+                    "duration": 0.0223,
                     "order": 9
                 },
                 {
@@ -1134,8 +1152,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0243초",
-                    "duration": 0.0243,
+                    "display_text": "지연시간 : 0.0223초",
+                    "duration": 0.0223,
                     "order": 12
                 },
                 {
@@ -1160,8 +1178,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0243초",
-                    "duration": 0.0243,
+                    "display_text": "지연시간 : 0.0223초",
+                    "duration": 0.0223,
                     "order": 15
                 },
                 {
@@ -1174,8 +1192,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0243초",
-                    "duration": 0.0243,
+                    "display_text": "지연시간 : 0.0223초",
+                    "duration": 0.0223,
                     "order": 17
                 }
             ]
@@ -1305,9 +1323,9 @@
         },
         "0d1180f9-64d9-4ac1-a442-3bfce3d30138": {
             "order": 12,
-            "name": "((1.4초 꾸욱)) 탭탭 체력회복",
+            "name": "((1.35초 꾸욱)) 탭탭 체력회복",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-20T02:37:56.348008",
+            "updated_at": "2024-12-21T14:07:29.507073",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -1358,8 +1376,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.4초",
-                    "duration": 0.4,
+                    "display_text": "지연시간 : 0.3500초",
+                    "duration": 0.35,
                     "order": 6
                 },
                 {
