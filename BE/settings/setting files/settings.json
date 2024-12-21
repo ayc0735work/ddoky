@@ -496,9 +496,9 @@
                     "display_text": "키 입력: 왼쪽 컨트롤 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
-                    "key_code": "왼쪽 컨트롤",
-                    "scan_code": 29,
-                    "virtual_key": 162,
+                    "key_code": "F",
+                    "scan_code": 33,
+                    "virtual_key": 70,
                     "modifiers": 0
                 },
                 {
@@ -2563,6 +2563,58 @@
                 },
                 {
                     "order": 31,
+                    "display_text": "키 입력: 숫자패드 6 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 6",
+                    "scan_code": 77,
+                    "virtual_key": 102,
+                    "modifiers": 0
+                },
+                {
+                    "order": 32,
+                    "display_text": "키 입력: 숫자패드 6 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 6",
+                    "scan_code": 77,
+                    "virtual_key": 102,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0239초",
+                    "duration": 0.0239,
+                    "order": 33
+                },
+                {
+                    "order": 34,
+                    "display_text": "키 입력: 숫자패드 6 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 6",
+                    "scan_code": 77,
+                    "virtual_key": 102,
+                    "modifiers": 0
+                },
+                {
+                    "order": 35,
+                    "display_text": "키 입력: 숫자패드 6 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 6",
+                    "scan_code": 77,
+                    "virtual_key": 102,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0239초",
+                    "duration": 0.0239,
+                    "order": 36
+                },
+                {
+                    "order": 37,
                     "type": "logic",
                     "display_text": "((2초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
