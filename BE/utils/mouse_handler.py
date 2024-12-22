@@ -87,7 +87,7 @@ class MouseHandler:
             delays = settings.get('key_delays', {})
             
             # 기본값 설정
-            DEFAULT_DELAY = 0.0205
+            DEFAULT_DELAY = 0.0245
             mouse_delay = DEFAULT_DELAY
             
             # 설정에서 값을 가져오되, 없으면 기본값 사용

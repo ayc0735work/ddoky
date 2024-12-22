@@ -258,7 +258,7 @@
             "order": 3,
             "name": "공력증강 - 빠르게 버전",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-21T14:07:46.998858",
+            "updated_at": "2024-12-22T20:53:13.253529",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -299,8 +299,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0265초",
-                    "duration": 0.0265,
+                    "display_text": "지연시간 : 0.1500초",
+                    "duration": 0.15,
                     "order": 5
                 },
                 {
@@ -355,7 +355,7 @@
             "order": 4,
             "name": "동동주 마시기 - 1회",
             "created_at": "2024-11-30T07:08:49.271692",
-            "updated_at": "2024-12-21T10:20:53.050535",
+            "updated_at": "2024-12-22T20:53:21.686185",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -1604,7 +1604,7 @@
             "order": 17,
             "name": "((1초)) 보호 무장 힘",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-12-21T16:47:31.378621",
+            "updated_at": "2024-12-22T19:34:15.906087",
             "trigger_key": {
                 "key_code": "숫자패드 +",
                 "modifiers": 0,
@@ -1634,8 +1634,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0103초",
-                    "duration": 0.0103,
+                    "display_text": "지연시간 : 0.0377초",
+                    "duration": 0.0377,
                     "order": 3
                 },
                 {
@@ -1660,8 +1660,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0103초",
-                    "duration": 0.0103,
+                    "display_text": "지연시간 : 0.0377초",
+                    "duration": 0.0377,
                     "order": 6
                 },
                 {
@@ -1686,8 +1686,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0103초",
-                    "duration": 0.0103,
+                    "display_text": "지연시간 : 0.0377초",
+                    "duration": 0.0377,
                     "order": 9
                 },
                 {
@@ -1712,8 +1712,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0103초",
-                    "duration": 0.0103,
+                    "display_text": "지연시간 : 0.0377초",
+                    "duration": 0.0377,
                     "order": 12
                 },
                 {
@@ -1738,8 +1738,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0103초",
-                    "duration": 0.0103,
+                    "display_text": "지연시간 : 0.0377초",
+                    "duration": 0.0377,
                     "order": 15
                 },
                 {
@@ -1764,8 +1764,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0103초",
-                    "duration": 0.0103,
+                    "display_text": "지연시간 : 0.0377초",
+                    "duration": 0.0377,
                     "order": 18
                 },
                 {
@@ -1790,8 +1790,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0103초",
-                    "duration": 0.0103,
+                    "display_text": "지연시간 : 0.0377초",
+                    "duration": 0.0377,
                     "order": 21
                 },
                 {
@@ -1806,8 +1806,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0103초",
-                    "duration": 0.0103,
+                    "display_text": "지연시간 : 0.0377초",
+                    "duration": 0.0377,
                     "order": 23
                 },
                 {
@@ -1832,8 +1832,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0103초",
-                    "duration": 0.0103,
+                    "display_text": "지연시간 : 0.0377초",
+                    "duration": 0.0377,
                     "order": 26
                 },
                 {

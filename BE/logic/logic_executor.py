@@ -50,7 +50,7 @@ class LogicExecutor(QObject):
         
         # 설정에서 딜레이 값 로드
         settings = Settings()
-        DEFAULT_DELAY = 0.0205
+        DEFAULT_DELAY = 0.0245
         
         # 기본 딜레이 값 설정
         default_delays = {

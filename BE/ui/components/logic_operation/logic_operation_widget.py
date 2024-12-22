@@ -539,10 +539,10 @@ class LogicOperationWidget(QFrame):
     def load_delay_settings(self):
         """저장된 지연 시간 설정 로드"""
         delays = self.settings_manager.get('key_delays', {
-            'press': 0.0205,
-            'release': 0.0205,
-            'mouse_input': 0.0205,
-            'default': 0.0205
+            'press': 0.0245,
+            'release': 0.0245,
+            'mouse_input': 0.0245,
+            'default': 0.0245
         })
         
         # 입력 필드에 값 설정
@@ -553,7 +553,7 @@ class LogicOperationWidget(QFrame):
 
     def _on_reset_delays(self):
         """지연 시간 초기화 버튼 클릭 시 호출"""
-        DEFAULT_DELAY = 0.0205
+        DEFAULT_DELAY = 0.0245
         
         # 입력 필드에 기본값 설정
         self.key_press_input.setText(f"{DEFAULT_DELAY:.4f}")
