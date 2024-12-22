@@ -50,7 +50,7 @@ class MainWindow(QMainWindow):
         
     def init_ui(self):
         """UI 초기화"""
-        self.setWindowTitle("또키 - 종합 매크로")        
+        self.setWindowTitle("또끼")        
         self.setMinimumHeight(MAIN_WINDOW_HEIGHT)
         self.setFixedWidth(MAIN_WINDOW_WIDTH)
         
