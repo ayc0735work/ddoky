@@ -89,33 +89,33 @@
                 {
                     "order": 3,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
                     "order": 4,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
                     "order": 5,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
                     "order": 6,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
@@ -217,33 +217,33 @@
                 {
                     "order": 9,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
                     "order": 10,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
                     "order": 11,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
                     "order": 12,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
@@ -724,49 +724,49 @@
                 {
                     "order": 4,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
                     "order": 5,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
                     "order": 6,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
                     "order": 7,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
                     "order": 8,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
                     "order": 9,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
@@ -821,49 +821,49 @@
                 {
                     "order": 4,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
                     "order": 5,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
                     "order": 6,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
                     "order": 7,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
                     "order": 8,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
                     "order": 9,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
@@ -1338,9 +1338,9 @@
         },
         "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484": {
             "order": 13,
-            "name": "((2초 꾸욱)) 탭탭 체력회복",
+            "name": "((4초 꾸욱)) 탭탭 체력회복",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-19T01:49:11.439383",
+            "updated_at": "2024-12-22T16:32:06.636823",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -1365,8 +1365,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.95초",
-                    "duration": 0.95,
+                    "display_text": "지연시간 : 1.9500초",
+                    "duration": 1.95,
                     "order": 3
                 },
                 {
@@ -1391,8 +1391,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.95초",
-                    "duration": 0.95,
+                    "display_text": "지연시간 : 1.9500초",
+                    "duration": 1.95,
                     "order": 6
                 },
                 {
@@ -2201,17 +2201,17 @@
                 {
                     "order": 37,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
                     "order": 38,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 }
             ]
@@ -2478,17 +2478,17 @@
                 {
                     "order": 29,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 },
                 {
                     "order": 30,
                     "type": "logic",
-                    "display_text": "((2초 꾸욱)) 탭탭 체력회복",
+                    "display_text": "((4초 꾸욱)) 탭탭 체력회복",
                     "logic_id": "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484",
-                    "logic_name": "((2초 꾸욱)) 탭탭 체력회복",
+                    "logic_name": "((4초 꾸욱)) 탭탭 체력회복",
                     "repeat_count": 1
                 }
             ]
@@ -3625,7 +3625,7 @@
             ]
         },
         "0f7febe4-03e2-4e00-bc00-4517a9a33556": {
-            "order": 27,
+            "order": 26,
             "name": "★1초씩 무한★ 첨 중독 - 조합본",
             "created_at": "2024-12-02T02:03:00.957188",
             "updated_at": "2024-12-18T15:48:22.108624",
@@ -3669,7 +3669,7 @@
             ]
         },
         "73c0ac82-d33b-4dce-a9a1-6af5a54dd99b": {
-            "order": 28,
+            "order": 27,
             "name": "★1초씩 무한★ 공격 중독",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-18T15:48:07.440720",
@@ -3821,7 +3821,7 @@
             ]
         },
         "fe01d089-03b6-4cec-9fb5-874bac55d783": {
-            "order": 29,
+            "order": 28,
             "name": "---------------사냥---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:10:04.268329",
@@ -3842,7 +3842,7 @@
             ]
         },
         "69b74254-4313-4546-94c9-313b21ce6e3d": {
-            "order": 30,
+            "order": 29,
             "name": "1초 4회씩 80회 반복 - 중독",
             "created_at": "2024-12-04T00:08:13.574278",
             "updated_at": "2024-12-18T16:05:33.789861",
@@ -3918,7 +3918,7 @@
             ]
         },
         "39e67926-aab9-4b61-bd2f-19797480f4bf": {
-            "order": 31,
+            "order": 30,
             "name": "1초 4회씩 20회 반복 - 절망",
             "created_at": "2024-12-01T02:22:23.843289",
             "updated_at": "2024-12-18T16:05:23.502516",
@@ -3995,7 +3995,7 @@
             ]
         },
         "753fe62f-775d-4518-9a11-5b0810605183": {
-            "order": 32,
+            "order": 31,
             "name": "1초 4회씩 20회 반복 - 저주",
             "created_at": "2024-11-30T16:06:26.318706",
             "updated_at": "2024-12-18T16:05:03.666703",
@@ -4072,7 +4072,7 @@
             ]
         },
         "59070f24-4d2d-4c54-8100-f104e4645d06": {
-            "order": 33,
+            "order": 32,
             "name": "1초 4회씩 20회 반복 - 마비",
             "created_at": "2024-11-30T14:35:32.801674",
             "updated_at": "2024-12-19T01:45:04.243747",
@@ -4149,7 +4149,7 @@
             ]
         },
         "27d1f013-d82b-42f2-87cd-785dad90b052": {
-            "order": 34,
+            "order": 33,
             "name": "디버프 상하좌우 - 1회",
             "created_at": "2024-12-06T16:29:20.641646",
             "updated_at": "2024-12-18T16:05:42.853466",
@@ -4234,7 +4234,7 @@
             ]
         },
         "7b0c844b-3c8d-4e92-aa93-8a28c3faf269": {
-            "order": 35,
+            "order": 34,
             "name": "((1초 4회)) 전체 돌리기 - 마비",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-19T00:49:44.900431",
@@ -4329,7 +4329,7 @@
             ]
         },
         "8a4d4894-addf-427e-a158-9c59324fec5f": {
-            "order": 36,
+            "order": 35,
             "name": "((1초 4회)) 전체 돌리기 - 저주",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-19T00:49:34.505927",
@@ -4424,7 +4424,7 @@
             ]
         },
         "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf": {
-            "order": 37,
+            "order": 36,
             "name": "((1초 4회)) 전체 돌리기 - 중독",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-18T15:46:46.645166",
@@ -4519,7 +4519,7 @@
             ]
         },
         "a294171e-4125-47bb-aed8-aaeb049db482": {
-            "order": 38,
+            "order": 37,
             "name": "((1초 4회)) 전체 돌리기 - 절망",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-18T15:45:29.420976",
@@ -4614,7 +4614,7 @@
             ]
         },
         "728ffa37-127b-40f3-a9b6-70dbc5b882db": {
-            "order": 39,
+            "order": 38,
             "name": "((1초)) 상하좌우 - 마비",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-21T11:16:22.532017",
@@ -4841,7 +4841,7 @@
             ]
         },
         "7e4c1fda-4463-4b4b-bee7-343da540e9d3": {
-            "order": 40,
+            "order": 39,
             "name": "((1초)) 상하좌우 - 저주",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-21T16:47:31.434698",
@@ -5068,7 +5068,7 @@
             ]
         },
         "aa39922c-0b07-4af7-9ccf-69807d682338": {
-            "order": 41,
+            "order": 40,
             "name": "((1초)) 상하좌우 - 중독",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-17T05:29:29.825627",
@@ -5295,7 +5295,7 @@
             ]
         },
         "3faa2a61-87ff-4f12-8ac8-a7fd7504b7c6": {
-            "order": 42,
+            "order": 41,
             "name": "((1초)) 상하 두 칸 - 저주",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-20T07:00:33.672487",
@@ -5522,7 +5522,7 @@
             ]
         },
         "c218516d-d3d9-43f3-9fe4-e09da98ec971": {
-            "order": 43,
+            "order": 42,
             "name": "((1초)) 좌우 두 칸 - 저주",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-20T07:00:33.695886",
@@ -5749,7 +5749,7 @@
             ]
         },
         "d3462ca4-81cb-4051-8e87-d058ae8ebc4c": {
-            "order": 44,
+            "order": 43,
             "name": "((1초)) 상하 두 칸 - 중독",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-21T16:47:31.451720",
@@ -5976,7 +5976,7 @@
             ]
         },
         "b60b29b5-747d-4188-a5f0-534cb406be43": {
-            "order": 45,
+            "order": 44,
             "name": "((1초)) 좌우 두 칸 - 중독",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-21T16:47:31.468341",
@@ -6203,7 +6203,7 @@
             ]
         },
         "eed1f76c-ac9d-4856-9714-86b5fd581d24": {
-            "order": 46,
+            "order": 45,
             "name": "((중첩로직)) - 마비 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-16T10:26:20.686604",
@@ -6272,7 +6272,7 @@
             ]
         },
         "cb1fc7a9-366a-4eea-99a6-37cf45f8ac27": {
-            "order": 47,
+            "order": 46,
             "name": "((중첩로직)) - 저주 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-19T12:51:03.487869",
@@ -6341,7 +6341,7 @@
             ]
         },
         "7c9cd306-f7f1-4bb2-828e-215171f4884e": {
-            "order": 48,
+            "order": 47,
             "name": "((중첩로직)) - 중독 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-16T10:28:48.370375",
@@ -6410,7 +6410,7 @@
             ]
         },
         "cad0b094-438e-4732-a52c-245fc8cfd1bf": {
-            "order": 49,
+            "order": 48,
             "name": "((중첩로직)) - 마비만 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-19T12:51:28.436512",
@@ -6453,7 +6453,7 @@
             ]
         },
         "f63b1a9f-568c-4265-8e61-641add26c4d9": {
-            "order": 50,
+            "order": 49,
             "name": "((중첩로직)) - 저주만 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-16T13:48:07.270719",
@@ -6496,7 +6496,7 @@
             ]
         },
         "5c08d668-af06-4929-a00a-9ef0eb97d52e": {
-            "order": 51,
+            "order": 50,
             "name": "((중첩로직)) - 중독만 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-16T14:18:03.585819",
@@ -6539,7 +6539,7 @@
             ]
         },
         "2faef0f7-de37-47d2-8a07-d917738aa41a": {
-            "order": 52,
+            "order": 51,
             "name": "((지정 클릭)) 활력",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-20T11:35:57.130625",
@@ -6684,7 +6684,7 @@
             ]
         },
         "1c3fd05e-cfad-4634-a9d4-65a303bc3f9c": {
-            "order": 53,
+            "order": 52,
             "name": "((지정 클릭)) 디버프",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-20T11:21:04.077952",
@@ -6883,7 +6883,7 @@
             ]
         },
         "50c0942d-2283-486b-acf6-ba028434d8a9": {
-            "order": 54,
+            "order": 53,
             "name": "((지정 클릭)) 버프+체력",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-20T11:35:09.124281",
@@ -7166,7 +7166,7 @@
             ]
         },
         "7d0d1763-539e-433c-affe-8c2dbbe3a600": {
-            "order": 55,
+            "order": 54,
             "name": "---------------디버프---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:10:07.682135",
@@ -7187,7 +7187,7 @@
             ]
         },
         "0ceb5d7f-00bb-48b5-95ba-0b204d99da44": {
-            "order": 56,
+            "order": 55,
             "name": "월드 재입장",
             "created_at": "2024-12-11T21:30:39.063045",
             "updated_at": "2024-12-19T17:38:35.229897",
@@ -7263,7 +7263,7 @@
             ]
         },
         "b09ec1d7-4e80-49c0-a1b5-480a888e5b16": {
-            "order": 57,
+            "order": 56,
             "name": "캐릭터 선택",
             "created_at": "2024-12-12T08:29:17.016286",
             "updated_at": "2024-12-19T17:38:51.032901",
@@ -7389,7 +7389,7 @@
             ]
         },
         "9ed591e4-b227-448b-9d0f-b90c76d1f662": {
-            "order": 58,
+            "order": 57,
             "name": "모두 줍기",
             "created_at": "2024-11-26T10:58:29.227835",
             "updated_at": "2024-12-16T10:19:53.360220",
@@ -7445,7 +7445,7 @@
             ]
         },
         "03a6663d-95f7-403d-98fe-8cb339932ab3": {
-            "order": 59,
+            "order": 58,
             "name": "귀환",
             "created_at": "2024-12-19T18:54:30.254977",
             "updated_at": "2024-12-21T05:14:32.973143",
@@ -7552,7 +7552,7 @@
             ]
         },
         "8141d159-f468-47b7-acb7-5de442be0d77": {
-            "order": 60,
+            "order": 59,
             "name": "긴급",
             "created_at": "2024-12-17T05:32:15.270999",
             "updated_at": "2024-12-20T13:29:26.464471",
@@ -7653,7 +7653,7 @@
             ]
         },
         "2d87cae4-7b1e-4d8f-9229-29a88668e91b": {
-            "order": 61,
+            "order": 60,
             "name": "긴급 - F2키용",
             "created_at": "2024-12-17T05:32:15.270999",
             "updated_at": "2024-12-20T13:29:37.097700",
@@ -7754,7 +7754,7 @@
             ]
         },
         "74c363cc-0452-4786-ae02-49e927baaa31": {
-            "order": 62,
+            "order": 61,
             "name": "---------------편의---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:10:11.762423",
@@ -7775,7 +7775,7 @@
             ]
         },
         "a8c749cb-cab0-4d04-b17c-6ba9776cc000": {
-            "order": 63,
+            "order": 62,
             "name": "(24시간) 평타 연속으로 휘두르기",
             "created_at": "2024-12-19T19:04:08.546454",
             "updated_at": "2024-12-20T01:15:33.558799",
@@ -7794,7 +7794,7 @@
             ]
         },
         "ef90f702-1e03-4c38-8f63-22fce3830bd9": {
-            "order": 64,
+            "order": 63,
             "name": "(1시간) 평타 연속으로 휘두르기",
             "created_at": "2024-12-19T19:04:08.546454",
             "updated_at": "2024-12-19T19:14:27.725479",
@@ -7813,7 +7813,7 @@
             ]
         },
         "25aee244-fca6-4236-a05a-7d53e1d404ca": {
-            "order": 65,
+            "order": 64,
             "name": "(1분) 평타 연속으로 휘두르기",
             "created_at": "2024-12-19T19:04:08.546454",
             "updated_at": "2024-12-19T19:14:05.296590",
@@ -7869,247 +7869,6 @@
                     "key_code": "A",
                     "scan_code": 30,
                     "virtual_key": 65,
-                    "modifiers": 0
-                }
-            ]
-        },
-        "b5acec2c-32ba-4866-8580-356fe0b9f154": {
-            "order": 26,
-            "name": "ㄴ 첨사냥 중첩로직용 (복사본)",
-            "created_at": "2024-11-30T10:25:06.438732",
-            "updated_at": "2024-12-21T16:49:00.396335",
-            "trigger_key": {
-                "is_system_key": false,
-                "key_code": "백슬래시(\\)",
-                "modifiers": 0,
-                "scan_code": 43,
-                "virtual_key": 220
-            },
-            "repeat_count": 1,
-            "is_nested": false,
-            "items": [
-                {
-                    "order": 1,
-                    "type": "logic",
-                    "display_text": "((1초)) 보호 무장 힘",
-                    "logic_id": "b8796333-e8d6-4ae2-9fec-801a713517d8",
-                    "logic_name": "((1초)) 보호 무장 힘",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 2,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 3,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 4,
-                    "type": "logic",
-                    "display_text": "((1초)) 상하좌우 - 마비",
-                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
-                    "logic_name": "((1초)) 상하좌우 - 마비",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 5,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 6,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 7,
-                    "type": "logic",
-                    "display_text": "((1초)) 상하 두 칸 - 중독",
-                    "logic_id": "d3462ca4-81cb-4051-8e87-d058ae8ebc4c",
-                    "logic_name": "((1초)) 상하 두 칸 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 8,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 9,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 10,
-                    "type": "logic",
-                    "display_text": "((1초)) 좌우 두 칸 - 중독",
-                    "logic_id": "b60b29b5-747d-4188-a5f0-534cb406be43",
-                    "logic_name": "((1초)) 좌우 두 칸 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 11,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 12,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 13,
-                    "type": "logic",
-                    "display_text": "((1초)) 상하좌우 - 저주",
-                    "logic_id": "7e4c1fda-4463-4b4b-bee7-343da540e9d3",
-                    "logic_name": "((1초)) 상하좌우 - 저주",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 14,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 15,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 16,
-                    "type": "logic",
-                    "display_text": "((1초)) 상하 두 칸 - 중독",
-                    "logic_id": "d3462ca4-81cb-4051-8e87-d058ae8ebc4c",
-                    "logic_name": "((1초)) 상하 두 칸 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 17,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 18,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 19,
-                    "type": "logic",
-                    "display_text": "((1초)) 좌우 두 칸 - 중독",
-                    "logic_id": "b60b29b5-747d-4188-a5f0-534cb406be43",
-                    "logic_name": "((1초)) 좌우 두 칸 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 20,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 21,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 22,
-                    "type": "logic",
-                    "display_text": "((1초)) 탭탭 체력회복 - 3회",
-                    "logic_id": "41d07718-6209-48ac-94c7-ed7432e1a512",
-                    "logic_name": "((1초)) 탭탭 체력회복 - 3회",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 23,
-                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
-                    "modifiers": 0
-                },
-                {
-                    "order": 24,
-                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 9",
-                    "scan_code": 73,
-                    "virtual_key": 105,
                     "modifiers": 0
                 }
             ]
