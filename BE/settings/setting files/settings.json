@@ -7405,10 +7405,16 @@
             "order": 68,
             "name": "((지정 클릭)) 디버프",
             "created_at": "2024-12-07T06:09:55.766255",
-            "updated_at": "2024-12-20T11:21:04.077952",
-            "trigger_key": null,
+            "updated_at": "2024-12-24T15:35:52.664027",
+            "trigger_key": {
+                "is_system_key": false,
+                "key_code": "백슬래시(\\)",
+                "modifiers": 0,
+                "scan_code": 43,
+                "virtual_key": 220
+            },
             "repeat_count": 1,
-            "is_nested": true,
+            "is_nested": false,
             "items": [
                 {
                     "type": "delay",
