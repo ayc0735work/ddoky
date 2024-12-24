@@ -1977,7 +1977,7 @@
             "order": 17,
             "name": "헬파이어",
             "created_at": "2024-12-16T20:35:45.182176",
-            "updated_at": "2024-12-23T10:46:34.370603",
+            "updated_at": "2024-12-24T14:23:49.394719",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "숫자패드 -",
@@ -2305,52 +2305,56 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 37,
-                    "type": "logic",
-                    "display_text": "((1초 -- 5회)) 체력회복",
-                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
-                    "logic_name": "((1초 -- 5회)) 체력회복",
-                    "repeat_count": 1
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0174초",
+                    "duration": 0.0174,
+                    "order": 37
                 },
                 {
                     "order": 38,
-                    "type": "logic",
-                    "display_text": "((1초 -- 5회)) 체력회복",
-                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
-                    "logic_name": "((1초 -- 5회)) 체력회복",
-                    "repeat_count": 1
+                    "display_text": "키 입력: 숫자패드 6 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 6",
+                    "scan_code": 77,
+                    "virtual_key": 102,
+                    "modifiers": 0
                 },
                 {
                     "order": 39,
-                    "type": "logic",
-                    "display_text": "((1초 -- 5회)) 체력회복",
-                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
-                    "logic_name": "((1초 -- 5회)) 체력회복",
-                    "repeat_count": 1
+                    "display_text": "키 입력: 숫자패드 6 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 6",
+                    "scan_code": 77,
+                    "virtual_key": 102,
+                    "modifiers": 0
                 },
                 {
-                    "order": 40,
-                    "type": "logic",
-                    "display_text": "((1초 -- 5회)) 체력회복",
-                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
-                    "logic_name": "((1초 -- 5회)) 체력회복",
-                    "repeat_count": 1
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0174초",
+                    "duration": 0.0174,
+                    "order": 40
                 },
                 {
                     "order": 41,
-                    "type": "logic",
-                    "display_text": "((1초 -- 5회)) 체력회복",
-                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
-                    "logic_name": "((1초 -- 5회)) 체력회복",
-                    "repeat_count": 1
+                    "display_text": "키 입력: 숫자패드 6 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 6",
+                    "scan_code": 77,
+                    "virtual_key": 102,
+                    "modifiers": 0
                 },
                 {
                     "order": 42,
-                    "type": "logic",
-                    "display_text": "((1초 -- 5회)) 체력회복",
-                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
-                    "logic_name": "((1초 -- 5회)) 체력회복",
-                    "repeat_count": 1
+                    "display_text": "키 입력: 숫자패드 6 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 6",
+                    "scan_code": 77,
+                    "virtual_key": 102,
+                    "modifiers": 0
                 },
                 {
                     "order": 43,
@@ -2362,6 +2366,54 @@
                 },
                 {
                     "order": 44,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 45,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 46,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 47,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 48,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 49,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 50,
                     "type": "logic",
                     "display_text": "((1초 -- 5회)) 체력회복",
                     "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
