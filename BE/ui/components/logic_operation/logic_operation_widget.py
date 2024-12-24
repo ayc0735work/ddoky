@@ -78,6 +78,36 @@ class LogicOperationWidget(QFrame):
         self.force_stop_btn.setStyleSheet(BUTTON_STYLE)
         self.force_stop_btn.clicked.connect(self._on_force_stop)
         button_group.addWidget(self.force_stop_btn)
+
+        # 로직 강제 중지 키 설정을 첫 번째 줄로 이동
+        force_stop_key_layout = QHBoxLayout()
+        force_stop_key_layout.setSpacing(5)
+        
+        force_stop_key_label = QLabel("로직 강제 중지 키")
+        force_stop_key_label.setFixedWidth(100)
+        force_stop_key_layout.addWidget(force_stop_key_label)
+        
+        self.force_stop_key_input = QLineEdit()
+        self.force_stop_key_input.setFixedWidth(120)
+        self.force_stop_key_input.setEnabled(False)
+        self.force_stop_key_input.setText('ESC')  # 기본값으로 ESC 키 표시
+        force_stop_key_layout.addWidget(self.force_stop_key_input)
+        
+        # 수정하기 버튼
+        self.edit_force_stop_key_btn = QPushButton("수정하기")
+        self.edit_force_stop_key_btn.setStyleSheet(BUTTON_STYLE)
+        self.edit_force_stop_key_btn.setFixedWidth(80)
+        self.edit_force_stop_key_btn.clicked.connect(self._on_edit_force_stop_key)
+        force_stop_key_layout.addWidget(self.edit_force_stop_key_btn)
+        
+        # 초기화 버튼
+        self.reset_force_stop_key_btn = QPushButton("초기화")
+        self.reset_force_stop_key_btn.setStyleSheet(BUTTON_STYLE)
+        self.reset_force_stop_key_btn.setFixedWidth(80)
+        self.reset_force_stop_key_btn.clicked.connect(self._on_reset_force_stop_key)
+        force_stop_key_layout.addWidget(self.reset_force_stop_key_btn)
+        
+        button_group.addLayout(force_stop_key_layout)
         
         first_row.addLayout(button_group)
         first_row.addStretch()  # 나머지 공간을 채움
@@ -196,35 +226,6 @@ class LogicOperationWidget(QFrame):
         operation_settings_layout.setContentsMargins(0, 10, 0, 0)  # 상단에 여백 추가
         operation_settings_layout.setSpacing(10)
         
-        # 로직 강제 중지 키 설정
-        force_stop_key_layout = QHBoxLayout()
-        force_stop_key_layout.setSpacing(5)
-        
-        force_stop_key_label = QLabel("로직 강제 중지 키")
-        force_stop_key_label.setFixedWidth(100)
-        force_stop_key_layout.addWidget(force_stop_key_label)
-        
-        self.force_stop_key_input = QLineEdit()
-        self.force_stop_key_input.setFixedWidth(120)
-        self.force_stop_key_input.setEnabled(False)
-        self.force_stop_key_input.setText('ESC')  # 기본값으로 ESC 키 표시
-        force_stop_key_layout.addWidget(self.force_stop_key_input)
-        
-        # 수정하기 버튼
-        self.edit_force_stop_key_btn = QPushButton("수정하기")
-        self.edit_force_stop_key_btn.setStyleSheet(BUTTON_STYLE)
-        self.edit_force_stop_key_btn.setFixedWidth(80)
-        self.edit_force_stop_key_btn.clicked.connect(self._on_edit_force_stop_key)
-        force_stop_key_layout.addWidget(self.edit_force_stop_key_btn)
-        
-        # 초기화 버튼
-        self.reset_force_stop_key_btn = QPushButton("초기화")
-        self.reset_force_stop_key_btn.setStyleSheet(BUTTON_STYLE)
-        self.reset_force_stop_key_btn.setFixedWidth(80)
-        self.reset_force_stop_key_btn.clicked.connect(self._on_reset_force_stop_key)
-        force_stop_key_layout.addWidget(self.reset_force_stop_key_btn)
-        
-        operation_settings_layout.addLayout(force_stop_key_layout)
         operation_settings_layout.addStretch()  # 남은 공간을 채움
         
         layout.addLayout(operation_settings_layout)
