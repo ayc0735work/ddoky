@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
                              QLabel, QCheckBox, QPushButton, QDialog,
-                             QMessageBox, QLineEdit, QListWidgetItem)
+                             QMessageBox, QLineEdit, QListWidgetItem, QSpacerItem,
+                             QSizePolicy)
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont, QDoubleValidator
 import copy
@@ -79,6 +80,10 @@ class LogicOperationWidget(QFrame):
         self.force_stop_btn.clicked.connect(self._on_force_stop)
         button_group.addWidget(self.force_stop_btn)
 
+        # 강제 중지 버튼과 라벨 사이 간격을 위한 스페이서 추가
+        spacer = QSpacerItem(40, 1, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        button_group.addSpacerItem(spacer)
+        
         # 로직 강제 중지 키 설정을 첫 번째 줄로 이동
         force_stop_key_layout = QHBoxLayout()
         force_stop_key_layout.setSpacing(5)
