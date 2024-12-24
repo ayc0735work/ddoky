@@ -81,7 +81,7 @@ class LogicOperationWidget(QFrame):
         button_group.addWidget(self.force_stop_btn)
 
         # 강제 중지 버튼과 라벨 사이 간격을 위한 스페이서 추가
-        spacer = QSpacerItem(40, 1, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        spacer = QSpacerItem(14, 1, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         button_group.addSpacerItem(spacer)
         
         # 로직 강제 중지 키 설정을 첫 번째 줄로 이동
@@ -93,7 +93,7 @@ class LogicOperationWidget(QFrame):
         force_stop_key_layout.addWidget(force_stop_key_label)
         
         self.force_stop_key_input = QLineEdit()
-        self.force_stop_key_input.setFixedWidth(120)
+        self.force_stop_key_input.setFixedWidth(100)
         self.force_stop_key_input.setEnabled(False)
         self.force_stop_key_input.setText('ESC')  # 기본값으로 ESC 키 표시
         force_stop_key_layout.addWidget(self.force_stop_key_input)
@@ -111,6 +111,16 @@ class LogicOperationWidget(QFrame):
         self.reset_force_stop_key_btn.setFixedWidth(80)
         self.reset_force_stop_key_btn.clicked.connect(self._on_reset_force_stop_key)
         force_stop_key_layout.addWidget(self.reset_force_stop_key_btn)
+        
+        # 초기화 버튼과 최적화 버튼 사이 간격
+        spacer2 = QSpacerItem(14, 1, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        force_stop_key_layout.addSpacerItem(spacer2)
+        
+        # 최적화 버튼
+        self.optimize_btn = QPushButton("메모리 최적화")
+        self.optimize_btn.setStyleSheet(BUTTON_STYLE)
+        self.optimize_btn.setFixedWidth(120)
+        force_stop_key_layout.addWidget(self.optimize_btn)
         
         button_group.addLayout(force_stop_key_layout)
         
