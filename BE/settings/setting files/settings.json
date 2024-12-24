@@ -55,7 +55,7 @@
             "order": 1,
             "name": "공력증강 - 1회 - 6번키",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-24T11:28:06.190030",
+            "updated_at": "2024-12-25T08:06:48.574793",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "숫자패드 6",
@@ -217,6 +217,38 @@
                 {
                     "order": 19,
                     "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 20,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 21,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 22,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 23,
+                    "type": "logic",
                     "display_text": "동동주 마시기 - 1회",
                     "logic_id": "9614e85c-3ceb-423b-97ea-e17bfc0101fc",
                     "logic_name": "동동주 마시기 - 1회",
@@ -226,7 +258,7 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.0265초",
                     "duration": 0.0265,
-                    "order": 20
+                    "order": 24
                 }
             ]
         },
@@ -234,7 +266,7 @@
             "order": 2,
             "name": "공력증강 - 1회 - 기본",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-24T11:28:52.294315",
+            "updated_at": "2024-12-25T08:06:35.457625",
             "trigger_key": {
                 "key_code": "F1",
                 "modifiers": 0,
@@ -439,10 +471,42 @@
                     "repeat_count": 1
                 },
                 {
+                    "order": 25,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 26,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 27,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 28,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
                     "type": "delay",
                     "display_text": "지연시간 : 0.0265초",
                     "duration": 0.0265,
-                    "order": 25
+                    "order": 29
                 }
             ]
         },
@@ -779,7 +843,7 @@
             "order": 6,
             "name": "체력회복 7번키 전용 - 111",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-23T16:43:25.313703",
+            "updated_at": "2024-12-25T08:06:58.713294",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "숫자패드 7",
@@ -897,10 +961,90 @@
                     "repeat_count": 1
                 },
                 {
+                    "order": 14,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 15,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 16,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 17,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 18,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 19,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 20,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 21,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 22,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 23,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
                     "type": "delay",
                     "display_text": "지연시간 : 0.035초",
                     "duration": 0.035,
-                    "order": 14
+                    "order": 24
                 }
             ]
         },
@@ -908,7 +1052,7 @@
             "order": 7,
             "name": "체력회복 7번키 전용 - 222",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-23T16:48:37.833387",
+            "updated_at": "2024-12-25T08:07:02.510030",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "7",
@@ -1026,10 +1170,90 @@
                     "repeat_count": 1
                 },
                 {
+                    "order": 14,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 15,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 16,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 17,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 18,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 19,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 20,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 21,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 22,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 23,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
                     "type": "delay",
                     "display_text": "지연시간 : 0.035초",
                     "duration": 0.035,
-                    "order": 14
+                    "order": 24
                 }
             ]
         },
@@ -3799,7 +4023,7 @@
             "order": 27,
             "name": "★1초씩 무한★ 공격 중독",
             "created_at": "2024-12-08T20:50:23.839286",
-            "updated_at": "2024-12-23T09:55:55.957505",
+            "updated_at": "2024-12-25T06:20:04.475029",
             "trigger_key": {
                 "key_code": "숫자패드 3",
                 "modifiers": 0,
@@ -3811,34 +4035,34 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1411초",
-                    "duration": 0.1411,
+                    "display_text": "지연시간 : 0.0857초",
+                    "duration": 0.0857,
                     "order": 1
                 },
                 {
                     "order": 2,
-                    "display_text": "키 입력: 숫자패드 3 --- 누르기",
+                    "display_text": "키 입력: 숫자패드 4 --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
-                    "key_code": "숫자패드 3",
-                    "scan_code": 81,
-                    "virtual_key": 99,
+                    "key_code": "숫자패드 4",
+                    "scan_code": 75,
+                    "virtual_key": 100,
                     "modifiers": 0
                 },
                 {
                     "order": 3,
-                    "display_text": "키 입력: 숫자패드 3 --- 떼기",
+                    "display_text": "키 입력: 숫자패드 4 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
-                    "key_code": "숫자패드 3",
-                    "scan_code": 81,
-                    "virtual_key": 99,
+                    "key_code": "숫자패드 4",
+                    "scan_code": 75,
+                    "virtual_key": 100,
                     "modifiers": 0
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1411초",
-                    "duration": 0.1411,
+                    "display_text": "지연시간 : 0.0857초",
+                    "duration": 0.0857,
                     "order": 4
                 },
                 {
@@ -3863,8 +4087,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1411초",
-                    "duration": 0.1411,
+                    "display_text": "지연시간 : 0.0857초",
+                    "duration": 0.0857,
                     "order": 7
                 },
                 {
@@ -3889,34 +4113,34 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1411초",
-                    "duration": 0.1411,
+                    "display_text": "지연시간 : 0.0857초",
+                    "duration": 0.0857,
                     "order": 10
                 },
                 {
                     "order": 11,
-                    "display_text": "키 입력: 숫자패드 8 --- 누르기",
+                    "display_text": "키 입력: 숫자패드 3 --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
-                    "key_code": "숫자패드 8",
-                    "scan_code": 72,
-                    "virtual_key": 104,
+                    "key_code": "숫자패드 3",
+                    "scan_code": 81,
+                    "virtual_key": 99,
                     "modifiers": 0
                 },
                 {
                     "order": 12,
-                    "display_text": "키 입력: 숫자패드 8 --- 떼기",
+                    "display_text": "키 입력: 숫자패드 3 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
-                    "key_code": "숫자패드 8",
-                    "scan_code": 72,
-                    "virtual_key": 104,
+                    "key_code": "숫자패드 3",
+                    "scan_code": 81,
+                    "virtual_key": 99,
                     "modifiers": 0
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1411초",
-                    "duration": 0.1411,
+                    "display_text": "지연시간 : 0.0857초",
+                    "duration": 0.0857,
                     "order": 13
                 },
                 {
@@ -3941,9 +4165,61 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1411초",
-                    "duration": 0.1411,
+                    "display_text": "지연시간 : 0.0857초",
+                    "duration": 0.0857,
                     "order": 16
+                },
+                {
+                    "order": 17,
+                    "display_text": "키 입력: 숫자패드 8 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 8",
+                    "scan_code": 72,
+                    "virtual_key": 104,
+                    "modifiers": 0
+                },
+                {
+                    "order": 18,
+                    "display_text": "키 입력: 숫자패드 8 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 8",
+                    "scan_code": 72,
+                    "virtual_key": 104,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0857초",
+                    "duration": 0.0857,
+                    "order": 19
+                },
+                {
+                    "order": 20,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 21,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0857초",
+                    "duration": 0.0857,
+                    "order": 22
                 }
             ]
         },
