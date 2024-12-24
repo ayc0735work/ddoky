@@ -112,16 +112,6 @@ class LogicOperationWidget(QFrame):
         self.reset_force_stop_key_btn.clicked.connect(self._on_reset_force_stop_key)
         force_stop_key_layout.addWidget(self.reset_force_stop_key_btn)
         
-        # 초기화 버튼과 최적화 버튼 사이 간격
-        spacer2 = QSpacerItem(14, 1, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        force_stop_key_layout.addSpacerItem(spacer2)
-        
-        # 최적화 버튼
-        self.optimize_btn = QPushButton("메모리 최적화")
-        self.optimize_btn.setStyleSheet(BUTTON_STYLE)
-        self.optimize_btn.setFixedWidth(120)
-        force_stop_key_layout.addWidget(self.optimize_btn)
-        
         button_group.addLayout(force_stop_key_layout)
         
         first_row.addLayout(button_group)
