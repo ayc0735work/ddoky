@@ -2024,7 +2024,7 @@
             "order": 15,
             "name": "((1초)) 보호 무장 힘",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-12-25T10:55:59.728936",
+            "updated_at": "2024-12-26T16:47:12.795271",
             "trigger_key": {
                 "key_code": "숫자패드 +",
                 "modifiers": 0,
@@ -2086,22 +2086,22 @@
                 },
                 {
                     "order": 7,
-                    "display_text": "키 입력: W --- 누르기",
+                    "display_text": "키 입력: X --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
-                    "key_code": "W",
-                    "scan_code": 17,
-                    "virtual_key": 87,
+                    "key_code": "X",
+                    "scan_code": 45,
+                    "virtual_key": 88,
                     "modifiers": 0
                 },
                 {
                     "order": 8,
-                    "display_text": "키 입력: W --- 떼기",
+                    "display_text": "키 입력: X --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
-                    "key_code": "W",
-                    "scan_code": 17,
-                    "virtual_key": 87,
+                    "key_code": "X",
+                    "scan_code": 45,
+                    "virtual_key": 88,
                     "modifiers": 0
                 },
                 {
@@ -2138,22 +2138,22 @@
                 },
                 {
                     "order": 13,
-                    "display_text": "키 입력: X --- 누르기",
+                    "display_text": "키 입력: Y --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
-                    "key_code": "X",
-                    "scan_code": 45,
-                    "virtual_key": 88,
+                    "key_code": "Y",
+                    "scan_code": 21,
+                    "virtual_key": 89,
                     "modifiers": 0
                 },
                 {
                     "order": 14,
-                    "display_text": "키 입력: X --- 떼기",
+                    "display_text": "키 입력: Y --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
-                    "key_code": "X",
-                    "scan_code": 45,
-                    "virtual_key": 88,
+                    "key_code": "Y",
+                    "scan_code": 21,
+                    "virtual_key": 89,
                     "modifiers": 0
                 },
                 {
@@ -2190,22 +2190,22 @@
                 },
                 {
                     "order": 19,
-                    "display_text": "키 입력: Y --- 누르기",
+                    "display_text": "키 입력: W --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
-                    "key_code": "Y",
-                    "scan_code": 21,
-                    "virtual_key": 89,
+                    "key_code": "W",
+                    "scan_code": 17,
+                    "virtual_key": 87,
                     "modifiers": 0
                 },
                 {
                     "order": 20,
-                    "display_text": "키 입력: Y --- 떼기",
+                    "display_text": "키 입력: W --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
-                    "key_code": "Y",
-                    "scan_code": 21,
-                    "virtual_key": 89,
+                    "key_code": "W",
+                    "scan_code": 17,
+                    "virtual_key": 87,
                     "modifiers": 0
                 },
                 {
@@ -2728,9 +2728,9 @@
         },
         "892b4944-a2dc-4d70-998b-a847161c47bf": {
             "order": 19,
-            "name": "헬파 후 신수마법 10초",
+            "name": "헬파 후 신수마법",
             "created_at": "2024-12-16T20:35:45.182176",
-            "updated_at": "2024-12-25T16:40:11.020931",
+            "updated_at": "2024-12-26T16:17:38.611931",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "숫자패드 /",
@@ -2822,9 +2822,9 @@
                 {
                     "order": 10,
                     "type": "logic",
-                    "display_text": "((1초 5회)) 디버프&신수 마법",
+                    "display_text": "((1초 4회)) 디버프&신수 마법",
                     "logic_id": "f1b0d9b4-5f6b-4740-ac4f-a50640cd93bd",
-                    "logic_name": "((1초 5회)) 디버프&신수 마법",
+                    "logic_name": "((1초 4회)) 디버프&신수 마법",
                     "repeat_count": 1
                 },
                 {
@@ -3051,11 +3051,11 @@
         },
         "f1b0d9b4-5f6b-4740-ac4f-a50640cd93bd": {
             "order": 20,
-            "name": "((1초 5회)) 디버프&신수 마법",
+            "name": "((1초 4회)) 디버프&신수 마법",
             "created_at": "2024-12-16T20:35:45.182176",
-            "updated_at": "2024-12-25T13:48:45.021708",
+            "updated_at": "2024-12-26T16:17:29.081620",
             "trigger_key": null,
-            "repeat_count": 5,
+            "repeat_count": 4,
             "is_nested": true,
             "items": [
                 {
@@ -3446,7 +3446,7 @@
             "order": 24,
             "name": "ㄴ 첨사냥 중첩로직용 - 241223 최적화",
             "created_at": "2024-11-30T10:25:06.438732",
-            "updated_at": "2024-12-25T16:15:08.138695",
+            "updated_at": "2024-12-26T17:27:37.614608",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -3502,25 +3502,25 @@
                 {
                     "order": 7,
                     "type": "logic",
-                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 저주",
-                    "logic_id": "5f488f71-8a87-4984-a6e6-da2bc5d69195",
-                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 저주",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 8,
-                    "type": "logic",
                     "display_text": "◎ 1초 점 ◎ 상하좌우 - 마비",
                     "logic_id": "58c77fae-cec5-4b06-975f-4e4296c0c40b",
                     "logic_name": "◎ 1초 점 ◎ 상하좌우 - 마비",
                     "repeat_count": 1
                 },
                 {
-                    "order": 9,
+                    "order": 8,
                     "type": "logic",
                     "display_text": "◎ 1초 점 ◎ 체력 4회",
                     "logic_id": "95d846eb-bf5d-44ab-9d70-9e53cca79343",
                     "logic_name": "◎ 1초 점 ◎ 체력 4회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 9,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
                     "repeat_count": 1
                 },
                 {
@@ -3558,21 +3558,13 @@
                 {
                     "order": 14,
                     "type": "logic",
-                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
-                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
-                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 15,
-                    "type": "logic",
                     "display_text": "◎ 1초 점 ◎ 상하좌우 - 마비",
                     "logic_id": "58c77fae-cec5-4b06-975f-4e4296c0c40b",
                     "logic_name": "◎ 1초 점 ◎ 상하좌우 - 마비",
                     "repeat_count": 1
                 },
                 {
-                    "order": 16,
+                    "order": 15,
                     "type": "logic",
                     "display_text": "◎ 1초 점 ◎ 체력 4회",
                     "logic_id": "95d846eb-bf5d-44ab-9d70-9e53cca79343",
@@ -3580,11 +3572,19 @@
                     "repeat_count": 1
                 },
                 {
-                    "order": 17,
+                    "order": 16,
                     "type": "logic",
                     "display_text": "◎ 1초 점 ◎ 버프",
                     "logic_id": "29f0f45b-2b2e-468f-8f77-47ace3aa483c",
                     "logic_name": "◎ 1초 점 ◎ 버프",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 17,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
                     "repeat_count": 1
                 },
                 {
@@ -3622,25 +3622,25 @@
                 {
                     "order": 22,
                     "type": "logic",
-                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
-                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
-                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 23,
-                    "type": "logic",
                     "display_text": "◎ 1초 점 ◎ 상하좌우 - 마비",
                     "logic_id": "58c77fae-cec5-4b06-975f-4e4296c0c40b",
                     "logic_name": "◎ 1초 점 ◎ 상하좌우 - 마비",
                     "repeat_count": 1
                 },
                 {
-                    "order": 24,
+                    "order": 23,
                     "type": "logic",
                     "display_text": "◎ 1초 점 ◎ 체력 4회",
                     "logic_id": "95d846eb-bf5d-44ab-9d70-9e53cca79343",
                     "logic_name": "◎ 1초 점 ◎ 체력 4회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 24,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
                     "repeat_count": 1
                 },
                 {
@@ -3678,21 +3678,13 @@
                 {
                     "order": 29,
                     "type": "logic",
-                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
-                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
-                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 30,
-                    "type": "logic",
                     "display_text": "◎ 1초 점 ◎ 상하좌우 - 마비",
                     "logic_id": "58c77fae-cec5-4b06-975f-4e4296c0c40b",
                     "logic_name": "◎ 1초 점 ◎ 상하좌우 - 마비",
                     "repeat_count": 1
                 },
                 {
-                    "order": 31,
+                    "order": 30,
                     "type": "logic",
                     "display_text": "◎ 1초 점 ◎ 체력 4회",
                     "logic_id": "95d846eb-bf5d-44ab-9d70-9e53cca79343",
@@ -9199,7 +9191,7 @@
             "order": 16,
             "name": "((0.72초)) 보호 무장 힘 - 공증 용",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-12-25T16:39:56.805541",
+            "updated_at": "2024-12-26T17:10:14.473858",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -9256,22 +9248,22 @@
                 },
                 {
                     "order": 7,
-                    "display_text": "키 입력: W --- 누르기",
+                    "display_text": "키 입력: X --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
-                    "key_code": "W",
-                    "scan_code": 17,
-                    "virtual_key": 87,
+                    "key_code": "X",
+                    "scan_code": 45,
+                    "virtual_key": 88,
                     "modifiers": 0
                 },
                 {
                     "order": 8,
-                    "display_text": "키 입력: W --- 떼기",
+                    "display_text": "키 입력: X --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
-                    "key_code": "W",
-                    "scan_code": 17,
-                    "virtual_key": 87,
+                    "key_code": "X",
+                    "scan_code": 45,
+                    "virtual_key": 88,
                     "modifiers": 0
                 },
                 {
@@ -9308,22 +9300,22 @@
                 },
                 {
                     "order": 13,
-                    "display_text": "키 입력: X --- 누르기",
+                    "display_text": "키 입력: Y --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
-                    "key_code": "X",
-                    "scan_code": 45,
-                    "virtual_key": 88,
+                    "key_code": "Y",
+                    "scan_code": 21,
+                    "virtual_key": 89,
                     "modifiers": 0
                 },
                 {
                     "order": 14,
-                    "display_text": "키 입력: X --- 떼기",
+                    "display_text": "키 입력: Y --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
-                    "key_code": "X",
-                    "scan_code": 45,
-                    "virtual_key": 88,
+                    "key_code": "Y",
+                    "scan_code": 21,
+                    "virtual_key": 89,
                     "modifiers": 0
                 },
                 {
@@ -9360,22 +9352,22 @@
                 },
                 {
                     "order": 19,
-                    "display_text": "키 입력: Y --- 누르기",
+                    "display_text": "키 입력: W --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
-                    "key_code": "Y",
-                    "scan_code": 21,
-                    "virtual_key": 89,
+                    "key_code": "W",
+                    "scan_code": 17,
+                    "virtual_key": 87,
                     "modifiers": 0
                 },
                 {
                     "order": 20,
-                    "display_text": "키 입력: Y --- 떼기",
+                    "display_text": "키 입력: W --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
-                    "key_code": "Y",
-                    "scan_code": 21,
-                    "virtual_key": 89,
+                    "key_code": "W",
+                    "scan_code": 17,
+                    "virtual_key": 87,
                     "modifiers": 0
                 },
                 {
