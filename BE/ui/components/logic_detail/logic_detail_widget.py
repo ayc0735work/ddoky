@@ -16,6 +16,7 @@ from ...constants.dimensions import (LOGIC_DETAIL_WIDTH, BASIC_SECTION_HEIGHT,
 from ....utils.key_handler import (KeyboardHook, get_key_display_text, get_key_location,
                                 get_modifier_text, format_key_info)
 from ..common.key_input_widget import KeyInputWidget
+from ..logic_maker.text_input_dialog import TextInputDialog
 
 class LogicDetailWidget(QFrame):
     """로직 상세 내용을 표시하고 관리하는 위젯"""
@@ -199,7 +200,7 @@ class LogicDetailWidget(QFrame):
         LogicControlButtonsSection__QHBoxLayout.addWidget(self.MoveUpButton__QPushButton)
         
         # 아래로 버튼
-        self.MoveDownButton__QPushButton = QPushButton("아래로")
+        self.MoveDownButton__QPushButton = QPushButton("아��로")
         self.MoveDownButton__QPushButton.setFixedWidth(LOGIC_BUTTON_WIDTH)
         self.MoveDownButton__QPushButton.setStyleSheet(BUTTON_STYLE)
         self.MoveDownButton__QPushButton.setEnabled(False)
@@ -248,7 +249,7 @@ class LogicDetailWidget(QFrame):
         self.DeleteItemButton__QPushButton.setEnabled(has_selection)  # 삭제는 다중 선택 가능
 
     def add_item(self, item_info):
-        """아이템을 리스트에 추가"""
+        """아��템을 리스트에 추가"""
         try:
             self.log_message.emit(f"[DEBUG] add_item 시작 - 입력받은 데이터: {item_info}")
             item = QListWidgetItem()
@@ -474,7 +475,7 @@ class LogicDetailWidget(QFrame):
                                      if logic.get('name') == logic_name]
                     
                     if matching_logics:
-                        # 오래된 로직의 UUID 사용
+                        # 오래된 로직의 UUID 사���
                         matching_logics.sort(key=lambda x: x[1].get('created_at', ''))
                         logic_id = matching_logics[0][0]
                         
@@ -530,7 +531,7 @@ class LogicDetailWidget(QFrame):
                         '왼쪽 컨트롤': win32con.VK_LCONTROL,
                         '오른쪽 컨트롤': win32con.VK_RCONTROL,
                         '왼쪽 알트': win32con.VK_LMENU,
-                        '오른쪽 알트': win32con.VK_RMENU,
+                        '���른쪽 알트': win32con.VK_RMENU,
                         'Home': win32con.VK_HOME,
                         '엔터': win32con.VK_RETURN,
                         '숫자패드 엔터': win32con.VK_RETURN,  # 일반 엔터와 같은 가상 키 코드 사용
@@ -856,7 +857,7 @@ class LogicDetailWidget(QFrame):
             
             self.log_message.emit(f"LogicManager.save_logic 호출 - ID: {self.current_logic_id}")
             print(f"[DEBUG] LogicManager.save_logic 호출 전 - ID: {self.current_logic_id}")
-            # LogicManager를 통해 저장
+            # LogicManager를 통해 저��
             success, result = self.logic_manager.save_logic(self.current_logic_id, logic_info)
             self.log_message.emit(f"LogicManager.save_logic 결과: {success}, {result}")
             print(f"[DEBUG] LogicManager.save_logic 호출 후 - 결과: {success}, {result}")
@@ -1166,6 +1167,7 @@ class LogicDetailWidget(QFrame):
         current_item = self.LogicItemList__QListWidget.currentItem()
         if current_item:
             item_text = current_item.text()
+            user_data = current_item.data(Qt.UserRole)
             
             # 지연시간 아이템인 경우
             if item_text.startswith("지연시간"):
@@ -1235,6 +1237,16 @@ class LogicDetailWidget(QFrame):
                             current_item.setData(Qt.UserRole, current_data)
                             self.item_edited.emit(new_text)
                             self.log_message.emit(f"키 입력 액션이 '{new_action}'으로 변경되었습니다")
+            # 텍스트 입력 아이템인 경우
+            elif user_data and user_data.get('type') == 'write_text':
+                dialog = TextInputDialog(self)
+                dialog.text_input.setText(user_data.get('text', ''))
+                if dialog.exec():
+                    new_text = dialog.get_text()
+                    current_item.setText(new_text['display_text'])
+                    current_item.setData(Qt.UserRole, new_text)
+                    self.item_edited.emit(new_text['display_text'])
+                    self.log_message.emit(f"텍스트 입력이 수정되었습니다: {new_text['text']}")
             else:
                 self.item_edited.emit(item_text)
 
@@ -1330,7 +1342,7 @@ class LogicDetailWidget(QFrame):
             self.log_message.emit(f"로직 정보 초기화 중 오류 발생: {str(e)}")
 
     def save_logic(self):
-        """현재 로직 저장"""
+        """현재 로직 저��"""
         try:
             logic_data = self.get_logic_data()
             success, result = self.logic_manager.save_logic(self.current_logic_id, logic_data)
@@ -1361,7 +1373,7 @@ class LogicDetailWidget(QFrame):
         if self.TriggerKeyInfoLabel__QLabel.text():
             clipboard = QGuiApplication.clipboard()
             clipboard.setText(self.TriggerKeyInfoLabel__QLabel.text())
-            self.log_message.emit("트리거 키 정보가 클립보드에 복사되었습니다")
+            self.log_message.emit("트리거 키 정���가 클립보드에 복사되었습니다")
 
     def _copy_item(self):
         """선택된 아이템들을 복사"""
