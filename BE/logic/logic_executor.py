@@ -448,7 +448,7 @@ class LogicExecutor(QObject):
                 current_repeat=1
             )
             
-            self._log_with_time(f"[중첩로직] {nested_logic.get('name')} 실행 ���작")
+            self._log_with_time(f"[중첩로직] {nested_logic.get('name')} 실행 시작")
             
         except Exception as e:
             self._log_with_time(f"[오류] 중첩로직 실행 중 오류 발생: {str(e)}")
@@ -500,7 +500,7 @@ class LogicExecutor(QObject):
             # 클릭 실행
             success = MouseHandler.click(screen_x, screen_y)
             if not success:
-                self._log_with_time("[마우스 입력 상���] 마우스 클릭 실행 실패")
+                self._log_with_time("[마우스 입력 상태] 마우스 클릭 실행 실패")
                 raise Exception("마우스 클릭 실행 실패")
             
             self._log_with_time(f"[마우스 입력] {step.get('name')} 실행 완료")
@@ -560,7 +560,7 @@ class LogicExecutor(QObject):
                 return
             
             # win32api를 사용하여 마우스 왼쪽 버튼의 현재 상태 확인
-            # GetAsyncKeyState 반환값에 0x8000 비트 마��크를 적용하여
+            # GetAsyncKeyState 반환값에 0x8000 비트 마스크를 적용하여
             # 버튼이 눌렸는지 확인
             is_pressed = win32api.GetAsyncKeyState(win32con.VK_LBUTTON) & 0x8000
             
@@ -681,7 +681,7 @@ class LogicExecutor(QObject):
             self._log_with_time(f"[오류] 강제 중지 중 오류 발생: {str(e)}")
 
     def _should_execute_logic(self):
-        """���직 실행 조건 확인
+        """로직 실행 조건 확인
         
         Returns:
             bool: 로직을 실행해야 하는지 여부
