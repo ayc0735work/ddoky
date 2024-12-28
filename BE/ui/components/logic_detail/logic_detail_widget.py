@@ -276,7 +276,7 @@ class LogicDetailWidget(QFrame):
                     user_data = {
                         "type": "delay",
                         "duration": duration,
-                        "display_text": f"지연시간: {duration}초",
+                        "display_text": f"지연시간 : {duration}초",
                         "order": insert_position + 1
                     }
                 elif item_type == 'mouse_input':
@@ -304,10 +304,19 @@ class LogicDetailWidget(QFrame):
                         "type": "wait_click",
                         "display_text": item_info.get('display_text', "클릭 대기"),
                         "order": insert_position + 1
+                    }            
+                elif item_type == 'write_text':
+                    # 텍스트 입력 처리
+                    user_data = {
+                        "type": "write_text",
+                        "text": item_info.get('text'),
+                        "display_text": item_info.get('display_text', f"텍스트 입력: {item_info.get('text')}"),
+                        "order": insert_position + 1
                     }
                 else:
                     self.log_message.emit(f"알 수 없는 아이템 타입입니다: {item_type}")
                     return
+
             else:
                 # 문자열인 경우 (이전 코드와의 호환성을 위해 유지)
                 self.log_message.emit("[DEBUG] 문자열 형식의 데이터 처리 시작")
@@ -335,14 +344,7 @@ class LogicDetailWidget(QFrame):
                             "modifiers": modifiers,
                             "order": insert_position + 1
                         }
-                elif item_text.startswith("지연시간"):
-                    duration = float(item_text.split(":")[1].replace("초", "").strip())
-                    user_data = {
-                        "type": "delay",
-                        "duration": duration,
-                        "display_text": item_text,
-                        "order": insert_position + 1
-                    }
+
                 else:
                     # 그 외의 경우는 중첩 로직으로 처리
                     user_data = {

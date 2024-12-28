@@ -1,6 +1,5 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QPushButton,
-                             QLabel, QInputDialog, QDialog, QLineEdit,
-                             QHBoxLayout, QDialogButtonBox)
+                             QLabel, QInputDialog, QDialog)
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
 
@@ -11,37 +10,7 @@ from .key_input_dialog import KeyInputDialog
 from .logic_selector_dialog import LogicSelectorDialog
 from .mouse_input_dialog import MouseInputDialog
 from .image_search_area_dialog import ImageSearchAreaDialog
-
-class TextInputDialog(QDialog):
-    """텍스트 입력 모달"""
-    
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle("텍스트 입력")
-        self.init_ui()
-        
-    def init_ui(self):
-        layout = QVBoxLayout()
-        
-        # 텍스트 입력 필드
-        self.text_input = QLineEdit()
-        layout.addWidget(self.text_input)
-        
-        # 버튼 박스
-        button_box = QDialogButtonBox(
-            QDialogButtonBox.Save | QDialogButtonBox.Cancel
-        )
-        button_box.button(QDialogButtonBox.Save).setText("저장")
-        button_box.button(QDialogButtonBox.Cancel).setText("취소")
-        button_box.accepted.connect(self.accept)
-        button_box.rejected.connect(self.reject)
-        layout.addWidget(button_box)
-        
-        self.setLayout(layout)
-        
-    def get_text(self):
-        """입력된 텍스트 반환"""
-        return self.text_input.text()
+from .text_input_dialog import TextInputDialog
 
 class LogicMakerToolWidget(QFrame):
     """로직 메이커 위젯"""
@@ -265,8 +234,16 @@ class LogicMakerToolWidget(QFrame):
         if dialog.exec() == QDialog.Accepted:
             text = dialog.get_text()
             if text:
+                # 텍스트 입력 정보 생성
+                text_info = {
+                    'type': 'write_text',
+                    'text': text,
+                    'display_text': f'텍스트 입력: {text}'
+                }
+                # 아이템 목록에 추가
+                self.items.append(text_info)  # 내부 리스트에 추가
+                self.item_added.emit(text_info)  # 시그널 발생
                 self.log_message.emit(f"텍스트 입력이 추가되었습니다: {text}")
-                self.item_added.emit({'type': 'text', 'display_text': text})
         
     def update_saved_logics(self, logics):
         """저장된 로직 정보 업데이트"""
