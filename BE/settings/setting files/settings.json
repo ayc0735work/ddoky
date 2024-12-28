@@ -578,7 +578,7 @@
             "order": 3,
             "name": "공증만 10회",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-28T00:29:19.497296",
+            "updated_at": "2024-12-29T07:01:08.958074",
             "trigger_key": null,
             "repeat_count": 10,
             "is_nested": true,
@@ -611,11 +611,78 @@
                 }
             ]
         },
-        "9614e85c-3ceb-423b-97ea-e17bfc0101fc": {
+        "11163ad3-7c9b-4b39-9176-0c49bff1c702": {
             "order": 4,
+            "name": "공증만 10회 후 풀체",
+            "created_at": "2024-12-08T13:23:32.528363",
+            "updated_at": "2024-12-29T07:54:13.828856",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "동동주 마시기 - 2회",
+                    "logic_id": "ec95ec19-80eb-4208-acf7-26c6a2d71848",
+                    "logic_name": "동동주 마시기 - 2회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 2,
+                    "type": "logic",
+                    "display_text": "공증만 10회",
+                    "logic_id": "d50ecf4d-7d08-4fac-bc3c-561fa7506307",
+                    "logic_name": "공증만 10회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 3,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 4,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 5,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 6,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 7,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                }
+            ]
+        },
+        "9614e85c-3ceb-423b-97ea-e17bfc0101fc": {
+            "order": 5,
             "name": "동동주 마시기 - 1회",
             "created_at": "2024-11-30T07:08:49.271692",
-            "updated_at": "2024-12-23T16:48:50.939927",
+            "updated_at": "2024-12-29T07:57:23.304894",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -687,10 +754,10 @@
             ]
         },
         "ec95ec19-80eb-4208-acf7-26c6a2d71848": {
-            "order": 5,
+            "order": 6,
             "name": "동동주 마시기 - 2회",
             "created_at": "2024-11-30T07:08:49.271692",
-            "updated_at": "2024-12-23T16:48:53.423528",
+            "updated_at": "2024-12-29T07:57:23.324581",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -788,10 +855,10 @@
             ]
         },
         "6e7713f7-1623-42b0-93f1-b838f3e1c97f": {
-            "order": 6,
+            "order": 7,
             "name": "동동주 마시기 - 4회",
             "created_at": "2024-11-30T07:08:49.271692",
-            "updated_at": "2024-12-23T16:48:56.164046",
+            "updated_at": "2024-12-29T07:58:30.376545",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -941,7 +1008,7 @@
             ]
         },
         "19f862d8-3df2-456b-afb8-a931a7909939": {
-            "order": 7,
+            "order": 8,
             "name": "체력회복 7번키 전용 - 111",
             "created_at": "2024-11-26T06:51:44.957381",
             "updated_at": "2024-12-25T08:06:58.713294",
@@ -1150,7 +1217,7 @@
             ]
         },
         "305665d9-d4c1-42ac-9ac8-4358af5649f2": {
-            "order": 8,
+            "order": 9,
             "name": "체력회복 7번키 전용 - 222",
             "created_at": "2024-11-26T06:51:44.957381",
             "updated_at": "2024-12-25T08:07:02.510030",
@@ -1359,10 +1426,10 @@
             ]
         },
         "0198c5f7-f53c-4349-a262-7ddb8249d882": {
-            "order": 9,
+            "order": 10,
             "name": "((1초 -- 5회)) 체력회복",
             "created_at": "2024-11-26T06:51:44.957381",
-            "updated_at": "2024-12-25T16:39:56.891289",
+            "updated_at": "2024-12-29T07:01:09.055940",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -1534,7 +1601,7 @@
             ]
         },
         "8d751d36-5f44-4631-92a4-bb3bd115b6f8": {
-            "order": 10,
+            "order": 11,
             "name": "((1초 -- 4회)) 체력회복",
             "created_at": "2024-11-26T06:51:44.957381",
             "updated_at": "2024-12-23T10:44:22.025337",
@@ -1683,7 +1750,7 @@
             ]
         },
         "41d07718-6209-48ac-94c7-ed7432e1a512": {
-            "order": 11,
+            "order": 12,
             "name": "((1초 -- 3회)) 체력회복",
             "created_at": "2024-11-26T06:51:44.957381",
             "updated_at": "2024-12-23T10:26:50.136610",
@@ -1806,7 +1873,7 @@
             ]
         },
         "3c1cf438-2dc3-4f7d-91d8-0a1f4b0bd484": {
-            "order": 12,
+            "order": 13,
             "name": "((4초 꾸욱)) 탭탭 체력회복",
             "created_at": "2024-11-26T06:51:44.957381",
             "updated_at": "2024-12-22T16:32:06.636823",
@@ -1885,7 +1952,7 @@
             ]
         },
         "380ff6a2-b515-4ff5-9e1a-829f95bda0c4": {
-            "order": 13,
+            "order": 14,
             "name": "탭탭 고정",
             "created_at": "2024-11-26T06:51:44.957381",
             "updated_at": "2024-12-23T21:44:28.441720",
@@ -1994,7 +2061,7 @@
             ]
         },
         "3b3431ef-08c5-43e0-bc9f-8f02b9fb96e5": {
-            "order": 14,
+            "order": 15,
             "name": "탭탭 고정 해제",
             "created_at": "2024-11-26T06:51:44.957381",
             "updated_at": "2024-12-20T11:21:04.014944",
@@ -2037,7 +2104,7 @@
             ]
         },
         "dbbd4afa-6565-4580-b69a-0aad17e600fb": {
-            "order": 15,
+            "order": 16,
             "name": "---------------체력---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:09:50.340247",
@@ -2058,10 +2125,10 @@
             ]
         },
         "b8796333-e8d6-4ae2-9fec-801a713517d8": {
-            "order": 16,
+            "order": 17,
             "name": "((1초)) 보호 무장 힘",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-12-26T16:47:12.795271",
+            "updated_at": "2024-12-28T17:22:42.897529",
             "trigger_key": {
                 "key_code": "숫자패드 +",
                 "modifiers": 0,
@@ -2278,10 +2345,10 @@
             ]
         },
         "268c3a4a-b945-485a-bd4c-01d60a9cd92d": {
-            "order": 17,
+            "order": 18,
             "name": "((0.72초)) 보호 무장 힘 - 공증 용",
             "created_at": "2024-11-26T10:58:29.227835",
-            "updated_at": "2024-12-26T17:10:14.473858",
+            "updated_at": "2024-12-29T05:39:05.268058",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -2487,7 +2554,7 @@
             ]
         },
         "f35f0cf0-60e2-43cb-bc3f-3d9030db4959": {
-            "order": 18,
+            "order": 19,
             "name": "---------------버프---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:09:59.687552",
@@ -2508,7 +2575,7 @@
             ]
         },
         "08f30d17-9930-4c48-950a-f7ef9b19a53d": {
-            "order": 19,
+            "order": 20,
             "name": "헬파이어",
             "created_at": "2024-12-16T20:35:45.182176",
             "updated_at": "2024-12-28T00:29:04.899121",
@@ -2805,7 +2872,7 @@
             ]
         },
         "892b4944-a2dc-4d70-998b-a847161c47bf": {
-            "order": 20,
+            "order": 21,
             "name": "헬파 후 신수마법",
             "created_at": "2024-12-16T20:35:45.182176",
             "updated_at": "2024-12-28T00:29:19.572118",
@@ -3012,7 +3079,7 @@
             ]
         },
         "f1b0d9b4-5f6b-4740-ac4f-a50640cd93bd": {
-            "order": 21,
+            "order": 22,
             "name": "((1초 4회)) 디버프&신수 마법",
             "created_at": "2024-12-16T20:35:45.182176",
             "updated_at": "2024-12-26T16:17:29.081620",
@@ -3133,7 +3200,7 @@
             ]
         },
         "e4683db8-7659-4024-9280-f1d19b8527be": {
-            "order": 22,
+            "order": 23,
             "name": "★1초씩 무한★ 디버프&신수 마법",
             "created_at": "2024-12-16T20:35:45.182176",
             "updated_at": "2024-12-18T15:40:40.833221",
@@ -3254,19 +3321,13 @@
             ]
         },
         "a97732be-77f0-474c-96f0-7b4f825f9036": {
-            "order": 23,
+            "order": 24,
             "name": "★1초씩 무한★ 첨 사냥 - 1",
             "created_at": "2024-12-08T21:25:24.196785",
-            "updated_at": "2024-12-24T11:28:52.399067",
-            "trigger_key": {
-                "is_system_key": false,
-                "key_code": "숫자패드 *",
-                "modifiers": 0,
-                "scan_code": 55,
-                "virtual_key": 106
-            },
+            "updated_at": "2024-12-29T06:16:41.941921",
+            "trigger_key": null,
             "repeat_count": 9999,
-            "is_nested": false,
+            "is_nested": true,
             "items": [
                 {
                     "order": 1,
@@ -3405,26 +3466,20 @@
             ]
         },
         "c76a452e-a866-4758-90ae-22d79afcefa5": {
-            "order": 24,
+            "order": 25,
             "name": "★1초씩 무한★ 첨 사냥 - 2",
             "created_at": "2024-12-08T21:25:24.196785",
-            "updated_at": "2024-12-24T11:29:07.179536",
-            "trigger_key": {
-                "is_system_key": false,
-                "key_code": "백쿼트(`)",
-                "modifiers": 0,
-                "scan_code": 41,
-                "virtual_key": 192
-            },
+            "updated_at": "2024-12-29T06:16:39.946664",
+            "trigger_key": null,
             "repeat_count": 9999,
-            "is_nested": false,
+            "is_nested": true,
             "items": [
                 {
                     "order": 1,
                     "type": "logic",
-                    "display_text": "ㄴ 첨사냥 중첩로직용 - 241223 최적화",
-                    "logic_id": "054de3f5-8227-4ab2-819a-7a4dcf6f7afd",
-                    "logic_name": "ㄴ 첨사냥 중첩로직용 - 241223 최적화",
+                    "display_text": "ㄴ 버무리기 종합",
+                    "logic_id": "887db8ca-304a-4529-8dfa-bffbddf2e305",
+                    "logic_name": "ㄴ 버무리기 종합",
                     "repeat_count": 1
                 },
                 {
@@ -3556,7 +3611,7 @@
             ]
         },
         "054de3f5-8227-4ab2-819a-7a4dcf6f7afd": {
-            "order": 25,
+            "order": 26,
             "name": "ㄴ 첨사냥 중첩로직용 - 241223 최적화",
             "created_at": "2024-11-30T10:25:06.438732",
             "updated_at": "2024-12-26T17:27:37.614608",
@@ -3806,8 +3861,863 @@
                 }
             ]
         },
+        "23e546cc-62a1-4701-892c-e7b3f6de6deb": {
+            "order": 27,
+            "name": "ㄴ 버무리기 - 마무리 공격 1사이클 무한반복",
+            "created_at": "2024-11-30T10:25:06.438732",
+            "updated_at": "2024-12-29T08:18:59.946092",
+            "trigger_key": null,
+            "repeat_count": 9999,
+            "is_nested": true,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "ㄴ 버무리기 - 마무리 공격 1사이클 (75초)",
+                    "logic_id": "9c8a4830-2558-4a4d-8529-f86191a7b868",
+                    "logic_name": "ㄴ 버무리기 - 마무리 공격 1사이클 (75초)",
+                    "repeat_count": 1
+                }
+            ]
+        },
+        "887db8ca-304a-4529-8dfa-bffbddf2e305": {
+            "order": 28,
+            "name": "ㄴ 버무리기 종합",
+            "created_at": "2024-11-30T10:25:06.438732",
+            "updated_at": "2024-12-29T08:17:52.824916",
+            "trigger_key": {
+                "is_system_key": false,
+                "key_code": "백쿼트(`)",
+                "modifiers": 0,
+                "scan_code": 41,
+                "virtual_key": 192
+            },
+            "repeat_count": 1,
+            "is_nested": false,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "ㄴ버무리기 - 저주, 중독 1사이클 (85초)",
+                    "logic_id": "1644df2f-0c7a-40a0-a87d-a9105ab0651a",
+                    "logic_name": "ㄴ버무리기 - 저주, 중독 1사이클 (85초)",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 2,
+                    "type": "logic",
+                    "display_text": "ㄴ 버무리기 - 중독 1사이클 (75초)",
+                    "logic_id": "a4793e9b-6876-425b-a33a-96db11e60e44",
+                    "logic_name": "ㄴ 버무리기 - 중독 1사이클 (75초)",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 3,
+                    "type": "logic",
+                    "display_text": "ㄴ 버무리기 - 마무리 공격 1사이클 (75초)",
+                    "logic_id": "9c8a4830-2558-4a4d-8529-f86191a7b868",
+                    "logic_name": "ㄴ 버무리기 - 마무리 공격 1사이클 (75초)",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 4,
+                    "type": "logic",
+                    "display_text": "ㄴ 버무리기 - 마무리 공격 1사이클 (75초)",
+                    "logic_id": "9c8a4830-2558-4a4d-8529-f86191a7b868",
+                    "logic_name": "ㄴ 버무리기 - 마무리 공격 1사이클 (75초)",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 5,
+                    "type": "logic",
+                    "display_text": "공증만 10회 후 풀체",
+                    "logic_id": "11163ad3-7c9b-4b39-9176-0c49bff1c702",
+                    "logic_name": "공증만 10회 후 풀체",
+                    "repeat_count": 1
+                }
+            ]
+        },
+        "9c8a4830-2558-4a4d-8529-f86191a7b868": {
+            "order": 29,
+            "name": "ㄴ 버무리기 - 마무리 공격 1사이클 (75초)",
+            "created_at": "2024-11-30T10:25:06.438732",
+            "updated_at": "2024-12-29T08:18:59.906711",
+            "trigger_key": {
+                "is_system_key": false,
+                "key_code": "숫자패드 *",
+                "modifiers": 0,
+                "scan_code": 55,
+                "virtual_key": 106
+            },
+            "repeat_count": 3,
+            "is_nested": false,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "ㄴ 버무리기 사이클 하위 - 마무리 공격 (20초)",
+                    "logic_id": "d349191e-d641-409e-80c1-f3b7ca26a6af",
+                    "logic_name": "ㄴ 버무리기 사이클 하위 - 마무리 공격 (20초)",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 2,
+                    "type": "logic",
+                    "display_text": "((상하좌우 1초)) - 활력",
+                    "logic_id": "77f377df-8786-4990-b30f-c2eba7e8feef",
+                    "logic_name": "((상하좌우 1초)) - 활력",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 3,
+                    "type": "logic",
+                    "display_text": "((상하좌우 1초)) - 활력",
+                    "logic_id": "77f377df-8786-4990-b30f-c2eba7e8feef",
+                    "logic_name": "((상하좌우 1초)) - 활력",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 4,
+                    "type": "logic",
+                    "display_text": "((상하좌우 1초)) - 마비",
+                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
+                    "logic_name": "((상하좌우 1초)) - 마비",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 5,
+                    "type": "logic",
+                    "display_text": "((상하좌우 1초)) - 마비",
+                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
+                    "logic_name": "((상하좌우 1초)) - 마비",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 6,
+                    "type": "logic",
+                    "display_text": "공증만 10회 후 풀체",
+                    "logic_id": "11163ad3-7c9b-4b39-9176-0c49bff1c702",
+                    "logic_name": "공증만 10회 후 풀체",
+                    "repeat_count": 1
+                }
+            ]
+        },
+        "1644df2f-0c7a-40a0-a87d-a9105ab0651a": {
+            "order": 30,
+            "name": "ㄴ버무리기 - 저주, 중독 1사이클 (85초)",
+            "created_at": "2024-11-30T10:25:06.438732",
+            "updated_at": "2024-12-29T07:02:17.564232",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "ㄴㄴ 버무리기 사이클 하위 - 저주 (9초)",
+                    "logic_id": "c7579d73-6591-4ab5-8a94-b0d9eec30f08",
+                    "logic_name": "ㄴㄴ 버무리기 사이클 하위 - 저주 (9초)",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 2,
+                    "type": "logic",
+                    "display_text": "ㄴㄴ 버무리기 사이클 하위 - 중독 (21초)",
+                    "logic_id": "10b6efbd-13b1-4fdc-8f79-683c99471988",
+                    "logic_name": "ㄴㄴ 버무리기 사이클 하위 - 중독 (21초)",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 3,
+                    "type": "logic",
+                    "display_text": "ㄴㄴ 버무리기 사이클 하위 - 중독 (21초)",
+                    "logic_id": "10b6efbd-13b1-4fdc-8f79-683c99471988",
+                    "logic_name": "ㄴㄴ 버무리기 사이클 하위 - 중독 (21초)",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 4,
+                    "type": "logic",
+                    "display_text": "ㄴㄴ 버무리기 사이클 하위 - 중독 (21초)",
+                    "logic_id": "10b6efbd-13b1-4fdc-8f79-683c99471988",
+                    "logic_name": "ㄴㄴ 버무리기 사이클 하위 - 중독 (21초)",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 5,
+                    "type": "logic",
+                    "display_text": "ㄴㄴ 버무리기 사이클 하위 - 공증대비 (6초)",
+                    "logic_id": "635a0299-d583-43ba-af05-42246034b8d6",
+                    "logic_name": "ㄴㄴ 버무리기 사이클 하위 - 공증대비 (6초)",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 6,
+                    "type": "logic",
+                    "display_text": "공증만 10회 후 풀체",
+                    "logic_id": "11163ad3-7c9b-4b39-9176-0c49bff1c702",
+                    "logic_name": "공증만 10회 후 풀체",
+                    "repeat_count": 1
+                }
+            ]
+        },
+        "a4793e9b-6876-425b-a33a-96db11e60e44": {
+            "order": 31,
+            "name": "ㄴ 버무리기 - 중독 1사이클 (75초)",
+            "created_at": "2024-11-30T10:25:06.438732",
+            "updated_at": "2024-12-29T07:02:43.175472",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "ㄴㄴ 버무리기 사이클 하위 - 중독 (21초)",
+                    "logic_id": "10b6efbd-13b1-4fdc-8f79-683c99471988",
+                    "logic_name": "ㄴㄴ 버무리기 사이클 하위 - 중독 (21초)",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 2,
+                    "type": "logic",
+                    "display_text": "ㄴㄴ 버무리기 사이클 하위 - 중독 (21초)",
+                    "logic_id": "10b6efbd-13b1-4fdc-8f79-683c99471988",
+                    "logic_name": "ㄴㄴ 버무리기 사이클 하위 - 중독 (21초)",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 3,
+                    "type": "logic",
+                    "display_text": "ㄴㄴ 버무리기 사이클 하위 - 중독 (21초)",
+                    "logic_id": "10b6efbd-13b1-4fdc-8f79-683c99471988",
+                    "logic_name": "ㄴㄴ 버무리기 사이클 하위 - 중독 (21초)",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 4,
+                    "type": "logic",
+                    "display_text": "ㄴㄴ 버무리기 사이클 하위 - 공증대비 (6초)",
+                    "logic_id": "635a0299-d583-43ba-af05-42246034b8d6",
+                    "logic_name": "ㄴㄴ 버무리기 사이클 하위 - 공증대비 (6초)",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 5,
+                    "type": "logic",
+                    "display_text": "공증만 10회 후 풀체",
+                    "logic_id": "11163ad3-7c9b-4b39-9176-0c49bff1c702",
+                    "logic_name": "공증만 10회 후 풀체",
+                    "repeat_count": 1
+                }
+            ]
+        },
+        "d349191e-d641-409e-80c1-f3b7ca26a6af": {
+            "order": 32,
+            "name": "ㄴ 버무리기 사이클 하위 - 마무리 공격 (20초)",
+            "created_at": "2024-11-30T10:25:06.438732",
+            "updated_at": "2024-12-29T08:25:41.960942",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 체력 4회",
+                    "logic_id": "95d846eb-bf5d-44ab-9d70-9e53cca79343",
+                    "logic_name": "◎ 1초 점 ◎ 체력 4회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 2,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 상하좌우 - 마비",
+                    "logic_id": "58c77fae-cec5-4b06-975f-4e4296c0c40b",
+                    "logic_name": "◎ 1초 점 ◎ 상하좌우 - 마비",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 3,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 버프",
+                    "logic_id": "29f0f45b-2b2e-468f-8f77-47ace3aa483c",
+                    "logic_name": "◎ 1초 점 ◎ 버프",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 4,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 상하좌우 - 저주",
+                    "logic_id": "3fd8aa4f-ed95-4e3d-bcfd-f54e5574ab2c",
+                    "logic_name": "◎ 1초 점 ◎ 상하좌우 - 저주",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 5,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 6,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 7,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 8,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 9,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 상하좌우 - 마비",
+                    "logic_id": "58c77fae-cec5-4b06-975f-4e4296c0c40b",
+                    "logic_name": "◎ 1초 점 ◎ 상하좌우 - 마비",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 10,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 체력 4회",
+                    "logic_id": "95d846eb-bf5d-44ab-9d70-9e53cca79343",
+                    "logic_name": "◎ 1초 점 ◎ 체력 4회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 11,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 버프",
+                    "logic_id": "29f0f45b-2b2e-468f-8f77-47ace3aa483c",
+                    "logic_name": "◎ 1초 점 ◎ 버프",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 12,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 상하좌우 - 저주",
+                    "logic_id": "3fd8aa4f-ed95-4e3d-bcfd-f54e5574ab2c",
+                    "logic_name": "◎ 1초 점 ◎ 상하좌우 - 저주",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 13,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 14,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 15,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 16,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 17,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 상하좌우 - 마비",
+                    "logic_id": "58c77fae-cec5-4b06-975f-4e4296c0c40b",
+                    "logic_name": "◎ 1초 점 ◎ 상하좌우 - 마비",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 18,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 체력 4회",
+                    "logic_id": "95d846eb-bf5d-44ab-9d70-9e53cca79343",
+                    "logic_name": "◎ 1초 점 ◎ 체력 4회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 19,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 버프",
+                    "logic_id": "29f0f45b-2b2e-468f-8f77-47ace3aa483c",
+                    "logic_name": "◎ 1초 점 ◎ 버프",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 20,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 상하좌우 - 저주",
+                    "logic_id": "3fd8aa4f-ed95-4e3d-bcfd-f54e5574ab2c",
+                    "logic_name": "◎ 1초 점 ◎ 상하좌우 - 저주",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 21,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 22,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 23,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 24,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                }
+            ]
+        },
+        "c7579d73-6591-4ab5-8a94-b0d9eec30f08": {
+            "order": 33,
+            "name": "ㄴㄴ 버무리기 사이클 하위 - 저주 (9초)",
+            "created_at": "2024-11-30T10:25:06.438732",
+            "updated_at": "2024-12-29T07:03:08.796973",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 2,
+                    "type": "logic",
+                    "display_text": "((상하좌우 1초)) - 마비",
+                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
+                    "logic_name": "((상하좌우 1초)) - 마비",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 3,
+                    "type": "logic",
+                    "display_text": "((0.72초)) 보호 무장 힘 - 공증 용",
+                    "logic_id": "268c3a4a-b945-485a-bd4c-01d60a9cd92d",
+                    "logic_name": "((0.72초)) 보호 무장 힘 - 공증 용",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 4,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 상하좌우 - 저주",
+                    "logic_id": "3fd8aa4f-ed95-4e3d-bcfd-f54e5574ab2c",
+                    "logic_name": "◎ 1초 점 ◎ 상하좌우 - 저주",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 5,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 저주",
+                    "logic_id": "8a4d4894-addf-427e-a158-9c59324fec5f",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 저주",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 6,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 저주",
+                    "logic_id": "8a4d4894-addf-427e-a158-9c59324fec5f",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 저주",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 7,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 저주",
+                    "logic_id": "8a4d4894-addf-427e-a158-9c59324fec5f",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 저주",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 8,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 저주",
+                    "logic_id": "8a4d4894-addf-427e-a158-9c59324fec5f",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 저주",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 9,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 저주",
+                    "logic_id": "8a4d4894-addf-427e-a158-9c59324fec5f",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 저주",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 10,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 저주",
+                    "logic_id": "8a4d4894-addf-427e-a158-9c59324fec5f",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 저주",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 11,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 저주",
+                    "logic_id": "8a4d4894-addf-427e-a158-9c59324fec5f",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 저주",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 12,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 저주",
+                    "logic_id": "8a4d4894-addf-427e-a158-9c59324fec5f",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 저주",
+                    "repeat_count": 1
+                }
+            ]
+        },
+        "10b6efbd-13b1-4fdc-8f79-683c99471988": {
+            "order": 34,
+            "name": "ㄴㄴ 버무리기 사이클 하위 - 중독 (21초)",
+            "created_at": "2024-11-30T10:25:06.438732",
+            "updated_at": "2024-12-29T07:49:11.118114",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "((상하좌우 1초)) - 활력",
+                    "logic_id": "77f377df-8786-4990-b30f-c2eba7e8feef",
+                    "logic_name": "((상하좌우 1초)) - 활력",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 2,
+                    "type": "logic",
+                    "display_text": "((상하좌우 1초)) - 활력",
+                    "logic_id": "77f377df-8786-4990-b30f-c2eba7e8feef",
+                    "logic_name": "((상하좌우 1초)) - 활력",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 3,
+                    "type": "logic",
+                    "display_text": "((상하좌우 1초)) - 마비",
+                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
+                    "logic_name": "((상하좌우 1초)) - 마비",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 4,
+                    "type": "logic",
+                    "display_text": "((상하좌우 1초)) - 마비",
+                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
+                    "logic_name": "((상하좌우 1초)) - 마비",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 5,
+                    "type": "logic",
+                    "display_text": "((0.72초)) 보호 무장 힘 - 공증 용",
+                    "logic_id": "268c3a4a-b945-485a-bd4c-01d60a9cd92d",
+                    "logic_name": "((0.72초)) 보호 무장 힘 - 공증 용",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 6,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 7,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 8,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 9,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 10,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 11,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 12,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 13,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 14,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 15,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 16,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 17,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 18,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 19,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 20,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 21,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 22,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 23,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 24,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 25,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 26,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 27,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                }
+            ]
+        },
+        "635a0299-d583-43ba-af05-42246034b8d6": {
+            "order": 35,
+            "name": "ㄴㄴ 버무리기 사이클 하위 - 공증대비 (6초)",
+            "created_at": "2024-11-30T10:25:06.438732",
+            "updated_at": "2024-12-29T07:58:03.637088",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "동동주 마시기 - 4회",
+                    "logic_id": "6e7713f7-1623-42b0-93f1-b838f3e1c97f",
+                    "logic_name": "동동주 마시기 - 4회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 2,
+                    "type": "logic",
+                    "display_text": "((상하좌우 1초)) - 활력",
+                    "logic_id": "77f377df-8786-4990-b30f-c2eba7e8feef",
+                    "logic_name": "((상하좌우 1초)) - 활력",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 3,
+                    "type": "logic",
+                    "display_text": "((상하좌우 1초)) - 활력",
+                    "logic_id": "77f377df-8786-4990-b30f-c2eba7e8feef",
+                    "logic_name": "((상하좌우 1초)) - 활력",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 4,
+                    "type": "logic",
+                    "display_text": "((상하좌우 1초)) - 마비",
+                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
+                    "logic_name": "((상하좌우 1초)) - 마비",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 5,
+                    "type": "logic",
+                    "display_text": "((상하좌우 1초)) - 마비",
+                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
+                    "logic_name": "((상하좌우 1초)) - 마비",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 6,
+                    "type": "logic",
+                    "display_text": "((0.72초)) 보호 무장 힘 - 공증 용",
+                    "logic_id": "268c3a4a-b945-485a-bd4c-01d60a9cd92d",
+                    "logic_name": "((0.72초)) 보호 무장 힘 - 공증 용",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 7,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                }
+            ]
+        },
         "0f7febe4-03e2-4e00-bc00-4517a9a33556": {
-            "order": 26,
+            "order": 36,
             "name": "★1초씩 무한★ 첨 중독 - 조합본",
             "created_at": "2024-12-02T02:03:00.957188",
             "updated_at": "2024-12-23T09:55:06.512077",
@@ -3851,7 +4761,7 @@
             ]
         },
         "73c0ac82-d33b-4dce-a9a1-6af5a54dd99b": {
-            "order": 27,
+            "order": 37,
             "name": "★1초씩 무한★ 공격 중독",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-25T06:20:04.475029",
@@ -4054,8 +4964,47 @@
                 }
             ]
         },
+        "883cb4ce-8d2f-4428-90dc-dfd47eebc1c5": {
+            "order": 38,
+            "name": "◎ 1초 점 ◎ 상하좌우 - 활력",
+            "created_at": "2024-12-08T20:50:23.839286",
+            "updated_at": "2024-12-29T06:14:04.629671",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "((상하좌우 1초)) - 활력",
+                    "logic_id": "77f377df-8786-4990-b30f-c2eba7e8feef",
+                    "logic_name": "((상하좌우 1초)) - 활력",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 숫자패드 9 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                },
+                {
+                    "order": 3,
+                    "display_text": "키 입력: 숫자패드 9 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 9",
+                    "scan_code": 73,
+                    "virtual_key": 105,
+                    "modifiers": 0
+                }
+            ]
+        },
         "58c77fae-cec5-4b06-975f-4e4296c0c40b": {
-            "order": 28,
+            "order": 39,
             "name": "◎ 1초 점 ◎ 상하좌우 - 마비",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-25T11:11:15.290299",
@@ -4094,10 +5043,10 @@
             ]
         },
         "3fd8aa4f-ed95-4e3d-bcfd-f54e5574ab2c": {
-            "order": 29,
+            "order": 40,
             "name": "◎ 1초 점 ◎ 상하좌우 - 저주",
             "created_at": "2024-12-08T20:50:23.839286",
-            "updated_at": "2024-12-25T16:15:08.020636",
+            "updated_at": "2024-12-29T08:19:20.770703",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -4133,7 +5082,7 @@
             ]
         },
         "de9a2bfa-63f6-4b41-a1cd-2ab16d1be627": {
-            "order": 30,
+            "order": 41,
             "name": "◎ 1초 점 ◎ 상하 두 칸 - 저주",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-23T10:31:44.228741",
@@ -4172,7 +5121,7 @@
             ]
         },
         "a78c4331-7176-4fd2-843f-bdd0d45dacb2": {
-            "order": 31,
+            "order": 42,
             "name": "◎ 1초 점 ◎ 좌우 두 칸 - 저주",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-23T10:31:44.245363",
@@ -4211,7 +5160,7 @@
             ]
         },
         "5f488f71-8a87-4984-a6e6-da2bc5d69195": {
-            "order": 32,
+            "order": 43,
             "name": "◎ 1초 점 ◎ 전체 돌리기 - 저주",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-23T12:26:19.156515",
@@ -4250,7 +5199,7 @@
             ]
         },
         "593c3960-6506-4673-8a84-520df8a14acf": {
-            "order": 33,
+            "order": 44,
             "name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-23T10:31:52.529338",
@@ -4289,7 +5238,7 @@
             ]
         },
         "95d846eb-bf5d-44ab-9d70-9e53cca79343": {
-            "order": 34,
+            "order": 45,
             "name": "◎ 1초 점 ◎ 체력 4회",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-23T11:03:19.977715",
@@ -4328,7 +5277,7 @@
             ]
         },
         "29f0f45b-2b2e-468f-8f77-47ace3aa483c": {
-            "order": 35,
+            "order": 46,
             "name": "◎ 1초 점 ◎ 버프",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-23T10:32:47.469810",
@@ -4367,7 +5316,7 @@
             ]
         },
         "fe01d089-03b6-4cec-9fb5-874bac55d783": {
-            "order": 36,
+            "order": 47,
             "name": "---------------사냥---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:10:04.268329",
@@ -4388,7 +5337,7 @@
             ]
         },
         "27d1f013-d82b-42f2-87cd-785dad90b052": {
-            "order": 37,
+            "order": 48,
             "name": "((1초씩)) 디버프 상하좌우 - 1회",
             "created_at": "2024-12-06T16:29:20.641646",
             "updated_at": "2024-12-23T09:30:48.396391",
@@ -4472,8 +5421,136 @@
                 }
             ]
         },
+        "5dfb7cf3-8832-45d1-bb9c-abb89d002203": {
+            "order": 49,
+            "name": "((빠른 디버프)) 마비, 중독 반복",
+            "created_at": "2024-12-04T00:08:13.574278",
+            "updated_at": "2024-12-28T17:37:44.705286",
+            "trigger_key": {
+                "is_system_key": false,
+                "key_code": "Delete",
+                "modifiers": 0,
+                "scan_code": 83,
+                "virtual_key": 46
+            },
+            "repeat_count": 10,
+            "is_nested": false,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "((1초)) 보호 무장 힘",
+                    "logic_id": "b8796333-e8d6-4ae2-9fec-801a713517d8",
+                    "logic_name": "((1초)) 보호 무장 힘",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 2,
+                    "type": "logic",
+                    "display_text": "((상하좌우 1초)) - 활력",
+                    "logic_id": "77f377df-8786-4990-b30f-c2eba7e8feef",
+                    "logic_name": "((상하좌우 1초)) - 활력",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 3,
+                    "type": "logic",
+                    "display_text": "((상하좌우 1초)) - 마비",
+                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
+                    "logic_name": "((상하좌우 1초)) - 마비",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 4,
+                    "type": "logic",
+                    "display_text": "((상하좌우 1초)) - 마비",
+                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
+                    "logic_name": "((상하좌우 1초)) - 마비",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 5,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프)) 15초 - 중독",
+                    "logic_id": "5d09104d-17a8-4bc2-934a-d7d5c7d8abe4",
+                    "logic_name": "((빠른 디버프)) 15초 - 중독",
+                    "repeat_count": 1
+                }
+            ]
+        },
+        "5d09104d-17a8-4bc2-934a-d7d5c7d8abe4": {
+            "order": 50,
+            "name": "((빠른 디버프)) 15초 - 중독",
+            "created_at": "2024-12-04T00:08:13.574278",
+            "updated_at": "2024-12-28T17:34:52.839896",
+            "trigger_key": null,
+            "repeat_count": 4,
+            "is_nested": true,
+            "items": [
+                {
+                    "order": 1,
+                    "display_text": "키 입력: ESC --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "ESC",
+                    "scan_code": 1,
+                    "virtual_key": 27,
+                    "modifiers": 0
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: ESC --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "ESC",
+                    "scan_code": 1,
+                    "virtual_key": 27,
+                    "modifiers": 0
+                },
+                {
+                    "order": 3,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 4,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 5,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 6,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 7,
+                    "type": "logic",
+                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
+                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
+                    "repeat_count": 1
+                }
+            ]
+        },
         "59070f24-4d2d-4c54-8100-f104e4645d06": {
-            "order": 38,
+            "order": 51,
             "name": "((빠른 디버프)) 960회- 3분 - 마비",
             "created_at": "2024-11-30T14:35:32.801674",
             "updated_at": "2024-12-28T16:03:57.411721",
@@ -4590,7 +5667,7 @@
             ]
         },
         "753fe62f-775d-4518-9a11-5b0810605183": {
-            "order": 39,
+            "order": 52,
             "name": "((빠른 디버프)) 960회- 3분 - 저주",
             "created_at": "2024-11-30T16:06:26.318706",
             "updated_at": "2024-12-28T16:03:52.019851",
@@ -4707,7 +5784,7 @@
             ]
         },
         "69b74254-4313-4546-94c9-313b21ce6e3d": {
-            "order": 40,
+            "order": 53,
             "name": "((빠른 디버프)) 960회 - 3분 - 중독",
             "created_at": "2024-12-04T00:08:13.574278",
             "updated_at": "2024-12-28T16:03:47.207646",
@@ -4823,7 +5900,7 @@
             ]
         },
         "39e67926-aab9-4b61-bd2f-19797480f4bf": {
-            "order": 43,
+            "order": 54,
             "name": "((빠른 디버프)) 960회- 3분 - 절망",
             "created_at": "2024-12-01T02:22:23.843289",
             "updated_at": "2024-12-28T16:04:04.146351",
@@ -4940,7 +6017,7 @@
             ]
         },
         "7b0c844b-3c8d-4e92-aa93-8a28c3faf269": {
-            "order": 44,
+            "order": 55,
             "name": "((빠른 디버프용)) 0.75초 전체 - 마비",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-23T09:46:43.280220",
@@ -5035,10 +6112,10 @@
             ]
         },
         "8a4d4894-addf-427e-a158-9c59324fec5f": {
-            "order": 45,
+            "order": 56,
             "name": "((빠른 디버프용)) 0.75초 전체 - 저주",
             "created_at": "2024-12-08T20:39:14.995922",
-            "updated_at": "2024-12-23T09:46:22.216400",
+            "updated_at": "2024-12-29T05:39:04.095701",
             "trigger_key": null,
             "repeat_count": 4,
             "is_nested": true,
@@ -5130,10 +6207,10 @@
             ]
         },
         "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf": {
-            "order": 46,
+            "order": 57,
             "name": "((빠른 디버프용)) 0.75초 전체 - 중독",
             "created_at": "2024-12-08T20:39:14.995922",
-            "updated_at": "2024-12-28T16:01:26.028332",
+            "updated_at": "2024-12-29T05:39:05.183537",
             "trigger_key": null,
             "repeat_count": 4,
             "is_nested": true,
@@ -5225,7 +6302,7 @@
             ]
         },
         "a294171e-4125-47bb-aed8-aaeb049db482": {
-            "order": 47,
+            "order": 58,
             "name": "((빠른 디버프용)) 0.75초 전체 - 절망",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-23T09:47:02.268190",
@@ -5320,7 +6397,7 @@
             ]
         },
         "dd9d0e75-5e27-4b9d-8974-ec6d716b373f": {
-            "order": 48,
+            "order": 59,
             "name": "((3초)) 전체 돌리기 - 마비",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-23T09:48:29.081779",
@@ -5363,7 +6440,7 @@
             ]
         },
         "ef856fd7-4c4d-48f8-a101-129889f141a5": {
-            "order": 49,
+            "order": 60,
             "name": "((3초)) 전체 돌리기 - 저주",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-23T09:46:22.258117",
@@ -5406,7 +6483,7 @@
             ]
         },
         "50700941-d187-4a64-836e-f80d3c290f28": {
-            "order": 50,
+            "order": 61,
             "name": "((3초)) 전체 돌리기 - 중독",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-23T09:40:12.546231",
@@ -5449,7 +6526,7 @@
             ]
         },
         "e7bb8a33-13be-4afc-a7bd-b428116a4290": {
-            "order": 51,
+            "order": 62,
             "name": "((5초)) 전체 돌리기 - 절망",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-23T09:47:02.314866",
@@ -5492,7 +6569,7 @@
             ]
         },
         "94fed6a3-f84f-4b13-8c5e-5ca39c40b336": {
-            "order": 52,
+            "order": 63,
             "name": "((3초)) 전체 중독, 첨",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-23T03:31:02.049133",
@@ -5531,7 +6608,7 @@
             ]
         },
         "8845a496-ad78-4e66-8221-7335d7f3624a": {
-            "order": 53,
+            "order": 64,
             "name": "((1초 4회)) 전체 돌리기 - 마비",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-23T10:24:03.605582",
@@ -5626,7 +6703,7 @@
             ]
         },
         "81483b03-d872-434c-bd99-badb688df8ac": {
-            "order": 54,
+            "order": 65,
             "name": "((1초 4회)) 전체 돌리기 - 저주",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-23T12:24:20.629495",
@@ -5721,7 +6798,7 @@
             ]
         },
         "894ac658-e124-4bb6-b46e-3a8f0ede3374": {
-            "order": 55,
+            "order": 66,
             "name": "((1초 4회)) 전체 돌리기 - 중독",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-23T10:23:40.679349",
@@ -5816,7 +6893,7 @@
             ]
         },
         "a7f0abbb-d877-4ca5-87c8-902ee34e7926": {
-            "order": 56,
+            "order": 67,
             "name": "((1초 4회)) 전체 돌리기 - 절망",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-23T10:23:47.951815",
@@ -5910,11 +6987,262 @@
                 }
             ]
         },
+        "77f377df-8786-4990-b30f-c2eba7e8feef": {
+            "order": 68,
+            "name": "((상하좌우 1초)) - 활력",
+            "created_at": "2024-12-09T13:56:02.913186",
+            "updated_at": "2024-12-29T07:20:58.525806",
+            "trigger_key": {
+                "is_system_key": false,
+                "key_code": "한자",
+                "modifiers": 0,
+                "scan_code": 56,
+                "virtual_key": 21
+            },
+            "repeat_count": 1,
+            "is_nested": false,
+            "items": [
+                {
+                    "order": 1,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 활력 - 홈 클릭",
+                    "logic_id": "5f73cf33-02ef-463d-8947-7607fdff2525",
+                    "logic_name": "((중첩로직)) - 활력 - 홈 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 방향키 위쪽 ↑ --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 위쪽 ↑",
+                    "scan_code": 72,
+                    "virtual_key": 38,
+                    "modifiers": 0
+                },
+                {
+                    "order": 3,
+                    "display_text": "키 입력: 방향키 위쪽 ↑ --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 위쪽 ↑",
+                    "scan_code": 72,
+                    "virtual_key": 38,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 4
+                },
+                {
+                    "order": 5,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 6,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 7
+                },
+                {
+                    "order": 8,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 활력 - 홈 클릭",
+                    "logic_id": "5f73cf33-02ef-463d-8947-7607fdff2525",
+                    "logic_name": "((중첩로직)) - 활력 - 홈 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 9,
+                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 아래쪽 ↓",
+                    "scan_code": 80,
+                    "virtual_key": 40,
+                    "modifiers": 0
+                },
+                {
+                    "order": 10,
+                    "display_text": "키 입력: 방향키 아래쪽 ↓ --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 아래쪽 ↓",
+                    "scan_code": 80,
+                    "virtual_key": 40,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 11
+                },
+                {
+                    "order": 12,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 13,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 14
+                },
+                {
+                    "order": 15,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 활력 - 홈 클릭",
+                    "logic_id": "5f73cf33-02ef-463d-8947-7607fdff2525",
+                    "logic_name": "((중첩로직)) - 활력 - 홈 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 16,
+                    "display_text": "키 입력: 방향키 왼쪽 ← --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 왼쪽 ←",
+                    "scan_code": 75,
+                    "virtual_key": 37,
+                    "modifiers": 0
+                },
+                {
+                    "order": 17,
+                    "display_text": "키 입력: 방향키 왼쪽 ← --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 왼쪽 ←",
+                    "scan_code": 75,
+                    "virtual_key": 37,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 18
+                },
+                {
+                    "order": 19,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 20,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 21
+                },
+                {
+                    "order": 22,
+                    "type": "logic",
+                    "display_text": "((중첩로직)) - 활력 - 홈 클릭",
+                    "logic_id": "5f73cf33-02ef-463d-8947-7607fdff2525",
+                    "logic_name": "((중첩로직)) - 활력 - 홈 클릭",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 23,
+                    "display_text": "키 입력: 방향키 오른쪽 → --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 오른쪽 →",
+                    "scan_code": 77,
+                    "virtual_key": 39,
+                    "modifiers": 0
+                },
+                {
+                    "order": 24,
+                    "display_text": "키 입력: 방향키 오른쪽 → --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 오른쪽 →",
+                    "scan_code": 77,
+                    "virtual_key": 39,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.005초",
+                    "duration": 0.005,
+                    "order": 25
+                },
+                {
+                    "order": 26,
+                    "display_text": "키 입력: 엔터 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                },
+                {
+                    "order": 27,
+                    "display_text": "키 입력: 엔터 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers": 0
+                }
+            ]
+        },
         "728ffa37-127b-40f3-a9b6-70dbc5b882db": {
-            "order": 57,
+            "order": 69,
             "name": "((상하좌우 1초)) - 마비",
             "created_at": "2024-12-09T13:56:02.913186",
-            "updated_at": "2024-12-28T16:22:07.640311",
+            "updated_at": "2024-12-29T07:20:58.564434",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -6138,7 +7466,7 @@
             ]
         },
         "7e4c1fda-4463-4b4b-bee7-343da540e9d3": {
-            "order": 58,
+            "order": 70,
             "name": "((상하좌우 1초)) - 저주",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-25T16:14:49.421822",
@@ -6365,7 +7693,7 @@
             ]
         },
         "aa39922c-0b07-4af7-9ccf-69807d682338": {
-            "order": 59,
+            "order": 71,
             "name": "((상하좌우 1초)) - 중독",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-23T09:50:46.961357",
@@ -6592,7 +7920,7 @@
             ]
         },
         "3faa2a61-87ff-4f12-8ac8-a7fd7504b7c6": {
-            "order": 60,
+            "order": 72,
             "name": "((상하 두 칸 1초)) - 저주",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-23T12:23:05.496381",
@@ -6819,7 +8147,7 @@
             ]
         },
         "c218516d-d3d9-43f3-9fe4-e09da98ec971": {
-            "order": 61,
+            "order": 73,
             "name": "((좌우 두 칸 1초)) - 저주",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-23T12:23:27.531733",
@@ -7046,7 +8374,7 @@
             ]
         },
         "d3462ca4-81cb-4051-8e87-d058ae8ebc4c": {
-            "order": 62,
+            "order": 74,
             "name": "((상하 두 칸 1초)) - 중독",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-23T09:51:24.706246",
@@ -7273,7 +8601,7 @@
             ]
         },
         "b60b29b5-747d-4188-a5f0-534cb406be43": {
-            "order": 63,
+            "order": 75,
             "name": "((좌우 두 칸 1초)) - 중독",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-23T09:51:34.849460",
@@ -7499,8 +8827,135 @@
                 }
             ]
         },
+        "5f73cf33-02ef-463d-8947-7607fdff2525": {
+            "order": 76,
+            "name": "((중첩로직)) - 활력 - 홈 클릭",
+            "created_at": "2024-12-07T06:09:55.766255",
+            "updated_at": "2024-12-28T17:47:12.053684",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0098초",
+                    "duration": 0.0098,
+                    "order": 1
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 왼쪽 쉬프트 --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "왼쪽 쉬프트",
+                    "scan_code": 42,
+                    "virtual_key": 160,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0098초",
+                    "duration": 0.0098,
+                    "order": 3
+                },
+                {
+                    "order": 4,
+                    "display_text": "키 입력: Z --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "Z",
+                    "scan_code": 44,
+                    "virtual_key": 90,
+                    "modifiers": 0
+                },
+                {
+                    "order": 5,
+                    "display_text": "키 입력: Z --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "Z",
+                    "scan_code": 44,
+                    "virtual_key": 90,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0098초",
+                    "duration": 0.0098,
+                    "order": 6
+                },
+                {
+                    "order": 7,
+                    "display_text": "키 입력: 왼쪽 쉬프트 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "왼쪽 쉬프트",
+                    "scan_code": 42,
+                    "virtual_key": 160,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0098초",
+                    "duration": 0.0098,
+                    "order": 8
+                },
+                {
+                    "order": 9,
+                    "display_text": "키 입력: L --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "L",
+                    "scan_code": 38,
+                    "virtual_key": 76,
+                    "modifiers": 0
+                },
+                {
+                    "order": 10,
+                    "display_text": "키 입력: L --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "L",
+                    "scan_code": 38,
+                    "virtual_key": 76,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0098초",
+                    "duration": 0.0098,
+                    "order": 11
+                },
+                {
+                    "order": 12,
+                    "display_text": "키 입력: Home --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "Home",
+                    "scan_code": 71,
+                    "virtual_key": 36,
+                    "modifiers": 0
+                },
+                {
+                    "order": 13,
+                    "display_text": "키 입력: Home --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "Home",
+                    "scan_code": 71,
+                    "virtual_key": 36,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0098초",
+                    "duration": 0.0098,
+                    "order": 14
+                }
+            ]
+        },
         "eed1f76c-ac9d-4856-9714-86b5fd581d24": {
-            "order": 64,
+            "order": 77,
             "name": "((중첩로직)) - 마비 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-23T10:18:58.213722",
@@ -7569,7 +9024,7 @@
             ]
         },
         "cb1fc7a9-366a-4eea-99a6-37cf45f8ac27": {
-            "order": 65,
+            "order": 78,
             "name": "((중첩로직)) - 저주 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-23T10:19:06.274358",
@@ -7638,10 +9093,10 @@
             ]
         },
         "7c9cd306-f7f1-4bb2-828e-215171f4884e": {
-            "order": 66,
+            "order": 79,
             "name": "((중첩로직)) - 중독 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
-            "updated_at": "2024-12-23T10:19:47.531041",
+            "updated_at": "2024-12-28T16:59:02.488160",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -7707,7 +9162,7 @@
             ]
         },
         "cad0b094-438e-4732-a52c-245fc8cfd1bf": {
-            "order": 67,
+            "order": 80,
             "name": "((중첩로직)) - 마비만 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-19T12:51:28.436512",
@@ -7750,7 +9205,7 @@
             ]
         },
         "f63b1a9f-568c-4265-8e61-641add26c4d9": {
-            "order": 68,
+            "order": 81,
             "name": "((중첩로직)) - 저주만 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-16T13:48:07.270719",
@@ -7793,7 +9248,7 @@
             ]
         },
         "5c08d668-af06-4929-a00a-9ef0eb97d52e": {
-            "order": 69,
+            "order": 82,
             "name": "((중첩로직)) - 중독만 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-16T14:18:03.585819",
@@ -7836,7 +9291,7 @@
             ]
         },
         "2faef0f7-de37-47d2-8a07-d917738aa41a": {
-            "order": 70,
+            "order": 83,
             "name": "((지정 클릭)) 활력",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-20T11:35:57.130625",
@@ -7981,7 +9436,7 @@
             ]
         },
         "1c3fd05e-cfad-4634-a9d4-65a303bc3f9c": {
-            "order": 71,
+            "order": 84,
             "name": "((지정 클릭)) 디버프",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-24T15:35:52.664027",
@@ -8186,7 +9641,7 @@
             ]
         },
         "7d0d1763-539e-433c-affe-8c2dbbe3a600": {
-            "order": 72,
+            "order": 85,
             "name": "---------------디버프---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:10:07.682135",
@@ -8207,7 +9662,7 @@
             ]
         },
         "0ceb5d7f-00bb-48b5-95ba-0b204d99da44": {
-            "order": 73,
+            "order": 86,
             "name": "월드 재입장",
             "created_at": "2024-12-11T21:30:39.063045",
             "updated_at": "2024-12-19T17:38:35.229897",
@@ -8283,7 +9738,7 @@
             ]
         },
         "b09ec1d7-4e80-49c0-a1b5-480a888e5b16": {
-            "order": 74,
+            "order": 87,
             "name": "캐릭터 선택",
             "created_at": "2024-12-12T08:29:17.016286",
             "updated_at": "2024-12-19T17:38:51.032901",
@@ -8409,7 +9864,7 @@
             ]
         },
         "9ed591e4-b227-448b-9d0f-b90c76d1f662": {
-            "order": 75,
+            "order": 88,
             "name": "모두 줍기",
             "created_at": "2024-11-26T10:58:29.227835",
             "updated_at": "2024-12-16T10:19:53.360220",
@@ -8465,7 +9920,7 @@
             ]
         },
         "03a6663d-95f7-403d-98fe-8cb339932ab3": {
-            "order": 76,
+            "order": 89,
             "name": "귀환",
             "created_at": "2024-12-19T18:54:30.254977",
             "updated_at": "2024-12-28T14:12:46.332908",
@@ -8572,7 +10027,7 @@
             ]
         },
         "5000e6f5-a61f-4498-a389-ed0afd949f47": {
-            "order": 77,
+            "order": 90,
             "name": "소환",
             "created_at": "2024-12-19T18:54:30.254977",
             "updated_at": "2024-12-28T15:29:37.895749",
@@ -8717,7 +10172,7 @@
             ]
         },
         "f2e0b12d-34dc-468a-aea6-68414c9be1a7": {
-            "order": 78,
+            "order": 91,
             "name": "출두 - 사냥터로",
             "created_at": "2024-12-19T18:54:30.254977",
             "updated_at": "2024-12-28T15:29:22.171197",
@@ -8862,10 +10317,10 @@
             ]
         },
         "5a81f53b-3761-4f20-b3c8-6c06b2818113": {
-            "order": 79,
+            "order": 92,
             "name": "출두 - 왕궁으로",
             "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2024-12-28T15:29:32.300401",
+            "updated_at": "2024-12-29T08:35:03.943697",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "등호(=)",
@@ -8967,14 +10422,8 @@
                     "order": 11
                 },
                 {
-                    "display_text": "텍스트 입력: 허그미",
-                    "order": 12,
-                    "text": "허그미",
-                    "type": "write_text"
-                },
-                {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1000초",
+                    "display_text": "지연시간 : 0.1초",
                     "duration": 0.1,
                     "order": 13
                 },
@@ -9003,11 +10452,16 @@
                     "display_text": "지연시간 : 0.0172초",
                     "duration": 0.0172,
                     "order": 16
+                },
+                {
+                    "display_text": "텍스트 입력: 서닜",
+                    "text": "서닜",
+                    "type": "write_text"
                 }
             ]
         },
         "8141d159-f468-47b7-acb7-5de442be0d77": {
-            "order": 80,
+            "order": 93,
             "name": "긴급",
             "created_at": "2024-12-17T05:32:15.270999",
             "updated_at": "2024-12-20T13:29:26.464471",
@@ -9108,7 +10562,7 @@
             ]
         },
         "2d87cae4-7b1e-4d8f-9229-29a88668e91b": {
-            "order": 81,
+            "order": 94,
             "name": "긴급 - F2키용",
             "created_at": "2024-12-17T05:32:15.270999",
             "updated_at": "2024-12-20T13:29:37.097700",
@@ -9209,7 +10663,7 @@
             ]
         },
         "74c363cc-0452-4786-ae02-49e927baaa31": {
-            "order": 82,
+            "order": 95,
             "name": "---------------편의---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:10:11.762423",
@@ -9226,152 +10680,6 @@
                     "scan_code": 71,
                     "virtual_key": 103,
                     "modifiers": 0
-                }
-            ]
-        },
-        "5d09104d-17a8-4bc2-934a-d7d5c7d8abe4": {
-            "order": 41,
-            "name": "((빠른 디버프)) 144회 - 25초 - 중독",
-            "created_at": "2024-12-04T00:08:13.574278",
-            "updated_at": "2024-12-28T16:22:07.659367",
-            "trigger_key": null,
-            "repeat_count": 4,
-            "is_nested": true,
-            "items": [
-                {
-                    "order": 1,
-                    "display_text": "키 입력: ESC --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "ESC",
-                    "scan_code": 1,
-                    "virtual_key": 27,
-                    "modifiers": 0
-                },
-                {
-                    "order": 2,
-                    "display_text": "키 입력: ESC --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "ESC",
-                    "scan_code": 1,
-                    "virtual_key": 27,
-                    "modifiers": 0
-                },
-                {
-                    "order": 3,
-                    "type": "logic",
-                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
-                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
-                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 4,
-                    "type": "logic",
-                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
-                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
-                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 5,
-                    "type": "logic",
-                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
-                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
-                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 6,
-                    "type": "logic",
-                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
-                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
-                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 7,
-                    "type": "logic",
-                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
-                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
-                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 8,
-                    "type": "logic",
-                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
-                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
-                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 9,
-                    "type": "logic",
-                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
-                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
-                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 10,
-                    "type": "logic",
-                    "display_text": "((빠른 디버프용)) 0.75초 전체 - 중독",
-                    "logic_id": "1f3d9c9f-5f36-40e1-8062-4aa10c6b5cdf",
-                    "logic_name": "((빠른 디버프용)) 0.75초 전체 - 중독",
-                    "repeat_count": 1
-                }
-            ]
-        },
-        "5dfb7cf3-8832-45d1-bb9c-abb89d002203": {
-            "order": 42,
-            "name": "((빠른 디버프)) 마비, 중독 반복",
-            "created_at": "2024-12-04T00:08:13.574278",
-            "updated_at": "2024-12-28T16:46:19.481238",
-            "trigger_key": {
-                "is_system_key": false,
-                "key_code": "Delete",
-                "modifiers": 0,
-                "scan_code": 83,
-                "virtual_key": 46
-            },
-            "repeat_count": 12,
-            "is_nested": false,
-            "items": [
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.1초",
-                    "duration": 0.1,
-                    "order": 1
-                },
-                {
-                    "order": 2,
-                    "type": "logic",
-                    "display_text": "((상하좌우 1초)) - 마비",
-                    "logic_id": "728ffa37-127b-40f3-a9b6-70dbc5b882db",
-                    "logic_name": "((상하좌우 1초)) - 마비",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.1000초",
-                    "duration": 0.1,
-                    "order": 3
-                },
-                {
-                    "order": 4,
-                    "type": "logic",
-                    "display_text": "((빠른 디버프)) 144회 - 25초 - 중독",
-                    "logic_id": "5d09104d-17a8-4bc2-934a-d7d5c7d8abe4",
-                    "logic_name": "((빠른 디버프)) 144회 - 25초 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.1초",
-                    "duration": 0.1,
-                    "order": 5
                 }
             ]
         }
