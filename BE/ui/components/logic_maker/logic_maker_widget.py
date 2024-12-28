@@ -116,7 +116,7 @@ class LogicMakerToolWidget(QFrame):
         """키가 선택되었을 때"""
         # 로그 메시지 생성
         log_msg = (
-            f"키 입력이 ��가되었습니다 [ "
+            f"키 입력이 추가되었습니다 [ "
             f"키: {key_info['key_code']}, "
             f"스캔 코드 (하드웨어 고유값): {key_info['scan_code']}, "
             f"확장 가상 키 (운영체제 레벨의 고유 값): {key_info['virtual_key']}, "

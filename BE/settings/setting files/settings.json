@@ -9007,24 +9007,6 @@
                     "order": 11
                 }
             ]
-        },
-        "be8eefb3-3042-4d55-8c31-ada5b73896d7": {
-            "order": 80,
-            "name": "aaa",
-            "created_at": "2024-12-28T14:21:57.856302",
-            "updated_at": "2024-12-28T14:21:57.865381",
-            "trigger_key": null,
-            "repeat_count": 1,
-            "is_nested": true,
-            "items": [
-                {
-                    "type": "undefined_type",
-                    "logic_name": "텍스트 입력: jk",
-                    "display_text": "정의되지 않은 로직: 텍스트 입력: jk",
-                    "repeat_count": 1,
-                    "order": 1
-                }
-            ]
         }
     },
     "recovery_detection_enabled": false

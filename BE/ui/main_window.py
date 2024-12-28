@@ -328,7 +328,7 @@ class MainWindow(QMainWindow):
         """로직이 삭제되었을 때 호출"""
         # 로직 매니저에서 로직 제거
         self.logic_manager.remove_logic(logic_name)
-        # 로직 메이커와 고급 기능 위젯의 ��장된 로직 목록 업데이트
+        # 로직 메이커와 고급 기능 위젯의 로직 목록 업데이트
         self.logic_maker_widget.update_saved_logics(self.logic_list_widget.saved_logics)
         self.advanced_widget.update_saved_logics(self.logic_list_widget.saved_logics)
         # 로직 구성 영역 초기화
