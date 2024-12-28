@@ -337,6 +337,8 @@ class LogicExecutor(QObject):
                 self._execute_nested_logic(item)
             elif item['type'] == 'wait_click':
                 self._execute_wait_click(item)
+            elif item['type'] == 'write_text':
+                self._execute_text_input(item)
             
             # 다음 스텝 실행을 위해 비동기 호출
             QTimer.singleShot(0, self._execute_next_step)
@@ -446,7 +448,7 @@ class LogicExecutor(QObject):
                 current_repeat=1
             )
             
-            self._log_with_time(f"[중첩로직] {nested_logic.get('name')} 실행 시작")
+            self._log_with_time(f"[중첩로직] {nested_logic.get('name')} 실행 ���작")
             
         except Exception as e:
             self._log_with_time(f"[오류] 중첩로직 실행 중 오류 발생: {str(e)}")
@@ -498,7 +500,7 @@ class LogicExecutor(QObject):
             # 클릭 실행
             success = MouseHandler.click(screen_x, screen_y)
             if not success:
-                self._log_with_time("[마우스 입력 상세] 마우스 클릭 실행 실패")
+                self._log_with_time("[마우스 입력 상���] 마우스 클릭 실행 실패")
                 raise Exception("마우스 클릭 실행 실패")
             
             self._log_with_time(f"[마우스 입력] {step.get('name')} 실행 완료")
@@ -558,7 +560,7 @@ class LogicExecutor(QObject):
                 return
             
             # win32api를 사용하여 마우스 왼쪽 버튼의 현재 상태 확인
-            # GetAsyncKeyState 반환값에 0x8000 비트 마스크를 적용하여
+            # GetAsyncKeyState 반환값에 0x8000 비트 마��크를 적용하여
             # 버튼이 눌렸는지 확인
             is_pressed = win32api.GetAsyncKeyState(win32con.VK_LBUTTON) & 0x8000
             
@@ -679,7 +681,7 @@ class LogicExecutor(QObject):
             self._log_with_time(f"[오류] 강제 중지 중 오류 발생: {str(e)}")
 
     def _should_execute_logic(self):
-        """로직 실행 조건 확인
+        """���직 실행 조건 확인
         
         Returns:
             bool: 로직을 실행해야 하는지 여부
@@ -975,3 +977,21 @@ class LogicExecutor(QObject):
                     
         if not found_matching_logic:
             self._log_with_time("[로그] 일치하는 트리거 키를 찾을 수 없습니다.")
+
+    def _execute_text_input(self, item):
+        """텍스트 입력 실행"""
+        try:
+            text = item.get('text', '')
+            # 텍스트 입력을 시스템 클립보드에 복사
+            QApplication.clipboard().setText(text)
+            # 텍스트 입력을 출력
+            self.log_message.emit(f"텍스트 입력: {text}")
+            print(f"텍스트 입력: {text}")
+            # 클립보드의 내용을 붙여넣기
+            win32api.keybd_event(win32con.VK_CONTROL, 0, 0, 0)  # Ctrl 키 누르기
+            win32api.keybd_event(0x56, 0, 0, 0)  # V 키 누르기
+            win32api.keybd_event(0x56, 0, win32con.KEYEVENTF_KEYUP, 0)  # V 키 떼기
+            win32api.keybd_event(win32con.VK_CONTROL, 0, win32con.KEYEVENTF_KEYUP, 0)  # Ctrl 키 떼기
+            self.log_message.emit("클립보드 내용이 붙여넣기되었습니다.")
+        except Exception as e:
+            self._log_with_time(f"[오류] 텍스트 입력 실행 중 오류 발생: {str(e)}")

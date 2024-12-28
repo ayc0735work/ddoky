@@ -8905,7 +8905,7 @@
             "order": 76,
             "name": "출두",
             "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2024-12-28T14:13:56.152311",
+            "updated_at": "2024-12-28T14:56:36.398315",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "End",
@@ -9005,6 +9005,30 @@
                     "display_text": "지연시간 : 0.0172초",
                     "duration": 0.0172,
                     "order": 11
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0172초",
+                    "duration": 0.0172,
+                    "order": 12
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0172초",
+                    "duration": 0.0172,
+                    "order": 13
+                },
+                {
+                    "display_text": "텍스트 입력: 허그미",
+                    "order": 14,
+                    "text": "허그미",
+                    "type": "write_text"
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0172초",
+                    "duration": 0.0172,
+                    "order": 15
                 }
             ]
         }
