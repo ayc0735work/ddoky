@@ -18,13 +18,24 @@ class LogicMakerController:
         self.widget.record_mode.connect(self._handle_record_mode)
         self.widget.wait_click_input.connect(self._handle_wait_click_input)
         
-    def _handle_key_input(self, key_text):
+    def _handle_key_input(self, key_info):
         """키 입력 처리
         
         Args:
-            key_text (str): 입력된 키 텍스트
+            key_info (dict): 입력된 키 정보
         """
-        pass
+        # 디버그 로그 출력
+        print(f"[DEBUG] add_item 시작 - 입력받은 데이터: {key_info.get('display_text', str(key_info))}")
+        print("[DEBUG] 문자열 형식의 데이터 처리 시작")
+        
+        # 아이템 목록에 추가
+        self.widget.items.append(key_info)
+        
+        # 추가된 위치 로그
+        print(f"[DEBUG] 아이템이 성공적으로 추가되었습니다. 위치: {len(self.widget.items) - 1}")
+        
+        # item_added 시그널 발생
+        self.widget.item_added.emit(key_info)
         
     def _handle_mouse_input(self, mouse_text):
         """마우스 입력 처리

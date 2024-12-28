@@ -116,7 +116,7 @@ class LogicMakerToolWidget(QFrame):
         """키가 선택되었을 때"""
         # 로그 메시지 생성
         log_msg = (
-            f"키 입력이 추가되었습니다 [ "
+            f"키 입력이 ��가되었습니다 [ "
             f"키: {key_info['key_code']}, "
             f"스캔 코드 (하드웨어 고유값): {key_info['scan_code']}, "
             f"확장 가상 키 (운영체제 레벨의 고유 값): {key_info['virtual_key']}, "
@@ -232,18 +232,10 @@ class LogicMakerToolWidget(QFrame):
         """텍스트 입력 추가"""
         dialog = TextInputDialog(self)
         if dialog.exec() == QDialog.Accepted:
-            text = dialog.get_text()
-            if text:
-                # 텍스트 입력 정보 생성
-                text_info = {
-                    'type': 'write_text',
-                    'text': text,
-                    'display_text': f'텍스트 입력: {text}'
-                }
-                # 아이템 목록에 추가
-                self.items.append(text_info)  # 내부 리스트에 추가
-                self.item_added.emit(text_info)  # 시그널 발생
-                self.log_message.emit(f"텍스트 입력이 추가되었습니다: {text}")
+            text_info = dialog.get_text()  # 이미 딕셔너리를 반환
+            if text_info:
+                self.item_added.emit(text_info)  # 직접 전달
+                self.log_message.emit(f"텍스트 입력이 추가되었습니다: {text_info['text']}")
         
     def update_saved_logics(self, logics):
         """저장된 로직 정보 업데이트"""

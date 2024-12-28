@@ -308,10 +308,10 @@ class LogicDetailWidget(QFrame):
                 elif item_type == 'write_text':
                     # 텍스트 입력 처리
                     user_data = {
-                        "type": "write_text",
-                        "text": item_info.get('text'),
-                        "display_text": item_info.get('display_text', f"텍스트 입력: {item_info.get('text')}"),
-                        "order": insert_position + 1
+                        'type': 'write_text',
+                        'text': item_info.get('text'),
+                        'display_text': item_info.get('display_text'),
+                        'order': insert_position + 1
                     }
                 else:
                     self.log_message.emit(f"알 수 없는 아이템 타입입니다: {item_type}")
@@ -474,7 +474,7 @@ class LogicDetailWidget(QFrame):
                                      if logic.get('name') == logic_name]
                     
                     if matching_logics:
-                        # 가장 오래된 로직의 UUID 사용
+                        # ��장 오래된 로직의 UUID 사용
                         matching_logics.sort(key=lambda x: x[1].get('created_at', ''))
                         logic_id = matching_logics[0][0]
                         
@@ -804,7 +804,7 @@ class LogicDetailWidget(QFrame):
 
             # 중첩로직용이 아닐 경우에만 트리거 키 검사
             if not is_nested and not self.trigger_key_info:
-                self.log_message.emit("오류: 트리거 키를 정해주세요.")
+                self.log_message.emit("오류: 트��거 키를 정해주세요.")
                 QMessageBox.warning(self, "저장 실패", "트리거 키를 정해주세요.", QMessageBox.Ok)
                 return False
 
@@ -1047,7 +1047,7 @@ class LogicDetailWidget(QFrame):
             item_info['order'] = current_count + 1
             item.setData(Qt.UserRole, item_info)
             self.LogicItemList__QListWidget.addItem(item)
-            self.log_message.emit(f"일반 아이템 추가 완료 - 타입: {item_info.get('type')}, 순서: {current_count + 1}")
+            self.log_message.emit(f"일반 아이템 추가 완�� - 타입: {item_info.get('type')}, 순서: {current_count + 1}")
     
     def _paste_item(self):
         """복사된 아이템들을 현재 선택된 아이템 아래에 붙여넣기"""
@@ -1130,7 +1130,7 @@ class LogicDetailWidget(QFrame):
         """입력된 데이터가 있는지 확인하고 새 로직 버튼 상태를 업데이트"""
         # 새 로직 버튼 활성화 조건:
         # 1. 로직 이름이 입력되어 있는 경우
-        # 2. 트리거 키가 설정되어 있는 경우
+        # 2. 트리거 ��가 설정되어 있는 경우
         # 3. 아이템 목록에 하나 이상의 아이템이 있는 경우
         # 4. 반복 횟수가 1이 아닌 경우
         has_logic_name = bool(self.LogicNameInput__QLineEdit.text().strip())
@@ -1183,7 +1183,7 @@ class LogicDetailWidget(QFrame):
                         delay = dialog.doubleValue()
                         delay_text = f"지연시간 : {delay:.4f}초"
                         current_item.setText(delay_text)
-                        # 순서 값과 content 유지
+                        # 순서 ��과 content 유지
                         current_data = current_item.data(Qt.UserRole)
                         current_data['content'] = delay_text  # content 필드 업데이트
                         current_item.setData(Qt.UserRole, current_data)

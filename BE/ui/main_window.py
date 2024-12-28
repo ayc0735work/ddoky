@@ -192,6 +192,7 @@ class MainWindow(QMainWindow):
         self.logic_maker_widget.delay_input.connect(self._on_delay_input)
         self.logic_maker_widget.add_logic.connect(self._on_add_logic)  # 로직 추가 시그널 연결
         self.logic_maker_widget.wait_click_input.connect(self._on_wait_click_input)  # 클릭 대기 시그널 연결
+        self.logic_maker_widget.item_added.connect(self._on_item_added)  # 아이템 추가 시그널 연결
         
         # 로직 실행 관련 시그널 연결
         self.logic_operation_widget.operation_toggled.connect(self._on_logic_operation_toggled)
@@ -274,7 +275,7 @@ class MainWindow(QMainWindow):
         
         # 로직 데이터 로드
         self.logic_detail_widget.load_logic(logic_info)
-        self._append_log(f"로직 '{logic_info['name']}'을(를) 수정합니다")
+        self._append_log(f"로직 '{logic_info['name']}'를(를) 수정합니다")
 
     def _load_window_settings(self):
         """윈도우 설정 로드"""
@@ -327,7 +328,7 @@ class MainWindow(QMainWindow):
         """로직이 삭제되었을 때 호출"""
         # 로직 매니저에서 로직 제거
         self.logic_manager.remove_logic(logic_name)
-        # 로직 메이커와 고급 기능 위젯의 저장된 로직 목록 업데이트
+        # 로직 메이커와 고급 기능 위젯의 ��장된 로직 목록 업데이트
         self.logic_maker_widget.update_saved_logics(self.logic_list_widget.saved_logics)
         self.advanced_widget.update_saved_logics(self.logic_list_widget.saved_logics)
         # 로직 구성 영역 초기화
@@ -366,3 +367,15 @@ class MainWindow(QMainWindow):
                 
         except Exception as e:
             self.log_widget.append(f"[경고] 클릭 대기 입력 처리 중 오류 발생: {str(e)}")
+
+    def _on_item_added(self, item_info):
+        """아이템이 추가되었을 때 호출"""
+        if isinstance(item_info, dict) and item_info.get('type') == 'write_text':
+            # 텍스트 입력인 경우 깔끔하게 표시
+            text = item_info.get('text', '')
+            display_text = f"텍스트 입력: {text}"
+            item_info['display_text'] = display_text
+            self.logic_detail_widget.add_item(item_info)
+        else:
+            # 다른 타입의 아이템은 그대로 전달
+            self.logic_detail_widget.add_item(item_info)
