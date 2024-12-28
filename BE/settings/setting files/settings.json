@@ -9328,7 +9328,7 @@
             "order": 42,
             "name": "((빠른 디버프)) 마비, 중독 반복",
             "created_at": "2024-12-04T00:08:13.574278",
-            "updated_at": "2024-12-28T16:22:07.703716",
+            "updated_at": "2024-12-28T16:46:19.481238",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "Delete",
@@ -9340,12 +9340,10 @@
             "is_nested": false,
             "items": [
                 {
-                    "order": 1,
-                    "type": "logic",
-                    "display_text": "지연시간 : 0.1000초",
-                    "logic_id": "2188e529-15d5-446e-8146-9991025c5a76",
-                    "logic_name": "지연시간 : 0.1000초",
-                    "repeat_count": 1
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.1초",
+                    "duration": 0.1,
+                    "order": 1
                 },
                 {
                     "order": 2,
@@ -9356,12 +9354,10 @@
                     "repeat_count": 1
                 },
                 {
-                    "order": 3,
-                    "type": "logic",
+                    "type": "delay",
                     "display_text": "지연시간 : 0.1000초",
-                    "logic_id": "2d4c45b1-1f38-42dc-ada4-37057ea9f058",
-                    "logic_name": "지연시간 : 0.1000초",
-                    "repeat_count": 1
+                    "duration": 0.1,
+                    "order": 3
                 },
                 {
                     "order": 4,
@@ -9372,12 +9368,10 @@
                     "repeat_count": 1
                 },
                 {
-                    "order": 5,
-                    "type": "logic",
-                    "display_text": "지연시간 : 0.1000초",
-                    "logic_id": "069a3485-1946-462f-b60e-a791b098839f",
-                    "logic_name": "지연시간 : 0.1000초",
-                    "repeat_count": 1
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.1초",
+                    "duration": 0.1,
+                    "order": 5
                 }
             ]
         }
