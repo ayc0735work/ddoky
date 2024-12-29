@@ -578,7 +578,7 @@
             "order": 3,
             "name": "공증만 10회",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-29T07:01:08.958074",
+            "updated_at": "2024-12-30T07:08:15.290301",
             "trigger_key": null,
             "repeat_count": 10,
             "is_nested": true,
@@ -605,8 +605,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0174초",
-                    "duration": 0.0174,
+                    "display_text": "지연시간 : 0.0331초",
+                    "duration": 0.0331,
                     "order": 3
                 }
             ]
@@ -615,7 +615,7 @@
             "order": 4,
             "name": "공증만 10회 후 풀체",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-29T12:13:16.924084",
+            "updated_at": "2024-12-30T07:08:05.014313",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -662,6 +662,22 @@
                 },
                 {
                     "order": 6,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 7,
+                    "type": "logic",
+                    "display_text": "((1초 -- 5회)) 체력회복",
+                    "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
+                    "logic_name": "((1초 -- 5회)) 체력회복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 8,
                     "type": "logic",
                     "display_text": "((1초 -- 5회)) 체력회복",
                     "logic_id": "0198c5f7-f53c-4349-a262-7ddb8249d882",
@@ -3502,7 +3518,7 @@
             "order": 26,
             "name": "ㄴ 첨사냥 중첩로직용 - 241223 최적화",
             "created_at": "2024-11-30T10:25:06.438732",
-            "updated_at": "2024-12-29T12:28:27.730594",
+            "updated_at": "2024-12-30T07:23:02.676970",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -3558,17 +3574,17 @@
                 {
                     "order": 7,
                     "type": "logic",
-                    "display_text": "◎ 1초 점 ◎ 체력 4회",
-                    "logic_id": "95d846eb-bf5d-44ab-9d70-9e53cca79343",
-                    "logic_name": "◎ 1초 점 ◎ 체력 4회",
+                    "display_text": "◎ 1초 점 ◎ 상하좌우 - 저주",
+                    "logic_id": "3fd8aa4f-ed95-4e3d-bcfd-f54e5574ab2c",
+                    "logic_name": "◎ 1초 점 ◎ 상하좌우 - 저주",
                     "repeat_count": 1
                 },
                 {
                     "order": 8,
                     "type": "logic",
-                    "display_text": "◎ 1초 점 ◎ 버프",
-                    "logic_id": "29f0f45b-2b2e-468f-8f77-47ace3aa483c",
-                    "logic_name": "◎ 1초 점 ◎ 버프",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
                     "repeat_count": 1
                 },
                 {
@@ -3606,25 +3622,25 @@
                 {
                     "order": 13,
                     "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 14,
+                    "type": "logic",
                     "display_text": "◎ 1초 점 ◎ 상하좌우 - 마비",
                     "logic_id": "58c77fae-cec5-4b06-975f-4e4296c0c40b",
                     "logic_name": "◎ 1초 점 ◎ 상하좌우 - 마비",
                     "repeat_count": 1
                 },
                 {
-                    "order": 14,
-                    "type": "logic",
-                    "display_text": "◎ 1초 점 ◎ 체력 4회",
-                    "logic_id": "95d846eb-bf5d-44ab-9d70-9e53cca79343",
-                    "logic_name": "◎ 1초 점 ◎ 체력 4회",
-                    "repeat_count": 1
-                },
-                {
                     "order": 15,
                     "type": "logic",
-                    "display_text": "◎ 1초 점 ◎ 버프",
-                    "logic_id": "29f0f45b-2b2e-468f-8f77-47ace3aa483c",
-                    "logic_name": "◎ 1초 점 ◎ 버프",
+                    "display_text": "◎ 1초 점 ◎ 상하좌우 - 저주",
+                    "logic_id": "3fd8aa4f-ed95-4e3d-bcfd-f54e5574ab2c",
+                    "logic_name": "◎ 1초 점 ◎ 상하좌우 - 저주",
                     "repeat_count": 1
                 },
                 {
@@ -3662,13 +3678,29 @@
                 {
                     "order": 20,
                     "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 21,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 22,
+                    "type": "logic",
                     "display_text": "◎ 1초 점 ◎ 상하좌우 - 마비",
                     "logic_id": "58c77fae-cec5-4b06-975f-4e4296c0c40b",
                     "logic_name": "◎ 1초 점 ◎ 상하좌우 - 마비",
                     "repeat_count": 1
                 },
                 {
-                    "order": 21,
+                    "order": 23,
                     "type": "logic",
                     "display_text": "◎ 1초 점 ◎ 체력 4회",
                     "logic_id": "95d846eb-bf5d-44ab-9d70-9e53cca79343",
@@ -3676,7 +3708,7 @@
                     "repeat_count": 1
                 },
                 {
-                    "order": 22,
+                    "order": 24,
                     "type": "logic",
                     "display_text": "◎ 1초 점 ◎ 버프",
                     "logic_id": "29f0f45b-2b2e-468f-8f77-47ace3aa483c",
@@ -3684,27 +3716,11 @@
                     "repeat_count": 1
                 },
                 {
-                    "order": 23,
-                    "type": "logic",
-                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
-                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
-                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 24,
-                    "type": "logic",
-                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
-                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
-                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
-                    "repeat_count": 1
-                },
-                {
                     "order": 25,
                     "type": "logic",
-                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
-                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
-                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "display_text": "◎ 1초 점 ◎ 상하좌우 - 저주",
+                    "logic_id": "3fd8aa4f-ed95-4e3d-bcfd-f54e5574ab2c",
+                    "logic_name": "◎ 1초 점 ◎ 상하좌우 - 저주",
                     "repeat_count": 1
                 },
                 {
@@ -3718,9 +3734,41 @@
                 {
                     "order": 27,
                     "type": "logic",
-                    "display_text": "◎ 1초 점 ◎ 버프",
-                    "logic_id": "29f0f45b-2b2e-468f-8f77-47ace3aa483c",
-                    "logic_name": "◎ 1초 점 ◎ 버프",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 28,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 29,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 30,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 31,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
                     "repeat_count": 1
                 }
             ]
@@ -5107,7 +5155,7 @@
             "order": 47,
             "name": "◎ 1초 점 ◎ 체력 4회",
             "created_at": "2024-12-08T20:50:23.839286",
-            "updated_at": "2024-12-23T11:03:19.977715",
+            "updated_at": "2024-12-29T21:07:11.243767",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
