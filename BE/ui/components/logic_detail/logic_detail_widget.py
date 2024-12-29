@@ -1244,11 +1244,13 @@ class LogicDetailWidget(QFrame):
                 if dialog.exec():
                     new_text = dialog.get_text()
                     current_item.setText(new_text['display_text'])
-                    current_item.setData(Qt.UserRole, new_text)
+                    # 기존 데이터의 순서 정보 유지
+                    current_data = current_item.data(Qt.UserRole)
+                    # 새로운 텍스트 정보로 업데이트하되 order는 유지
+                    current_data.update(new_text)
+                    current_item.setData(Qt.UserRole, current_data)
                     self.item_edited.emit(new_text['display_text'])
                     self.log_message.emit(f"텍스트 입력이 수정되었습니다: {new_text['text']}")
-            else:
-                self.item_edited.emit(item_text)
 
     def _delete_item(self):
         """선택된 아이템 삭제"""
