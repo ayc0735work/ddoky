@@ -517,7 +517,7 @@ class LogicExecutor(QObject):
         이 과정에서 UI는 계속 반응하며 강제 중지(ESC)도 가능합니다.
         
         동작 과정:
-        1. QTimer 생성 및 설정 (200ms 간격)
+        1. QTimer 생성 및 설정 (50ms 간격)
         2. 마우스 클릭 감지를 위한 check_click 함수 연결
         3. 타이머 시작 및 마우스 클릭 대기
         4. 클릭 감지 시 다음 단계로 진행
@@ -536,15 +536,15 @@ class LogicExecutor(QObject):
         
         # QTimer 객체 생성 및 설정
         # setSingleShot(False): 타이머가 반복적으로 실행되도록 설정
-        # setInterval(200): 200밀리초(0.2초) 간격으로 체크
+        # setInterval(10): 10밀리초(0.001초) 간격으로 체크
         wait_timer = QTimer()
         wait_timer.setSingleShot(False)
-        wait_timer.setInterval(200)
+        wait_timer.setInterval(10) # 10밀리초(0.001초) 간격
         
         def check_click():
             """마우스 클릭 상태를 확인하는 콜백 함수
             
-            매 타이머 간격(200ms)마다 실행되며:
+            매 타이머 간격(10ms)마다 실행되며:
             1. 강제 중지 여부 확인
             2. 마우스 왼쪽 버튼 상태 확인
             3. 버튼 상태 변화에 따른 처리
