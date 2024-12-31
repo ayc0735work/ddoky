@@ -239,7 +239,7 @@ class LogicExecutor(QObject):
                     )
                     # 로직 실행 시작 시간 초기화
                     self._start_time = time.time()
-                    self._log_with_time(f"[로직 실행] 로직 '{logic.get('name')}({logic_id})' 실행 시작")
+                    self._log_with_time(f"[로직 실행 시작] <br> 실행 로직: {logic.get('name')} <br>   - 로직 UUID: {logic_id}")
                     
                     self.execution_started.emit()
                     
@@ -968,7 +968,7 @@ class LogicExecutor(QObject):
                     )
                     # 로직 실행 시작 시간 초기화
                     self._start_time = time.time()
-                    self._log_with_time(f"[로직 실행] 로직 '{logic.get('name')}({logic_id})' 실행 시작")
+                    self._log_with_time(f"[로직 실행 시작] <br> 실행 로직: {logic.get('name')} <br>   - 로직 UUID: {logic_id}")
                     
                     self.execution_started.emit()
                     
