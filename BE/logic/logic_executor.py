@@ -536,15 +536,15 @@ class LogicExecutor(QObject):
         
         # QTimer 객체 생성 및 설정
         # setSingleShot(False): 타이머가 반복적으로 실행되도록 설정
-        # setInterval(10): 10밀리초(0.001초) 간격으로 체크
+        # setInterval(5): 5밀리초(0.0005초) 간격으로 체크
         wait_timer = QTimer()
         wait_timer.setSingleShot(False)
-        wait_timer.setInterval(10) # 10밀리초(0.001초) 간격
+        wait_timer.setInterval(5) # 5밀리초(0.0005초) 간격
         
         def check_click():
             """마우스 클릭 상태를 확인하는 콜백 함수
             
-            매 타이머 간격(10ms)마다 실행되며:
+            매 타이머 간격(5ms)마다 실행되며:
             1. 강제 중지 여부 확인
             2. 마우스 왼쪽 버튼 상태 확인
             3. 버튼 상태 변화에 따른 처리
