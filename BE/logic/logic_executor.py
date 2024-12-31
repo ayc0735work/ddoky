@@ -707,20 +707,25 @@ class LogicExecutor(QObject):
 
     def _is_trigger_key_matched(self, logic, key_info):
         """트리거 키 매칭 확인"""
-        # 중첩 로인 경우 매칭하지 않음
+        # 중첩 로직인 경우 매칭하지 않음
         if logic.get('is_nested', False):
             return False
         
         trigger_key = logic.get('trigger_key', {})
-        self._log_with_time("[로그] 트리거 키 매칭 확인 - 트리거 키: {}, 입력 키: {}".format(trigger_key, key_info))
         
         # trigger_key나 key_info가 None인 경우 처리
         if not trigger_key or not key_info:
             return False
         
-        # 가상 키와 스캔 코드만 비교
-        return (trigger_key.get('virtual_key') == key_info.get('virtual_key') and
-                trigger_key.get('scan_code') == key_info.get('scan_code'))
+        # 가상 키와 스캔 코드 비교
+        is_matched = (trigger_key.get('virtual_key') == key_info.get('virtual_key') and
+                     trigger_key.get('scan_code') == key_info.get('scan_code'))
+        
+        # 매칭된 경우에만 로그 출력
+        if is_matched:
+            self._log_with_time("[로그] 트리거 키 매칭 - 트리거 키: {}, 입력 키: {}".format(trigger_key, key_info))
+            
+        return is_matched
 
     def _log_with_time(self, message):
         """시간 정보가 포함된 로그 메시지 출력"""
@@ -978,20 +983,514 @@ class LogicExecutor(QObject):
         if not found_matching_logic:
             self._log_with_time("[로그] 일치하는 트리거 키를 찾을 수 없습니다.")
 
-    def _execute_text_input(self, item):
-        """텍스트 입력 실행"""
-        try:
-            text = item.get('text', '')
-            # 텍스트 입력을 시스템 클립보드에 복사
-            QApplication.clipboard().setText(text)
-            # 텍스트 입력을 출력
-            self.log_message.emit(f"텍스트 입력: {text}")
-            print(f"텍스트 입력: {text}")
-            # 클립보드의 내용을 붙여넣기
-            win32api.keybd_event(win32con.VK_CONTROL, 0, 0, 0)  # Ctrl 키 누르기
-            win32api.keybd_event(0x56, 0, 0, 0)  # V 키 누르기
-            win32api.keybd_event(0x56, 0, win32con.KEYEVENTF_KEYUP, 0)  # V 키 떼기
-            win32api.keybd_event(win32con.VK_CONTROL, 0, win32con.KEYEVENTF_KEYUP, 0)  # Ctrl 키 떼기
-            self.log_message.emit("클립보드 내용이 붙여넣기되었습니다.")
-        except Exception as e:
-            self._log_with_time(f"[오류] 텍스트 입력 실행 중 오류 발생: {str(e)}")
+```
+
+```python
+    def _is_trigger_key_matched(self, logic, key_info):
+        """트리거 키 매칭 확인"""
+        # 중첩 로직인 경우 매칭하지 않음
+        if logic.get('is_nested', False):
+            return False
+        
+        trigger_key = logic.get('trigger_key', {})
+        
+        # trigger_key나 key_info가 None인 경우 처리
+        if not trigger_key or not key_info:
+            return False
+        
+        # 가상 키와 스캔 코드 비교
+        is_matched = (trigger_key.get('virtual_key') == key_info.get('virtual_key') and
+                     trigger_key.get('scan_code') == key_info.get('scan_code'))
+        
+        # 매칭된 경우에만 로그 출력
+        if is_matched:
+            self._log_with_time("[로그] 트리거 키 매칭 - 트리거 키: {}, 입력 키: {}".format(trigger_key, key_info))
+            
+        return is_matched
+```
+
+```python
+    def _on_key_released(self, key_info):
+        """키를 뗄 때 호출
+        
+        Args:
+            key_info (dict): 입력된 키 정보
+        """
+        print(f"[DEBUG] 키 이벤트 감지 - key_info: {key_info}, step_input: {self.is_step_input}, simulated: {self.is_simulated_input}")
+        self._log_with_time("[키 감지 로그] 키 입력 감지: {}".format(key_info))
+        
+        # 시뮬레이션된 입력과 실제 입력을 구분하여 처리
+        if key_info['key_code'] == 'ESC':
+            if self.is_simulated_input:
+                print("[DEBUG] 시뮬레이션된 ESC 입력 무시")
+                return
+            else:
+                print("[DEBUG] 실제 ESC 입력 감지")
+                self._log_with_time("[키 감지 로그] 실제 ESC 키 입력 감지")
+                if self._should_stop:
+                    print("[DEBUG] 이미 중지 상태입니다.")
+                    return
+                self._should_stop = True
+                # 실제 ESC 입력에 대한 추가 처리 로직 필요 시 여기에 추가
+        
+        # 시뮬레이션된 입력은 무시
+        if self.is_simulated_input:
+            print("[DEBUG] 시뮬레이션된 입력 무시")
+            return
+        
+        # 스텝 입력이 아닐 때만 강제 중지 키 처리
+        if not self.is_step_input and key_info.get('virtual_key') == self.force_stop_key:
+            print("[DEBUG] 강제 중지 키 감지 - 강제 중지 실행")
+            print("[DEBUG] 키 이벤트 감지 종료 ----\n")
+            self._log_with_time("[키 감지 로그] 강제 중지 키 감지 - 로직 강제 중지 실행")
+            self.force_stop()
+            return
+        
+        if not self._should_execute_logic():
+            self._log_with_time("[로그] 로직 실행 조건이 맞지 않습니다.")
+            return
+            
+        # 최신 로직 정보로 로직 찾기 및 실행
+        found_matching_logic = False
+        logics = self.logic_manager.get_all_logics(force=True)
+        
+        for logic_id, logic in logics.items():
+            if self._is_trigger_key_matched(logic, key_info):
+                found_matching_logic = True
+                if self.execution_state['is_executing']:
+                    self._log_with_time("다른 로직이 실행 중입니다.")
+                    return
+                    
+                try:
+                    self.selected_logic = logic
+                    self.selected_logic['id'] = logic_id  # ID 정보 추가
+                    self._update_state(
+                        is_executing=True,
+                        current_step=0,
+                        current_repeat=1
+                    )
+                    # 로직 실행 시작 시간 초기화
+                    self._start_time = time.time()
+                    self._log_with_time(f"[로직 실행] 로직 '{logic.get('name')}({logic_id})' 실행 시작")
+                    
+                    self.execution_started.emit()
+                    
+                    # 비동기적으로 첫 번째 스텝 실행
+                    QTimer.singleShot(0, self._execute_next_step)
+                    return
+                    
+                except Exception as e:
+                    self._log_with_time("[오류] 로직 시작 중 오류 발생: {}".format(str(e)))
+                    self._safe_cleanup()
+                    
+        if not found_matching_logic:
+            self._log_with_time("[로그] 일치하는 트리거 키를 찾을 수 없습니다.")
+```
+
+```python
+    def _is_trigger_key_matched(self, logic, key_info):
+        """트리거 키 매칭 확인"""
+        # 중첩 로직인 경우 매칭하지 않음
+        if logic.get('is_nested', False):
+            return False
+        
+        trigger_key = logic.get('trigger_key', {})
+        
+        # trigger_key나 key_info가 None인 경우 처리
+        if not trigger_key or not key_info:
+            return False
+        
+        # 가상 키와 스캔 코드 비교
+        is_matched = (trigger_key.get('virtual_key') == key_info.get('virtual_key') and
+                     trigger_key.get('scan_code') == key_info.get('scan_code'))
+        
+        # 매칭된 경우에만 로그 출력
+        if is_matched:
+            self._log_with_time("[로그] 트리거 키 매칭 - 트리거 키: {}, 입력 키: {}".format(trigger_key, key_info))
+            
+        return is_matched
+```
+
+```python
+    def _on_key_released(self, key_info):
+        """키를 뗄 때 호출
+        
+        Args:
+            key_info (dict): 입력된 키 정보
+        """
+        print(f"[DEBUG] 키 이벤트 감지 - key_info: {key_info}, step_input: {self.is_step_input}, simulated: {self.is_simulated_input}")
+        self._log_with_time("[키 감지 로그] 키 입력 감지: {}".format(key_info))
+        
+        # 시뮬레이션된 입력과 실제 입력을 구분하여 처리
+        if key_info['key_code'] == 'ESC':
+            if self.is_simulated_input:
+                print("[DEBUG] 시뮬레이션된 ESC 입력 무시")
+                return
+            else:
+                print("[DEBUG] 실제 ESC 입력 감지")
+                self._log_with_time("[키 감지 로그] 실제 ESC 키 입력 감지")
+                if self._should_stop:
+                    print("[DEBUG] 이미 중지 상태입니다.")
+                    return
+                self._should_stop = True
+                # 실제 ESC 입력에 대한 추가 처리 로직 필요 시 여기에 추가
+        
+        # 시뮬레이션된 입력은 무시
+        if self.is_simulated_input:
+            print("[DEBUG] 시뮬레이션된 입력 무시")
+            return
+        
+        # 스텝 입력이 아닐 때만 강제 중지 키 처리
+        if not self.is_step_input and key_info.get('virtual_key') == self.force_stop_key:
+            print("[DEBUG] 강제 중지 키 감지 - 강제 중지 실행")
+            print("[DEBUG] 키 이벤트 감지 종료 ----\n")
+            self._log_with_time("[키 감지 로그] 강제 중지 키 감지 - 로직 강제 중지 실행")
+            self.force_stop()
+            return
+        
+        if not self._should_execute_logic():
+            self._log_with_time("[로그] 로직 실행 조건이 맞지 않습니다.")
+            return
+            
+        # 최신 로직 정보로 로직 찾기 및 실행
+        found_matching_logic = False
+        logics = self.logic_manager.get_all_logics(force=True)
+        
+        for logic_id, logic in logics.items():
+            if self._is_trigger_key_matched(logic, key_info):
+                found_matching_logic = True
+                if self.execution_state['is_executing']:
+                    self._log_with_time("다른 로직이 실행 중입니다.")
+                    return
+                    
+                try:
+                    self.selected_logic = logic
+                    self.selected_logic['id'] = logic_id  # ID 정보 추가
+                    self._update_state(
+                        is_executing=True,
+                        current_step=0,
+                        current_repeat=1
+                    )
+                    # 로직 실행 시작 시간 초기화
+                    self._start_time = time.time()
+                    self._log_with_time(f"[로직 실행] 로직 '{logic.get('name')}({logic_id})' 실행 시작")
+                    
+                    self.execution_started.emit()
+                    
+                    # 비동기적으로 첫 번째 스텝 실행
+                    QTimer.singleShot(0, self._execute_next_step)
+                    return
+                    
+                except Exception as e:
+                    self._log_with_time("[오류] 로직 시작 중 오류 발생: {}".format(str(e)))
+                    self._safe_cleanup()
+                    
+        if not found_matching_logic:
+            self._log_with_time("[로그] 일치하는 트리거 키를 찾을 수 없습니다.")
+```
+
+```python
+    def _is_trigger_key_matched(self, logic, key_info):
+        """트리거 키 매칭 확인"""
+        # 중첩 로직인 경우 매칭하지 않음
+        if logic.get('is_nested', False):
+            return False
+        
+        trigger_key = logic.get('trigger_key', {})
+        
+        # trigger_key나 key_info가 None인 경우 처리
+        if not trigger_key or not key_info:
+            return False
+        
+        # 가상 키와 스캔 코드 비교
+        is_matched = (trigger_key.get('virtual_key') == key_info.get('virtual_key') and
+                     trigger_key.get('scan_code') == key_info.get('scan_code'))
+        
+        # 매칭된 경우에만 로그 출력
+        if is_matched:
+            self._log_with_time("[로그] 트리거 키 매칭 - 트리거 키: {}, 입력 키: {}".format(trigger_key, key_info))
+            
+        return is_matched
+```
+
+```python
+    def _on_key_released(self, key_info):
+        """키를 뗄 때 호출
+        
+        Args:
+            key_info (dict): 입력된 키 정보
+        """
+        print(f"[DEBUG] 키 이벤트 감지 - key_info: {key_info}, step_input: {self.is_step_input}, simulated: {self.is_simulated_input}")
+        self._log_with_time("[키 감지 로그] 키 입력 감지: {}".format(key_info))
+        
+        # 시뮬레이션된 입력과 실제 입력을 구분하여 처리
+        if key_info['key_code'] == 'ESC':
+            if self.is_simulated_input:
+                print("[DEBUG] 시뮬레이션된 ESC 입력 무시")
+                return
+            else:
+                print("[DEBUG] 실제 ESC 입력 감지")
+                self._log_with_time("[키 감지 로그] 실제 ESC 키 입력 감지")
+                if self._should_stop:
+                    print("[DEBUG] 이미 중지 상태입니다.")
+                    return
+                self._should_stop = True
+                # 실제 ESC 입력에 대한 추가 처리 로직 필요 시 여기에 추가
+        
+        # 시뮬레이션된 입력은 무시
+        if self.is_simulated_input:
+            print("[DEBUG] 시뮬레이션된 입력 무시")
+            return
+        
+        # 스텝 입력이 아닐 때만 강제 중지 키 처리
+        if not self.is_step_input and key_info.get('virtual_key') == self.force_stop_key:
+            print("[DEBUG] 강제 중지 키 감지 - 강제 중지 실행")
+            print("[DEBUG] 키 이벤트 감지 종료 ----\n")
+            self._log_with_time("[키 감지 로그] 강제 중지 키 감지 - 로직 강제 중지 실행")
+            self.force_stop()
+            return
+        
+        if not self._should_execute_logic():
+            self._log_with_time("[로그] 로직 실행 조건이 맞지 않습니다.")
+            return
+            
+        # 최신 로직 정보로 로직 찾기 및 실행
+        found_matching_logic = False
+        logics = self.logic_manager.get_all_logics(force=True)
+        
+        for logic_id, logic in logics.items():
+            if self._is_trigger_key_matched(logic, key_info):
+                found_matching_logic = True
+                if self.execution_state['is_executing']:
+                    self._log_with_time("다른 로직이 실행 중입니다.")
+                    return
+                    
+                try:
+                    self.selected_logic = logic
+                    self.selected_logic['id'] = logic_id  # ID 정보 추가
+                    self._update_state(
+                        is_executing=True,
+                        current_step=0,
+                        current_repeat=1
+                    )
+                    # 로직 실행 시작 시간 초기화
+                    self._start_time = time.time()
+                    self._log_with_time(f"[로직 실행] 로직 '{logic.get('name')}({logic_id})' 실행 시작")
+                    
+                    self.execution_started.emit()
+                    
+                    # 비동기적으로 첫 번째 스텝 실행
+                    QTimer.singleShot(0, self._execute_next_step)
+                    return
+                    
+                except Exception as e:
+                    self._log_with_time("[오류] 로직 시작 중 오류 발생: {}".format(str(e)))
+                    self._safe_cleanup()
+                    
+        if not found_matching_logic:
+            self._log_with_time("[로그] 일치하는 트리거 키를 찾을 수 없습니다.")
+```
+
+```python
+    def _is_trigger_key_matched(self, logic, key_info):
+        """트리거 키 매칭 확인"""
+        # 중첩 로직인 경우 매칭하지 않음
+        if logic.get('is_nested', False):
+            return False
+        
+        trigger_key = logic.get('trigger_key', {})
+        
+        # trigger_key나 key_info가 None인 경우 처리
+        if not trigger_key or not key_info:
+            return False
+        
+        # 가상 키와 스캔 코드 비교
+        is_matched = (trigger_key.get('virtual_key') == key_info.get('virtual_key') and
+                     trigger_key.get('scan_code') == key_info.get('scan_code'))
+        
+        # 매칭된 경우에만 로그 출력
+        if is_matched:
+            self._log_with_time("[로그] 트리거 키 매칭 - 트리거 키: {}, 입력 키: {}".format(trigger_key, key_info))
+            
+        return is_matched
+```
+
+```python
+    def _on_key_released(self, key_info):
+        """키를 뗄 때 호출
+        
+        Args:
+            key_info (dict): 입력된 키 정보
+        """
+        print(f"[DEBUG] 키 이벤트 감지 - key_info: {key_info}, step_input: {self.is_step_input}, simulated: {self.is_simulated_input}")
+        self._log_with_time("[키 감지 로그] 키 입력 감지: {}".format(key_info))
+        
+        # 시뮬레이션된 입력과 실제 입력을 구분하여 처리
+        if key_info['key_code'] == 'ESC':
+            if self.is_simulated_input:
+                print("[DEBUG] 시뮬레이션된 ESC 입력 무시")
+                return
+            else:
+                print("[DEBUG] 실제 ESC 입력 감지")
+                self._log_with_time("[키 감지 로그] 실제 ESC 키 입력 감지")
+                if self._should_stop:
+                    print("[DEBUG] 이미 중지 상태입니다.")
+                    return
+                self._should_stop = True
+                # 실제 ESC 입력에 대한 추가 처리 로직 필요 시 여기에 추가
+        
+        # 시뮬레이션된 입력은 무시
+        if self.is_simulated_input:
+            print("[DEBUG] 시뮬레이션된 입력 무시")
+            return
+        
+        # 스텝 입력이 아닐 때만 강제 중지 키 처리
+        if not self.is_step_input and key_info.get('virtual_key') == self.force_stop_key:
+            print("[DEBUG] 강제 중지 키 감지 - 강제 중지 실행")
+            print("[DEBUG] 키 이벤트 감지 종료 ----\n")
+            self._log_with_time("[키 감지 로그] 강제 중지 키 감지 - 로직 강제 중지 실행")
+            self.force_stop()
+            return
+        
+        if not self._should_execute_logic():
+            self._log_with_time("[로그] 로직 실행 조건이 맞지 않습니다.")
+            return
+            
+        # 최신 로직 정보로 로직 찾기 및 실행
+        found_matching_logic = False
+        logics = self.logic_manager.get_all_logics(force=True)
+        
+        for logic_id, logic in logics.items():
+            if self._is_trigger_key_matched(logic, key_info):
+                found_matching_logic = True
+                if self.execution_state['is_executing']:
+                    self._log_with_time("다른 로직이 실행 중입니다.")
+                    return
+                    
+                try:
+                    self.selected_logic = logic
+                    self.selected_logic['id'] = logic_id  # ID 정보 추가
+                    self._update_state(
+                        is_executing=True,
+                        current_step=0,
+                        current_repeat=1
+                    )
+                    # 로직 실행 시작 시간 초기화
+                    self._start_time = time.time()
+                    self._log_with_time(f"[로직 실행] 로직 '{logic.get('name')}({logic_id})' 실행 시작")
+                    
+                    self.execution_started.emit()
+                    
+                    # 비동기적으로 첫 번째 스텝 실행
+                    QTimer.singleShot(0, self._execute_next_step)
+                    return
+                    
+                except Exception as e:
+                    self._log_with_time("[오류] 로직 시작 중 오류 발생: {}".format(str(e)))
+                    self._safe_cleanup()
+                    
+        if not found_matching_logic:
+            self._log_with_time("[로그] 일치하는 트리거 키를 찾을 수 없습니다.")
+```
+
+```python
+    def _is_trigger_key_matched(self, logic, key_info):
+        """트리거 키 매칭 확인"""
+        # 중첩 로직인 경우 매칭하지 않음
+        if logic.get('is_nested', False):
+            return False
+        
+        trigger_key = logic.get('trigger_key', {})
+        
+        # trigger_key나 key_info가 None인 경우 처리
+        if not trigger_key or not key_info:
+            return False
+        
+        # 가상 키와 스캔 코드 비교
+        is_matched = (trigger_key.get('virtual_key') == key_info.get('virtual_key') and
+                     trigger_key.get('scan_code') == key_info.get('scan_code'))
+        
+        # 매칭된 경우에만 로그 출력
+        if is_matched:
+            self._log_with_time("[로그] 트리거 키 매칭 - 트리거 키: {}, 입력 키: {}".format(trigger_key, key_info))
+            
+        return is_matched
+```
+
+```python
+    def _on_key_released(self, key_info):
+        """키를 뗄 때 호출
+        
+        Args:
+            key_info (dict): 입력된 키 정보
+        """
+        print(f"[DEBUG] 키 이벤트 감지 - key_info: {key_info}, step_input: {self.is_step_input}, simulated: {self.is_simulated_input}")
+        self._log_with_time("[키 감지 로그] 키 입력 감지: {}".format(key_info))
+        
+        # 시뮬레이션된 입력과 실제 입력을 구분하여 처리
+        if key_info['key_code'] == 'ESC':
+            if self.is_simulated_input:
+                print("[DEBUG] 시뮬레이션된 ESC 입력 무시")
+                return
+            else:
+                print("[DEBUG] 실제 ESC 입력 감지")
+                self._log_with_time("[키 감지 로그] 실제 ESC 키 입력 감지")
+                if self._should_stop:
+                    print("[DEBUG] 이미 중지 상태입니다.")
+                    return
+                self._should_stop = True
+                # 실제 ESC 입력에 대한 추가 처리 로직 필요 시 여기에 추가
+        
+        # 시뮬레이션된 입력은 무시
+        if self.is_simulated_input:
+            print("[DEBUG] 시뮬레이션된 입력 무시")
+            return
+        
+        # 스텝 입력이 아닐 때만 강제 중지 키 처리
+        if not self.is_step_input and key_info.get('virtual_key') == self.force_stop_key:
+            print("[DEBUG] 강제 중지 키 감지 - 강제 중지 실행")
+            print("[DEBUG] 키 이벤트 감지 종료 ----\n")
+            self._log_with_time("[키 감지 로그] 강제 중지 키 감지 - 로직 강제 중지 실행")
+            self.force_stop()
+            return
+        
+        if not self._should_execute_logic():
+            self._log_with_time("[로그] 로직 실행 조건이 맞지 않습니다.")
+            return
+            
+        # 최신 로직 정보로 로직 찾기 및 실행
+        found_matching_logic = False
+        logics = self.logic_manager.get_all_logics(force=True)
+        
+        for logic_id, logic in logics.items():
+            if self._is_trigger_key_matched(logic, key_info):
+                found_matching_logic = True
+                if self.execution_state['is_executing']:
+                    self._log_with_time("다른 로직이 실행 중입니다.")
+                    return
+                    
+                try:
+                    self.selected_logic = logic
+                    self.selected_logic['id'] = logic_id  # ID 정보 추가
+                    self._update_state(
+                        is_executing=True,
+                        current_step=0,
+                        current_repeat=1
+                    )
+                    # 로직 실행 시작 시간 초기화
+                    self._start_time = time.time()
+                    self._log_with_time(f"[로직 실행] 로직 '{logic.get('name')}({logic_id})' 실행 시작")
+                    
+                    self.execution_started.emit()
+                    
+                    # 비동기적으로 첫 번째 스텝 실행
+                    QTimer.singleShot(0, self._execute_next_step)
+                    return
+                    
+                except Exception as e:
+                    self._log_with_time("[오류] 로직 시작 중 오류 발생: {}".format(str(e)))
+                    self._safe_cleanup()
+                    
+        if not found_matching_logic:
+            self._log_with_time("[로그] 일치하는 트리거 키를 찾을 수 없습니다.")
+```
