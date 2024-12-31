@@ -302,7 +302,7 @@ class MainWindow(QMainWindow):
         if is_enabled:
             self.logic_executor.start_monitoring()
             self.advanced_controller.set_monitoring_enabled(True)  # 게이지 모니터링 시작
-            self._append_log("로직 동작이 활성화되었습니다")
+            self._append_log("로직 동작이 활성화되었습니다<br>")
         else:
             self.logic_executor.stop_monitoring()
             self.advanced_controller.set_monitoring_enabled(False)  # 게이지 모니터링 중지

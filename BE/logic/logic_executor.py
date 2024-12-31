@@ -252,7 +252,7 @@ class LogicExecutor(QObject):
                     self._safe_cleanup()
                     
         if not found_matching_logic:
-            self._log_with_time("[로그] 일치하는 트리거 키를 찾을 수 없습니다.")
+            self._log_with_time(f"[로그] 일치하는 트리거 키를 찾을 수 없습니다.<br>입력된 키 정보: {key_info}")
     
     def _execute_next_step(self):
         """현재 실행할 스텝이 무엇인지 결정하는 관련자 함수"""
@@ -707,20 +707,25 @@ class LogicExecutor(QObject):
 
     def _is_trigger_key_matched(self, logic, key_info):
         """트리거 키 매칭 확인"""
-        # 중첩 로인 경우 매칭하지 않음
+        # 중첩 로직인 경우 매칭하지 않음
         if logic.get('is_nested', False):
             return False
         
         trigger_key = logic.get('trigger_key', {})
-        self._log_with_time("[로그] 트리거 키 매칭 확인 - 트리거 키: {}, 입력 키: {}".format(trigger_key, key_info))
         
         # trigger_key나 key_info가 None인 경우 처리
         if not trigger_key or not key_info:
             return False
         
-        # 가상 키와 스캔 코드만 비교
-        return (trigger_key.get('virtual_key') == key_info.get('virtual_key') and
-                trigger_key.get('scan_code') == key_info.get('scan_code'))
+        # 가상 키와 스캔 코드 비교
+        is_matched = (trigger_key.get('virtual_key') == key_info.get('virtual_key') and
+                     trigger_key.get('scan_code') == key_info.get('scan_code'))
+        
+        # 매칭된 경우에만 로그 출력
+        if is_matched:
+            self._log_with_time("[로그] 트리거 키 매칭 확인 - 트리거 키: {}, 입력 키: {}".format(trigger_key, key_info))
+            
+        return is_matched
 
     def _log_with_time(self, message):
         """시간 정보가 포함된 로그 메시지 출력"""
@@ -774,7 +779,7 @@ class LogicExecutor(QObject):
         elif "중첩로직" in message:
             formatted_message = f"<span style='color: #008000; font-size: 24px; font-weight: bold;'>{time_info}</span> <span style='color: #008000; font-size: 24px; font-weight: bold;'>{message}</span>"
 
-        elif "키 입력: 숫자패드 9" in message or "키 입력: 숫자패드 8" in message:
+        elif "키 입력: 숫자패드 9" in message or "키 입력: 숫자패드 8" in message or "키 입력: 숫자패드 1" in message:
             formatted_message = f"<span style='color: #FF00FF; font-size: 14px; font-weight: bold;'>{time_info}</span> <span style='color: #FF00FF; font-size: 14px; font-weight: bold;'>{message}</span>"
 
         elif "로직 실행" in message and ("실행 시작" in message or "반복 완료" in message):
@@ -976,7 +981,7 @@ class LogicExecutor(QObject):
                     self._safe_cleanup()
                     
         if not found_matching_logic:
-            self._log_with_time("[로그] 일치하는 트리거 키를 찾을 수 없습니다.")
+            self._log_with_time(f"[로그] 일치하는 트리거 키를 찾을 수 없습니다. <br> 입력된 키 정보: {key_info} <br>")
 
     def _execute_text_input(self, item):
         """텍스트 입력 실행"""
