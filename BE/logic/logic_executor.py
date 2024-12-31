@@ -723,7 +723,7 @@ class LogicExecutor(QObject):
         
         # 매칭된 경우에만 로그 출력
         if is_matched:
-            self._log_with_time("[로그] 트리거 키 매칭 확인 - 트리거 키: {}, 입력 키: {}".format(trigger_key, key_info))
+            self._log_with_time("[로그] 트리거 키 매칭 확인 <br>   - 트리거 키: {}, <br>   - 입력 키: {} <br><br>".format(trigger_key, key_info))
             
         return is_matched
 
