@@ -37,13 +37,16 @@ class LogicMakerController:
         # item_added 시그널 발생
         self.widget.item_added.emit(key_info)
         
-    def _handle_mouse_input(self, mouse_text):
+    def _handle_mouse_input(self, mouse_info):
         """마우스 입력 처리
         
         Args:
-            mouse_text (str): 마우스 입력 텍스트
+            mouse_info (dict): 마우스 입력 정보
         """
-        log_msg = f"(logic_maker_controller--_handle_mouse_input)마우스 입력이 추가되었습니다: {mouse_text}"
+        # 아이템 추가
+        self.widget.add_item(mouse_info)
+        
+        log_msg = f"(logic_maker_controller--_handle_mouse_input)마우스 입력이 추가되었습니다: {mouse_info['display_text']}"
         self.widget.log_message.emit(log_msg)
         
     def _handle_delay_input(self, delay_text):

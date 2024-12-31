@@ -284,8 +284,13 @@ class LogicDetailWidget(QFrame):
                     # 마우스 입력 처리
                     user_data = {
                         "type": "mouse_input",
-                        "action": item_info.get('action'),
-                        "position": item_info.get('position'),
+                        "action": item_info.get('action', '클릭'),
+                        "button": item_info.get('button', '왼쪽 버튼'),
+                        "name": item_info.get('name', ''),
+                        "coordinates_x": item_info.get('coordinates_x', 0),
+                        "coordinates_y": item_info.get('coordinates_y', 0),
+                        "ratios_x": item_info.get('ratios_x', 0),
+                        "ratios_y": item_info.get('ratios_y', 0),
                         "display_text": item_info.get('display_text', "마우스 입력"),
                         "order": insert_position + 1
                     }
@@ -625,52 +630,24 @@ class LogicDetailWidget(QFrame):
             # 마우스 입력 아이템인 경우
             elif item_text.startswith("마우스 입력:"):
                 self.log_message.emit("[DEBUG] 마우스 입력 아이템 처리 시작")
+                self.log_message.emit(f"[DEBUG] 마우스 입력 처리 - 원본 데이터: {user_data}")
                 
-                # 마우스 입력 데이터 처리
-                try:
-                    mouse_data = {}
-                    if isinstance(user_data, dict):
-                        mouse_data = user_data.copy()
-                    else:
-                        mouse_data = {
-                            'type': 'mouse_input',
-                            'display_text': item_text,
-                            'coordinates_x': 0,
-                            'coordinates_y': 0,
-                            'ratios_x': 0,
-                            'ratios_y': 0,
-                            'action': '클릭',
-                            'button': '왼쪽 버튼',
-                            'name': ''
-                        }
-                    
-                    # 기본 필드 확인 및 추가
-                    mouse_data['type'] = 'mouse_input'
-                    mouse_data['order'] = order
-                    if 'display_text' not in mouse_data:
-                        mouse_data['display_text'] = item_text
-                        
-                    self.log_message.emit(f"[DEBUG] 마우스 입력 처리 - 원본 데이터: {user_data}")
-                    self.log_message.emit(f"[DEBUG] 마우스 입력 처리 - 처리된 데이터: {mouse_data}")
-                        
-                    items.append(mouse_data)
-                except Exception as e:
-                    self.log_message.emit(f"[오류] 마우스 입력 데이터 처리 중 오류 발생: {str(e)}")
-                    import traceback
-                    self.log_message.emit(f"[오류 상세] {traceback.format_exc()}")
-                    # 기본 데이터로 저장
-                    items.append({
-                        'type': 'mouse_input',
-                        'display_text': item_text,
-                        'order': order,
-                        'coordinates_x': 0,
-                        'coordinates_y': 0,
-                        'ratios_x': 0,
-                        'ratios_y': 0,
-                        'action': '클릭',
-                        'button': '왼쪽 버튼',
-                        'name': ''
-                    })
+                # 마우스 입력 데이터 유지
+                processed_data = {
+                    'type': 'mouse_input',
+                    'action': user_data.get('action', '클릭'),
+                    'button': user_data.get('button', '왼쪽 버튼'),
+                    'name': user_data.get('name', ''),
+                    'coordinates_x': user_data.get('coordinates_x', 0),
+                    'coordinates_y': user_data.get('coordinates_y', 0),
+                    'ratios_x': user_data.get('ratios_x', 0),
+                    'ratios_y': user_data.get('ratios_y', 0),
+                    'order': order,
+                    'display_text': user_data.get('display_text', '')
+                }
+                
+                self.log_message.emit(f"[DEBUG] 마우스 입력 처리 - 처리된 데이터: {processed_data}")
+                items.append(processed_data)
                 
             # 지연시간 아이템인 경우
             elif item_text.startswith("지연시간"):

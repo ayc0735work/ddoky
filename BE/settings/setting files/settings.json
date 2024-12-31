@@ -578,7 +578,7 @@
             "order": 3,
             "name": "공증만 10회",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2024-12-30T08:07:10.437941",
+            "updated_at": "2024-12-31T07:10:34.847713",
             "trigger_key": null,
             "repeat_count": 10,
             "is_nested": true,
@@ -605,8 +605,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0557초",
-                    "duration": 0.0557,
+                    "display_text": "지연시간 : 0.0789초",
+                    "duration": 0.0789,
                     "order": 3
                 }
             ]
@@ -9667,7 +9667,7 @@
             "order": 89,
             "name": "월드 재입장",
             "created_at": "2024-12-11T21:30:39.063045",
-            "updated_at": "2024-12-19T17:38:35.229897",
+            "updated_at": "2024-12-31T07:41:28.252439",
             "trigger_key": {
                 "key_code": "F3",
                 "modifiers": 0,
@@ -9679,12 +9679,30 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.5000초",
+                    "display_text": "지연시간 : 0.5초",
                     "duration": 0.5,
                     "order": 1
                 },
                 {
                     "order": 2,
+                    "type": "mouse_input",
+                    "display_text": "마우스 입력: kk (1512, 1259)",
+                    "name": "",
+                    "action": "클릭",
+                    "button": "왼쪽 버튼",
+                    "coordinates_x": 0,
+                    "coordinates_y": 0,
+                    "ratios_x": 0,
+                    "ratios_y": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.5초",
+                    "duration": 0.5,
+                    "order": 3
+                },
+                {
+                    "order": 4,
                     "type": "mouse_input",
                     "display_text": "마우스 입력: 메뉴 버튼 클릭 (2009, 73)",
                     "name": "메뉴 버튼 클릭",
@@ -9697,12 +9715,12 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.5000초",
+                    "display_text": "지연시간 : 0.5초",
                     "duration": 0.5,
-                    "order": 3
+                    "order": 5
                 },
                 {
-                    "order": 4,
+                    "order": 6,
                     "type": "mouse_input",
                     "display_text": "마우스 입력: 월드 재입장 버튼 클릭 (616, 860)",
                     "name": "월드 재입장 버튼 클릭",
@@ -9715,12 +9733,12 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.5000초",
+                    "display_text": "지연시간 : 0.5초",
                     "duration": 0.5,
-                    "order": 5
+                    "order": 7
                 },
                 {
-                    "order": 6,
+                    "order": 8,
                     "type": "mouse_input",
                     "display_text": "마우스 입력: 월드 재입장 확인창 클릭 (915, 669)",
                     "name": "월드 재입장 확인창 클릭",
@@ -9733,9 +9751,9 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.5000초",
+                    "display_text": "지연시간 : 0.5초",
                     "duration": 0.5,
-                    "order": 7
+                    "order": 9
                 }
             ]
         },
