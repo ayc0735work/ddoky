@@ -239,7 +239,14 @@ class LogicExecutor(QObject):
                     )
                     # 로직 실행 시작 시간 초기화
                     self._start_time = time.time()
-                    self._log_with_time(f"[로직 실행 시작] <br> 실행 로직: {logic.get('name')} <br>   - 로직 UUID: {logic_id}")
+                    self._log_with_time(
+                        f"""
+                        <br>
+                        [로직 실행 시작] <br>
+                        - 로직 이름: {logic.get('name')} <br>
+                        - 로직 UUID: {logic_id}
+                        """
+                    )
                     
                     self.execution_started.emit()
                     
@@ -252,7 +259,7 @@ class LogicExecutor(QObject):
                     self._safe_cleanup()
                     
         if not found_matching_logic:
-            self._log_with_time(f"[로그] 일치하는 트리거 키를 찾을 수 없습니다.<br>입력된 키 정보: {key_info}")
+            self._log_with_time(f"[로그] 일치하는 트리거 키를 찾을 수 없습니다.<br>입력된 키 정보: {key_info}<br>")
     
     def _execute_next_step(self):
         """현재 실행할 스텝이 무엇인지 결정하는 관련자 함수"""
@@ -280,10 +287,26 @@ class LogicExecutor(QObject):
                     parent_id = parent_logic.get('id', '')
                     parent_step = parent_state.get('current_step', 0)
                     parent_info = f" - {parent_name}({parent_id})의 {parent_step}번 스텝"
-                    self._log_with_time(f"[로직-중첩로직]{parent_info} 중첩로직 '{current_logic_name}({current_logic_id})' {current_repeat}/{repeat_count} 반복 완료")
+                    self._log_with_time(
+                        f"""
+                        [중첩로직 반복 완료] <br>
+                        - 반복횟수:  {current_repeat}/{repeat_count} 반복 완료 <br>
+                        - 부모 로직: {parent_name} <br>
+                        - 중첩로직 이름: {current_logic_name} <br>
+                        - 중첩로직 UUID: {current_logic_id} <br>
+                        """
+                        )
+
                 else:
                     # 일반 로직의 경우
-                    self._log_with_time(f"[로직 실행] 로직 '{current_logic_name}({current_logic_id})' {current_repeat}/{repeat_count} 반복 완료")
+                    self._log_with_time(
+                        f"""
+                        [로직 실행] <br> 
+                        - 반복횟수:  {current_repeat}/{repeat_count} 반복 완료 <br>
+                        - 로직 이름: {current_logic_name} <br>
+                        - 로직 UUID: {current_logic_id} <br>
+                        """
+                        )
                 
                 if current_repeat < repeat_count:
                     # 아직 반복 횟수 남았으면 처음부터 다시 시작
@@ -414,7 +437,7 @@ class LogicExecutor(QObject):
         try:
             duration = float(step['duration'])
             time.sleep(duration)
-            self._log_with_time(f"[지연시간] {duration}초 대기 완료")
+            self._log_with_time(f"[지연시간] {duration}초 대기 완료<br>")
         except Exception as e:
             self._log_with_time(f"[오류] 지연시간 실행 중 오류 발생: {str(e)}")
             raise
@@ -423,8 +446,9 @@ class LogicExecutor(QObject):
         """중첩로직 실행"""
         try:
             logic_id = step.get('logic_id')
+            logic_name = step.get('logic_name')
             if not logic_id:
-                raise Exception("중첩로직의 ID가 없습니다.")
+                raise Exception("중첩로직의 ID가 없습니다.<br>")
             
             # 현재 상태를 스택에 저장
             self._logic_stack.append((
@@ -439,7 +463,14 @@ class LogicExecutor(QObject):
             logics = self.logic_manager.get_all_logics(force=True)
             nested_logic = logics.get(logic_id)
             if not nested_logic:
-                raise Exception(f"중첩로직을 찾을 수 없습니다: {logic_id}")
+                raise Exception(
+                    f"""
+                    <br>
+                    중첩로직을 찾을 수 없습니다
+                    - 중첩로직 이름: {logic_name} <br>
+                    - 중첩로직 UUID: {logic_id} <br>
+                    """
+                    )
             
             nested_logic['id'] = logic_id  # ID 정보 추가
             self.selected_logic = nested_logic
@@ -448,7 +479,14 @@ class LogicExecutor(QObject):
                 current_repeat=1
             )
             
-            self._log_with_time(f"[중첩로직] {nested_logic.get('name')} 실행 시작")
+            self._log_with_time(
+                f"""
+                [중첩로직 실행 시작]<br>
+                - 중첩로직 이름: {nested_logic.get('name')} <br>
+                - 중첩로직 UUID: ({nested_logic.get('id')})<br>
+                """
+                )
+            self._execute_next_step()
             
         except Exception as e:
             self._log_with_time(f"[오류] 중첩로직 실행 중 오류 발생: {str(e)}")
@@ -771,22 +809,22 @@ class LogicExecutor(QObject):
         # 메시지 스타일 적용
         if "[오류]" in message:
             # 오류 메시지 - 어두운 빨간색
-            formatted_message = f"<span style='color: #FFA500; font-size: 14px;'>{time_info}</span> <span style='color: #FFA500; font-size: 14px;'>{message}</span>"
+            formatted_message = f"<span style='color: #FFA500; font-size: 12px;'>{time_info}</span> <span style='color: #FFA500; font-size: 12px;'>{message}</span>"
         
         elif "ESC 키 감지" in message or "강제 중지" in message:
-            formatted_message = f"<span style='color: #FF0000; font-size: 20px; font-weight: bold;'>{time_info}</span> <span style='color: #FF0000; font-size: 20px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #FF0000; font-size: 16px; font-weight: bold;'>{time_info}</span> <span style='color: #FF0000; font-size: 16px; font-weight: bold;'>{message}</span>"
         
         elif "중첩로직" in message:
-            formatted_message = f"<span style='color: #008000; font-size: 24px; font-weight: bold;'>{time_info}</span> <span style='color: #008000; font-size: 24px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #008000; font-size: 18px; font-weight: bold;'>{time_info}</span> <span style='color: #008000; font-size: 18px; font-weight: bold;'>{message}</span>"
 
         elif "키 입력: 숫자패드 9" in message or "키 입력: 숫자패드 8" in message or "키 입력: 숫자패드 1" in message:
-            formatted_message = f"<span style='color: #FF00FF; font-size: 14px; font-weight: bold;'>{time_info}</span> <span style='color: #FF00FF; font-size: 14px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #FF00FF; font-size: 12px; font-weight: bold;'>{time_info}</span> <span style='color: #FF00FF; font-size: 12px; font-weight: bold;'>{message}</span>"
 
         elif "로직 실행" in message and ("실행 시작" in message or "반복 완료" in message):
-            formatted_message = f"<span style='color: #0000FF; font-size: 28px; font-weight: bold;'>{time_info}</span> <span style='color: #0000FF; font-size: 28px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #0000FF; font-size: 20px; font-weight: bold;'>{time_info}</span> <span style='color: #0000FF; font-size: 20px; font-weight: bold;'>{message}</span>"
 
         elif "왼쪽 버튼 클릭 대기" in message:
-            formatted_message = f"<span style='color: #E2C000; font-size: 24px; font-weight: bold;'>{time_info}</span> <span style='color: #E2C000; font-size: 24px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #E2C000; font-size: 20px; font-weight: bold;'>{time_info}</span> <span style='color: #E2C000; font-size: 20px; font-weight: bold;'>{message}</span>"
 
         else:
             # 기본 메시지 - 기본 스타일
