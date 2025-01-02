@@ -486,7 +486,6 @@ class LogicExecutor(QObject):
                 - 중첩로직 UUID: ({nested_logic.get('id')})<br>
                 """
                 )
-            self._execute_next_step()
             
         except Exception as e:
             self._log_with_time(f"[오류] 중첩로직 실행 중 오류 발생: {str(e)}")
