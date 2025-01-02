@@ -9527,7 +9527,7 @@
             "order": 87,
             "name": "출두 - 사냥터로",
             "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-01T16:58:18.866624",
+            "updated_at": "2025-01-02T19:18:18.941873",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "하이픈(-)",
@@ -9815,6 +9815,38 @@
                     "display_text": "지연시간 : 0.0472초",
                     "duration": 0.0472,
                     "order": 34
+                },
+                {
+                    "order": 35,
+                    "display_text": "키 입력: 방향키 오른쪽 → --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 오른쪽 →",
+                    "scan_code": 77,
+                    "virtual_key": 39,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 1.2000초",
+                    "duration": 1.2,
+                    "order": 36
+                },
+                {
+                    "order": 37,
+                    "display_text": "키 입력: 방향키 오른쪽 → --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 오른쪽 →",
+                    "scan_code": 77,
+                    "virtual_key": 39,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0472초",
+                    "duration": 0.0472,
+                    "order": 38
                 }
             ]
         },
@@ -9822,7 +9854,7 @@
             "order": 88,
             "name": "출두 - 왕궁으로",
             "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-01T16:58:04.181486",
+            "updated_at": "2025-01-02T19:32:49.268501",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "등호(=)",
@@ -10014,11 +10046,25 @@
                     "display_text": "지연시간 : 0.0172초",
                     "duration": 0.0172,
                     "order": 23
+                },
+                {
+                    "order": 24,
+                    "type": "logic",
+                    "display_text": "ㄴ왕궁 위로 걸어가기",
+                    "logic_id": "cda13f03-f1ac-456e-8fe6-516ff415ea61",
+                    "logic_name": "ㄴ왕궁 위로 걸어가기",
+                    "repeat_count": 1
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0172초",
+                    "duration": 0.0172,
+                    "order": 25
                 }
             ]
         },
         "7a10f701-269d-450d-aaf5-8d9388ca64be": {
-            "order": 89,
+            "order": 90,
             "name": "흉가 사냥 중 세계후",
             "created_at": "2024-12-30T23:21:52.330353",
             "updated_at": "2024-12-31T19:46:32.410585",
@@ -10163,7 +10209,7 @@
             ]
         },
         "8141d159-f468-47b7-acb7-5de442be0d77": {
-            "order": 90,
+            "order": 91,
             "name": "긴급",
             "created_at": "2024-12-17T05:32:15.270999",
             "updated_at": "2024-12-20T13:29:26.464471",
@@ -10264,7 +10310,7 @@
             ]
         },
         "2d87cae4-7b1e-4d8f-9229-29a88668e91b": {
-            "order": 91,
+            "order": 92,
             "name": "긴급 - F2키용",
             "created_at": "2024-12-17T05:32:15.270999",
             "updated_at": "2024-12-20T13:29:37.097700",
@@ -10365,7 +10411,7 @@
             ]
         },
         "74c363cc-0452-4786-ae02-49e927baaa31": {
-            "order": 92,
+            "order": 93,
             "name": "---------------편의---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:10:11.762423",
@@ -10421,6 +10467,85 @@
                     "scan_code": 73,
                     "virtual_key": 105,
                     "modifiers": 0
+                }
+            ]
+        },
+        "cda13f03-f1ac-456e-8fe6-516ff415ea61": {
+            "order": 89,
+            "name": "ㄴ왕궁 위로 걸어가기",
+            "created_at": "2024-12-19T18:54:30.254977",
+            "updated_at": "2025-01-02T19:35:01.775941",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0172초",
+                    "duration": 0.0172,
+                    "order": 1
+                },
+                {
+                    "order": 2,
+                    "display_text": "키 입력: 방향키 위쪽 ↑ --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "방향키 위쪽 ↑",
+                    "scan_code": 72,
+                    "virtual_key": 38,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 1.5초",
+                    "duration": 1.5,
+                    "order": 3
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 1.5초",
+                    "duration": 1.5,
+                    "order": 4
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 1.5초",
+                    "duration": 1.5,
+                    "order": 5
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 1.5초",
+                    "duration": 1.5,
+                    "order": 6
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 1.5초",
+                    "duration": 1.5,
+                    "order": 7
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 1.5초",
+                    "duration": 1.5,
+                    "order": 8
+                },
+                {
+                    "order": 9,
+                    "display_text": "키 입력: 방향키 위쪽 ↑ --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "방향키 위쪽 ↑",
+                    "scan_code": 72,
+                    "virtual_key": 38,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0172초",
+                    "duration": 0.0172,
+                    "order": 10
                 }
             ]
         }
