@@ -692,6 +692,15 @@ class LogicExecutor(QObject):
                 except Exception as e:
                     self._log_with_time(f"[오류] 키 해제 실패 (VK: {vk}): {str(e)}")
 
+    def _release_all_keys(self):
+        """현재 눌려있는 모든 키를 떼는 함수"""
+        # 모든 가상 키코드에 대해 검사 (0x01부터 0xFE까지)
+        for vk in range(0x01, 0xFF):
+            # 키가 눌려있는지 확인
+            if win32api.GetAsyncKeyState(vk) & 0x8000:
+                # 키 떼기 이벤트 발생
+                win32api.keybd_event(vk, 0, win32con.KEYEVENTF_KEYUP, 0)
+
     def force_stop(self):
         """강제 중지"""
         self._log_with_time("[로그] 강제 중지 함수 시작")
@@ -700,13 +709,17 @@ class LogicExecutor(QObject):
             # 먼저 stopping 상태로 설정
             self._update_state(is_stopping=True)
             
+            # 모든 눌려있는 키 떼기
+            self._release_all_keys()
+            self._log_with_time("[로그] 모든 키 떼기 완료")
+            
             # 모든 로직 중지 (reset_execution_state()도 호출됨)
             self.stop_all_logic()
             
             # 키 입력 모니터링 다시 시작
             if self.is_logic_enabled:
                 self.start_monitoring()
-                self._log_with_time("[로그] 키 입력 니터링 다시 시작")
+                self._log_with_time("[로그] 키 입력 모니터링 다시 시작")
             
             # 중지 상태 해제
             self._should_stop = False
