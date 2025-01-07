@@ -625,27 +625,6 @@ class LogicExecutor(QObject):
             QApplication.processEvents()  # UI 이벤트 처리 허용
             time.sleep(0.1)  # CPU 부하 감소를 위한 짧은 대기{{ ... }}
 
-    def stop_all_logic(self):
-        """모든 실행 중인 로직을 강제로 중지"""
-        self._log_with_time("[로직 강제 중지] 모든 로직 강제 중지 시작")
-        
-        with self._cleanup_lock:
-            try:
-                # 모저 실행 상태를 중지로 설정하여 새로운 타이머 생성 방지
-                self._update_state(is_stopping=True)
-                
-                # 타이머 정리를 비동기적으로 처리
-                self._clear_timers_async()
-                
-                # 키보드 입력 상태 정리
-                self._release_all_keys()
-                
-                # 실행 상태 초기화
-                self.reset_execution_state()
-                
-            except Exception as e:
-                self._log_with_time("[오류] 로직 중지 중 오류 발생: {}".format(str(e)))
-
     def _clear_timers_async(self):
         """타이머를 비동기적으로 정리"""
         self._log_with_time(f"[로직 강제 중지] 비동기로 실행된 타이머 정리 시작 (총 {len(self._active_timers)}개)")
@@ -659,6 +638,8 @@ class LogicExecutor(QObject):
             if not timer_groups:
                 self._active_timers.clear()
                 self._log_with_time("[로직 강제 중지] 비동기로 실행된 모든 타이머 정리 완료<br>")
+                # 모든 정리가 완료된 후 시간 초기화
+                self._start_time = 0
                 return
             
             group = timer_groups.pop(0)
@@ -697,14 +678,17 @@ class LogicExecutor(QObject):
         self._log_with_time("[로직 강제 중지] ---------- 로직 강제 중지 시작 (동기적으로 강제 중지)")
         
         try:
-            # 먼저 stopping 상태로 설정
+            # 먼저 중지 상태로 설정
             self._update_state(is_stopping=True)
             
-            # 모든 눌려있는 키 떼기
+            # 키보드 상태 정리 - 모든 눌려있는 키 떼기
             self._release_all_keys()
             
-            # 모든 로직 중지 (reset_execution_state()도 호출됨)
-            self.stop_all_logic()
+            # 타이머 정리를 비동기적으로 처리
+            self._clear_timers_async()
+
+            # 실행 상태 초기화
+            self.reset_execution_state()
             
             # 키 입력 모니터링 다시 시작
             if self.is_logic_enabled:
@@ -792,7 +776,7 @@ class LogicExecutor(QObject):
             "로직 실행 완료",
             "중첩로직",
             "반복 완료",
-            "강제 중지",
+            "로직 강제 중지",
             "타이머 정리",
             "키 상태 정리",
             "스텝",
@@ -853,25 +837,8 @@ class LogicExecutor(QObject):
             self._logic_stack.clear()
             # 선택된 로직 초기화
             self.selected_logic = None
-            # 시작 시간 초기화
-            self._start_time = 0
             
             self.execution_state_changed.emit(self.execution_state.copy())
-
-    def _clear_all_timers(self):
-        """모든 타이머를 정리하는 메서드"""
-        active_timers = len(self._active_timers)
-        logger.info(f"활성 타이머 개수: {active_timers}")
-        
-        for timer in self._active_timers:
-            try:
-                timer.stop()
-                timer.deleteLater()
-            except:
-                pass
-                
-        self._active_timers.clear()
-        logger.info("모든 타이머 정리 완료")
 
     def save_logics_to_settings(self):
         """현재 로직 목록을 설정에 저장"""
