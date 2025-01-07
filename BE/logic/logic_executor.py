@@ -813,6 +813,9 @@ class LogicExecutor(QObject):
 
         # 시간 정보 포함 패턴이 있는 경우 시간 정보 추가
         if any(pattern in message for pattern in time_patterns):
+            # _start_time이 0이면 현재 시간으로 초기화
+            if self._start_time == 0:
+                self._start_time = time.time()
             elapsed = time.time() - self._start_time
             time_info = f"[{elapsed:.4f}초]"
         else:
