@@ -802,7 +802,7 @@ class LogicExecutor(QObject):
             formatted_message = f"<span style='color: #FFA500; font-size: 12px;'>{time_info}</span> <span style='color: #FFA500; font-size: 12px;'>{message}</span>"
         
         elif "로직 강제 중지" in message:
-            formatted_message = f"<span style='color: #FF0000; font-size: 14px; font-weight: bold;'>{time_info}</span> <span style='color: #FF0000; font-size: 14px; font-weight: bold;'>{message}</span>"
+            formatted_message = f"<span style='color: #FF0000; font-size: 16px; font-weight: bold;'>{time_info}</span> <span style='color: #FF0000; font-size: 16px; font-weight: bold;'>{message}</span>"
         
         elif "중첩로직" in message:
             formatted_message = f"<span style='color: #008000; font-size: 18px; font-weight: bold;'>{time_info}</span> <span style='color: #008000; font-size: 18px; font-weight: bold;'>{message}</span>"
