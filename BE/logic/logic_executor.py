@@ -648,7 +648,7 @@ class LogicExecutor(QObject):
 
     def _clear_timers_async(self):
         """타이머를 비동기적으로 정리"""
-        self._log_with_time(f"[로직 강제 중지] 타이머 정리 시작 (총 {len(self._active_timers)}개)")
+        self._log_with_time(f"[로직 강제 중지] 비동기로 실행된 타이머 정리 시작 (총 {len(self._active_timers)}개)")
         
         # 타이머를 작은 그룹으로 나누어 처리
         BATCH_SIZE = 10
@@ -658,7 +658,7 @@ class LogicExecutor(QObject):
         def clear_timer_group():
             if not timer_groups:
                 self._active_timers.clear()
-                self._log_with_time("[로직 강제 중지] 모든 타이머 정리 완료")
+                self._log_with_time("[로직 강제 중지] 비동기로 실행된 모든 타이머 정리 완료<br>")
                 return
             
             group = timer_groups.pop(0)
@@ -693,8 +693,8 @@ class LogicExecutor(QObject):
         self._log_with_time("[로직 강제 중지] 모든 키 떼기 완료")
 
     def force_stop(self):
-        """강제 중지"""
-        self._log_with_time("[로직 강제 중지] ---------- 로직 강제 중지 시작")
+        """로직 강제 중지"""
+        self._log_with_time("[로직 강제 중지] ---------- 로직 강제 중지 시작 (동기적으로 강제 중지)")
         
         try:
             # 먼저 stopping 상태로 설정
@@ -714,7 +714,7 @@ class LogicExecutor(QObject):
             self._should_stop = False
             self._log_with_time("[로직 강제 중지] 중지 상태 해제 완료")
             
-            self._log_with_time("[로직 강제 중지] ---------- 로직 강제 중지 완료<br><br>")
+            self._log_with_time("[로직 강제 중지] ---------- 로직 강제 중지 완료 (동기적으로 강제 중지)<br>")
             
         except Exception as e:
             self._log_with_time(f"[오류] 강제 중지 중 오류 발생: {str(e)}")
