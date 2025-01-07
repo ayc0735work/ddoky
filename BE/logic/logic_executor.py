@@ -109,12 +109,12 @@ class LogicExecutor(QObject):
 
     def _update_state(self, **kwargs):
         """상태 업데이트 및 알림"""
-        self._log_with_time("[상태 로그] 상태 업데이트 시작: {}".format(kwargs))
+        self._log_with_time("[로직 강제 중지] 상태 업데이트 시작: {}".format(kwargs))
         with self._state_lock:
-            self._log_with_time("[상태 로그] 상태 락 획득")
+            self._log_with_time("[로직 강제 중지] 상태 락 획득")
             self.execution_state.update(kwargs)
             self.execution_state_changed.emit(self.execution_state.copy())
-            self._log_with_time("[상태 로그] 상태 변경 알림 완료")
+            self._log_with_time("[로직 강제 중지] 상태 변경 알림 완료")
     
     def start_monitoring(self):
         """트리거 키 모니터링 작"""
@@ -627,7 +627,7 @@ class LogicExecutor(QObject):
 
     def stop_all_logic(self):
         """모든 실행 중인 로직을 강제로 중지"""
-        self._log_with_time("[로그] 모든 로직 강제 중지 시작")
+        self._log_with_time("[로직 강제 중지] 모든 로직 강제 중지 시작")
         
         with self._cleanup_lock:
             try:
@@ -638,7 +638,7 @@ class LogicExecutor(QObject):
                 self._clear_timers_async()
                 
                 # 키보드 입력 상태 정리
-                self._clear_keyboard_state()
+                self._release_all_keys()
                 
                 # 실행 상태 초기화
                 self.reset_execution_state()
@@ -648,7 +648,7 @@ class LogicExecutor(QObject):
 
     def _clear_timers_async(self):
         """타이머를 비동기적으로 정리"""
-        self._log_with_time(f"[로그] 타이머 정리 시작 (총 {len(self._active_timers)}개)")
+        self._log_with_time(f"[로직 강제 중지] 타이머 정리 시작 (총 {len(self._active_timers)}개)")
         
         # 타이머를 작은 그룹으로 나누어 처리
         BATCH_SIZE = 10
@@ -658,7 +658,7 @@ class LogicExecutor(QObject):
         def clear_timer_group():
             if not timer_groups:
                 self._active_timers.clear()
-                self._log_with_time("[로그] 모든 타이머 정리 완료")
+                self._log_with_time("[로직 강제 중지] 모든 타이머 정리 완료")
                 return
             
             group = timer_groups.pop(0)
@@ -675,35 +675,26 @@ class LogicExecutor(QObject):
         # 첫 번째 그룹 처리 시작
         QTimer.singleShot(0, clear_timer_group)
 
-    def _clear_keyboard_state(self):
-        """키보드 상태 정리"""
-        if self.selected_logic and 'items' in self.selected_logic:
-            pressed_keys = set()
-            for item in self.selected_logic['items']:
-                if item.get('type') == 'key_input' and item.get('action') == '누르기':
-                    vk = item.get('virtual_key')
-                    if vk:
-                        pressed_keys.add(vk)
-            
-            self._log_with_time(f"[로그] 키 상태 정리 시작 (총 {len(pressed_keys)}개)")
-            for vk in pressed_keys:
-                try:
-                    win32api.keybd_event(vk, 0, win32con.KEYEVENTF_KEYUP, 0)
-                except Exception as e:
-                    self._log_with_time(f"[오류] 키 해제 실패 (VK: {vk}): {str(e)}")
-
     def _release_all_keys(self):
-        """현재 눌려있는 모든 키를 떼는 함수"""
+        """키보드 상태 정리 / 현재 눌려있는 모든 키를 떼는 함수"""
+        pressed_keys = []
         # 모든 가상 키코드에 대해 검사 (0x01부터 0xFE까지)
         for vk in range(0x01, 0xFF):
             # 키가 눌려있는지 확인
             if win32api.GetAsyncKeyState(vk) & 0x8000:
-                # 키 떼기 이벤트 발생
-                win32api.keybd_event(vk, 0, win32con.KEYEVENTF_KEYUP, 0)
+                pressed_keys.append(vk)
+                try:
+                    # 키 떼기 이벤트 발생
+                    win32api.keybd_event(vk, 0, win32con.KEYEVENTF_KEYUP, 0)
+                except Exception as e:
+                    self._log_with_time(f"[오류] 키 해제 실패 (VK: {vk}): {str(e)}")
+        
+        self._log_with_time(f"[로직 강제 중지] 키 상태 정리 시작 (총 {len(pressed_keys)}개)")
+        self._log_with_time("[로직 강제 중지] 모든 키 떼기 완료")
 
     def force_stop(self):
         """강제 중지"""
-        self._log_with_time("[로그] 강제 중지 함수 시작")
+        self._log_with_time("[로직 강제 중지] ---------- 로직 강제 중지 시작")
         
         try:
             # 먼저 stopping 상태로 설정
@@ -711,7 +702,6 @@ class LogicExecutor(QObject):
             
             # 모든 눌려있는 키 떼기
             self._release_all_keys()
-            self._log_with_time("[로그] 모든 키 떼기 완료")
             
             # 모든 로직 중지 (reset_execution_state()도 호출됨)
             self.stop_all_logic()
@@ -719,13 +709,12 @@ class LogicExecutor(QObject):
             # 키 입력 모니터링 다시 시작
             if self.is_logic_enabled:
                 self.start_monitoring()
-                self._log_with_time("[로그] 키 입력 모니터링 다시 시작")
             
             # 중지 상태 해제
             self._should_stop = False
-            self._log_with_time("[로그] 중지 상태 해제 완료")
+            self._log_with_time("[로직 강제 중지] 중지 상태 해제 완료")
             
-            self._log_with_time("[로그] 강제 중지 완료")
+            self._log_with_time("[로직 강제 중지] ---------- 로직 강제 중지 완료<br><br>")
             
         except Exception as e:
             self._log_with_time(f"[오류] 강제 중지 중 오류 발생: {str(e)}")
@@ -828,8 +817,8 @@ class LogicExecutor(QObject):
             # 오류 메시지 - 어두운 빨간색
             formatted_message = f"<span style='color: #FFA500; font-size: 12px;'>{time_info}</span> <span style='color: #FFA500; font-size: 12px;'>{message}</span>"
         
-        elif "ESC 키 감지" in message or "강제 중지" in message:
-            formatted_message = f"<span style='color: #FF0000; font-size: 16px; font-weight: bold;'>{time_info}</span> <span style='color: #FF0000; font-size: 16px; font-weight: bold;'>{message}</span>"
+        elif "로직 강제 중지" in message:
+            formatted_message = f"<span style='color: #FF0000; font-size: 14px; font-weight: bold;'>{time_info}</span> <span style='color: #FF0000; font-size: 14px; font-weight: bold;'>{message}</span>"
         
         elif "중첩로직" in message:
             formatted_message = f"<span style='color: #008000; font-size: 18px; font-weight: bold;'>{time_info}</span> <span style='color: #008000; font-size: 18px; font-weight: bold;'>{message}</span>"
