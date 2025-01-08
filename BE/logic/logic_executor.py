@@ -7,10 +7,18 @@ from PySide6.QtWidgets import QApplication
 from ..utils.key_handler import KeyboardHook
 from ..utils.mouse_handler import MouseHandler
 import threading
-from ..settings.settings import Settings
+from ..settings.settings_manager import SettingsManager
 
 class LogicExecutor(QObject):
     """로직 실행기"""
+    
+    # 기본 딜레이 값 (key_delays.json의 기본값)
+    DEFAULT_DELAYS = {
+        'press': 0.026,
+        'release': 0.0017,
+        'mouse_input': 0.0245,
+        'default': 0.0025
+    }
     
     # 시그널 정의
     execution_started = Signal()  # 로직 실행 시작
@@ -48,37 +56,19 @@ class LogicExecutor(QObject):
             'current_repeat': 1
         }
         
-        # 설정에서 딜레이 값 로드
-        settings = Settings()
-        DEFAULT_DELAY = 0.0245
+        # settings_manager 인스턴스 생성
+        self.settings_manager = SettingsManager()
         
-        # 기본 딜레이 값 설정
-        default_delays = {
-            'press': DEFAULT_DELAY,
-            'release': DEFAULT_DELAY,
-            'mouse_input': DEFAULT_DELAY,
-            'default': DEFAULT_DELAY
-        }
+        # key_delays.json 파일에서 딜레이 값 로드
+        delays = self.settings_manager.get('key_delays', self.DEFAULT_DELAYS)
         
-        # 키 딜레이 설정 로드
-        saved_delays = settings.get('key_delays', {})
-        
-        # 설정에서 값을 가져오되, 없으면 기본값 사용
-        delays = default_delays.copy()
-        if isinstance(saved_delays, dict):
-            for key in default_delays:
-                if key in saved_delays:
-                    delays[key] = saved_delays[key]
-        
+        # KEY_DELAYS 설정
         self.KEY_DELAYS = {
             '누르기': delays['press'],
             '떼기': delays['release'],
             '마우스 입력': delays['mouse_input'],
             '기본': delays['default']
         }
-        
-        # 새로운 설정을 저장
-        settings.set('key_delays', delays)
         
         # 리소스 관리
         self.keyboard_hook = None
@@ -844,45 +834,45 @@ class LogicExecutor(QObject):
         """현재 로직 목록을 설정에 저장"""
         try:
             # 현재 설정을 다시 로드하여 최신 상태 유지
-            self.settings_manager.reload_settings()
+            # self.settings_manager.reload_settings()
             
             # 로직 목록을 순회하면서 order 값 업데이트
             updated_logics = {}
-            for i in range(self.SavedLogicList__QListWidget.count()):
-                item = self.SavedLogicList__QListWidget.item(i)
-                if item:
-                    logic_id = item.data(Qt.UserRole)
-                    if logic_id in self.settings_manager.settings.get('logics', {}):
-                        logic_info = self.settings_manager.settings['logics'][logic_id]
+            # for i in range(self.SavedLogicList__QListWidget.count()):
+            #     item = self.SavedLogicList__QListWidget.item(i)
+            #     if item:
+            #         logic_id = item.data(Qt.UserRole)
+            #         if logic_id in self.settings_manager.settings.get('logics', {}):
+            #             logic_info = self.settings_manager.settings['logics'][logic_id]
                         
-                        # 첫 번째 아이템의 order는 1로 설정하고, 나머지 2부터 순차적으로 증가
-                        logic_info['order'] = 1 if i == 0 else i + 1
-                        logic_info['updated_at'] = datetime.now().isoformat()
+            #             # 첫 번째 아이템의 order는 1로 설정하고, 나머지 2부터 순차적으로 증가
+            #             logic_info['order'] = 1 if i == 0 else i + 1
+            #             logic_info['updated_at'] = datetime.now().isoformat()
                         
-                        # settings_manager를 통해 로직 저장 (필드 순서 정)
-                        updated_logic = self.settings_manager.save_logic(logic_id, logic_info)
-                        updated_logics[logic_id] = updated_logic
+            #             # settings_manager를 통해 로직 저장 (필드 순서 정)
+            #             updated_logic = self.settings_manager.save_logic(logic_id, logic_info)
+            #             updated_logics[logic_id] = updated_logic
             
-            # 모든 로직이 성공적으로 저장되면 saved_logics 업데이트
-            self.saved_logics = updated_logics
+            # # 모든 로직이 성공적으로 저장되면 saved_logics 업데이트
+            # self.saved_logics = updated_logics
             
-            # settings_manager의 settings 업데이트 및 저장
-            settings = self.settings_manager.settings.copy()
-            settings['logics'] = updated_logics
-            self.settings_manager._save_settings(settings)  # settings 인자 추가
+            # # settings_manager의 settings 업데이트 및 저장
+            # settings = self.settings_manager.settings.copy()
+            # settings['logics'] = updated_logics
+            # self.settings_manager._save_settings(settings)  # settings 인자 추가
             
             self.log_message.emit("로직이 성공적으로 저장되었습니다.")
             
         except Exception as e:
             self.log_message.emit(f"로직 저장 중 오류 발생: {str(e)}")
             # 오류 발생 시 저장된 로직 다시 불러기
-            self.load_saved_logics()
+            # self.load_saved_logics()
 
     def execute_logic(self, logic_id, repeat_count=None):
         """로직을 실행"""
         try:
             # 실행 시점에 최신 로직 데이터 로드
-            logics = self.settings_manager.load_logics(force=True)
+            logics = self.logic_manager.get_all_logics(force=True)
             if logic_id not in logics:
                 raise ValueError(f"로직을 찾을 수 없습니다: {logic_id}")
                 

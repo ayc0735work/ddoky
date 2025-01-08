@@ -296,9 +296,11 @@ class LogicOperationWidget(QFrame):
         self.active_process_label.setText(f"활성 프로세스: {process_name}")
         
     def set_logic_executor(self, executor):
-        """LogicExecutor 인스턴스 설정"""
+        """로직 실행기 설정"""
         self.logic_executor = executor
-
+        # 로직 실행기가 설정되면 바로 딜레이 설정 로드
+        self.load_delay_settings()
+            
     def copy_items(self):
         """선택된 아이템들을 복사합니다."""
         selected_items = self.get_selected_items()
@@ -544,6 +546,7 @@ class LogicOperationWidget(QFrame):
     
     def load_delay_settings(self):
         """저장된 지연 시간 설정 로드"""
+        # key_delays.json 파일에서 값을 불러옴
         delays = self.settings_manager.get('key_delays', {
             'press': 0.0245,
             'release': 0.0245,
@@ -551,12 +554,24 @@ class LogicOperationWidget(QFrame):
             'default': 0.0245
         })
         
-        # 입력 필드에 값 설정
+        print(f"로드된 딜레이 설정: {delays}")  # 로그 추가
+        
+        # UI에 표시
         self.key_press_input.setText(f"{delays['press']:.4f}")
         self.key_release_input.setText(f"{delays['release']:.4f}")
         self.mouse_input_delay.setText(f"{delays['mouse_input']:.4f}")
         self.default_delay_input.setText(f"{delays['default']:.4f}")
-
+        
+        # LogicExecutor의 KEY_DELAYS에도 설정
+        if self.logic_executor:
+            self.logic_executor.KEY_DELAYS = {
+                '누르기': delays['press'],
+                '떼기': delays['release'],
+                '마우스 입력': delays['mouse_input'],
+                '기본': delays['default']
+            }
+            print(f"LogicExecutor KEY_DELAYS 설정됨: {self.logic_executor.KEY_DELAYS}")  # 로그 추가
+    
     def _on_reset_delays(self):
         """지연 시간 초기화 버튼 클릭 시 호출"""
         DEFAULT_DELAY = 0.0245
