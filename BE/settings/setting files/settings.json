@@ -10655,7 +10655,7 @@
             "order": 92,
             "name": "ㄴ왕궁 위로 걸어가기 10초",
             "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-08T06:49:20.482356",
+            "updated_at": "2025-01-08T13:52:31.749920",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -10712,8 +10712,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.2500초",
-                    "duration": 0.25,
+                    "display_text": "지연시간 : 0.285초",
+                    "duration": 0.285,
                     "order": 7
                 },
                 {
@@ -10761,13 +10761,21 @@
                 {
                     "order": 13,
                     "type": "logic",
-                    "display_text": "ㄴ2초 짧은 딜레이 반복",
-                    "logic_id": "d1ba5b14-8941-47b6-af34-aa41692340ee",
-                    "logic_name": "ㄴ2초 짧은 딜레이 반복",
+                    "display_text": "ㄴ0.75초 짧은 딜레이 반복",
+                    "logic_id": "091f5af5-562c-4781-ba4e-b1128c8dcc81",
+                    "logic_name": "ㄴ0.75초 짧은 딜레이 반복",
                     "repeat_count": 1
                 },
                 {
                     "order": 14,
+                    "type": "logic",
+                    "display_text": "ㄴ0.75초 짧은 딜레이 반복",
+                    "logic_id": "091f5af5-562c-4781-ba4e-b1128c8dcc81",
+                    "logic_name": "ㄴ0.75초 짧은 딜레이 반복",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 15,
                     "display_text": "키 입력: 방향키 위쪽 ↑ --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -10780,7 +10788,7 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.25초",
                     "duration": 0.25,
-                    "order": 15
+                    "order": 16
                 }
             ]
         },
@@ -11196,7 +11204,7 @@
             "order": 99,
             "name": "ㄴ 왕퀘 받기",
             "created_at": "2024-12-30T23:21:52.330353",
-            "updated_at": "2025-01-06T22:16:52.613957",
+            "updated_at": "2025-01-08T13:06:21.648680",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -11387,8 +11395,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1996초",
-                    "duration": 0.1996,
+                    "display_text": "지연시간 : 0.0453초",
+                    "duration": 0.0453,
                     "order": 23
                 }
             ]
@@ -11397,7 +11405,7 @@
             "order": 100,
             "name": "ㄴ 왕퀘 취소",
             "created_at": "2024-12-30T23:21:52.330353",
-            "updated_at": "2025-01-07T08:21:18.449283",
+            "updated_at": "2025-01-08T13:06:29.169379",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -11588,8 +11596,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1996초",
-                    "duration": 0.1996,
+                    "display_text": "지연시간 : 0.0453초",
+                    "duration": 0.0453,
                     "order": 23
                 }
             ]
@@ -12281,7 +12289,7 @@
             "order": 113,
             "name": "ㄴ0.75초 짧은 딜레이 반복",
             "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-06T22:05:50.171142",
+            "updated_at": "2025-01-08T13:52:31.684305",
             "trigger_key": null,
             "repeat_count": 30,
             "is_nested": true,
