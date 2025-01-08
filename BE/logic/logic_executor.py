@@ -8,6 +8,7 @@ from ..utils.key_handler import KeyboardHook
 from ..utils.mouse_handler import MouseHandler
 import threading
 from ..settings.settings_manager import SettingsManager
+import keyboard
 
 class LogicExecutor(QObject):
     """로직 실행기"""
@@ -627,7 +628,7 @@ class LogicExecutor(QObject):
         def clear_timer_group():
             if not timer_groups:
                 self._active_timers.clear()
-                self._log_with_time("[로직 강제 중지] 비동기로 실행된 모든 타이머 정리 완료<br>")
+                self._log_with_time("[로직 강제 중지] 비동기로 실행된 모든 타이머 정리 완료<br><br>")
                 # 모든 정리가 완료된 후 시간 초기화
                 self._start_time = 0
                 return
@@ -673,6 +674,14 @@ class LogicExecutor(QObject):
             
             # 키보드 상태 정리 - 모든 눌려있는 키 떼기
             self._release_all_keys()
+            
+            # ESC 키 두 번 누르기
+            for _ in range(2):
+                win32api.keybd_event(27, 0, 0, 0)
+                time.sleep(self.KEY_DELAYS['누르기'])
+                win32api.keybd_event(27, 0, win32con.KEYEVENTF_KEYUP, 0)
+                time.sleep(self.KEY_DELAYS['떼기'])
+            self._log_with_time("[로직 강제 중지] ESC키 두 번 눌렀다 떼기 완료")
             
             # 타이머 정리를 비동기적으로 처리
             self._clear_timers_async()
