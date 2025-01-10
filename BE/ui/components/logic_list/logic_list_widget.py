@@ -48,7 +48,7 @@ class LogicListWidget(QFrame):
         LogicListLayout__QVBoxLayout.setSpacing(10)
         
         # 타이틀
-        LogicListTitle__QLabel = QLabel("만든 로직 영역")
+        LogicListTitle__QLabel = QLabel("만든 로직 리스트")
         LogicListTitle__QLabel.setFont(QFont(TITLE_FONT_FAMILY, SECTION_FONT_SIZE, QFont.Weight.Bold))
         LogicListLayout__QVBoxLayout.addWidget(LogicListTitle__QLabel)
         

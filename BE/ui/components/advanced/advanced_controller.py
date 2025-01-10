@@ -30,7 +30,7 @@ class AdvancedController(QObject):
         self.is_monitoring_enabled = False
     
     def set_monitoring_enabled(self, enabled: bool):
-        """로직 동작 체크박스 상태에 따른 모니터링 설정"""
+        """로직 동작 허용 여부 체크박스 상태에 따른 모니터링 설정"""
         self.is_monitoring_enabled = enabled
         if enabled:
             self.monitor_timer.start()

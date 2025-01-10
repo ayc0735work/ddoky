@@ -14,11 +14,11 @@ from BE.settings.settings_manager import SettingsManager  # SettingsManager 추�
 from ..logic_maker.key_input_dialog import KeyInputDialog  # KeyInputDialog를 여기로 이동
 
 class LogicOperationWidget(QFrame):
-    """로직 동작 온오프 위젯"""
+    """로직 동작 허용 여부 온오프 위젯"""
     
     process_selected = Signal(dict)  # 프로세스가 선택되었을 때
     process_reset = Signal()  # 프로세스가 초기화되었을 때
-    operation_toggled = Signal(bool)  # 로직 동작이 토글되었을 때
+    operation_toggled = Signal(bool)  # 로직 동작 허용 여부 체크박스가 토글되었을 때
     force_stop = Signal()  # 강제 중지 시그널 추가
     log_message = Signal(str)  # 로그 메시지 시그널
     
@@ -47,13 +47,13 @@ class LogicOperationWidget(QFrame):
         title.setFont(QFont(TITLE_FONT_FAMILY, SECTION_FONT_SIZE, QFont.Weight.Bold))
         layout.addWidget(title)
         
-        # 첫 번째 줄 레이아웃 (로직 동작, 버튼)
+        # 첫 번째 줄 레이아웃 (로직 동작 허용 여부, 버튼)
         first_row = QHBoxLayout()
         first_row.setContentsMargins(0, 0, 0, 0)
         first_row.setSpacing(10)  # 체크박스와 버튼 그룹 사이 간격
         
-        # 로직 동작 체크박스
-        self.operation_checkbox = QCheckBox("로직 동작")
+        # 로직 동작 허용 여부 체크박스
+        self.operation_checkbox = QCheckBox("로직 동작 허용")
         self.operation_checkbox.toggled.connect(self._on_operation_toggled)
         first_row.addWidget(self.operation_checkbox)
         

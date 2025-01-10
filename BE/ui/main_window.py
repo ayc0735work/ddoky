@@ -98,7 +98,7 @@ class MainWindow(QMainWindow):
     
     def init_components(self):
         """UI 컴포넌트 초기화"""
-        # 로직 동작 온오프 위젯
+        # 로직 동작 허용 여부 온오프 위젯
         self.logic_operation_widget = LogicOperationWidget()
         self.logic_operation_widget.set_logic_executor(self.logic_executor)  # set_logic_executor 메서드 사용
         self.logic_operation_controller = LogicOperationController(self.logic_operation_widget)
@@ -298,15 +298,15 @@ class MainWindow(QMainWindow):
         super().closeEvent(event)
 
     def _on_logic_operation_toggled(self, is_enabled):
-        """로직 동작 체크박스 상태가 변경되었을 때 호출"""
+        """로직 동작 허용 여부 체크박스 상태가 변경되었을 때 호출"""
         if is_enabled:
             self.logic_executor.start_monitoring()
             self.advanced_controller.set_monitoring_enabled(True)  # 게이지 모니터링 시작
-            self._append_log("로직 동작이 활성화되었습니다<br>")
+            self._append_log("로직 동작 허용 여부가 허용 상태로 변경되었습니다<br>")
         else:
             self.logic_executor.stop_monitoring()
             self.advanced_controller.set_monitoring_enabled(False)  # 게이지 모니터링 중지
-            self._append_log("로직 동작이 비활성화되었습니다")
+            self._append_log("로직 동작 허용 여부가 불허용 상태로 변경되었습니다<br>")
     
     def _on_logic_saved(self, logic_info):
         """로직이 저장되었을 때 호출"""
@@ -314,7 +314,7 @@ class MainWindow(QMainWindow):
         # 로직 메이커와 고급 기능 위젯의 저장된 로직 목록 업데이트
         self.logic_maker_widget.update_saved_logics(self.logic_list_widget.saved_logics)
         self.advanced_widget.update_saved_logics(self.logic_list_widget.saved_logics)
-        # 로직 구성 영역 초기화
+        # 로직 세부 항목 / 로직 만들기 초기화
         self.logic_detail_widget.clear_all()
     
     def _on_logic_updated(self, original_name, logic_info):
@@ -331,7 +331,7 @@ class MainWindow(QMainWindow):
         # 로직 메이커와 고급 기능 위젯의 로직 목록 업데이트
         self.logic_maker_widget.update_saved_logics(self.logic_list_widget.saved_logics)
         self.advanced_widget.update_saved_logics(self.logic_list_widget.saved_logics)
-        # 로직 구성 영역 초기화
+        # 로직 세부 항목 / 로직 만들기 초기화
         self.logic_detail_widget.clear_all()
 
     def _on_process_selected(self, process_info):

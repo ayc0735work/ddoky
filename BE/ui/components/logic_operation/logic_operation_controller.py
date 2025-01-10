@@ -7,7 +7,7 @@ import win32api
 import time
 
 class LogicOperationController(QObject):
-    """로직 동작 온오프 컨트롤러"""
+    """로직 동작 허용 여부 온오프 컨트롤러"""
     
     def __init__(self, widget):
         try:
@@ -37,7 +37,7 @@ class LogicOperationController(QObject):
         self.widget.log_message.emit("[디버그] 시그널 연결이 완료되었습니다")
         
     def _handle_operation_toggle(self, checked):
-        """로직 동작 토글 처리"""
+        """로직 동작 허용 여부 토글 처리"""
         if checked:
             # 로직 실행 시 사용자의 입력 문자열 복사 및 출력
             user_input = self.widget.logic_detail_widget.get_user_input()

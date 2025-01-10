@@ -17,7 +17,7 @@ class LogicMakerToolWidget(QFrame):
     key_input = Signal(dict)  # 키 입력이 추가되었을 때 (키 정보를 딕셔너리로 전달)
     mouse_input = Signal(dict)  # 마우스 입력이 추가되었을 때 (마우스 정보를 딕셔너리로 전달)
     delay_input = Signal(str)  # 지연시간이 추가되었을 때
-    record_mode = Signal(bool)  # 기록 모드가 토글되��을 때
+    record_mode = Signal(bool)  # 기록 모드가 토글되었을 때
     log_message = Signal(str)  # 로그 메시지를 전달하는 시그널
     add_logic = Signal(str)  # 만든 로직 추가 시그널 (로직 이름)
     item_added = Signal(dict)  # 아이템이 추가되었을 때
@@ -41,7 +41,7 @@ class LogicMakerToolWidget(QFrame):
         layout.setSpacing(10)
 
         # 타이틀
-        title = QLabel("로직 메이커 도구")
+        title = QLabel("로직 만들기 도구")
         title.setFont(QFont(TITLE_FONT_FAMILY, SECTION_FONT_SIZE, QFont.Weight.Bold))
         layout.addWidget(title)
 
@@ -69,7 +69,7 @@ class LogicMakerToolWidget(QFrame):
         button_layout.addWidget(self.delay_btn)
 
         # 클릭 대기 버튼
-        self.wait_click_button = QPushButton("왼쪽클릭시 다음으로 진행")
+        self.wait_click_button = QPushButton("클릭시 다음으로 진행")
         self.wait_click_button.setStyleSheet(BUTTON_STYLE)
         self.wait_click_button.clicked.connect(self._add_wait_click)
         button_layout.addWidget(self.wait_click_button)
