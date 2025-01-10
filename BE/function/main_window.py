@@ -6,7 +6,6 @@ from PySide6.QtCore import Qt, QPoint, QSize, QSettings
 from PySide6.QtGui import QFont
 import sys
 import traceback
-
 from BE.function.components.logic_list.logic_list_widget import LogicListWidget
 from BE.function.components.logic_list.logic_list_controller import LogicListController
 from BE.function.components.logic_detail.logic_detail_widget import LogicDetailWidget
@@ -21,9 +20,10 @@ from BE.function.utils.error_handler import ErrorHandler
 from BE.logic.logic_manager import LogicManager
 from BE.logic.logic_executor import LogicExecutor
 from BE.function.components.process.process_manager import ProcessManager
-
 from BE.function.constants.dimensions import (MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, BASIC_SECTION_HEIGHT,
                                MIDDLE_SPACE)
+from BE.function.etc_function.etc_function_widget import EtcFunctionWidget
+from BE.function.etc_function.etc_function_controller import EtcFunctionController
 
 class MainWindow(QMainWindow):
     """메인 윈도우 클래스"""
@@ -101,6 +101,12 @@ class MainWindow(QMainWindow):
         
         # 기본 기능 영역
         self.init_basic_features()
+        
+        # 기타 기능 위젯
+        self.etc_function_widget = EtcFunctionWidget()
+        self.etc_function_controller = EtcFunctionController(self.etc_function_widget)
+        self.etc_function_widget.log_message.connect(self._append_log)  # 로그 메시지 연결
+        self.main_layout.addWidget(self.etc_function_widget)
         
         # 로그 영역
         self.init_log_features()
