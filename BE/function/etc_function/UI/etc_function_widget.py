@@ -112,7 +112,9 @@ class EtcFunctionWidget(QWidget):
         
     def update_hellfire_countdown_label(self, text):
         """헬파이어 카운트다운 레이블 업데이트"""
-        self.hellfire_countdown_label.setText(text)
+        # 값이 변경될 때만 업데이트
+        if not self.hellfire_countdown_label.text() == text:
+            self.hellfire_countdown_label.setText(text)
         
     def set_controller(self, controller):
         """컨트롤러 설정
