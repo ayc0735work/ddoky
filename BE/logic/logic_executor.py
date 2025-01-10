@@ -676,12 +676,12 @@ class LogicExecutor(QObject):
             self._release_all_keys()
             
             # ESC 키 두 번 누르기
-            for _ in range(2):
+            for _ in range(3):
                 win32api.keybd_event(27, 0, 0, 0)
                 time.sleep(self.KEY_DELAYS['누르기'])
                 win32api.keybd_event(27, 0, win32con.KEYEVENTF_KEYUP, 0)
                 time.sleep(self.KEY_DELAYS['떼기'])
-            self._log_with_time("[로직 강제 중지] ESC키 두 번 눌렀다 떼기 완료")
+            self._log_with_time("[로직 강제 중지] ESC키 세 번 눌렀다 떼기 완료")
             
             # 타이머 정리를 비동기적으로 처리
             self._clear_timers_async()
