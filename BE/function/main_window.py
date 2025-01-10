@@ -24,6 +24,8 @@ from BE.function.constants.dimensions import (MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEI
                                MIDDLE_SPACE)
 from BE.function.etc_function.UI.etc_function_widget import EtcFunctionWidget
 from BE.function.etc_function.Controller.etc_function_controller import EtcFunctionController
+from BE.utils.key_handler import KeyboardHook
+import logging
 
 class MainWindow(QMainWindow):
     """메인 윈도우 클래스"""
@@ -41,6 +43,10 @@ class MainWindow(QMainWindow):
         # 로직 관리자와 실행기 초기화
         self.logic_manager = LogicManager(self.settings_manager)
         self.logic_executor = LogicExecutor(self.process_manager, self.logic_manager)
+        
+        # 키보드 훅 초기화
+        self.keyboard_hook = KeyboardHook()
+        self.keyboard_hook.start()
         
         self.init_ui()
         self._setup_connections()  # 시그널/슬롯 연결 설정
@@ -147,6 +153,10 @@ class MainWindow(QMainWindow):
         """컴포넌트 간 시그널/슬롯 연결 설정"""
         # 전역 에러 핸들러 연결
         self.error_handler.error_occurred.connect(self._append_log)
+        
+        # 키보드 훅 시그널을 EtcFunctionController에 연결
+        self.keyboard_hook.key_pressed.connect(self.etc_function_controller._on_key_pressed)
+        self.keyboard_hook.key_released.connect(self.etc_function_controller._on_key_released)
         
         # 로직 동작 허용 여부 변경 시 기타 기능 위젯에도 전달
         self.logic_operation_widget.operation_toggled.connect(self.etc_function_widget.set_logic_enabled)
@@ -273,14 +283,24 @@ class MainWindow(QMainWindow):
         
     def closeEvent(self, event):
         """윈도우가 닫힐 때 호출되는 이벤트 핸들러"""
-        # 현재 윈도우 위치와 크기 저장
-        position = self.pos()
-        size = self.size()
-        
-        self.settings_manager.set_window_position(position.x(), position.y())
-        self.settings_manager.set_window_size(size.width(), size.height())
-        
-        super().closeEvent(event)
+        try:
+            # 윈도우 위치와 크기 저장
+            settings = QSettings()
+            settings.setValue("geometry", self.geometry())
+            
+            # 키보드 훅 정리
+            if hasattr(self, 'keyboard_hook'):
+                self.keyboard_hook.stop()
+            
+            # 프로세스 체크 타이머 정리
+            if hasattr(self.etc_function_controller, 'process_check_timer'):
+                self.etc_function_controller.process_check_timer.stop()
+            
+            event.accept()
+            
+        except Exception as e:
+            logging.error(f"윈도우 종료 중 오류 발생: {str(e)}")
+            event.accept()
 
     def _on_logic_operation_toggled(self, is_enabled):
         """로직 동작 허용 여부 체크박스 상태가 변경되었을 때 호출"""

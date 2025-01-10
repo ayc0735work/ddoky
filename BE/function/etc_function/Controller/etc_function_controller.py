@@ -1,8 +1,9 @@
 import logging
 import sys
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QTimer, QObject
 from ...components.process.process_manager import ProcessManager
 from .countdown_controller import CountdownController
+import time
 
 # 로깅 설정
 logging.basicConfig(
@@ -13,37 +14,137 @@ logging.basicConfig(
     ]
 )
 
-class EtcFunctionController:
+class EtcFunctionController(QObject):
     """기타 기능 컨트롤러"""
     
     def __init__(self, widget):
-        """
-        Args:
-            widget: EtcFunctionWidget 인스턴스
-        """
+        super().__init__()
         logging.debug("[컨트롤러] 초기화 시작")
         self.widget = widget
         self.process_manager = ProcessManager()
         self.countdown_controller = CountdownController()
-        self._setup_connections()
-        self.widget.set_controller(self)  # 위젯에 컨트롤러 참조 설정
+        
+        # 키 상태 관리
+        self._key_state = {
+            'group_a_pressed': False,  # A그룹 키 눌림 상태
+            'group_b_pressed': False,  # B그룹 키 눌림 상태
+            'last_key_info': None,     # 마지막 키 정보
+            'sequence_valid': False,    # 시퀀스 유효성
+            'sequence_start_time': None # 시퀀스 시작 시간
+        }
+        
+        # 시퀀스 타임아웃 타이머
+        self._sequence_timer = QTimer()
+        self._sequence_timer.setInterval(10000)  # 10초
+        self._sequence_timer.timeout.connect(self._on_sequence_timeout)
+        self._sequence_timer.setSingleShot(True)
         
         # 활성 프로세스 체크 타이머 설정
         self.process_check_timer = QTimer()
         self.process_check_timer.timeout.connect(self._check_process_state)
         self.process_check_timer.start(100)  # 100ms 간격으로 체크
         
+        self._connect_signals()
+        self.widget.set_controller(self)  # 위젯에 컨트롤러 참조 설정
         logging.debug("[컨트롤러] 초기화 완료")
         
         logging.info("EtcFunctionController 초기화 완료")
         
-    def _setup_connections(self):
-        """시그널/슬롯 연결 설정"""
+    def _connect_signals(self):
+        """시그널 연결"""
         # 카운트다운 컨트롤러 시그널 연결
         self.countdown_controller.countdown_updated.connect(self._update_countdown_label)
+        self.countdown_controller.countdown_finished.connect(self._on_countdown_finished)
         logging.debug("[컨트롤러] 시그널 연결 완료")
         # 카운트다운 값 변경 시그널 연결
         self.widget.countdown_value_changed.connect(self._handle_countdown_value_changed)
+        
+    def _on_key_pressed(self, key_info):
+        """키가 눌렸을 때의 처리"""
+        logging.debug(f"[EtcFunctionController] 키 눌림 감지: {key_info}")
+        
+        if self._is_group_a_key(key_info):
+            logging.debug("[EtcFunctionController] A그룹 키 감지됨")
+            self._key_state.update({
+                'group_a_pressed': True,
+                'last_key_info': key_info,
+                'sequence_start_time': time.time()
+            })
+            self._sequence_timer.start()
+            
+        elif self._is_group_b_key(key_info) and self._key_state['group_a_pressed']:
+            logging.debug("[EtcFunctionController] B그룹 키 감지됨 (A그룹 키 활성화 상태)")
+            self._key_state['group_b_pressed'] = True
+            
+    def _on_key_released(self, key_info):
+        """키가 떼졌을 때의 처리"""
+        logging.debug(f"[EtcFunctionController] 키 뗌 감지: {key_info}")
+        
+        if self._is_group_b_key(key_info) and self._validate_key_sequence():
+            logging.debug("[EtcFunctionController] 유효한 키 시퀀스 감지됨, 카운트다운 시작")
+            self._sequence_timer.stop()
+            self._start_countdown()
+            
+    def _is_group_a_key(self, key_info):
+        """A그룹 키인지 확인"""
+        return key_info['virtual_key'] in [97, 49]  # 숫자패드 1 또는 일반 1
+        
+    def _is_group_b_key(self, key_info):
+        """B그룹 키인지 확인"""
+        return key_info['virtual_key'] == 13  # 엔터 키
+        
+    def _validate_key_sequence(self):
+        """키 시퀀스 유효성 검증"""
+        if (self._key_state['group_a_pressed'] and 
+            self._key_state['group_b_pressed']):
+            logging.debug("[EtcFunctionController] 키 시퀀스 검증 성공")
+            self._key_state['sequence_valid'] = True
+            return True
+        logging.debug("[EtcFunctionController] 키 시퀀스 검증 실패")
+        return False
+        
+    def _on_sequence_timeout(self):
+        """시퀀스 타임아웃 처리"""
+        logging.debug("[EtcFunctionController] 키 시퀀스 타임아웃 발생")
+        self._reset_key_state()
+        
+    def _reset_key_state(self):
+        """키 상태 초기화"""
+        logging.debug("[EtcFunctionController] 키 상태 초기화")
+        self._key_state.update({
+            'group_a_pressed': False,
+            'group_b_pressed': False,
+            'last_key_info': None,
+            'sequence_valid': False,
+            'sequence_start_time': None
+        })
+        
+    def _check_conditions(self):
+        """모든 실행 조건 체크"""
+        is_enabled = self.widget.is_logic_enabled
+        is_active = self.process_manager.is_selected_process_active()
+        is_valid = self._key_state['sequence_valid']
+        
+        logging.debug(f"[EtcFunctionController] 조건 체크: "
+                     f"로직 활성화={is_enabled}, "
+                     f"프로세스 활성화={is_active}, "
+                     f"시퀀스 유효={is_valid}")
+                     
+        return is_enabled and is_active and is_valid
+        
+    def _start_countdown(self):
+        """카운트다운 시작"""
+        if self._check_conditions():
+            logging.debug("[EtcFunctionController] 카운트다운 시작")
+            self.countdown_controller.start_countdown()
+            self._reset_key_state()
+        else:
+            logging.debug("[EtcFunctionController] 카운트다운 시작 조건 불충족")
+            
+    def _on_countdown_finished(self):
+        """카운트다운 완료 처리"""
+        logging.debug("[EtcFunctionController] 카운트다운 완료")
+        self._reset_key_state()
         
     def _handle_countdown_value_changed(self, value):
         """카운트다운 값 변경 처리"""
