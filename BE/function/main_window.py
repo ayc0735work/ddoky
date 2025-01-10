@@ -22,8 +22,8 @@ from BE.logic.logic_executor import LogicExecutor
 from BE.function.components.process.process_manager import ProcessManager
 from BE.function.constants.dimensions import (MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, BASIC_SECTION_HEIGHT,
                                MIDDLE_SPACE)
-from BE.function.etc_function.etc_function_widget import EtcFunctionWidget
-from BE.function.etc_function.etc_function_controller import EtcFunctionController
+from BE.function.etc_function.UI.etc_function_widget import EtcFunctionWidget
+from BE.function.etc_function.Controller.etc_function_controller import EtcFunctionController
 
 class MainWindow(QMainWindow):
     """메인 윈도우 클래스"""
