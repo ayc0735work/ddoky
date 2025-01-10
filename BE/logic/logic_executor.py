@@ -178,31 +178,30 @@ class LogicExecutor(QObject):
         print(f"[DEBUG] 키 이벤트 감지 - key_info: {key_info}, step_input: {self.is_step_input}, simulated: {self.is_simulated_input}")
         self._log_with_time("[키 감지 로그] 키 입력 감지: {}".format(key_info))
         
-        # 시뮬레이션된 입력과 실제 입력을 구분하여 처리
-        if key_info['key_code'] == 'ESC':
-            if self.is_simulated_input:
-                print("[DEBUG] 시뮬레이션된 ESC 입력 무시")
-                return
-            else:
-                print("[DEBUG] 실제 ESC 입력 감지")
-                self._log_with_time("[키 감지 로그] 실제 ESC 키 입력 감지")
+        # 강제 중지 키(ESC) 처리 - 시뮬레이션된 입력이 아닐 때만 처리
+        if not self.is_simulated_input and key_info.get('virtual_key') == self.force_stop_key:
+            # 활성 프로세스와 선택된 프로세스가 동일한지 확인
+            active_process = self.process_manager.get_active_process()
+            selected_process = self.process_manager.get_selected_process()
+            
+            if active_process and selected_process and active_process['pid'] == selected_process['pid']:
+                # 이미 중지 상태인지 확인
                 if self._should_stop:
                     print("[DEBUG] 이미 중지 상태입니다.")
                     return
+                    
+                print("[DEBUG] 강제 중지 키 감지 - 강제 중지 실행")
+                print("[DEBUG] 키 이벤트 감지 종료 ----\n")
+                self._log_with_time("[키 감지 로그] 강제 중지 키 감지 - 로직 강제 중지 실행")
                 self._should_stop = True
-                # 실제 ESC 입력에 대한 추가 처리 로직 필요 시 여기에 추가
-        
-        # 시뮬레이션된 입력은 무시
+                self.force_stop()
+            else:
+                self._log_with_time("[키 감지 로그] 강제 중지 키가 감지되었으나, 활성 프로세스가 선택된 프로세스와 다르므로 무시됩니다.")
+            return
+            
+        # 시뮬레이션된 입력 처리
         if self.is_simulated_input:
             print("[DEBUG] 시뮬레이션된 입력 무시")
-            return
-        
-        # 스텝 입력이 아닐 때만 강제 중지 키 처리
-        if not self.is_step_input and key_info.get('virtual_key') == self.force_stop_key:
-            print("[DEBUG] 강제 중지 키 감지 - 강제 중지 실행")
-            print("[DEBUG] 키 이벤트 감지 종료 ----\n")
-            self._log_with_time("[키 감지 로그] 강제 중지 키 감지 - 로직 강제 중지 실행")
-            self.force_stop()
             return
         
         if not self._should_execute_logic():
