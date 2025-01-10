@@ -1,9 +1,11 @@
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
-                             QFrame, QSpinBox, QPushButton)
-from PySide6.QtCore import Signal
+                             QFrame)
+from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QFont
 from ...constants.styles import (TITLE_FONT_FAMILY, SECTION_FONT_SIZE, 
-                               CONTAINER_STYLE)
+                               CONTAINER_STYLE, LABEL_FONT_SIZE)
+from ...constants.dimensions import (KEY_COUNTDOWN_WIDTH, EMPTY_SECTION_WIDTH,
+                                   SECTION_MARGIN)
 
 class EtcFunctionWidget(QWidget):
     """기타 기능 위젯"""
@@ -29,69 +31,77 @@ class EtcFunctionWidget(QWidget):
         title_label.setFont(title_font)
         self.main_layout.addWidget(title_label)
         
-        # 버튼 레이아웃
-        self.button_layout = QHBoxLayout()
-        self.main_layout.addLayout(self.button_layout)
-        
-        # 기타 기능 버튼들 추가
-        # self.add_function_buttons()
+        # 섹션들을 담을 수평 레이아웃
+        sections_layout = QHBoxLayout()
+        sections_layout.setSpacing(SECTION_MARGIN)
         
         # 키 입력 카운트다운 섹션
-        self.init_key_countdown_section()
+        sections_layout.addWidget(self.init_key_countdown_section())
         
-    # def add_function_buttons(self):
-    #     """기타 기능 버튼들 추가"""
-    #     # 여기에 필요한 기타 기능 버튼들을 추가
-    #     # 예시:
-    #     # self.add_button("기능 1", self.function1)
-    #     # self.add_button("기능 2", self.function2)
+        # 빈 섹션
+        sections_layout.addWidget(self.init_empty_section())
         
-    # def add_button(self, text, callback):
-    #     """버튼 추가 헬퍼 메서드"""
-    #     button = QPushButton(text)
-    #     button.clicked.connect(callback)
-    #     self.button_layout.addWidget(button)
+        self.main_layout.addLayout(sections_layout)
         
-    # def function1(self):
-    #     """기능 1"""
-    #     self.log_message.emit("기능 1이 실행되었습니다.")
-        
-    # def function2(self):
-    #     """기능 2"""
-    #     self.log_message.emit("기능 2가 실행되었습니다.")
-
     def init_key_countdown_section(self):
         """키 입력 카운트다운 섹션 초기화"""
         # 컨테이너 프레임
         container = QFrame()
         container.setStyleSheet(CONTAINER_STYLE)
+        container.setFixedWidth(KEY_COUNTDOWN_WIDTH)
         container_layout = QVBoxLayout()
+        container_layout.setContentsMargins(5, 5, 5, 5)  # 여백 최소화
+        container_layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)  # 왼쪽 상단 정렬
         container.setLayout(container_layout)
         
         # 섹션 제목
         section_title = QLabel("키 입력 카운트다운")
+        section_title.setStyleSheet("border: none;")
+        section_title.setAlignment(Qt.AlignLeft)  # 왼쪽 정렬
         section_font = QFont(TITLE_FONT_FAMILY, SECTION_FONT_SIZE - 2)
         section_font.setWeight(QFont.Bold)
         section_title.setFont(section_font)
         container_layout.addWidget(section_title)
         
-        # 카운트다운 설정 영역
+        # 카운트다운 표시 영역
         countdown_layout = QHBoxLayout()
         
-        # 카운트다운 입력
-        self.countdown_spinbox = QSpinBox()
-        self.countdown_spinbox.setRange(1, 60)  # 1초에서 60초
-        self.countdown_spinbox.setValue(3)  # 기본값 3초
-        self.countdown_spinbox.setSuffix("초")
-        self.countdown_spinbox.valueChanged.connect(self._on_countdown_value_changed)
+        # 헬파이어 라벨
+        hellfire_label = QLabel("헬파이어:")
+        hellfire_label.setStyleSheet("border: none;")
+        hellfire_label.setFont(QFont(TITLE_FONT_FAMILY, LABEL_FONT_SIZE))
+        countdown_layout.addWidget(hellfire_label)
         
-        # 레이블과 스핀박스를 수평 레이아웃에 추가
-        countdown_layout.addWidget(QLabel("대기 시간:"))
-        countdown_layout.addWidget(self.countdown_spinbox)
+        # 카운트다운 라벨
+        self.countdown_label = QLabel("헬파이어 마법 미감지")
+        self.countdown_label.setStyleSheet("border: none;")
+        self.countdown_label.setFont(QFont(TITLE_FONT_FAMILY, LABEL_FONT_SIZE))
+        countdown_layout.addWidget(self.countdown_label)
         countdown_layout.addStretch()
         
         container_layout.addLayout(countdown_layout)
-        self.main_layout.addWidget(container)
+        return container
+        
+    def init_empty_section(self):
+        """빈 섹션 초기화"""
+        container = QFrame()
+        container.setStyleSheet(CONTAINER_STYLE)
+        container.setFixedWidth(EMPTY_SECTION_WIDTH)
+        container_layout = QVBoxLayout()
+        container_layout.setContentsMargins(5, 5, 5, 5)  # 여백 최소화
+        container_layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)  # 왼쪽 상단 정렬
+        container.setLayout(container_layout)
+        
+        # 섹션 제목
+        section_title = QLabel("아직 기능 구현이 없는 영역")
+        section_title.setStyleSheet("border: none;")
+        section_title.setAlignment(Qt.AlignLeft)  # 왼쪽 정렬
+        section_font = QFont(TITLE_FONT_FAMILY, SECTION_FONT_SIZE - 2)
+        section_font.setWeight(QFont.Bold)
+        section_title.setFont(section_font)
+        container_layout.addWidget(section_title)
+        
+        return container
         
     def _on_countdown_value_changed(self, value):
         """카운트다운 값이 변경되었을 때 호출"""
