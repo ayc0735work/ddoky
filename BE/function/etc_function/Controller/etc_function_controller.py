@@ -83,7 +83,7 @@ class EtcFunctionController(QObject):
         if self._is_group_b_key(key_info) and self._validate_key_sequence():
             logging.debug("[EtcFunctionController] 유효한 키 시퀀스 감지됨, 카운트다운 시작")
             self._sequence_timer.stop()
-            self._start_countdown()
+            self.start_hellfire_countdown()
             
     def _is_group_a_key(self, key_info):
         """A그룹 키인지 확인"""
@@ -119,19 +119,18 @@ class EtcFunctionController(QObject):
             'sequence_start_time': None
         })
         
-    def _check_conditions(self):
-        """모든 실행 조건 체크"""
-        is_enabled = self.widget.is_logic_enabled
-        is_active = self.process_manager.is_selected_process_active()
-        is_valid = self._key_state['sequence_valid']
-        
-        logging.debug(f"[EtcFunctionController] 조건 체크: "
-                     f"로직 활성화={is_enabled}, "
-                     f"프로세스 활성화={is_active}, "
-                     f"시퀀스 유효={is_valid}")
-                     
-        return is_enabled and is_active and is_valid
-        
+    def _check_process_state(self):
+        """프로세스 상태 체크"""
+        try:
+            # 프로세스가 비활성화되었을 때만 카운트다운 중지
+            if not self.process_manager.is_selected_process_active():
+                if self.countdown_controller.is_running():
+                    logging.debug("[컨트롤러] 프로세스 비활성화로 카운트다운 중지")
+                    self.stop_hellfire_countdown()
+                    
+        except Exception as e:
+            logging.error(f"[컨트롤러] 프로세스 상태 체크 중 오류 발생: {e}")
+            
     def _start_countdown(self):
         """카운트다운 시작"""
         if self._check_conditions():
@@ -175,31 +174,15 @@ class EtcFunctionController(QObject):
         """
         self.widget.update_hellfire_countdown_label(f"{value:.2f}")
 
-    def _check_process_state(self):
-        """프로세스 상태 체크 및 카운트다운 제어"""
-        try:
-            selected_process = self.process_manager.get_selected_process()
-            active_process = self.process_manager.get_active_process()
-            
-            if selected_process and active_process:
-                is_active = selected_process['pid'] == active_process['pid']
-                current_logic_enabled = self.widget.is_logic_enabled
-                current_countdown_running = self.countdown_controller._running
-                
-                # 프로세스 상태가 변경되었을 때만 위젯 업데이트 및 로그 출력
-                if is_active != self.widget.is_process_active():
-                    logging.debug(f"[컨트롤러] 프로세스 상태 변경 감지 - 선택: {selected_process['pid']}, 활성: {active_process['pid']}, 일치: {is_active}, 로직활성화: {current_logic_enabled}")
-                    self.widget.update_process_state(is_active)
-                    
-                # 상태에 따라 카운트다운 제어
-                if is_active and current_logic_enabled:
-                    if not current_countdown_running:
-                        logging.debug("[컨트롤러] 카운트다운 시작")
-                        self.start_hellfire_countdown()
-                else:
-                    if current_countdown_running:
-                        logging.debug("[컨트롤러] 카운트다운 중지")
-                        self.stop_hellfire_countdown()
-                    
-        except Exception as e:
-            logging.error(f"[컨트롤러] 프로세스 상태 체크 중 오류 발생: {e}")
+    def _check_conditions(self):
+        """모든 실행 조건 체크"""
+        is_enabled = self.widget.is_logic_enabled
+        is_active = self.process_manager.is_selected_process_active()
+        is_valid = self._key_state['sequence_valid']
+        
+        logging.debug(f"[EtcFunctionController] 조건 체크: "
+                     f"로직 활성화={is_enabled}, "
+                     f"프로세스 활성화={is_active}, "
+                     f"시퀀스 유효={is_valid}")
+                     
+        return is_enabled and is_active and is_valid

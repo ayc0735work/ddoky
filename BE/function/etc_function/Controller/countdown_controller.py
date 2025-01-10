@@ -19,6 +19,10 @@ class CountdownController(QObject):
         self._timer.setInterval(10)  # 10ms 간격으로 업데이트
         logging.debug("[CountdownController] 초기화 완료")
         
+    def is_running(self):
+        """현재 카운트다운 실행 상태 반환"""
+        return self._is_running
+        
     def start_countdown(self):
         """카운트다운 시작"""
         if not self._is_running:
@@ -41,7 +45,6 @@ class CountdownController(QObject):
         """타이머 타임아웃 처리"""
         if self._is_running and self._countdown_value > 0:
             self._countdown_value = max(0, round(self._countdown_value - 0.01, 2))
-            logging.debug(f"[CountdownController] 카운트다운 업데이트: {self._countdown_value:.2f}")
             self.countdown_updated.emit(self._countdown_value)
             
             if self._countdown_value == 0:
