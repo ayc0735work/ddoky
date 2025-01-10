@@ -610,10 +610,10 @@ class LogicExecutor(QObject):
         
         # 타이머 완료 대기
         # processEvents()로 UI 반응성 유지하면서
-        # 0.1초 간격으로 타이머 상태 확인
+        # 0.005초 간격으로 타이머 상태 확인
         while wait_timer.isActive() and not self._should_stop:
             QApplication.processEvents()  # UI 이벤트 처리 허용
-            time.sleep(0.1)  # CPU 부하 감소를 위한 짧은 대기{{ ... }}
+            time.sleep(0.005)  # CPU 부하 감소를 위한 짧은 대기{{ ... }}
 
     def _clear_timers_async(self):
         """타이머를 비동기적으로 정리"""
