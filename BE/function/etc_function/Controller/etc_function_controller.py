@@ -182,8 +182,14 @@ class EtcFunctionController(QObject):
         """헬파이어 카운트다운 시작"""
         logging.info("[컨트롤러] 헬파이어 카운트다운 시작 요청")
         logging.info("헬파이어 카운트다운 시작")
-        self.countdown_controller.start_countdown()
         
+        if self.countdown_controller.is_running():
+            # 이미 실행 중이면 리셋
+            self.countdown_controller.reset_countdown()
+        else:
+            # 처음 시작
+            self.countdown_controller.start_countdown()
+            
     def stop_hellfire_countdown(self):
         """헬파이어 카운트다운 중지"""
         logging.info("[컨트롤러] 헬파이어 카운트다운 중지 요청")

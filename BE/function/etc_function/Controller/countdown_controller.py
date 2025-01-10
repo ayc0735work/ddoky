@@ -14,35 +14,58 @@ class CountdownWorker(QThread):
         super().__init__(parent)
         self._target_end_time = None
         self._is_running = False
+        self._lock = threading.Lock()
         
     def set_target_time(self, target_time):
-        self._target_end_time = target_time
+        with self._lock:
+            self._target_end_time = target_time
+            logging.debug(f"[CountdownWorker] 목표 시간 설정: {target_time}")
         
     def stop(self):
-        self._is_running = False
+        logging.debug("[CountdownWorker] 정지 요청")
+        with self._lock:
+            self._is_running = False
         
     def run(self):
-        self._is_running = True
-        while self._is_running and self._target_end_time:
+        with self._lock:
+            if self._target_end_time is None:
+                logging.error("[CountdownWorker] 목표 시간이 설정되지 않음")
+                return
+                
+            self._is_running = True
+            target_time = self._target_end_time
+            logging.debug(f"[CountdownWorker] 카운트다운 시작. 목표 시간: {target_time}")
+        
+        while True:
+            with self._lock:
+                if not self._is_running:
+                    logging.debug("[CountdownWorker] 정지 신호 감지")
+                    break
+                if self._target_end_time != target_time:
+                    logging.debug("[CountdownWorker] 목표 시간 변경 감지")
+                    break
+            
             current_time = perf_counter()
-            remaining = max(0, self._target_end_time - current_time)
+            remaining = max(0, target_time - current_time)
             
             self.time_updated.emit(remaining)
             
             if remaining <= 0:
+                logging.debug("[CountdownWorker] 카운트다운 완료")
                 break
-                
-            # QThread의 내장 이벤트 루프 사용
-            self.msleep(1)
             
+            self.msleep(1)
+        
+        logging.debug("[CountdownWorker] 스레드 종료")
+        with self._lock:
+            self._is_running = False
         self.finished.emit()
-        self._is_running = False
 
 class CountdownController(QObject):
     """카운트다운 컨트롤러"""
     
-    countdown_updated = Signal(float)  # 카운트다운 값이 업데이트될 때 발생하는 시그널
-    countdown_finished = Signal()      # 카운트다운이 완료될 때 발생하는 시그널
+    countdown_updated = Signal(float)
+    countdown_finished = Signal()
     
     def __init__(self):
         super().__init__()
@@ -53,20 +76,16 @@ class CountdownController(QObject):
         self._last_update_time = None
         
         # 워커 스레드 초기화
-        self._worker = CountdownWorker()
-        self._worker.time_updated.connect(self._update_time)
-        self._worker.finished.connect(self._on_worker_finished)
+        self._worker = None
+        self._create_worker()
         
-        # 타이머 초기화 (고정밀 타이머로 설정)
+        # 타이머 초기화
         self._timer = QTimer()
         self._timer.setTimerType(Qt.TimerType.PreciseTimer)
         self._timer.timeout.connect(self._on_timeout)
-        self._timer.setInterval(16)  # 약 60fps로 업데이트
+        self._timer.setInterval(16)
         
-        # 스레드 동기화를 위한 락
         self._lock = threading.Lock()
-        
-        # 성능 모니터링
         self._performance_stats = {
             'updates': 0,
             'delays': 0,
@@ -74,32 +93,61 @@ class CountdownController(QObject):
         }
         
         logging.debug("[CountdownController] 초기화 완료")
+    
+    def _create_worker(self):
+        """새로운 워커 스레드 생성"""
+        if self._worker is not None:
+            self._worker.stop()
+            self._worker.wait()
+            self._worker.deleteLater()
         
+        self._worker = CountdownWorker()
+        self._worker.time_updated.connect(self._update_time)
+        self._worker.finished.connect(self._on_worker_finished)
+        logging.debug("[CountdownController] 새로운 워커 생성")
+    
     def is_running(self):
         """현재 카운트다운 실행 상태 반환"""
-        return self._is_running
+        with self._lock:
+            return self._is_running
         
-    def start_countdown(self):
-        """카운트다운 시작"""
-        if not self._is_running:
-            logging.debug("[CountdownController] 카운트다운 시작")
-            with self._lock:
-                self._is_running = True
-                self._countdown_value = 10.00
-                self._start_time = perf_counter()
-                self._target_end_time = self._start_time + 10.0
-                self._last_update_time = self._start_time
+    def reset_countdown(self):
+        """카운트다운 리셋 (진행 중에도 가능)"""
+        logging.debug("[CountdownController] 카운트다운 리셋 시작")
+        
+        # 워커 스레드 중지 및 대기
+        if self._worker is not None:
+            self._worker.stop()
+            self._worker.wait()
+        
+        with self._lock:
+            current_time = perf_counter()
+            self._countdown_value = 10.00
+            self._start_time = current_time
+            self._target_end_time = current_time + 10.0
+            self._last_update_time = current_time
+            self._is_running = True
             
-            # 워커 스레드 시작
+            # 새로운 워커 생성 및 시작
+            self._create_worker()
             self._worker.set_target_time(self._target_end_time)
             self._worker.start()
             
-            self._timer.start()
+            # 타이머 시작
+            if not self._timer.isActive():
+                self._timer.start()
+            
             self.countdown_updated.emit(self._countdown_value)
+            logging.debug("[CountdownController] 카운트다운 리셋 완료, 새로운 카운트다운 시작")
+    
+    def start_countdown(self):
+        """카운트다운 시작"""
+        if not self.is_running():
+            self.reset_countdown()
         
     def stop_countdown(self):
         """카운트다운 중지"""
-        if self._is_running:
+        if self.is_running():
             logging.debug("[CountdownController] 카운트다운 중지")
             with self._lock:
                 self._is_running = False
@@ -109,7 +157,7 @@ class CountdownController(QObject):
                 self._start_time = None
                 self._target_end_time = None
                 self._last_update_time = None
-            self.countdown_updated.emit(self._countdown_value)
+                self.countdown_updated.emit(self._countdown_value)
     
     def _update_time(self, remaining_time):
         """워커 스레드로부터 시간 업데이트 수신"""
@@ -119,12 +167,16 @@ class CountdownController(QObject):
     def _on_worker_finished(self):
         """워커 스레드 완료 처리"""
         logging.debug("[CountdownController] 워커 스레드 완료")
-        self.stop_countdown()
-        self.countdown_finished.emit()
+        with self._lock:
+            if self._countdown_value <= 0:  # 카운트다운이 정상적으로 완료된 경우에만
+                self._is_running = False
+                self._timer.stop()
+                self.countdown_finished.emit()
+                logging.debug("[CountdownController] 카운트다운 정상 완료")
         
     def _on_timeout(self):
         """타이머 타임아웃 처리 (UI 업데이트용)"""
-        if not self._is_running:
+        if not self.is_running():
             return
             
         current_time = perf_counter()
