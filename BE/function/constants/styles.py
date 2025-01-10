@@ -74,6 +74,6 @@ LOG_TEXT_STYLE = """
 
 # Font settings
 TITLE_FONT_FAMILY = "Noto Sans CJK KR"
-TITLE_FONT_SIZE = 20
-SECTION_FONT_SIZE = 14
-LABEL_FONT_SIZE = 14  # 일반 라벨 폰트 사이즈
+TITLE_FONT_SIZE = 20 # 각 영역 타이틀 폰트 사이즈
+SECTION_FONT_SIZE = 14 # 각 영역의 하위 타이틀 폰트 사이즈
+ETC_FUNCTION_COUNTDOWN_FONT_SIZE = 14  # 기타 기능 영역의 키 입력 카운트다운 라벨 폰트 사이즈

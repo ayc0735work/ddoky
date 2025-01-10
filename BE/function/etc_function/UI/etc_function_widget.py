@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QFont
 from ...constants.styles import (TITLE_FONT_FAMILY, SECTION_FONT_SIZE, 
-                               CONTAINER_STYLE, LABEL_FONT_SIZE)
+                               CONTAINER_STYLE, ETC_FUNCTION_COUNTDOWN_FONT_SIZE)
 from ...constants.dimensions import (KEY_COUNTDOWN_WIDTH, EMPTY_SECTION_WIDTH,
                                    SECTION_MARGIN)
 
@@ -69,13 +69,13 @@ class EtcFunctionWidget(QWidget):
         # 헬파이어 라벨
         hellfire_label = QLabel("헬파이어:")
         hellfire_label.setStyleSheet("border: none;")
-        hellfire_label.setFont(QFont(TITLE_FONT_FAMILY, LABEL_FONT_SIZE))
+        hellfire_label.setFont(QFont(TITLE_FONT_FAMILY, ETC_FUNCTION_COUNTDOWN_FONT_SIZE))
         countdown_layout.addWidget(hellfire_label)
         
         # 카운트다운 라벨
         self.countdown_label = QLabel("헬파이어 마법 미감지")
         self.countdown_label.setStyleSheet("border: none;")
-        self.countdown_label.setFont(QFont(TITLE_FONT_FAMILY, LABEL_FONT_SIZE))
+        self.countdown_label.setFont(QFont(TITLE_FONT_FAMILY, ETC_FUNCTION_COUNTDOWN_FONT_SIZE))
         countdown_layout.addWidget(self.countdown_label)
         countdown_layout.addStretch()
         
