@@ -556,7 +556,7 @@ class LogicExecutor(QObject):
         start_time = time.time()
         
         # 로그 출력으로 현재 상태 알림
-        self._log_with_time("[왼쪽 버튼 클릭 대기] 왼쪽 버튼 클릭 대기 중...")
+        self._log_with_time("[마우스 왼쪽 버튼 클릭 또는 스페이스바 입력 대기] 입력 대기 중...")
         
         # 마우스 버튼의 눌림/뗌 상태를 추적하기 위한 변수
         button_pressed = False
@@ -569,19 +569,19 @@ class LogicExecutor(QObject):
         wait_timer.setInterval(5) # 5밀리초(0.0005초) 간격
         
         def check_click():
-            """마우스 클릭 상태를 확인하는 콜백 함수
+            """마우스 클릭 상태나 스페이스바 입력을 확인하는 콜백 함수
             
             매 타이머 간격(5ms)마다 실행되며:
             1. 강제 중지 여부 확인
-            2. 마우스 왼쪽 버튼 상태 확인
-            3. 버튼 상태 변화에 따른 처리
+            2. 마우스 왼쪽 버튼 상태 또는 스페이스바 입력 확인
+            3. 버튼/키 상태 변화에 따른 처리
             """
             nonlocal button_pressed, start_time
             
             # 강제 중지 요청이 있는 경우 타이머 정리
             if self._should_stop:
                 elapsed_time = time.time() - start_time
-                self._log_with_time(f"[{elapsed_time:.4f}초] [왼쪽 버튼 클릭 대기] 강제 중지됨")
+                self._log_with_time(f"[{elapsed_time:.4f}초] [마우스 왼쪽 버튼 클릭 또는 스페이스바 입력 대기] 강제 중지됨")
                 wait_timer.stop()
                 wait_timer.deleteLater()
                 return
@@ -589,17 +589,20 @@ class LogicExecutor(QObject):
             # win32api를 사용하여 마우스 왼쪽 버튼의 현재 상태 확인
             # GetAsyncKeyState 반환값에 0x8000 비트 마스크를 적용하여
             # 버튼이 눌렸는지 확인
-            is_pressed = win32api.GetAsyncKeyState(win32con.VK_LBUTTON) & 0x8000
+            # 마우스 왼쪽 버튼과 스페이스바 상태 확인
+            is_mouse_pressed = win32api.GetAsyncKeyState(win32con.VK_LBUTTON) & 0x8000
+            is_space_pressed = win32api.GetAsyncKeyState(win32con.VK_SPACE) & 0x8000
             
-            if is_pressed and not button_pressed:
-                # 버튼이 처음 눌린 순간 감지
+            if (is_mouse_pressed or is_space_pressed) and not button_pressed:
+                # 버튼이나 키가 처음 눌린 순간 감지
                 button_pressed = True
                 elapsed_time = time.time() - start_time
-                self._log_with_time(f"[{elapsed_time:.4f}초] [왼쪽 버튼 클릭 대기] 왼쪽 버튼이 눌렸습니다")
-            elif not is_pressed and button_pressed:
-                # 버튼이 떼진 순간 감지 및 다음 단계 진행
+                input_type = "왼쪽 버튼" if is_mouse_pressed else "스페이스바"
+                self._log_with_time(f"[{elapsed_time:.4f}초] [마우스 왼쪽 버튼 클릭 또는 스페이스바 입력 대기] {input_type}가 눌렸습니다")
+            elif not (is_mouse_pressed or is_space_pressed) and button_pressed:
+                # 버튼이나 키가 떼진 순간 감지 및 다음 단계 진행
                 elapsed_time = time.time() - start_time
-                self._log_with_time(f"[{elapsed_time:.4f}초] [왼쪽 버튼 클릭 대기] 왼쪽 버튼이 떼졌습니다. 다음 단계로 진행합니다")
+                self._log_with_time(f"[{elapsed_time:.4f}초] [마우스 왼쪽 버튼 클릭 또는 스페이스바 입력] 입력이 감지되어 다음 단계로 진행합니다")
                 wait_timer.stop()
                 wait_timer.deleteLater()
         
@@ -811,7 +814,7 @@ class LogicExecutor(QObject):
         elif "로직 실행" in message and ("실행 시작" in message or "반복 완료" in message):
             formatted_message = f"<span style='color: #0000FF; font-size: 20px; font-weight: bold;'>{time_info}</span> <span style='color: #0000FF; font-size: 20px; font-weight: bold;'>{message}</span>"
 
-        elif "왼쪽 버튼 클릭 대기" in message:
+        elif "마우스 왼쪽 버튼 클릭" in message:
             formatted_message = f"<span style='color: #E2C000; font-size: 20px; font-weight: bold;'>{time_info}</span> <span style='color: #E2C000; font-size: 20px; font-weight: bold;'>{message}</span>"
 
         else:
