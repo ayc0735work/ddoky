@@ -553,10 +553,11 @@ class LogicExecutor(QObject):
             item (dict): 클릭 대기 아이템 정보를 담은 딕셔너리
         """
         # 시작 시간 기록
-        start_time = time.time()
+        start_time = self._start_time
         
         # 로그 출력으로 현재 상태 알림
-        self._log_with_time("[마우스 왼쪽 버튼 클릭 또는 스페이스바 입력 대기] 입력 대기 중...")
+        elapsed_time = time.time() - start_time
+        self._log_with_time(f"[마우스 왼쪽 버튼 클릭 또는 스페이스바 입력 대기] 입력 대기 중...")
         
         # 마우스 버튼의 눌림/뗌 상태를 추적하기 위한 변수
         button_pressed = False
@@ -581,11 +582,11 @@ class LogicExecutor(QObject):
             # 강제 중지 요청이 있는 경우 타이머 정리
             if self._should_stop:
                 elapsed_time = time.time() - start_time
-                self._log_with_time(f"[{elapsed_time:.4f}초] [마우스 왼쪽 버튼 클릭 또는 스페이스바 입력 대기] 강제 중지됨")
+                self._log_with_time(f"[마우스 왼쪽 버튼 클릭 또는 스페이스바 입력 대기] 강제 중지됨")
                 wait_timer.stop()
                 wait_timer.deleteLater()
                 return
-            
+                
             # win32api를 사용하여 마우스 왼쪽 버튼의 현재 상태 확인
             # GetAsyncKeyState 반환값에 0x8000 비트 마스크를 적용하여
             # 버튼이 눌렸는지 확인
@@ -598,11 +599,11 @@ class LogicExecutor(QObject):
                 button_pressed = True
                 elapsed_time = time.time() - start_time
                 input_type = "왼쪽 버튼" if is_mouse_pressed else "스페이스바"
-                self._log_with_time(f"[{elapsed_time:.4f}초] [마우스 왼쪽 버튼 클릭 또는 스페이스바 입력 대기] {input_type}가 눌렸습니다")
+                self._log_with_time(f"[마우스 왼쪽 버튼 클릭 또는 스페이스바 입력 대기] {input_type}가 눌렸습니다")
             elif not (is_mouse_pressed or is_space_pressed) and button_pressed:
                 # 버튼이나 키가 떼진 순간 감지 및 다음 단계 진행
                 elapsed_time = time.time() - start_time
-                self._log_with_time(f"[{elapsed_time:.4f}초] [마우스 왼쪽 버튼 클릭 또는 스페이스바 입력] 입력이 감지되어 다음 단계로 진행합니다")
+                self._log_with_time(f"[마우스 왼쪽 버튼 클릭 또는 스페이스바 입력] 입력이 감지되어 다음 단계로 진행합니다")
                 wait_timer.stop()
                 wait_timer.deleteLater()
         
@@ -784,7 +785,8 @@ class LogicExecutor(QObject):
             "지연시간",
             "키 입력",
             "모든 키 떼기",
-            "중지 상태"
+            "중지 상태",
+            "마우스 왼쪽 버튼 클릭 또는 스페이스바 입력 대기"
         ]
 
         # 시간 정보 포함 패턴이 있는 경우 시간 정보 추가
