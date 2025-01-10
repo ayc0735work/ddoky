@@ -148,6 +148,12 @@ class MainWindow(QMainWindow):
         # 전역 에러 핸들러 연결
         self.error_handler.error_occurred.connect(self._append_log)
         
+        # 로직 동작 허용 여부 변경 시 기타 기능 위젯에도 전달
+        self.logic_operation_widget.operation_toggled.connect(self.etc_function_widget.set_logic_enabled)
+        
+        # 프로세스 선택 시 기타 기능 컨트롤러에도 전달
+        self.process_manager.process_selected.connect(self.etc_function_controller.process_manager.set_selected_process)
+        
         # 로직 리스트와 상세 정보 연결
         self.logic_list_widget.logic_selected.connect(self.logic_detail_controller.on_logic_selected)
         self.logic_list_widget.edit_logic.connect(self._handle_edit_logic)

@@ -1,3 +1,5 @@
+import logging
+import sys
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
                              QFrame)
 from PySide6.QtCore import Signal, Qt
@@ -12,11 +14,15 @@ class EtcFunctionWidget(QWidget):
     
     # 시그널 정의
     log_message = Signal(str)  # 로그 메시지 시그널
-    countdown_value_changed = Signal(int)  # 카운트다운 값 변경 시그널
+    countdown_value_changed = Signal(float)  # 카운트다운 값 변경 시그널
     
     def __init__(self):
         super().__init__()
+        self.is_logic_enabled = False
+        self.controller = None  # 컨트롤러 참조 저장
+        self._process_active = False  # 프로세스 활성 상태
         self.init_ui()
+        logging.debug("[위젯] 초기화 완료")
         
     def init_ui(self):
         """UI 초기화"""
@@ -72,11 +78,12 @@ class EtcFunctionWidget(QWidget):
         hellfire_label.setFont(QFont(TITLE_FONT_FAMILY, ETC_FUNCTION_COUNTDOWN_FONT_SIZE))
         countdown_layout.addWidget(hellfire_label)
         
-        # 카운트다운 라벨
-        self.countdown_label = QLabel("헬파이어 마법 미감지")
-        self.countdown_label.setStyleSheet("border: none;")
-        self.countdown_label.setFont(QFont(TITLE_FONT_FAMILY, ETC_FUNCTION_COUNTDOWN_FONT_SIZE))
-        countdown_layout.addWidget(self.countdown_label)
+        # 카운트다운 레이블
+        self.hellfire_countdown_label = QLabel("10.00")
+        self.hellfire_countdown_label.setStyleSheet("border: none; color: red; font-weight: bold;")
+        self.hellfire_countdown_label.setFont(QFont(TITLE_FONT_FAMILY, ETC_FUNCTION_COUNTDOWN_FONT_SIZE))
+        self.hellfire_countdown_label.setAlignment(Qt.AlignCenter)
+        countdown_layout.addWidget(self.hellfire_countdown_label)
         countdown_layout.addStretch()
         
         container_layout.addLayout(countdown_layout)
@@ -103,6 +110,62 @@ class EtcFunctionWidget(QWidget):
         
         return container
         
+    def update_hellfire_countdown_label(self, text):
+        """헬파이어 카운트다운 레이블 업데이트"""
+        self.hellfire_countdown_label.setText(text)
+        
+    def set_controller(self, controller):
+        """컨트롤러 설정
+        
+        Args:
+            controller: EtcFunctionController 인스턴스
+        """
+        self.controller = controller
+        logging.debug("[위젯] 컨트롤러 설정 완료")
+        
+    def set_logic_enabled(self, enabled):
+        """로직 활성화 상태 설정
+        
+        Args:
+            enabled (bool): 활성화 여부
+        """
+        logging.debug(f"[위젯] 로직 활성화 상태 변경: {enabled}")
+        self.log_message.emit(f"[위젯] 로직 활성화 상태 변경: {enabled}")  # 로그 메시지 발생
+        
+        self.is_logic_enabled = enabled
+        
+        # 상태 변경을 컨트롤러에 알림
+        if self.controller:
+            if enabled and self.is_process_active():
+                logging.debug("[위젯] 조건 충족 - 카운트다운 시작 요청")
+                self.log_message.emit("[위젯] 조건 충족 - 카운트다운 시작 요청")
+                self.controller.start_hellfire_countdown()
+            else:
+                logging.debug("[위젯] 조건 불충족 - 카운트다운 중지 요청")
+                self.log_message.emit("[위젯] 조건 불충족 - 카운트다운 중지 요청")
+                self.controller.stop_hellfire_countdown()
+                
+    def is_process_active(self):
+        """선택된 프로세스가 활성 상태인지 확인"""
+        return self._process_active
+        
+    def update_process_state(self, is_active):
+        """프로세스 활성 상태 업데이트
+        
+        Args:
+            is_active (bool): 프로세스 활성화 여부
+        """
+        logging.debug(f"[위젯] 프로세스 상태 업데이트: {is_active}")
+        if self._process_active != is_active:
+            logging.debug(f"[위젯] 프로세스 상태 변경: {is_active}")
+            self._process_active = is_active
+            if self.is_logic_enabled and is_active and self.controller:
+                logging.debug("[위젯] 프로세스 활성화로 인한 카운트다운 시작 요청")
+                self.controller.start_hellfire_countdown()
+            elif not is_active and self.controller:
+                logging.debug("[위젯] 프로세스 비활성화로 인한 카운트다운 중지 요청")
+                self.controller.stop_hellfire_countdown()
+                
     def _on_countdown_value_changed(self, value):
         """카운트다운 값이 변경되었을 때 호출"""
         self.countdown_value_changed.emit(value)
