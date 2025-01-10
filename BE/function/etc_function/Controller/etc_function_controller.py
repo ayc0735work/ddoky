@@ -30,7 +30,9 @@ class EtcFunctionController(QObject):
             'group_b_pressed': False,  # B그룹 키 눌림 상태
             'last_key_info': None,     # 마지막 키 정보
             'sequence_valid': False,    # 시퀀스 유효성
-            'sequence_start_time': None # 시퀀스 시작 시간
+            'sequence_start_time': None, # 시퀀스 시작 시간
+            'tab_pressed_time': None,   # 탭키가 눌린 시간
+            'tab_sequence_valid': False  # 탭 시퀀스 유효성
         }
         
         # 시퀀스 타임아웃 타이머
@@ -59,19 +61,39 @@ class EtcFunctionController(QObject):
         # 카운트다운 값 변경 시그널 연결
         self.widget.countdown_value_changed.connect(self._handle_countdown_value_changed)
         
+    def _is_tab_key(self, key_info):
+        """탭 키인지 확인"""
+        return (key_info['virtual_key'] == 9 and 
+                key_info['key_code'] == 'Tab' and 
+                not key_info['is_system_key'])
+                
     def _on_key_pressed(self, key_info):
         """키가 눌렸을 때의 처리"""
         logging.debug(f"[EtcFunctionController] 키 눌림 감지: {key_info}")
+        current_time = time.time()
         
-        if self._is_group_a_key(key_info):
-            logging.debug("[EtcFunctionController] A그룹 키 감지됨")
-            self._key_state.update({
-                'group_a_pressed': True,
-                'last_key_info': key_info,
-                'sequence_start_time': time.time()
-            })
-            self._sequence_timer.start()
+        # 탭키 감지
+        if self._is_tab_key(key_info):
+            self._key_state['tab_pressed_time'] = current_time
+            logging.debug("[EtcFunctionController] 탭키 감지됨")
             
+        # A그룹 키(숫자1) 감지
+        elif self._is_group_a_key(key_info):
+            # 탭키가 10초 이내에 눌렸는지 확인
+            if (self._key_state['tab_pressed_time'] and 
+                current_time - self._key_state['tab_pressed_time'] <= 10):
+                self._key_state['tab_sequence_valid'] = True
+                logging.debug("[EtcFunctionController] 탭 시퀀스 유효함, 즉시 카운트다운 시작")
+                self.start_hellfire_countdown()
+            else:
+                # 기존 A그룹 키 처리 로직
+                self._key_state.update({
+                    'group_a_pressed': True,
+                    'last_key_info': key_info,
+                    'sequence_start_time': current_time
+                })
+                self._sequence_timer.start()
+                
         elif self._is_group_b_key(key_info) and self._key_state['group_a_pressed']:
             logging.debug("[EtcFunctionController] B그룹 키 감지됨 (A그룹 키 활성화 상태)")
             self._key_state['group_b_pressed'] = True
@@ -116,7 +138,9 @@ class EtcFunctionController(QObject):
             'group_b_pressed': False,
             'last_key_info': None,
             'sequence_valid': False,
-            'sequence_start_time': None
+            'sequence_start_time': None,
+            'tab_pressed_time': None,    # 추가
+            'tab_sequence_valid': False   # 추가
         })
         
     def _check_process_state(self):
