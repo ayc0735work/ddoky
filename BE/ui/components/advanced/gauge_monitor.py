@@ -40,7 +40,7 @@ class GaugeMonitor(QObject):
         
         try:
             # 디버그 이미지 저장 경로 설정
-            current_dir = os.path.dirname(os.path.abspath(__file__))  # BE/function/components/advanced
+            current_dir = os.path.dirname(os.path.abspath(__file__))  # BE/ui/components/advanced
             be_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(current_dir))))  # BE
             
             # 디버그 이미지 저장 경로 설정 (BE/BE/captures/Real_time_Capture)
