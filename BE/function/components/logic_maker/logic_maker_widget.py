@@ -69,7 +69,7 @@ class LogicMakerToolWidget(QFrame):
         button_layout.addWidget(self.delay_btn)
 
         # 클릭 대기 버튼
-        self.wait_click_button = QPushButton("클릭시 다음으로 진행")
+        self.wait_click_button = QPushButton("왼쪽클릭시 다음으로 진행")
         self.wait_click_button.setStyleSheet(BUTTON_STYLE)
         self.wait_click_button.clicked.connect(self._add_wait_click)
         button_layout.addWidget(self.wait_click_button)
@@ -246,7 +246,6 @@ class LogicMakerToolWidget(QFrame):
             'display_text': '왼쪽 버튼 클릭시 다음으로 진행',
             'button': 'left'
         }
-        self.wait_click_input.emit(wait_click_info)
         self.item_added.emit(wait_click_info)  # 아이템 목록에 추가
         self.log_message.emit("왼쪽 버튼 클릭시 다음으로 진행 아이템이 추가되었습니다")
 
