@@ -15,8 +15,6 @@ from BE.function.components.logic_maker.logic_maker_widget import LogicMakerTool
 from BE.function.components.logic_maker.logic_maker_controller import LogicMakerController
 from BE.function.components.logic_operation.logic_operation_controller import LogicOperationController
 from BE.function.components.logic_operation.logic_operation_widget import LogicOperationWidget
-from BE.function.components.advanced.advanced_widget import AdvancedWidget
-from BE.function.components.advanced.advanced_controller import AdvancedController
 from BE.function.components.log.log_widget import LogWidget
 from BE.settings.settings_manager import SettingsManager
 from BE.function.utils.error_handler import ErrorHandler
@@ -25,7 +23,7 @@ from BE.logic.logic_executor import LogicExecutor
 from BE.function.components.process.process_manager import ProcessManager
 
 from BE.function.constants.dimensions import (MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, BASIC_SECTION_HEIGHT,
-                               MIDDLE_SPACE, ADVANCED_SECTION_HEIGHT)
+                               MIDDLE_SPACE)
 
 class MainWindow(QMainWindow):
     """메인 윈도우 클래스"""
@@ -88,10 +86,6 @@ class MainWindow(QMainWindow):
         self.basic_features_layout = QHBoxLayout()
         self.basic_features_layout.setSpacing(0)
         
-        # 고급 기능 영역 레이아웃
-        self.advanced_features_layout = QHBoxLayout()
-        self.advanced_features_layout.setSpacing(0)
-        
         # 로그 영역 레이아웃
         self.log_layout = QHBoxLayout()
         self.log_layout.setSpacing(0)
@@ -107,9 +101,6 @@ class MainWindow(QMainWindow):
         
         # 기본 기능 영역
         self.init_basic_features()
-        
-        # 고급 기능 영역
-        self.init_advanced_features()
         
         # 로그 영역
         self.init_log_features()
@@ -140,21 +131,6 @@ class MainWindow(QMainWindow):
         
         self.main_layout.addLayout(self.basic_features_layout)
         
-    def init_advanced_features(self):
-        """고급 기능 영역 초기화"""
-        self.advanced_widget = AdvancedWidget()
-        # 초기 로직 목록 전달
-        self.advanced_widget.update_saved_logics(self.logic_list_widget.saved_logics)
-        self.advanced_features_layout.addWidget(self.advanced_widget)
-        self.main_layout.addLayout(self.advanced_features_layout)
-        
-        # AdvancedController 초기화 및 연결
-        self.advanced_controller = AdvancedController(
-            process_manager=self.process_manager,
-            logic_manager=self.logic_manager
-        )
-        self.advanced_controller.widget = self.advanced_widget
-        
     def init_log_features(self):
         """로그 영역 초기화"""
         self.log_widget = LogWidget()
@@ -182,9 +158,6 @@ class MainWindow(QMainWindow):
         self.logic_detail_widget.log_message.connect(self._append_log)
         self.logic_maker_widget.log_message.connect(self._append_log)
         self.logic_operation_widget.log_message.connect(self._append_log)  # _append_log를 통해 로그 추가
-        
-        # 고급 기능과 로직 상세 정보 연결
-        self.advanced_widget.advanced_action.connect(self.logic_detail_controller.on_advanced_action)
         
         # 로직 메이커 시그널 연결
         self.logic_maker_widget.key_input.connect(self._on_key_input)
@@ -301,49 +274,42 @@ class MainWindow(QMainWindow):
         """로직 동작 허용 여부 체크박스 상태가 변경되었을 때 호출"""
         if is_enabled:
             self.logic_executor.start_monitoring()
-            self.advanced_controller.set_monitoring_enabled(True)  # 게이지 모니터링 시작
             self._append_log("로직 동작 허용 여부가 허용 상태로 변경되었습니다<br>")
         else:
             self.logic_executor.stop_monitoring()
-            self.advanced_controller.set_monitoring_enabled(False)  # 게이지 모니터링 중지
             self._append_log("로직 동작 허용 여부가 불허용 상태로 변경되었습니다<br>")
     
     def _on_logic_saved(self, logic_info):
         """로직이 저장되었을 때 호출"""
         self.logic_manager.load_logic(logic_info['name'])
-        # 로직 메이커와 고급 기능 위젯의 저장된 로직 목록 업데이트
+        # 로직 메이커의 저장된 로직 목록 업데이트
         self.logic_maker_widget.update_saved_logics(self.logic_list_widget.saved_logics)
-        self.advanced_widget.update_saved_logics(self.logic_list_widget.saved_logics)
         # 로직 세부 항목 / 로직 만들기 초기화
         self.logic_detail_widget.clear_all()
     
     def _on_logic_updated(self, original_name, logic_info):
         """로직이 수정되었을 때 호출"""
         self.logic_manager.load_logic(logic_info['name'])
-        # 로직 메이커와 고급 기능 위젯의 저장된 로직 목록 업데이트
+        # 로직 메이커의 저장된 로직 목록 업데이트
         self.logic_maker_widget.update_saved_logics(self.logic_list_widget.saved_logics)
-        self.advanced_widget.update_saved_logics(self.logic_list_widget.saved_logics)
 
     def _on_logic_deleted(self, logic_name):
         """로직이 삭제되었을 때 호출"""
         # 로직 매니저에서 로직 제거
         self.logic_manager.remove_logic(logic_name)
-        # 로직 메이커와 고급 기능 위젯의 로직 목록 업데이트
+        # 로직 메이커의 로직 목록 업데이트
         self.logic_maker_widget.update_saved_logics(self.logic_list_widget.saved_logics)
-        self.advanced_widget.update_saved_logics(self.logic_list_widget.saved_logics)
         # 로직 세부 항목 / 로직 만들기 초기화
         self.logic_detail_widget.clear_all()
 
     def _on_process_selected(self, process_info):
         """프로세스가 선택되었을 때 호출"""
         self.process_manager.set_selected_process(process_info)
-        self.advanced_controller.set_target_process(process_info)
         self._append_log(f"프로세스를 선택했습니다: {process_info}")
     
     def _on_process_reset(self):
         """프로세스가 초기화되었을 때 호출"""
         self.process_manager.set_selected_process(None)
-        self.advanced_controller.set_target_process(None)
         self._append_log("프로세스 선택이 초기화되었습니다")
 
     def _on_add_logic(self, logic_name):

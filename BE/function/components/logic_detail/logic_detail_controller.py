@@ -36,13 +36,3 @@ class LogicDetailController:
         Args:
             logic_name (str): 선택된 로직의 이름
         """
-        
-    def on_advanced_action(self, action):
-        """고급 기능이 실행되었을 때의 처리
-        
-        Args:
-            action (str): 실행된 고급 기능의 종류
-        """
-        # TODO: 고급 기능에 따른 로직 상세 정보 업데이트
-        log_msg = f"고급 기능에 따른 로직 상세 정보 업데이트: {action}"
-        self.widget.log_message.emit(log_msg)

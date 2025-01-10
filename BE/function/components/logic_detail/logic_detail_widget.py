@@ -1243,7 +1243,7 @@ class LogicDetailWidget(QFrame):
                 item_data = item.data(Qt.UserRole)
                 item_data['order'] = i + 1
                 item.setData(Qt.UserRole, item_data)
-            self.log_message.emit(f"{len(selected_items)}개의 로직 구성 아이템이 제되었습니다")
+            self.log_message.emit(f"{len(selected_items)}개의 로직 구성 아이템이 삭제되었습니다")
 
     def _on_nested_checkbox_changed(self, state):
         """중첩로직용 체크박스 상태 변경 시 호출"""

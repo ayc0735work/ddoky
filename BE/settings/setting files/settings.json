@@ -9,47 +9,6 @@
             "height": 2000
         }
     },
-    "gauge_monitor": {
-        "hp_gauge": {
-            "coordinates": {
-                "x": 2258,
-                "y": 1403,
-                "width": 296,
-                "height": 21
-            },
-            "ratios": {
-                "x": 0.7524158613795402,
-                "y": 0.8462002412545235,
-                "width": 0.09863378873708764,
-                "height": 0.012665862484921592
-            },
-            "image_file": "captures\\capture_setting_img\\capture_hp.png",
-            "timestamp": "20241203_163916"
-        },
-        "mp_gauge": {
-            "coordinates": {
-                "x": 2256,
-                "y": 1452,
-                "width": 295,
-                "height": 19
-            },
-            "ratios": {
-                "x": 0.7517494168610463,
-                "y": 0.8757539203860072,
-                "width": 0.09830056647784072,
-                "height": 0.011459589867310011
-            },
-            "image_file": "captures\\capture_setting_img\\capture_mp.png",
-            "timestamp": "20241203_163738"
-        }
-    },
-    "advanced_settings": {
-        "hp_threshold": 25,
-        "mp_threshold": 24,
-        "hp_logic": null,
-        "mp_logic": null,
-        "common_logic": null
-    },
     "logics": {
         "c4a8abec-8857-43b8-9086-427ec16be1b9": {
             "order": 1,
@@ -12692,6 +12651,5 @@
                 }
             ]
         }
-    },
-    "recovery_detection_enabled": false
+    }
 }
