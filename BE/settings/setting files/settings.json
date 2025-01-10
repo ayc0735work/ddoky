@@ -560,15 +560,15 @@
             "order": 3,
             "name": "공증만 1.3초 5회 (다른거랑 같이하면 씹혀서 1초 안됨)",
             "created_at": "2024-12-08T13:23:32.528363",
-            "updated_at": "2025-01-07T21:48:22.715205",
+            "updated_at": "2025-01-10T12:45:55.961600",
             "trigger_key": null,
             "repeat_count": 5,
             "is_nested": true,
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0545초",
-                    "duration": 0.0545,
+                    "display_text": "지연시간 : 0.0455초",
+                    "duration": 0.0455,
                     "order": 1
                 },
                 {
@@ -583,8 +583,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1초",
-                    "duration": 0.1,
+                    "display_text": "지연시간 : 0.086초",
+                    "duration": 0.086,
                     "order": 3
                 },
                 {
@@ -599,8 +599,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0545초",
-                    "duration": 0.0545,
+                    "display_text": "지연시간 : 0.0455초",
+                    "duration": 0.0455,
                     "order": 5
                 }
             ]
@@ -2812,9 +2812,9 @@
                 {
                     "order": 10,
                     "type": "logic",
-                    "display_text": "((8초 소모)) 디버프&신수 마법",
+                    "display_text": "((3초 소모)) 디버프&신수 마법",
                     "logic_id": "f1b0d9b4-5f6b-4740-ac4f-a50640cd93bd",
-                    "logic_name": "((8초 소모)) 디버프&신수 마법",
+                    "logic_name": "((3초 소모)) 디버프&신수 마법",
                     "repeat_count": 1
                 },
                 {
@@ -2917,9 +2917,9 @@
         },
         "dd0f8016-2d5b-40d5-bf8e-a070e83fc35f": {
             "order": 21,
-            "name": "헬 - 신수 - 헬 - 왕궁 (마력 4만)",
+            "name": "헬 - 신수 - 왕궁 (마력 4.6만)",
             "created_at": "2024-12-16T20:35:45.182176",
-            "updated_at": "2025-01-07T21:46:09.263829",
+            "updated_at": "2025-01-10T13:28:08.195771",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "백쿼트(`)",
@@ -3143,9 +3143,9 @@
                 {
                     "order": 26,
                     "type": "logic",
-                    "display_text": "((8초 소모)) 디버프&신수 마법",
+                    "display_text": "((3초 소모)) 디버프&신수 마법",
                     "logic_id": "f1b0d9b4-5f6b-4740-ac4f-a50640cd93bd",
-                    "logic_name": "((8초 소모)) 디버프&신수 마법",
+                    "logic_name": "((3초 소모)) 디버프&신수 마법",
                     "repeat_count": 1
                 },
                 {
@@ -3220,11 +3220,11 @@
         },
         "f1b0d9b4-5f6b-4740-ac4f-a50640cd93bd": {
             "order": 22,
-            "name": "((8초 소모)) 디버프&신수 마법",
+            "name": "((3초 소모)) 디버프&신수 마법",
             "created_at": "2024-12-16T20:35:45.182176",
-            "updated_at": "2025-01-07T13:43:23.650472",
+            "updated_at": "2025-01-10T13:27:42.668887",
             "trigger_key": null,
-            "repeat_count": 8,
+            "repeat_count": 3,
             "is_nested": true,
             "items": [
                 {
@@ -12344,7 +12344,7 @@
             "order": 107,
             "name": "마력사기 반복",
             "created_at": "2024-12-17T05:32:15.270999",
-            "updated_at": "2025-01-07T13:25:04.789988",
+            "updated_at": "2025-01-10T13:27:45.671782",
             "trigger_key": null,
             "repeat_count": 20,
             "is_nested": true,
@@ -12506,14 +12506,14 @@
                 {
                     "order": 19,
                     "type": "mouse_input",
-                    "display_text": "마우스 입력: 인풋박스 클릭 (1188, 926)",
-                    "name": "인풋박스 클릭",
+                    "display_text": "마우스 입력: 수치로 사기 클릭 (1259, 756)",
+                    "name": "수치로 사기 클릭",
                     "action": "클릭",
                     "button": "왼쪽 버튼",
-                    "coordinates_x": 1188,
-                    "coordinates_y": 926,
-                    "ratios_x": 0.3393316195372751,
-                    "ratios_y": 0.47584789311408016
+                    "coordinates_x": 1259,
+                    "coordinates_y": 756,
+                    "ratios_x": 0.35696058973631983,
+                    "ratios_y": 0.38571428571428573
                 },
                 {
                     "type": "delay",
@@ -12522,19 +12522,63 @@
                     "order": 20
                 },
                 {
-                    "display_text": "텍스트 입력: 20",
                     "order": 21,
-                    "text": "20",
+                    "display_text": "키 입력: Space --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "Space",
+                    "scan_code": 57,
+                    "virtual_key": 32,
+                    "modifiers": 0
+                },
+                {
+                    "order": 22,
+                    "display_text": "키 입력: Space --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "Space",
+                    "scan_code": 57,
+                    "virtual_key": 32,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.4234초",
+                    "duration": 0.4234,
+                    "order": 23
+                },
+                {
+                    "order": 24,
+                    "type": "mouse_input",
+                    "display_text": "마우스 입력: 텍스트 인풋박스 클릭 (1238, 938)",
+                    "name": "텍스트 인풋박스 클릭",
+                    "action": "클릭",
+                    "button": "왼쪽 버튼",
+                    "coordinates_x": 1238,
+                    "coordinates_y": 938,
+                    "ratios_x": 0.3510065211227672,
+                    "ratios_y": 0.4785714285714286
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.4234초",
+                    "duration": 0.4234,
+                    "order": 25
+                },
+                {
+                    "display_text": "텍스트 입력: 500",
+                    "order": 26,
+                    "text": "500",
                     "type": "write_text"
                 },
                 {
                     "type": "delay",
                     "display_text": "지연시간 : 0.4234초",
                     "duration": 0.4234,
-                    "order": 22
+                    "order": 27
                 },
                 {
-                    "order": 23,
+                    "order": 28,
                     "type": "mouse_input",
                     "display_text": "마우스 입력: OK 클릭 (1247, 1157)",
                     "name": "OK 클릭",
@@ -12549,10 +12593,10 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.4234초",
                     "duration": 0.4234,
-                    "order": 24
+                    "order": 29
                 },
                 {
-                    "order": 25,
+                    "order": 30,
                     "display_text": "키 입력: Space --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -12560,61 +12604,9 @@
                     "scan_code": 57,
                     "virtual_key": 32,
                     "modifiers": 0
-                },
-                {
-                    "order": 26,
-                    "display_text": "키 입력: Space --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "Space",
-                    "scan_code": 57,
-                    "virtual_key": 32,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.4234초",
-                    "duration": 0.4234,
-                    "order": 27
-                },
-                {
-                    "order": 28,
-                    "display_text": "키 입력: Space --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "Space",
-                    "scan_code": 57,
-                    "virtual_key": 32,
-                    "modifiers": 0
-                },
-                {
-                    "order": 29,
-                    "display_text": "키 입력: Space --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "Space",
-                    "scan_code": 57,
-                    "virtual_key": 32,
-                    "modifiers": 0
-                },
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.4234초",
-                    "duration": 0.4234,
-                    "order": 30
                 },
                 {
                     "order": 31,
-                    "display_text": "키 입력: Space --- 누르기",
-                    "action": "누르기",
-                    "type": "key_input",
-                    "key_code": "Space",
-                    "scan_code": 57,
-                    "virtual_key": 32,
-                    "modifiers": 0
-                },
-                {
-                    "order": 32,
                     "display_text": "키 입력: Space --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -12627,7 +12619,59 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.4234초",
                     "duration": 0.4234,
-                    "order": 33
+                    "order": 32
+                },
+                {
+                    "order": 33,
+                    "display_text": "키 입력: Space --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "Space",
+                    "scan_code": 57,
+                    "virtual_key": 32,
+                    "modifiers": 0
+                },
+                {
+                    "order": 34,
+                    "display_text": "키 입력: Space --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "Space",
+                    "scan_code": 57,
+                    "virtual_key": 32,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.4234초",
+                    "duration": 0.4234,
+                    "order": 35
+                },
+                {
+                    "order": 36,
+                    "display_text": "키 입력: Space --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "Space",
+                    "scan_code": 57,
+                    "virtual_key": 32,
+                    "modifiers": 0
+                },
+                {
+                    "order": 37,
+                    "display_text": "키 입력: Space --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "Space",
+                    "scan_code": 57,
+                    "virtual_key": 32,
+                    "modifiers": 0
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.4234초",
+                    "duration": 0.4234,
+                    "order": 38
                 }
             ]
         },
