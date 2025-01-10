@@ -26,13 +26,14 @@ class EtcFunctionController(QObject):
         
         # 키 상태 관리
         self._key_state = {
-            'group_a_pressed': False,  # A그룹 키 눌림 상태
-            'group_b_pressed': False,  # B그룹 키 눌림 상태
-            'last_key_info': None,     # 마지막 키 정보
-            'sequence_valid': False,    # 시퀀스 유효성
-            'sequence_start_time': None, # 시퀀스 시작 시간
-            'tab_pressed_time': None,   # 탭키가 눌린 시간
-            'tab_sequence_valid': False  # 탭 시퀀스 유효성
+            'group_a_pressed': False,     # A그룹 키(1) 눌림 상태
+            'group_b_pressed': False,     # B그룹 키(엔터) 눌림 상태
+            'last_key_info': None,        # 마지막 키 정보
+            'sequence_valid': False,       # 일반 시퀀스 유효성
+            'sequence_start_time': None,   # 시퀀스 시작 시간
+            'tab_pressed_time': None,      # 탭키 눌린 시간
+            'tab_sequence_used': False,    # 탭 시퀀스 사용 여부
+            'tab_cooldown_time': None      # 탭 시퀀스 쿨다운 시간
         }
         
         # 시퀀스 타임아웃 타이머
@@ -72,28 +73,39 @@ class EtcFunctionController(QObject):
         logging.debug(f"[EtcFunctionController] 키 눌림 감지: {key_info}")
         current_time = time.time()
         
-        # 탭키 감지
+        # 1. 탭키 처리
         if self._is_tab_key(key_info):
-            self._key_state['tab_pressed_time'] = current_time
-            logging.debug("[EtcFunctionController] 탭키 감지됨")
+            self._key_state.update({
+                'tab_pressed_time': current_time,
+                'tab_sequence_used': False  # 탭 시퀀스 초기화
+            })
+            logging.debug("[EtcFunctionController] 탭키 감지됨, 시퀀스 초기화")
+            return
             
-        # A그룹 키(숫자1) 감지
+        # 2. A그룹 키(숫자1) 처리
         elif self._is_group_a_key(key_info):
-            # 탭키가 10초 이내에 눌렸는지 확인
-            if (self._key_state['tab_pressed_time'] and 
-                current_time - self._key_state['tab_pressed_time'] <= 10):
-                self._key_state['tab_sequence_valid'] = True
-                logging.debug("[EtcFunctionController] 탭 시퀀스 유효함, 즉시 카운트다운 시작")
+            # 2-1. 탭 시퀀스 체크
+            if (not self._key_state['tab_sequence_used'] and  # 아직 사용되지 않은 탭 시퀀스
+                self._key_state['tab_pressed_time'] and       # 탭이 눌린 적이 있고
+                current_time - self._key_state['tab_pressed_time'] <= 10):  # 10초 이내
+                
+                self._key_state['tab_sequence_used'] = True  # 탭 시퀀스 사용 처리
+                self._key_state['tab_cooldown_time'] = current_time  # 쿨다운 시작
+                logging.debug("[EtcFunctionController] 탭 시퀀스로 카운트다운 시작")
                 self.start_hellfire_countdown()
-            else:
-                # 기존 A그룹 키 처리 로직
+                return
+                
+            # 2-2. 일반 시퀀스 시작
+            if not self._key_state['tab_sequence_used']:  # 탭 시퀀스가 사용되지 않은 경우에만
                 self._key_state.update({
                     'group_a_pressed': True,
                     'last_key_info': key_info,
                     'sequence_start_time': current_time
                 })
                 self._sequence_timer.start()
+                logging.debug("[EtcFunctionController] 일반 시퀀스 시작")
                 
+        # 3. B그룹 키(엔터) 처리
         elif self._is_group_b_key(key_info) and self._key_state['group_a_pressed']:
             logging.debug("[EtcFunctionController] B그룹 키 감지됨 (A그룹 키 활성화 상태)")
             self._key_state['group_b_pressed'] = True
@@ -133,14 +145,21 @@ class EtcFunctionController(QObject):
     def _reset_key_state(self):
         """키 상태 초기화"""
         logging.debug("[EtcFunctionController] 키 상태 초기화")
+        current_time = time.time()
+        
+        # 탭 시퀀스 쿨다운 체크
+        if (self._key_state['tab_cooldown_time'] and 
+            current_time - self._key_state['tab_cooldown_time'] > 10):  # 10초 쿨다운
+            self._key_state['tab_sequence_used'] = False
+            logging.debug("[EtcFunctionController] 탭 시퀀스 쿨다운 완료")
+        
         self._key_state.update({
             'group_a_pressed': False,
             'group_b_pressed': False,
             'last_key_info': None,
             'sequence_valid': False,
             'sequence_start_time': None,
-            'tab_pressed_time': None,    # 추가
-            'tab_sequence_valid': False   # 추가
+            'tab_pressed_time': None
         })
         
     def _check_process_state(self):
