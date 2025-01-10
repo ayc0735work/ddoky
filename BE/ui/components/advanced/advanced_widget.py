@@ -10,7 +10,7 @@ from ...constants.styles import (FRAME_STYLE, CONTAINER_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from ...constants.dimensions import (ADVANCED_FRAME_WIDTH, ADVANCED_SECTION_HEIGHT,
                                    DEFAULT_RECOVERY_THRESHOLD, MIDDLE_SPACE)
-from BE.funcion.components.logic_maker.logic_selector_dialog import LogicSelectorDialog
+from BE.function.components.logic_maker.logic_selector_dialog import LogicSelectorDialog
 from .compare_area_dialog import CompareAreaDialog
 from BE.settings.settings import Settings
 from .gauge_monitor import GaugeMonitor

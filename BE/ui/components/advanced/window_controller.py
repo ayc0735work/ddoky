@@ -15,7 +15,7 @@ class WindowController:
         self.shell = win32com.client.Dispatch("WScript.Shell")
         
         # 디버그용 디렉토리 설정
-        current_dir = os.path.dirname(os.path.abspath(__file__))  # BE/funcion/components/advanced
+        current_dir = os.path.dirname(os.path.abspath(__file__))  # BE/function/components/advanced
         be_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(current_dir))))  # BE
         self.debug_dir = os.path.join(be_dir, 'BE', 'captures', 'Real_time_Capture')
         
