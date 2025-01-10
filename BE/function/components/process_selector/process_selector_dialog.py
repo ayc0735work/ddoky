@@ -5,7 +5,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt
 
 from BE.process.process_manager import ProcessManager
-from BE.ui.constants.styles import BUTTON_STYLE, LIST_STYLE
+from BE.function.constants.styles import BUTTON_STYLE, LIST_STYLE
 
 class ProcessSelectorDialog(QDialog):
     def __init__(self, parent=None):
