@@ -18,8 +18,8 @@ import logging
 import sys
 import time
 from PySide6.QtCore import QTimer, QObject
-from ...components.process.process_manager import ProcessManager
-from .countdown_controller import CountdownController
+from ....components.process.process_manager import ProcessManager
+from .countdown_controller__main import CountdownController
 
 # 로깅 설정
 logging.basicConfig(
@@ -30,7 +30,7 @@ logging.basicConfig(
     ]
 )
 
-class EtcFunctionController(QObject):
+class CountdownControllerInputSequence(QObject):
     """기타 기능 컨트롤러 클래스
     
     키 입력을 감지하고 적절한 동작을 수행하는 컨트롤러입니다.
@@ -79,7 +79,7 @@ class EtcFunctionController(QObject):
         self.widget.set_controller(self)  # 위젯에 컨트롤러 참조 설정
         logging.debug("[컨트롤러] 초기화 완료")
         
-        logging.info("EtcFunctionController 초기화 완료")
+        logging.info("CountdownControllerInputSequence 초기화 완료")
         
     def _connect_signals(self):
         """시그널 연결"""
@@ -111,7 +111,7 @@ class EtcFunctionController(QObject):
         2. A그룹 키(숫자1) 처리
         3. B그룹 키(엔터) 처리
         """
-        logging.debug(f"[EtcFunctionController] 키 눌림 감지: {key_info}")
+        logging.debug(f"[CountdownControllerInputSequence] 키 눌림 감지: {key_info}")
         current_time = time.time()
         
         # 1. 탭키 처리
@@ -120,7 +120,7 @@ class EtcFunctionController(QObject):
                 'tab_pressed_time': current_time,
                 'tab_sequence_used': False  # 탭 시퀀스 초기화
             })
-            logging.debug("[EtcFunctionController] 탭키 감지됨, 시퀀스 초기화")
+            logging.debug("[CountdownControllerInputSequence] 탭키 감지됨, 시퀀스 초기화")
             return
             
         # 2. A그룹 키(숫자1) 처리
@@ -132,7 +132,7 @@ class EtcFunctionController(QObject):
                 
                 self._key_state['tab_sequence_used'] = True  # 탭 시퀀스 사용 처리
                 self._key_state['tab_cooldown_time'] = current_time  # 쿨다운 시작
-                logging.debug("[EtcFunctionController] 탭 시퀀스로 카운트다운 시작")
+                logging.debug("[CountdownControllerInputSequence] 탭 시퀀스로 카운트다운 시작")
                 self.start_hellfire_countdown()
                 return
                 
@@ -144,11 +144,11 @@ class EtcFunctionController(QObject):
                     'sequence_start_time': current_time
                 })
                 self._sequence_timer.start()
-                logging.debug("[EtcFunctionController] 일반 시퀀스 시작")
+                logging.debug("[CountdownControllerInputSequence] 일반 시퀀스 시작")
                 
         # 3. B그룹 키(엔터) 처리
         elif self._is_group_b_key(key_info) and self._key_state['group_a_pressed']:
-            logging.debug("[EtcFunctionController] B그룹 키 감지됨 (A그룹 키 활성화 상태)")
+            logging.debug("[CountdownControllerInputSequence] B그룹 키 감지됨 (A그룹 키 활성화 상태)")
             self._key_state['group_b_pressed'] = True
             
     def _on_key_released(self, key_info):
@@ -159,10 +159,10 @@ class EtcFunctionController(QObject):
         2. 시퀀스 유효성 검사
         3. 카운트다운 시작
         """
-        logging.debug(f"[EtcFunctionController] 키 뗌 감지: {key_info}")
+        logging.debug(f"[CountdownControllerInputSequence] 키 뗌 감지: {key_info}")
         
         if self._is_group_b_key(key_info) and self._validate_key_sequence():
-            logging.debug("[EtcFunctionController] 유효한 키 시퀀스 감지됨, 카운트다운 시작")
+            logging.debug("[CountdownControllerInputSequence] 유효한 키 시퀀스 감지됨, 카운트다운 시작")
             self._sequence_timer.stop()
             self.start_hellfire_countdown()
             
@@ -198,10 +198,10 @@ class EtcFunctionController(QObject):
         """
         if (self._key_state['group_a_pressed'] and 
             self._key_state['group_b_pressed']):
-            logging.debug("[EtcFunctionController] 키 시퀀스 검증 성공")
+            logging.debug("[CountdownControllerInputSequence] 키 시퀀스 검증 성공")
             self._key_state['sequence_valid'] = True
             return True
-        logging.debug("[EtcFunctionController] 키 시퀀스 검증 실패")
+        logging.debug("[CountdownControllerInputSequence] 키 시퀀스 검증 실패")
         return False
         
     def _on_sequence_timeout(self):
@@ -210,7 +210,7 @@ class EtcFunctionController(QObject):
         동작 순서:
         1. 키 상태 초기화
         """
-        logging.debug("[EtcFunctionController] 키 시퀀스 타임아웃 발생")
+        logging.debug("[CountdownControllerInputSequence] 키 시퀀스 타임아웃 발생")
         self._reset_key_state()
         
     def _reset_key_state(self):
@@ -220,14 +220,14 @@ class EtcFunctionController(QObject):
         1. 키 상태 초기화
         2. 탭 시퀀스 쿨다운 체크
         """
-        logging.debug("[EtcFunctionController] 키 상태 초기화")
+        logging.debug("[CountdownControllerInputSequence] 키 상태 초기화")
         current_time = time.time()
         
         # 탭 시퀀스 쿨다운 체크
         if (self._key_state['tab_cooldown_time'] and 
             current_time - self._key_state['tab_cooldown_time'] > 10):  # 10초 쿨다운
             self._key_state['tab_sequence_used'] = False
-            logging.debug("[EtcFunctionController] 탭 시퀀스 쿨다운 완료")
+            logging.debug("[CountdownControllerInputSequence] 탭 시퀀스 쿨다운 완료")
         
         self._key_state.update({
             'group_a_pressed': False,
@@ -263,11 +263,11 @@ class EtcFunctionController(QObject):
         2. 카운트다운 시작
         """
         if self._check_conditions():
-            logging.debug("[EtcFunctionController] 카운트다운 시작")
+            logging.debug("[CountdownControllerInputSequence] 카운트다운 시작")
             self.countdown_controller.start_countdown()
             self._reset_key_state()
         else:
-            logging.debug("[EtcFunctionController] 카운트다운 시작 조건 불충족")
+            logging.debug("[CountdownControllerInputSequence] 카운트다운 시작 조건 불충족")
             
     def _on_countdown_finished(self):
         """카운트다운 완료 처리
@@ -275,7 +275,7 @@ class EtcFunctionController(QObject):
         동작 순서:
         1. 키 상태 초기화
         """
-        logging.debug("[EtcFunctionController] 카운트다운 완료")
+        logging.debug("[CountdownControllerInputSequence] 카운트다운 완료")
         self._reset_key_state()
         
     def _handle_countdown_value_changed(self, value):
@@ -306,8 +306,8 @@ class EtcFunctionController(QObject):
         주의사항:
             프로세스가 실행 중일 때는 카운트다운을 시작하지 않음
         """
-        if not self._check_process_state():
-            logging.info("[컨트롤러] 프로세스 실행 중, 카운트다운 시작 불가")
+        if not self.process_manager.is_selected_process_active():
+            logging.info("[컨트롤러] 프로세스가 활성화되지 않음, 카운트다운 시작 불가")
             return
             
         logging.info("[컨트롤러] 헬파이어 카운트다운 시작 요청")
@@ -351,7 +351,7 @@ class EtcFunctionController(QObject):
         is_active = self.process_manager.is_selected_process_active()
         is_valid = self._key_state['sequence_valid']
         
-        logging.debug(f"[EtcFunctionController] 조건 체크: "
+        logging.debug(f"[CountdownControllerInputSequence] 조건 체크: "
                      f"로직 활성화={is_enabled}, "
                      f"프로세스 활성화={is_active}, "
                      f"시퀀스 유효={is_valid}")

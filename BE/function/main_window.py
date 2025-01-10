@@ -22,8 +22,8 @@ from BE.logic.logic_executor import LogicExecutor
 from BE.function.components.process.process_manager import ProcessManager
 from BE.function.constants.dimensions import (MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, BASIC_SECTION_HEIGHT,
                                MIDDLE_SPACE)
-from BE.function.etc_function.UI.etc_function_widget import EtcFunctionWidget
-from BE.function.etc_function.Controller.etc_function_controller import EtcFunctionController
+from BE.function.etc_function.countdown.UI.etc_function_widget import EtcFunctionWidget
+from BE.function.etc_function.countdown.Controller.countdown_controller__input_sequence import CountdownControllerInputSequence
 from BE.utils.key_handler import KeyboardHook
 import logging
 
@@ -110,7 +110,7 @@ class MainWindow(QMainWindow):
         
         # 기타 기능 위젯
         self.etc_function_widget = EtcFunctionWidget()
-        self.etc_function_controller = EtcFunctionController(self.etc_function_widget)
+        self.countdown_controller__input_sequence = CountdownControllerInputSequence(self.etc_function_widget)
         self.etc_function_widget.log_message.connect(self._append_log)  # 로그 메시지 연결
         self.main_layout.addWidget(self.etc_function_widget)
         
@@ -154,15 +154,15 @@ class MainWindow(QMainWindow):
         # 전역 에러 핸들러 연결
         self.error_handler.error_occurred.connect(self._append_log)
         
-        # 키보드 훅 시그널을 EtcFunctionController에 연결
-        self.keyboard_hook.key_pressed.connect(self.etc_function_controller._on_key_pressed)
-        self.keyboard_hook.key_released.connect(self.etc_function_controller._on_key_released)
+        # 키보드 훅 시그널을 CountdownControllerInputSequence에 연결
+        self.keyboard_hook.key_pressed.connect(self.countdown_controller__input_sequence._on_key_pressed)
+        self.keyboard_hook.key_released.connect(self.countdown_controller__input_sequence._on_key_released)
         
         # 로직 동작 허용 여부 변경 시 기타 기능 위젯에도 전달
         self.logic_operation_widget.operation_toggled.connect(self.etc_function_widget.set_logic_enabled)
         
         # 프로세스 선택 시 기타 기능 컨트롤러에도 전달
-        self.process_manager.process_selected.connect(self.etc_function_controller.process_manager.set_selected_process)
+        self.process_manager.process_selected.connect(self.countdown_controller__input_sequence.process_manager.set_selected_process)
         
         # 로직 리스트와 상세 정보 연결
         self.logic_list_widget.logic_selected.connect(self.logic_detail_controller.on_logic_selected)
@@ -293,8 +293,8 @@ class MainWindow(QMainWindow):
                 self.keyboard_hook.stop()
             
             # 프로세스 체크 타이머 정리
-            if hasattr(self.etc_function_controller, 'process_check_timer'):
-                self.etc_function_controller.process_check_timer.stop()
+            if hasattr(self.countdown_controller__input_sequence, 'process_check_timer'):
+                self.countdown_controller__input_sequence.process_check_timer.stop()
             
             event.accept()
             
