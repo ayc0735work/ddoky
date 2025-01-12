@@ -2996,7 +2996,7 @@
             "order": 23,
             "name": "헬파이어 (숫자1) - 1",
             "created_at": "2024-12-16T20:35:45.182176",
-            "updated_at": "2025-01-12T14:18:16.534110",
+            "updated_at": "2025-01-12T20:46:07.023233",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "F2",
@@ -3211,30 +3211,6 @@
                     "display_text": "동동주 마시기 - 1회",
                     "logic_id": "9614e85c-3ceb-423b-97ea-e17bfc0101fc",
                     "logic_name": "동동주 마시기 - 1회",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 24,
-                    "type": "logic",
-                    "display_text": "(0.5초) 공증 + 체력",
-                    "logic_id": "158bc3a6-839b-4123-8202-9e9a69a6d403",
-                    "logic_name": "(0.5초) 공증 + 체력",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 25,
-                    "type": "logic",
-                    "display_text": "(0.5초) 공증 + 체력",
-                    "logic_id": "158bc3a6-839b-4123-8202-9e9a69a6d403",
-                    "logic_name": "(0.5초) 공증 + 체력",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 26,
-                    "type": "logic",
-                    "display_text": "((1초)) 보호 무장 힘",
-                    "logic_id": "b8796333-e8d6-4ae2-9fec-801a713517d8",
-                    "logic_name": "((1초)) 보호 무장 힘",
                     "repeat_count": 1
                 }
             ]
@@ -11724,8 +11700,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1596초",
-                    "duration": 0.1596,
+                    "display_text": "지연시간 : 0.1496초",
+                    "duration": 0.1496,
                     "order": 3
                 },
                 {
@@ -11750,8 +11726,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1596초",
-                    "duration": 0.1596,
+                    "display_text": "지연시간 : 0.1496초",
+                    "duration": 0.1496,
                     "order": 6
                 },
                 {
@@ -11776,8 +11752,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1596초",
-                    "duration": 0.1596,
+                    "display_text": "지연시간 : 0.1496초",
+                    "duration": 0.1496,
                     "order": 9
                 },
                 {
@@ -11802,8 +11778,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1596초",
-                    "duration": 0.1596,
+                    "display_text": "지연시간 : 0.1496초",
+                    "duration": 0.1496,
                     "order": 12
                 },
                 {
@@ -11828,8 +11804,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1596초",
-                    "duration": 0.1596,
+                    "display_text": "지연시간 : 0.1496초",
+                    "duration": 0.1496,
                     "order": 15
                 },
                 {
@@ -11854,8 +11830,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1596초",
-                    "duration": 0.1596,
+                    "display_text": "지연시간 : 0.1496초",
+                    "duration": 0.1496,
                     "order": 18
                 },
                 {
@@ -11880,8 +11856,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1596초",
-                    "duration": 0.1596,
+                    "display_text": "지연시간 : 0.1496초",
+                    "duration": 0.1496,
                     "order": 21
                 },
                 {
@@ -11919,8 +11895,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1596초",
-                    "duration": 0.1596,
+                    "display_text": "지연시간 : 0.1496초",
+                    "duration": 0.1496,
                     "order": 3
                 },
                 {
@@ -11945,8 +11921,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1596초",
-                    "duration": 0.1596,
+                    "display_text": "지연시간 : 0.1496초",
+                    "duration": 0.1496,
                     "order": 6
                 },
                 {
@@ -11971,8 +11947,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1596초",
-                    "duration": 0.1596,
+                    "display_text": "지연시간 : 0.1496초",
+                    "duration": 0.1496,
                     "order": 9
                 },
                 {
@@ -11997,8 +11973,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1596초",
-                    "duration": 0.1596,
+                    "display_text": "지연시간 : 0.1496초",
+                    "duration": 0.1496,
                     "order": 12
                 },
                 {
@@ -12023,8 +11999,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1596초",
-                    "duration": 0.1596,
+                    "display_text": "지연시간 : 0.1496초",
+                    "duration": 0.1496,
                     "order": 15
                 },
                 {
@@ -12049,8 +12025,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1596초",
-                    "duration": 0.1596,
+                    "display_text": "지연시간 : 0.1496초",
+                    "duration": 0.1496,
                     "order": 18
                 },
                 {
@@ -12075,8 +12051,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1596초",
-                    "duration": 0.1596,
+                    "display_text": "지연시간 : 0.1496초",
+                    "duration": 0.1496,
                     "order": 21
                 },
                 {
