@@ -9930,7 +9930,7 @@
             "order": 90,
             "name": "출두 - 사냥터로",
             "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-07T11:58:34.764141",
+            "updated_at": "2025-01-12T07:44:33.332386",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "하이픈(-)",
@@ -10119,8 +10119,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.3121초",
-                    "duration": 0.3121,
+                    "display_text": "지연시간 : 0.2421초",
+                    "duration": 0.2421,
                     "order": 22
                 },
                 {
@@ -10131,8 +10131,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.3121초",
-                    "duration": 0.3121,
+                    "display_text": "지연시간 : 0.2421초",
+                    "duration": 0.2421,
                     "order": 24
                 },
                 {
@@ -10297,7 +10297,7 @@
             "order": 91,
             "name": "출두 -  왕궁으로",
             "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-07T13:23:46.599166",
+            "updated_at": "2025-01-12T07:44:42.755424",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "등호(=)",
@@ -10486,8 +10486,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.3121초",
-                    "duration": 0.3121,
+                    "display_text": "지연시간 : 0.2421초",
+                    "duration": 0.2421,
                     "order": 22
                 },
                 {
@@ -10498,8 +10498,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.3121초",
-                    "duration": 0.3121,
+                    "display_text": "지연시간 : 0.2421초",
+                    "duration": 0.2421,
                     "order": 24
                 },
                 {
@@ -10614,7 +10614,7 @@
             "order": 92,
             "name": "ㄴ왕궁 위로 걸어가기 10초",
             "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-08T13:52:31.749920",
+            "updated_at": "2025-01-12T05:19:14.597612",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -10712,29 +10712,21 @@
                 {
                     "order": 12,
                     "type": "logic",
-                    "display_text": "ㄴ2초 짧은 딜레이 반복",
-                    "logic_id": "d1ba5b14-8941-47b6-af34-aa41692340ee",
-                    "logic_name": "ㄴ2초 짧은 딜레이 반복",
+                    "display_text": "ㄴ1.5초 짧은 딜레이 반복",
+                    "logic_id": "4652b96c-40d0-4b95-b455-d3284d78f993",
+                    "logic_name": "ㄴ1.5초 짧은 딜레이 반복",
                     "repeat_count": 1
                 },
                 {
                     "order": 13,
                     "type": "logic",
-                    "display_text": "ㄴ0.75초 짧은 딜레이 반복",
-                    "logic_id": "091f5af5-562c-4781-ba4e-b1128c8dcc81",
-                    "logic_name": "ㄴ0.75초 짧은 딜레이 반복",
+                    "display_text": "ㄴ1.25초 짧은 딜레이 반복",
+                    "logic_id": "24b5c681-a45f-40ff-8f64-d3ffa85cf93c",
+                    "logic_name": "ㄴ1.25초 짧은 딜레이 반복",
                     "repeat_count": 1
                 },
                 {
                     "order": 14,
-                    "type": "logic",
-                    "display_text": "ㄴ0.75초 짧은 딜레이 반복",
-                    "logic_id": "091f5af5-562c-4781-ba4e-b1128c8dcc81",
-                    "logic_name": "ㄴ0.75초 짧은 딜레이 반복",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 15,
                     "display_text": "키 입력: 방향키 위쪽 ↑ --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -10747,7 +10739,7 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.25초",
                     "duration": 0.25,
-                    "order": 16
+                    "order": 15
                 }
             ]
         },
@@ -10982,8 +10974,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0453초",
-                    "duration": 0.0453,
+                    "display_text": "지연시간 : 0.0373초",
+                    "duration": 0.0373,
                     "order": 1
                 },
                 {
@@ -11008,8 +11000,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0453초",
-                    "duration": 0.0453,
+                    "display_text": "지연시간 : 0.0373초",
+                    "duration": 0.0373,
                     "order": 4
                 },
                 {
@@ -11042,8 +11034,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0453초",
-                    "duration": 0.0453,
+                    "display_text": "지연시간 : 0.0373초",
+                    "duration": 0.0373,
                     "order": 8
                 },
                 {
@@ -11068,8 +11060,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0453초",
-                    "duration": 0.0453,
+                    "display_text": "지연시간 : 0.0373초",
+                    "duration": 0.0373,
                     "order": 11
                 }
             ]
@@ -11085,8 +11077,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0453초",
-                    "duration": 0.0453,
+                    "display_text": "지연시간 : 0.0373초",
+                    "duration": 0.0373,
                     "order": 1
                 },
                 {
@@ -11127,8 +11119,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0453초",
-                    "duration": 0.0453,
+                    "display_text": "지연시간 : 0.0373초",
+                    "duration": 0.0373,
                     "order": 6
                 },
                 {
@@ -11153,8 +11145,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0453초",
-                    "duration": 0.0453,
+                    "display_text": "지연시간 : 0.0373초",
+                    "duration": 0.0373,
                     "order": 9
                 }
             ]
@@ -11170,8 +11162,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0453초",
-                    "duration": 0.0453,
+                    "display_text": "지연시간 : 0.0373초",
+                    "duration": 0.0373,
                     "order": 1
                 },
                 {
@@ -11184,8 +11176,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1996초",
-                    "duration": 0.1996,
+                    "display_text": "지연시간 : 0.1596초",
+                    "duration": 0.1596,
                     "order": 3
                 },
                 {
@@ -11210,8 +11202,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1996초",
-                    "duration": 0.1996,
+                    "display_text": "지연시간 : 0.1596초",
+                    "duration": 0.1596,
                     "order": 6
                 },
                 {
@@ -11236,8 +11228,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1996초",
-                    "duration": 0.1996,
+                    "display_text": "지연시간 : 0.1596초",
+                    "duration": 0.1596,
                     "order": 9
                 },
                 {
@@ -11262,8 +11254,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1996초",
-                    "duration": 0.1996,
+                    "display_text": "지연시간 : 0.1596초",
+                    "duration": 0.1596,
                     "order": 12
                 },
                 {
@@ -11288,8 +11280,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1996초",
-                    "duration": 0.1996,
+                    "display_text": "지연시간 : 0.1596초",
+                    "duration": 0.1596,
                     "order": 15
                 },
                 {
@@ -11314,8 +11306,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1996초",
-                    "duration": 0.1996,
+                    "display_text": "지연시간 : 0.1596초",
+                    "duration": 0.1596,
                     "order": 18
                 },
                 {
@@ -11340,8 +11332,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1996초",
-                    "duration": 0.1996,
+                    "display_text": "지연시간 : 0.1596초",
+                    "duration": 0.1596,
                     "order": 21
                 },
                 {
@@ -11354,8 +11346,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0453초",
-                    "duration": 0.0453,
+                    "display_text": "지연시간 : 0.0373초",
+                    "duration": 0.0373,
                     "order": 23
                 }
             ]
@@ -11371,8 +11363,8 @@
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0453초",
-                    "duration": 0.0453,
+                    "display_text": "지연시간 : 0.0373초",
+                    "duration": 0.0373,
                     "order": 1
                 },
                 {
@@ -11385,8 +11377,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1996초",
-                    "duration": 0.1996,
+                    "display_text": "지연시간 : 0.1596초",
+                    "duration": 0.1596,
                     "order": 3
                 },
                 {
@@ -11411,8 +11403,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1996초",
-                    "duration": 0.1996,
+                    "display_text": "지연시간 : 0.1596초",
+                    "duration": 0.1596,
                     "order": 6
                 },
                 {
@@ -11437,8 +11429,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1996초",
-                    "duration": 0.1996,
+                    "display_text": "지연시간 : 0.1596초",
+                    "duration": 0.1596,
                     "order": 9
                 },
                 {
@@ -11463,8 +11455,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1996초",
-                    "duration": 0.1996,
+                    "display_text": "지연시간 : 0.1596초",
+                    "duration": 0.1596,
                     "order": 12
                 },
                 {
@@ -11489,8 +11481,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1996초",
-                    "duration": 0.1996,
+                    "display_text": "지연시간 : 0.1596초",
+                    "duration": 0.1596,
                     "order": 15
                 },
                 {
@@ -11515,8 +11507,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1996초",
-                    "duration": 0.1996,
+                    "display_text": "지연시간 : 0.1596초",
+                    "duration": 0.1596,
                     "order": 18
                 },
                 {
@@ -11541,8 +11533,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.1996초",
-                    "duration": 0.1996,
+                    "display_text": "지연시간 : 0.1596초",
+                    "duration": 0.1596,
                     "order": 21
                 },
                 {
@@ -11555,8 +11547,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0453초",
-                    "duration": 0.0453,
+                    "display_text": "지연시간 : 0.0373초",
+                    "duration": 0.0373,
                     "order": 23
                 }
             ]
@@ -11616,8 +11608,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0453초",
-                    "duration": 0.0453,
+                    "display_text": "지연시간 : 0.0373초",
+                    "duration": 0.0373,
                     "order": 6
                 },
                 {
@@ -11695,8 +11687,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0453초",
-                    "duration": 0.0453,
+                    "display_text": "지연시간 : 0.0373초",
+                    "duration": 0.0373,
                     "order": 6
                 },
                 {
@@ -11723,15 +11715,15 @@
             "order": 103,
             "name": "ㄴ 퀘스트 보기",
             "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-07T10:12:31.950890",
+            "updated_at": "2025-01-12T10:01:38.579366",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0366초",
-                    "duration": 0.0366,
+                    "display_text": "지연시간 : 0.0373초",
+                    "duration": 0.0373,
                     "order": 1
                 },
                 {
@@ -11808,8 +11800,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0366초",
-                    "duration": 0.0366,
+                    "display_text": "지연시간 : 0.0373초",
+                    "duration": 0.0373,
                     "order": 10
                 }
             ]
@@ -11818,15 +11810,15 @@
             "order": 104,
             "name": "ㄴ 아이템 보기",
             "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-07T10:12:44.525399",
+            "updated_at": "2025-01-12T10:01:43.518906",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
             "items": [
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0366초",
-                    "duration": 0.0366,
+                    "display_text": "지연시간 : 0.0373초",
+                    "duration": 0.0373,
                     "order": 1
                 },
                 {
@@ -11903,8 +11895,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0366초",
-                    "duration": 0.0366,
+                    "display_text": "지연시간 : 0.0373초",
+                    "duration": 0.0373,
                     "order": 10
                 }
             ]
@@ -12152,150 +12144,6 @@
                     "display_text": "지연시간 : 0.0187초",
                     "duration": 0.0187,
                     "order": 11
-                }
-            ]
-        },
-        "74c363cc-0452-4786-ae02-49e927baaa31": {
-            "order": 108,
-            "name": "---------------편의---------------",
-            "created_at": "2024-12-08T13:40:39.094231",
-            "updated_at": "2024-12-15T17:10:11.762423",
-            "trigger_key": null,
-            "repeat_count": 1,
-            "is_nested": true,
-            "items": [
-                {
-                    "order": 1,
-                    "display_text": "키 입력: 숫자패드 7 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 7",
-                    "scan_code": 71,
-                    "virtual_key": 103,
-                    "modifiers": 0
-                }
-            ]
-        },
-        "03919966-0ce8-419f-a690-197e9e0eacf3": {
-            "order": 109,
-            "name": "ㄴ7.5초 짧은 딜레이 반복",
-            "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-06T17:18:40.817940",
-            "trigger_key": null,
-            "repeat_count": 300,
-            "is_nested": true,
-            "items": [
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.025초",
-                    "duration": 0.025,
-                    "order": 1
-                }
-            ]
-        },
-        "d1ba5b14-8941-47b6-af34-aa41692340ee": {
-            "order": 110,
-            "name": "ㄴ2초 짧은 딜레이 반복",
-            "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-06T19:34:10.884350",
-            "trigger_key": null,
-            "repeat_count": 80,
-            "is_nested": true,
-            "items": [
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.025초",
-                    "duration": 0.025,
-                    "order": 1
-                }
-            ]
-        },
-        "24b5c681-a45f-40ff-8f64-d3ffa85cf93c": {
-            "order": 111,
-            "name": "ㄴ1.25초 짧은 딜레이 반복",
-            "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-06T19:32:02.125122",
-            "trigger_key": null,
-            "repeat_count": 50,
-            "is_nested": true,
-            "items": [
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.025초",
-                    "duration": 0.025,
-                    "order": 1
-                }
-            ]
-        },
-        "1661ae64-c7d1-4349-9e2c-a25589bbd93d": {
-            "order": 112,
-            "name": "ㄴ1초 짧은 딜레이 반복",
-            "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-06T14:53:18.572087",
-            "trigger_key": null,
-            "repeat_count": 40,
-            "is_nested": true,
-            "items": [
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.025초",
-                    "duration": 0.025,
-                    "order": 1
-                }
-            ]
-        },
-        "091f5af5-562c-4781-ba4e-b1128c8dcc81": {
-            "order": 113,
-            "name": "ㄴ0.75초 짧은 딜레이 반복",
-            "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-08T13:52:31.684305",
-            "trigger_key": null,
-            "repeat_count": 30,
-            "is_nested": true,
-            "items": [
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.025초",
-                    "duration": 0.025,
-                    "order": 1
-                }
-            ]
-        },
-        "2e85f283-d561-4bb8-b38a-5cf94d43de1e": {
-            "order": 114,
-            "name": "ㄴ0.5초 짧은 딜레이 반복",
-            "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-07T21:15:34.278469",
-            "trigger_key": null,
-            "repeat_count": 20,
-            "is_nested": true,
-            "items": [
-                {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.025초",
-                    "duration": 0.025,
-                    "order": 1
-                }
-            ]
-        },
-        "379b6a00-e9bc-475e-ac39-e52a44ed7ec6": {
-            "order": 116,
-            "name": "---------------지연시간---------------",
-            "created_at": "2024-12-08T13:40:39.094231",
-            "updated_at": "2025-01-06T13:23:18.381638",
-            "trigger_key": null,
-            "repeat_count": 1,
-            "is_nested": true,
-            "items": [
-                {
-                    "order": 1,
-                    "display_text": "키 입력: 숫자패드 7 --- 떼기",
-                    "action": "떼기",
-                    "type": "key_input",
-                    "key_code": "숫자패드 7",
-                    "scan_code": 71,
-                    "virtual_key": 103,
-                    "modifiers": 0
                 }
             ]
         },
@@ -12634,8 +12482,148 @@
                 }
             ]
         },
-        "9a32dac4-4f69-4700-99cb-4ea6234a0320": {
+        "74c363cc-0452-4786-ae02-49e927baaa31": {
+            "order": 108,
+            "name": "---------------편의---------------",
+            "created_at": "2024-12-08T13:40:39.094231",
+            "updated_at": "2024-12-15T17:10:11.762423",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "order": 1,
+                    "display_text": "키 입력: 숫자패드 7 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 7",
+                    "scan_code": 71,
+                    "virtual_key": 103,
+                    "modifiers": 0
+                }
+            ]
+        },
+        "03919966-0ce8-419f-a690-197e9e0eacf3": {
+            "order": 109,
+            "name": "ㄴ7.5초 짧은 딜레이 반복",
+            "created_at": "2024-12-19T18:54:30.254977",
+            "updated_at": "2025-01-06T17:18:40.817940",
+            "trigger_key": null,
+            "repeat_count": 300,
+            "is_nested": true,
+            "items": [
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.025초",
+                    "duration": 0.025,
+                    "order": 1
+                }
+            ]
+        },
+        "d1ba5b14-8941-47b6-af34-aa41692340ee": {
+            "order": 110,
+            "name": "ㄴ2초 짧은 딜레이 반복",
+            "created_at": "2024-12-19T18:54:30.254977",
+            "updated_at": "2025-01-06T19:34:10.884350",
+            "trigger_key": null,
+            "repeat_count": 80,
+            "is_nested": true,
+            "items": [
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.025초",
+                    "duration": 0.025,
+                    "order": 1
+                }
+            ]
+        },
+        "4652b96c-40d0-4b95-b455-d3284d78f993": {
+            "order": 111,
+            "name": "ㄴ1.5초 짧은 딜레이 반복",
+            "created_at": "2024-12-19T18:54:30.254977",
+            "updated_at": "2025-01-12T05:16:49.610641",
+            "trigger_key": null,
+            "repeat_count": 60,
+            "is_nested": true,
+            "items": [
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.025초",
+                    "duration": 0.025,
+                    "order": 1
+                }
+            ]
+        },
+        "24b5c681-a45f-40ff-8f64-d3ffa85cf93c": {
+            "order": 112,
+            "name": "ㄴ1.25초 짧은 딜레이 반복",
+            "created_at": "2024-12-19T18:54:30.254977",
+            "updated_at": "2025-01-12T05:19:14.530571",
+            "trigger_key": null,
+            "repeat_count": 50,
+            "is_nested": true,
+            "items": [
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.025초",
+                    "duration": 0.025,
+                    "order": 1
+                }
+            ]
+        },
+        "1661ae64-c7d1-4349-9e2c-a25589bbd93d": {
+            "order": 113,
+            "name": "ㄴ1초 짧은 딜레이 반복",
+            "created_at": "2024-12-19T18:54:30.254977",
+            "updated_at": "2025-01-06T14:53:18.572087",
+            "trigger_key": null,
+            "repeat_count": 40,
+            "is_nested": true,
+            "items": [
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.025초",
+                    "duration": 0.025,
+                    "order": 1
+                }
+            ]
+        },
+        "091f5af5-562c-4781-ba4e-b1128c8dcc81": {
+            "order": 114,
+            "name": "ㄴ0.75초 짧은 딜레이 반복",
+            "created_at": "2024-12-19T18:54:30.254977",
+            "updated_at": "2025-01-08T13:52:31.684305",
+            "trigger_key": null,
+            "repeat_count": 30,
+            "is_nested": true,
+            "items": [
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.025초",
+                    "duration": 0.025,
+                    "order": 1
+                }
+            ]
+        },
+        "2e85f283-d561-4bb8-b38a-5cf94d43de1e": {
             "order": 115,
+            "name": "ㄴ0.5초 짧은 딜레이 반복",
+            "created_at": "2024-12-19T18:54:30.254977",
+            "updated_at": "2025-01-07T21:15:34.278469",
+            "trigger_key": null,
+            "repeat_count": 20,
+            "is_nested": true,
+            "items": [
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.025초",
+                    "duration": 0.025,
+                    "order": 1
+                }
+            ]
+        },
+        "9a32dac4-4f69-4700-99cb-4ea6234a0320": {
+            "order": 116,
             "name": "ㄴ0.25초 짧은 딜레이 반복",
             "created_at": "2024-12-19T18:54:30.254977",
             "updated_at": "2025-01-10T17:08:07.960697",
@@ -12648,6 +12636,27 @@
                     "display_text": "지연시간 : 0.025초",
                     "duration": 0.025,
                     "order": 1
+                }
+            ]
+        },
+        "379b6a00-e9bc-475e-ac39-e52a44ed7ec6": {
+            "order": 117,
+            "name": "---------------지연시간---------------",
+            "created_at": "2024-12-08T13:40:39.094231",
+            "updated_at": "2025-01-06T13:23:18.381638",
+            "trigger_key": null,
+            "repeat_count": 1,
+            "is_nested": true,
+            "items": [
+                {
+                    "order": 1,
+                    "display_text": "키 입력: 숫자패드 7 --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "숫자패드 7",
+                    "scan_code": 71,
+                    "virtual_key": 103,
+                    "modifiers": 0
                 }
             ]
         }
