@@ -4490,9 +4490,9 @@
                 {
                     "order": 5,
                     "type": "logic",
-                    "display_text": "ㄴ 첨 중독 21초 반복 (복사본)",
+                    "display_text": "ㄴ 첨 중독 15초 반복 (복사본)",
                     "logic_id": "190ab47d-99b2-4385-9411-b0367980d7f6",
-                    "logic_name": "ㄴ 첨 중독 21초 반복 (복사본)",
+                    "logic_name": "ㄴ 첨 중독 15초 반복 (복사본)",
                     "repeat_count": 1
                 }
             ]
@@ -4538,11 +4538,11 @@
         },
         "190ab47d-99b2-4385-9411-b0367980d7f6": {
             "order": 33,
-            "name": "ㄴ 첨 중독 21초 반복 (복사본)",
+            "name": "ㄴ 첨 중독 15초 반복 (복사본)",
             "created_at": "2024-12-02T02:03:00.957188",
-            "updated_at": "2025-01-03T03:54:45.560898",
+            "updated_at": "2025-01-16T21:06:57.605011",
             "trigger_key": null,
-            "repeat_count": 21,
+            "repeat_count": 15,
             "is_nested": true,
             "items": [
                 {
@@ -10690,7 +10690,7 @@
             "order": 96,
             "name": "출두 - 사냥터로",
             "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-15T00:42:59.944933",
+            "updated_at": "2025-01-16T16:27:38.574552",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "하이픈(-)",
@@ -10988,13 +10988,19 @@
                 {
                     "order": 36,
                     "type": "logic",
-                    "display_text": "ㄴ0.5초 짧은 딜레이 반복",
-                    "logic_id": "2e85f283-d561-4bb8-b38a-5cf94d43de1e",
-                    "logic_name": "ㄴ0.5초 짧은 딜레이 반복",
+                    "display_text": "ㄴ0.25초 짧은 딜레이 반복",
+                    "logic_id": "9a32dac4-4f69-4700-99cb-4ea6234a0320",
+                    "logic_name": "ㄴ0.25초 짧은 딜레이 반복",
                     "repeat_count": 1
                 },
                 {
-                    "order": 37,
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0500초",
+                    "duration": 0.05,
+                    "order": 37
+                },
+                {
+                    "order": 38,
                     "display_text": "키 입력: 방향키 아래쪽 ↓ --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -11007,10 +11013,10 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.0292초",
                     "duration": 0.0292,
-                    "order": 38
+                    "order": 39
                 },
                 {
-                    "order": 39,
+                    "order": 40,
                     "display_text": "키 입력: 방향키 오른쪽 → --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -11020,7 +11026,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 40,
+                    "order": 41,
                     "type": "logic",
                     "display_text": "ㄴ2초 짧은 딜레이 반복",
                     "logic_id": "d1ba5b14-8941-47b6-af34-aa41692340ee",
@@ -11028,7 +11034,7 @@
                     "repeat_count": 1
                 },
                 {
-                    "order": 41,
+                    "order": 42,
                     "display_text": "키 입력: 방향키 오른쪽 → --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -11038,7 +11044,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 42,
+                    "order": 43,
                     "type": "logic",
                     "display_text": "ㄴ→흉가 진입하면서 마비",
                     "logic_id": "992cb06a-6e2e-46d1-a621-d02ea30d1ca5",
@@ -11049,7 +11055,7 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.0217초",
                     "duration": 0.0217,
-                    "order": 43
+                    "order": 44
                 }
             ]
         },
@@ -11410,7 +11416,7 @@
             "order": 98,
             "name": "ㄴ왕궁 위로 걸어가기 10초",
             "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-15T20:39:14.795787",
+            "updated_at": "2025-01-16T13:18:02.793445",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -11516,9 +11522,9 @@
                 {
                     "order": 13,
                     "type": "logic",
-                    "display_text": "ㄴ1.75초 짧은 딜레이 반복",
-                    "logic_id": "05a8a747-8725-4a18-9497-210fedc60150",
-                    "logic_name": "ㄴ1.75초 짧은 딜레이 반복",
+                    "display_text": "ㄴ2초 짧은 딜레이 반복",
+                    "logic_id": "d1ba5b14-8941-47b6-af34-aa41692340ee",
+                    "logic_name": "ㄴ2초 짧은 딜레이 반복",
                     "repeat_count": 1
                 },
                 {
@@ -11816,7 +11822,7 @@
             "order": 104,
             "name": "ㄴ 왕 누르기 (탭)",
             "created_at": "2024-12-30T23:21:52.330353",
-            "updated_at": "2025-01-15T16:37:27.046527",
+            "updated_at": "2025-01-16T20:15:05.657226",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -11866,7 +11872,13 @@
                     "repeat_count": 1
                 },
                 {
-                    "order": 6,
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.1000초",
+                    "duration": 0.1,
+                    "order": 6
+                },
+                {
+                    "order": 7,
                     "display_text": "키 입력: 방향키 위쪽 ↑ --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -11876,7 +11888,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 7,
+                    "order": 8,
                     "display_text": "키 입력: 엔터 --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -11886,7 +11898,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 8,
+                    "order": 9,
                     "display_text": "키 입력: 엔터 --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -11899,7 +11911,7 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.0153초",
                     "duration": 0.0153,
-                    "order": 9
+                    "order": 10
                 }
             ]
         },
@@ -12301,7 +12313,7 @@
             "order": 107,
             "name": "ㄴ 탭 이동 방식 변경 (직관적 이동)",
             "created_at": "2024-12-30T23:21:52.330353",
-            "updated_at": "2025-01-15T15:33:27.025828",
+            "updated_at": "2025-01-16T12:55:47.082342",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -12341,56 +12353,50 @@
                 {
                     "order": 5,
                     "type": "mouse_input",
-                    "display_text": "마우스 입력: 직관적 이동 선택 (1609, 1049)",
-                    "name": "직관적 이동 선택",
+                    "display_text": "마우스 입력: NEXT 버튼 클릭 (2164, 1585)",
+                    "name": "NEXT 버튼 클릭",
                     "action": "클릭",
                     "button": "왼쪽 버튼",
-                    "coordinates_x": 1609,
-                    "coordinates_y": 1049,
-                    "ratios_x": 0.4585351952123112,
-                    "ratios_y": 0.5379487179487179
-                },
-                {
-                    "order": 6,
-                    "type": "mouse_input",
-                    "display_text": "마우스 입력: 직관적 이동 선택 (1609, 1049)",
-                    "name": "직관적 이동 선택",
-                    "action": "클릭",
-                    "button": "왼쪽 버튼",
-                    "coordinates_x": 1609,
-                    "coordinates_y": 1049,
-                    "ratios_x": 0.4585351952123112,
-                    "ratios_y": 0.5379487179487179
+                    "coordinates_x": 2164,
+                    "coordinates_y": 1585,
+                    "ratios_x": 0.6223756111590452,
+                    "ratios_y": 0.8203933747412008
                 },
                 {
                     "type": "delay",
                     "display_text": "지연시간 : 0.0153초",
                     "duration": 0.0153,
-                    "order": 7
+                    "order": 6
                 },
                 {
-                    "order": 8,
+                    "order": 7,
                     "type": "mouse_input",
-                    "display_text": "마우스 입력: OK 클릭 (1756, 1594)",
-                    "name": "OK 클릭",
+                    "display_text": "마우스 입력: 직관적 이동 선택 (1748, 1125)",
+                    "name": "직관적 이동 선택",
                     "action": "클릭",
                     "button": "왼쪽 버튼",
-                    "coordinates_x": 1756,
-                    "coordinates_y": 1594,
-                    "ratios_x": 0.5004274722143061,
-                    "ratios_y": 0.8174358974358974
+                    "coordinates_x": 1748,
+                    "coordinates_y": 1125,
+                    "ratios_x": 0.5027322404371585,
+                    "ratios_y": 0.5822981366459627
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0153초",
+                    "duration": 0.0153,
+                    "order": 8
                 },
                 {
                     "order": 9,
                     "type": "mouse_input",
-                    "display_text": "마우스 입력: OK 클릭 (1756, 1594)",
-                    "name": "OK 클릭",
+                    "display_text": "마우스 입력: OK 버튼 클릭 (1312, 1580)",
+                    "name": "OK 버튼 클릭",
                     "action": "클릭",
                     "button": "왼쪽 버튼",
-                    "coordinates_x": 1756,
-                    "coordinates_y": 1594,
-                    "ratios_x": 0.5004274722143061,
-                    "ratios_y": 0.8174358974358974
+                    "coordinates_x": 1312,
+                    "coordinates_y": 1580,
+                    "ratios_x": 0.37733678458441183,
+                    "ratios_y": 0.8178053830227743
                 },
                 {
                     "type": "delay",
@@ -12404,7 +12410,7 @@
             "order": 108,
             "name": "ㄴ 탭 이동 방식 변경 (라인 이동)",
             "created_at": "2024-12-30T23:21:52.330353",
-            "updated_at": "2025-01-15T15:33:32.007652",
+            "updated_at": "2025-01-16T12:55:50.202546",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -12444,56 +12450,50 @@
                 {
                     "order": 5,
                     "type": "mouse_input",
-                    "display_text": "마우스 입력: 라인 이동 클릭 (1966, 1050)",
-                    "name": "라인 이동 클릭",
+                    "display_text": "마우스 입력: NEXT 버튼 클릭 (2170, 1581)",
+                    "name": "NEXT 버튼 클릭",
                     "action": "클릭",
                     "button": "왼쪽 버튼",
-                    "coordinates_x": 1966,
-                    "coordinates_y": 1050,
-                    "ratios_x": 0.5602735822171558,
-                    "ratios_y": 0.5384615384615384
-                },
-                {
-                    "order": 6,
-                    "type": "mouse_input",
-                    "display_text": "마우스 입력: 라인 이동 클릭 (1966, 1050)",
-                    "name": "라인 이동 클릭",
-                    "action": "클릭",
-                    "button": "왼쪽 버튼",
-                    "coordinates_x": 1966,
-                    "coordinates_y": 1050,
-                    "ratios_x": 0.5602735822171558,
-                    "ratios_y": 0.5384615384615384
+                    "coordinates_x": 2170,
+                    "coordinates_y": 1581,
+                    "ratios_x": 0.6241012366983031,
+                    "ratios_y": 0.8183229813664596
                 },
                 {
                     "type": "delay",
                     "display_text": "지연시간 : 0.0153초",
                     "duration": 0.0153,
-                    "order": 7
+                    "order": 6
                 },
                 {
-                    "order": 8,
+                    "order": 7,
                     "type": "mouse_input",
-                    "display_text": "마우스 입력: OK 클릭 (1756, 1594)",
-                    "name": "OK 클릭",
+                    "display_text": "마우스 입력: 라인 이동 선택 (2071, 1125)",
+                    "name": "라인 이동 선택",
                     "action": "클릭",
                     "button": "왼쪽 버튼",
-                    "coordinates_x": 1756,
-                    "coordinates_y": 1594,
-                    "ratios_x": 0.5004274722143061,
-                    "ratios_y": 0.8174358974358974
+                    "coordinates_x": 2071,
+                    "coordinates_y": 1125,
+                    "ratios_x": 0.5956284153005464,
+                    "ratios_y": 0.5822981366459627
+                },
+                {
+                    "type": "delay",
+                    "display_text": "지연시간 : 0.0153초",
+                    "duration": 0.0153,
+                    "order": 8
                 },
                 {
                     "order": 9,
                     "type": "mouse_input",
-                    "display_text": "마우스 입력: OK 클릭 (1756, 1594)",
-                    "name": "OK 클릭",
+                    "display_text": "마우스 입력: OK 버튼 클릭 (1308, 1585)",
+                    "name": "OK 버튼 클릭",
                     "action": "클릭",
                     "button": "왼쪽 버튼",
-                    "coordinates_x": 1756,
-                    "coordinates_y": 1594,
-                    "ratios_x": 0.5004274722143061,
-                    "ratios_y": 0.8174358974358974
+                    "coordinates_x": 1308,
+                    "coordinates_y": 1585,
+                    "ratios_x": 0.37618636755823986,
+                    "ratios_y": 0.8203933747412008
                 },
                 {
                     "type": "delay",
@@ -13401,7 +13401,7 @@
             "order": 121,
             "name": "ㄴ0.75초 짧은 딜레이 반복",
             "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-15T20:38:38.336615",
+            "updated_at": "2025-01-16T14:35:19.833761",
             "trigger_key": null,
             "repeat_count": 30,
             "is_nested": true,
@@ -13418,7 +13418,7 @@
             "order": 122,
             "name": "ㄴ0.5초 짧은 딜레이 반복",
             "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-07T21:15:34.278469",
+            "updated_at": "2025-01-16T20:15:05.577861",
             "trigger_key": null,
             "repeat_count": 20,
             "is_nested": true,
@@ -13435,7 +13435,7 @@
             "order": 123,
             "name": "ㄴ0.25초 짧은 딜레이 반복",
             "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-10T17:08:07.960697",
+            "updated_at": "2025-01-16T14:09:51.861098",
             "trigger_key": null,
             "repeat_count": 10,
             "is_nested": true,
