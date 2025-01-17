@@ -10898,7 +10898,7 @@
             "order": 96,
             "name": "출두 - 사냥터로",
             "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-16T16:27:38.574552",
+            "updated_at": "2025-01-18T01:37:37.091333",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "하이픈(-)",
@@ -11178,13 +11178,7 @@
                     "repeat_count": 1
                 },
                 {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0217초",
-                    "duration": 0.0217,
-                    "order": 34
-                },
-                {
-                    "order": 35,
+                    "order": 34,
                     "display_text": "키 입력: 방향키 아래쪽 ↓ --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -11194,7 +11188,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 36,
+                    "order": 35,
                     "type": "logic",
                     "display_text": "ㄴ0.25초 짧은 딜레이 반복",
                     "logic_id": "9a32dac4-4f69-4700-99cb-4ea6234a0320",
@@ -11203,12 +11197,12 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0500초",
+                    "display_text": "지연시간 : 0.05초",
                     "duration": 0.05,
-                    "order": 37
+                    "order": 36
                 },
                 {
-                    "order": 38,
+                    "order": 37,
                     "display_text": "키 입력: 방향키 아래쪽 ↓ --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -11218,13 +11212,7 @@
                     "modifiers": 0
                 },
                 {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.0292초",
-                    "duration": 0.0292,
-                    "order": 39
-                },
-                {
-                    "order": 40,
+                    "order": 38,
                     "display_text": "키 입력: 방향키 오른쪽 → --- 누르기",
                     "action": "누르기",
                     "type": "key_input",
@@ -11234,7 +11222,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 41,
+                    "order": 39,
                     "type": "logic",
                     "display_text": "ㄴ2초 짧은 딜레이 반복",
                     "logic_id": "d1ba5b14-8941-47b6-af34-aa41692340ee",
@@ -11242,7 +11230,7 @@
                     "repeat_count": 1
                 },
                 {
-                    "order": 42,
+                    "order": 40,
                     "display_text": "키 입력: 방향키 오른쪽 → --- 떼기",
                     "action": "떼기",
                     "type": "key_input",
@@ -11252,7 +11240,7 @@
                     "modifiers": 0
                 },
                 {
-                    "order": 43,
+                    "order": 41,
                     "type": "logic",
                     "display_text": "ㄴ→흉가 진입하면서 마비",
                     "logic_id": "992cb06a-6e2e-46d1-a621-d02ea30d1ca5",
@@ -11263,7 +11251,7 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.0217초",
                     "duration": 0.0217,
-                    "order": 44
+                    "order": 42
                 }
             ]
         },
@@ -11271,7 +11259,7 @@
             "order": 97,
             "name": "출두 -  왕궁으로",
             "created_at": "2024-12-19T18:54:30.254977",
-            "updated_at": "2025-01-15T14:00:33.234869",
+            "updated_at": "2025-01-18T02:19:06.364932",
             "trigger_key": {
                 "is_system_key": false,
                 "key_code": "등호(=)",
@@ -11591,13 +11579,7 @@
                     "modifiers": 0
                 },
                 {
-                    "type": "delay",
-                    "display_text": "지연시간 : 0.1327초",
-                    "duration": 0.1327,
-                    "order": 37
-                },
-                {
-                    "order": 38,
+                    "order": 37,
                     "type": "logic",
                     "display_text": "ㄴ왕궁 위로 걸어가기 10초",
                     "logic_id": "cda13f03-f1ac-456e-8fe6-516ff415ea61",
@@ -11608,10 +11590,10 @@
                     "type": "delay",
                     "display_text": "지연시간 : 0.0217초",
                     "duration": 0.0217,
-                    "order": 39
+                    "order": 38
                 },
                 {
-                    "order": 40,
+                    "order": 39,
                     "type": "logic",
                     "display_text": "완료보고 후  왕퀘 받기 취소 반복 - 마우스 버전",
                     "logic_id": "7615955f-6c5e-465b-8735-0af6b6680a86",
