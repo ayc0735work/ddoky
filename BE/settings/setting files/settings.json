@@ -3974,7 +3974,7 @@
             "order": 29,
             "name": "ㄴ 첨사냥 중첩로직용 - 241231",
             "created_at": "2024-11-30T10:25:06.438732",
-            "updated_at": "2025-01-07T13:27:57.221105",
+            "updated_at": "2025-01-17T06:47:54.686866",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -4389,6 +4389,214 @@
                 },
                 {
                     "order": 52,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 53,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 상하좌우 - 마비",
+                    "logic_id": "58c77fae-cec5-4b06-975f-4e4296c0c40b",
+                    "logic_name": "◎ 1초 점 ◎ 상하좌우 - 마비",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 54,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 체력 4회",
+                    "logic_id": "95d846eb-bf5d-44ab-9d70-9e53cca79343",
+                    "logic_name": "◎ 1초 점 ◎ 체력 4회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 55,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 버프",
+                    "logic_id": "29f0f45b-2b2e-468f-8f77-47ace3aa483c",
+                    "logic_name": "◎ 1초 점 ◎ 버프",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 56,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 상하 두 칸 - 저주",
+                    "logic_id": "de9a2bfa-63f6-4b41-a1cd-2ab16d1be627",
+                    "logic_name": "◎ 1초 점 ◎ 상하 두 칸 - 저주",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 57,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 좌우 두 칸 - 저주",
+                    "logic_id": "a78c4331-7176-4fd2-843f-bdd0d45dacb2",
+                    "logic_name": "◎ 1초 점 ◎ 좌우 두 칸 - 저주",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 58,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 59,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 60,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 61,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 62,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 63,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 64,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 65,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 66,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 상하좌우 - 마비",
+                    "logic_id": "58c77fae-cec5-4b06-975f-4e4296c0c40b",
+                    "logic_name": "◎ 1초 점 ◎ 상하좌우 - 마비",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 67,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 체력 4회",
+                    "logic_id": "95d846eb-bf5d-44ab-9d70-9e53cca79343",
+                    "logic_name": "◎ 1초 점 ◎ 체력 4회",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 68,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 버프",
+                    "logic_id": "29f0f45b-2b2e-468f-8f77-47ace3aa483c",
+                    "logic_name": "◎ 1초 점 ◎ 버프",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 69,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 상하 두 칸 - 저주",
+                    "logic_id": "de9a2bfa-63f6-4b41-a1cd-2ab16d1be627",
+                    "logic_name": "◎ 1초 점 ◎ 상하 두 칸 - 저주",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 70,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 좌우 두 칸 - 저주",
+                    "logic_id": "a78c4331-7176-4fd2-843f-bdd0d45dacb2",
+                    "logic_name": "◎ 1초 점 ◎ 좌우 두 칸 - 저주",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 71,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 72,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 73,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 74,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 75,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 76,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 77,
+                    "type": "logic",
+                    "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
+                    "logic_name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
+                    "repeat_count": 1
+                },
+                {
+                    "order": 78,
                     "type": "logic",
                     "display_text": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
                     "logic_id": "593c3960-6506-4673-8a84-520df8a14acf",
@@ -11919,7 +12127,7 @@
             "order": 105,
             "name": "ㄴ 왕퀘 받기 - 마우스 버전",
             "created_at": "2024-12-30T23:21:52.330353",
-            "updated_at": "2025-01-15T00:34:07.109599",
+            "updated_at": "2025-01-17T17:05:05.280505",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -12116,7 +12324,7 @@
             "order": 106,
             "name": "ㄴ 왕퀘 취소 - 마우스 버전",
             "created_at": "2024-12-30T23:21:52.330353",
-            "updated_at": "2025-01-15T00:32:14.338810",
+            "updated_at": "2025-01-17T17:05:20.425859",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -12313,7 +12521,7 @@
             "order": 107,
             "name": "ㄴ 탭 이동 방식 변경 (직관적 이동)",
             "created_at": "2024-12-30T23:21:52.330353",
-            "updated_at": "2025-01-16T12:55:47.082342",
+            "updated_at": "2025-01-17T17:12:57.882244",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -12346,8 +12554,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0543초",
-                    "duration": 0.0543,
+                    "display_text": "지연시간 : 0.0443초",
+                    "duration": 0.0443,
                     "order": 4
                 },
                 {
@@ -12364,8 +12572,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0153초",
-                    "duration": 0.0153,
+                    "display_text": "지연시간 : 0.0443초",
+                    "duration": 0.0443,
                     "order": 6
                 },
                 {
@@ -12382,8 +12590,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0153초",
-                    "duration": 0.0153,
+                    "display_text": "지연시간 : 0.0443초",
+                    "duration": 0.0443,
                     "order": 8
                 },
                 {
@@ -12410,7 +12618,7 @@
             "order": 108,
             "name": "ㄴ 탭 이동 방식 변경 (라인 이동)",
             "created_at": "2024-12-30T23:21:52.330353",
-            "updated_at": "2025-01-16T12:55:50.202546",
+            "updated_at": "2025-01-17T17:13:07.558237",
             "trigger_key": null,
             "repeat_count": 1,
             "is_nested": true,
@@ -12443,8 +12651,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0543초",
-                    "duration": 0.0543,
+                    "display_text": "지연시간 : 0.0443초",
+                    "duration": 0.0443,
                     "order": 4
                 },
                 {
@@ -12461,8 +12669,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0153초",
-                    "duration": 0.0153,
+                    "display_text": "지연시간 : 0.0443초",
+                    "duration": 0.0443,
                     "order": 6
                 },
                 {
@@ -12479,8 +12687,8 @@
                 },
                 {
                     "type": "delay",
-                    "display_text": "지연시간 : 0.0153초",
-                    "duration": 0.0153,
+                    "display_text": "지연시간 : 0.0443초",
+                    "duration": 0.0443,
                     "order": 8
                 },
                 {
