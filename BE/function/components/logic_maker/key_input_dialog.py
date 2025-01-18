@@ -46,15 +46,13 @@ class KeyInputDialog(QDialog):
         # 키 정보 라벨
         self.KeyInfoLabel__QLabel = QLabel()
         self.KeyInfoLabel__QLabel.setWordWrap(True)
-        self.KeyInfoLabel__QLabel.mousePressEvent = self._copy_key_info_to_clipboard
-        self.KeyInfoLabel__QLabel.setCursor(Qt.PointingHandCursor)
         KeyInputLayout__QVBoxLayout.addWidget(self.KeyInfoLabel__QLabel)
         
         # 버튼 레이아웃
         KeyInputButtonSection__QHBoxLayout = QHBoxLayout()
         
         # 확인 버튼
-        self.ConfirmButton__QPushButton = QPushButton("키 입력 저장")
+        self.ConfirmButton__QPushButton = QPushButton("입력된 키 정보 저장")
         self.ConfirmButton__QPushButton.clicked.connect(self._on_confirm)
         KeyInputButtonSection__QHBoxLayout.addWidget(self.ConfirmButton__QPushButton)
         
@@ -65,6 +63,14 @@ class KeyInputDialog(QDialog):
         
         KeyInputLayout__QVBoxLayout.addLayout(KeyInputButtonSection__QHBoxLayout)
         self.setLayout(KeyInputLayout__QVBoxLayout)
+
+    def keyPressEvent(self, event: QKeyEvent):
+        """키 이벤트 처리"""
+        # ESC와 Enter 키를 무시
+        if event.key() in [Qt.Key_Escape, Qt.Key_Return, Qt.Key_Enter]:
+            event.ignore()
+        else:
+            super().keyPressEvent(event)
         
     def _on_confirm(self):
         """확인 버튼 클릭 시"""
@@ -75,17 +81,3 @@ class KeyInputDialog(QDialog):
     def get_key_info(self):
         """현재 입력된 키 정보 반환"""
         return self.KeyInputWidget__KeyInputWidget.get_key_info()
-        
-    def _copy_key_info_to_clipboard(self, event):
-        """키 정보를 클립보드에 복사"""
-        if self.KeyInfoLabel__QLabel.text():
-            clipboard = QGuiApplication.clipboard()
-            clipboard.setText(self.KeyInfoLabel__QLabel.text())
-
-    def keyPressEvent(self, event: QKeyEvent):
-        """키 이벤트 처리"""
-        # ESC와 Enter 키를 무시
-        if event.key() in [Qt.Key_Escape, Qt.Key_Return, Qt.Key_Enter]:
-            event.ignore()
-        else:
-            super().keyPressEvent(event)
