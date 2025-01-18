@@ -677,15 +677,7 @@ class LogicExecutor(QObject):
             
             # 키보드 상태 정리 - 모든 눌려있는 키 떼기
             self._release_all_keys()
-            
-            # ESC 키 두 번 누르기
-            for _ in range(3):
-                win32api.keybd_event(27, 0, 0, 0)
-                time.sleep(self.KEY_DELAYS['누르기'])
-                win32api.keybd_event(27, 0, win32con.KEYEVENTF_KEYUP, 0)
-                time.sleep(self.KEY_DELAYS['떼기'])
-            self._log_with_time("[로직 강제 중지] ESC키 세 번 눌렀다 떼기 완료")
-            
+
             # 타이머 정리를 비동기적으로 처리
             self._clear_timers_async()
 
@@ -696,10 +688,22 @@ class LogicExecutor(QObject):
             if self.is_logic_enabled:
                 self.start_monitoring()
             
+            # ESC 키 두 번 누르기
+            for _ in range(3):
+                # 0.009초 딜레이
+                time.sleep(0.009)
+                # ESC 키 누르기
+                win32api.keybd_event(27, 0, 0, 0)
+                # ESC 키 떼기
+                win32api.keybd_event(27, 0, win32con.KEYEVENTF_KEYUP, 0)
+                # 0.009초 딜레이
+                time.sleep(0.009)
+            self._log_with_time("[로직 강제 중지] ESC키 세 번 눌렀다 떼기 완료")
+
             # 중지 상태 해제
             self._should_stop = False
             self._log_with_time("[로직 강제 중지] 중지 상태 해제 완료")
-            
+
             self._log_with_time("[로직 강제 중지] ---------- 로직 강제 중지 완료 (동기적으로 강제 중지)<br>")
             
         except Exception as e:
