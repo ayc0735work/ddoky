@@ -15,7 +15,7 @@ from ...constants.dimensions import (LOGIC_DETAIL_WIDTH, BASIC_SECTION_HEIGHT,
                                  LOGIC_BUTTON_WIDTH)
 from ....utils.key_handler import (KeyboardHook, get_key_display_text, get_key_location,
                                 get_modifier_text, format_key_info)
-from ..common.key_input_widget import KeyInputWidget
+from ..._common_components.modal.entered_key_information_input_modal.key_input_widget import KeyInputWidget
 from ..logic_maker.text_input_dialog import TextInputDialog
 
 class LogicDetailWidget(QFrame):
@@ -291,8 +291,7 @@ class LogicDetailWidget(QFrame):
                         "coordinates_y": item_info.get('coordinates_y', 0),
                         "ratios_x": item_info.get('ratios_x', 0),
                         "ratios_y": item_info.get('ratios_y', 0),
-                        "display_text": item_info.get('display_text', "마우스 입력"),
-                        "order": insert_position + 1
+                        "display_text": item_info.get('display_text', '')
                     }
                 elif item_type == 'logic':
                     # 중첩 로직 처리

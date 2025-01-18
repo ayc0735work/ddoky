@@ -1,11 +1,10 @@
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QKeyEvent, QGuiApplication
-from ....utils.key_handler import format_key_info
-from ..common.key_input_widget import KeyInputWidget
+from ..._common_components.modal.entered_key_information_input_modal.key_input_widget import KeyInputWidget
 
 class KeyInputDialog(QDialog):
-    """키 입력을 받는 다이얼로그"""
+    """키 입력을 받아 정보를 표출하는 다이얼로그"""
     
     def __init__(self, parent=None):
         super().__init__(parent)
