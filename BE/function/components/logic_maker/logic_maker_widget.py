@@ -129,11 +129,27 @@ class LogicMakerToolWidget(QFrame):
             self.log_message.emit(f"[ERROR] 잘못된 형식의 데이터: {type(item)}")
 
     def _add_key_input(self):
-
-        """키 입력 추가"""
+        """키 입력 추가
+        
+        프로세스:
+        1. KeyInputDialog 인스턴스 생성
+        2. 모달 다이얼로그로 표시하여 사용자 입력 대기
+        3. 사용자가 확인(OK)을 클릭하면:
+           - get_key_info()로 입력된 키 정보 가져오기
+           - 키 정보가 유효하면 _on_key_selected() 호출하여 처리
+        """
+        # 1. 키 입력 다이얼로그 생성 (부모를 self로 지정하여 모달로 표시)
         dialog = KeyInputDialog(self)
+        
+        # 2. 다이얼로그를 모달로 실행하고 사용자 응답 확인
+        # QDialog.Accepted는 사용자가 OK 버튼을 클릭했을 때 반환됨
         if dialog.exec() == QDialog.Accepted:
+            # 3. 입력된 키 정보 가져오기
+            # key_info는 키 코드, 키 이름 등을 포함하는 딕셔너리
             key_info = dialog.get_key_info()
+            
+            # 4. 키 정보가 유효한 경우 처리
+            # _on_key_selected()는 키 정보를 로직 아이템 목록에 추가
             if key_info:
                 self._on_key_selected(key_info)
 
