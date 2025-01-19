@@ -17,7 +17,7 @@ class LogicMakerController(QObject):
         
     def _connect_signals(self):
         """시그널 연결"""
-        self.widget.key_input.connect(self._handle_key_input)
+        self.widget.confirmed_and_added_key_info.connect(self._handle_key_input)
         self.widget.mouse_input.connect(self._handle_mouse_input)
         self.widget.delay_input.connect(self._handle_delay_input)
         self.widget.record_mode.connect(self._handle_record_mode)

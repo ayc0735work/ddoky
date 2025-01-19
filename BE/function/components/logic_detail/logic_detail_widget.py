@@ -332,6 +332,7 @@ class LogicDetailWidget(QFrame):
                         key_text = key_parts[0].replace("키 입력: ", "").strip()
                         action = key_parts[1]  # "누르기" 또는 "떼기"
                         
+                        
                         # 수정자 키가 있는지 확인
                         if "+" in key_text:
                             modifiers_text, key = key_text.rsplit("+", 1)
@@ -1177,7 +1178,7 @@ class LogicDetailWidget(QFrame):
                 except ValueError:
                     self.log_message.emit("지연시간 형식이 올바르지 않습니다")
             # 키 입력 아이템인 경우
-            elif item_text.startswith("키 입력:"):
+            elif item_text.startswith("(logic_detail_widget.py) 키 입력:"):
                 key_parts = item_text.split(" --- ")
                 if len(key_parts) == 2:
                     key_text = key_parts[0]

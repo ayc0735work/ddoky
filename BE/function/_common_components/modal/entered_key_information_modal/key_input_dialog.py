@@ -72,7 +72,7 @@ class KeyInputDialog(QDialog):
             super().keyPressEvent(event)
 
     def get_entered_key_info(self):
-        """현재 입력된 키 정보 반환"""
+        """현재 입력된 키 정보 반환 (키보드 훅을 통해 얻은 raw_key_info를 구조화한 formatted_key_info 키 정보)"""
         return self.KeyInputWidget__KeyInputWidget.get_formatted_key_info()
 
     def _on_confirm(self):

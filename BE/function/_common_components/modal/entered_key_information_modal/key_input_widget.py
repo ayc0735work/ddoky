@@ -90,7 +90,7 @@ class KeyInputWidget(QWidget):
             self.modifiers_label.setText(f"수정자 키: {formatted_key_info['modifier_text']}")
             
     def get_formatted_key_info(self):
-        """현재 입력된 키 정보 반환"""
+        """현재 입력된 키 정보 반환 (키보드 훅을 통해 얻은 raw_key_info를 구조화한 formatted_key_info 키 정보)"""
         return self.last_key_info
         
     def set_key_info(self, formatted_key_info):

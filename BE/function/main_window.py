@@ -182,7 +182,7 @@ class MainWindow(QMainWindow):
         self.logic_operation_widget.log_message.connect(self._append_log)  # _append_log를 통해 로그 추가
         
         # 로직 메이커 시그널 연결
-        self.logic_maker_widget.key_input.connect(self._on_key_input)
+        self.logic_maker_widget.confirmed_and_added_key_info.connect(self._on_key_input)
         self.logic_maker_widget.mouse_input.connect(self._on_mouse_input)
         self.logic_maker_widget.delay_input.connect(self._on_delay_input)
         self.logic_maker_widget.add_logic.connect(self._on_add_logic)  # 로직 추가 시그널 연결
@@ -207,11 +207,30 @@ class MainWindow(QMainWindow):
         """로그 메시지 추가"""
         self.log_widget.append(message)
         
-    def _on_key_input(self, key_info):
-        """키 입력이 추가되었을 때 호출"""
-        # 키 정보를 문자열로 변환
-        key_text = key_info.get('display_text', '')  # 이벤트 타입이 포함된 텍스트 사용
-        modifiers = key_info.get('modifiers', 0)
+    def _on_key_input(self, key_state_info):
+        """LogicMakerToolWidget의 confirmed_and_added_key_info 시그널을 통해 전달된 키 상태 정보를 처리합니다.
+
+        데이터 흐름:
+        1. LogicMakerToolWidget._add_confirmed_input_key()
+           - key_state_info_press와 key_state_info_release를 생성 (key_state_info)
+           - confirmed_and_added_key_info 시그널을 통해 각각 전달
+           
+        2. MainWindow._on_key_input()
+           - confirmed_and_added_key_info 시그널로 전달된 key_state_info를 받아서 표시 형식으로 변환
+           - 수정자 키(Ctrl, Shift, Alt) 정보 추가
+           - "(main_window.py 최초 입력)" 접두어 추가
+           
+        3. LogicDetailWidget.add_item()
+           - 변환된 문자열을 아이템 목록에 추가
+
+        Args:
+            key_state_info (dict): confirmed_and_added_key_info 시그널로 전달된 키 상태 정보 (key_state_info_press와 key_state_info_release)
+                - display_text (str): 키 코드와 상태(누르기/떼기)
+                - modifiers (int): 수정자 키 상태 플래그
+        """
+        # 키 상태 정보를 문자열로 변환
+        key_text = key_state_info.get('display_text', '')  # 이벤트 타입이 포함된 텍스트 사용
+        modifiers = key_state_info.get('modifiers', 0)
         modifier_text = ""
         
         if modifiers & Qt.ControlModifier:
@@ -221,7 +240,7 @@ class MainWindow(QMainWindow):
         if modifiers & Qt.AltModifier:
             modifier_text += "Alt+"
             
-        display_text = f"키 입력: {modifier_text}{key_text}"
+        display_text = f"(main_window.py 최초 입력) 키 입력: {modifier_text}{key_text}"
         self.logic_detail_widget.add_item(display_text)
         
     def _on_mouse_input(self, mouse_info):

@@ -14,7 +14,7 @@ from .text_input_dialog import TextInputDialog
 class LogicMakerToolWidget(QFrame):
     """로직 메이커 위젯"""
     # 시그널 정의
-    key_input = Signal(dict)  # 키 입력이 추가되었을 때 (키 정보를 딕셔너리로 전달)
+    confirmed_and_added_key_info = Signal(dict)  # 키 입력이 컨펌되고 추가되었을 때 (키 정보를 딕셔너리로 전달)
     mouse_input = Signal(dict)  # 마우스 입력이 추가되었을 때 (마우스 정보를 딕셔너리로 전달)
     delay_input = Signal(str)  # 지연시간이 추가되었을 때
     record_mode = Signal(bool)  # 기록 모드가 토글되었을 때
@@ -53,7 +53,7 @@ class LogicMakerToolWidget(QFrame):
         # 키 입력 버튼
         self.key_btn = QPushButton("키 입력 추가")
         self.key_btn.setStyleSheet(BUTTON_STYLE)
-        self.key_btn.clicked.connect(self._add_key_input)
+        self.key_btn.clicked.connect(self._request_key_to_input)
         button_layout.addWidget(self.key_btn)
 
         # 마우스 입력 버튼
@@ -115,8 +115,20 @@ class LogicMakerToolWidget(QFrame):
     def add_item(self, item):
         """아이템을 목록에 추가합니다.
         
+        현재 이 메서드는 마우스 입력 정보를 처리하는 데 사용됩니다.
+        키 입력의 경우 다른 경로로 처리됩니다:
+        1. _add_confirmed_input_key()에서 confirmed_and_added_key_info 시그널 발생
+        2. LogicDetailWidget의 add_item()이 시그널을 받아서 처리
+        3. 아이템 목록 상자에 추가
+        
+        마우스 입력의 경우 이 메서드를 통해 처리됩니다:
+        1. _on_mouse_input()에서 이 메서드 호출
+        2. items 리스트에 추가
+        3. item_added 시그널 발생
+        
         Args:
             item (dict): 추가할 아이템 정보
+                마우스 입력 정보를 포함하는 딕셔너리
         """
         self.log_message.emit(f"[DEBUG] add_item 시작 (logic_maker_widget.py) - 입력받은 데이터: {item}")
         
@@ -128,15 +140,25 @@ class LogicMakerToolWidget(QFrame):
         else:
             self.log_message.emit(f"[ERROR] 잘못된 형식의 데이터: {type(item)}")
 
-    def _add_key_input(self):
-        """키 입력 추가
+    def _request_key_to_input(self):
+        """입력하려는 키를 요청하는 다이얼로그를 표시
         
         프로세스:
-        1. KeyInputDialog 인스턴스 생성
-        2. 모달 다이얼로그로 표시하여 사용자 입력 대기
+        1. KeyInputDialog 인스턴스를 생성하여 모달 다이얼로그로 표시
+        2. 사용자가 키를 입력하면 KeyInputWidget이 keyboard_hook_handler를 통해 키 정보를 캡처
         3. 사용자가 확인(OK)을 클릭하면:
-           - get_entered_key_info()로 입력된 키 정보 가져오기
-           - 키 정보가 유효하면 _on_key_selected() 호출하여 처리
+            - KeyInputDialog.get_entered_key_info()를 통해 formatted_key_info를 가져옴
+            - formatted_key_info는 다음 정보를 포함하는 딕셔너리:
+                {
+                    'key_code': str,      # 키의 표시 이름 (예: 'A', 'Enter', '방향키 왼쪽 ←')
+                    'scan_code': int,     # 하드웨어 키보드의 물리적 위치 값
+                    'virtual_key': int,   # Windows API 가상 키 코드
+                    'modifiers': int,     # Qt 기반 수정자 키 상태 플래그
+                    'location': str,      # 키보드 위치 (예: '왼쪽', '오른쪽', '숫자패드')
+                    'modifier_text': str, # 수정자 키 텍스트 (예: 'Ctrl + Alt')
+                    'is_system_key': bool # ALT 키 눌림 여부
+                }
+            - 키 정보가 유효하면 _add_confirmed_input_key()를 호출하여 처리
         """
         # 1. 키 입력 다이얼로그 생성 (부모를 self로 지정하여 모달로 표시)
         dialog = KeyInputDialog(self)
@@ -145,60 +167,72 @@ class LogicMakerToolWidget(QFrame):
         # QDialog.Accepted는 사용자가 OK 버튼을 클릭했을 때 반환됨
         if dialog.exec() == QDialog.Accepted:
             # 3. 입력된 키 정보 가져오기
-            # key_info는 키 코드, 키 이름 등을 포함하는 딕셔너리
-            key_info = dialog.get_entered_key_info()
+            # get_entered_key_info는 키 코드, 키 이름 등을 포함하는 딕셔너리
+            get_entered_key_info = dialog.get_entered_key_info()
             
             # 4. 키 정보가 유효한 경우 처리
-            # _on_key_selected()는 키 정보를 로직 아이템 목록에 추가
-            if key_info:
-                self._on_key_selected(key_info)
+            # _add_confirmed_input_key()는 키 정보를 로직 아이템 목록에 추가
+            if get_entered_key_info:
+                self._add_confirmed_input_key(get_entered_key_info)
 
-    def _on_key_selected(self, key_info):
-        """키가 선택되었을 때"""
+    def _add_confirmed_input_key(self, get_entered_key_info):
+        """KeyInputDialog에서 확인된 키 입력 정보를 처리하여 키 상태 정보를 생성하고 전달합니다.
 
+        데이터 흐름:
+        1. KeyInputDialog에서 키 입력 정보 수신
+           - get_entered_key_info: 사용자가 입력하고 확인한 키 정보
+           - 키 코드, 스캔 코드, 가상 키, 위치, 수정자 키 등의 정보 포함
+        
+        2. 로그 메시지 생성 및 전달
+           - 상세 키 정보를 포함한 로그 메시지 생성
+           - log_message 시그널을 통해 로그 전달
+           
+        3. 키 상태 정보 생성 및 전달
+           3.1 누르기(Press) 이벤트
+               - key_state_info_press 생성 (원본 키 정보 복사)
+               - display_text에 "--- 누르기" 추가
+               - confirmed_and_added_key_info 시그널로 전달
+               
+           3.2 떼기(Release) 이벤트
+               - key_state_info_release 생성 (원본 키 정보 복사)
+               - display_text에 "--- 떼기" 추가
+               - confirmed_and_added_key_info 시그널로 전달
+               
+        4. 시그널 수신 및 처리 (MainWindow)
+           - confirmed_and_added_key_info 시그널을 통해 전달된 키 상태 정보를
+           - MainWindow._on_key_input()에서 수신하여 처리
+           - 최종적으로 LogicDetailWidget.add_item()으로 전달되어 목록에 추가
+
+        Args:
+            get_entered_key_info (dict): KeyInputDialog에서 받은 키 입력 정보
+                - key_code (str): 키 코드
+                - scan_code (int): 스캔 코드
+                - vk (int): 가상 키 코드
+                - modifiers (int): 수정자 키 상태
+                - is_extended (bool): 확장 키 여부
+        """
         # 로그 메시지 생성
         log_msg = (
             f"키 입력이 추가되었습니다 [ "
-            f"키: {key_info['key_code']}, "
-            f"스캔 코드 (하드웨어 고유값): {key_info['scan_code']}, "
-            f"확장 가상 키 (운영체제 레벨의 고유 값): {key_info['virtual_key']}, "
-            f"키보드 위치: {self._get_key_location(key_info['scan_code'])}, "
-            f"수정자 키: {self._get_modifier_text(key_info['modifiers'])} ]"
+            f"키: {get_entered_key_info['key_code']}, "
+            f"스캔 코드 (하드웨어 고유값): {get_entered_key_info['scan_code']}, "
+            f"확장 가상 키 (운영체제 레벨의 고유 값): {get_entered_key_info['virtual_key']}, "
+            f"키보드 위치: {get_entered_key_info['location']}, "
+            f"수정자 키: {get_entered_key_info['modifier_text']} ]"
         )
 
         # 로그 메시지 전달
         self.log_message.emit(log_msg)
 
-        # 누르기 이벤트용 키 정보
-        press_info = key_info.copy()
-        press_info['display_text'] = f"{key_info['key_code']} --- 누르기"
-        self.key_input.emit(press_info)
+        # 누르기 이벤트용 키 상태 정보
+        key_state_info_press = get_entered_key_info.copy()
+        key_state_info_press['display_text'] = f"{get_entered_key_info['key_code']} --- 누르기"
+        self.confirmed_and_added_key_info.emit(key_state_info_press)
         
-        # 떼기 이벤트용 키 정보
-        release_info = key_info.copy()
-        release_info['display_text'] = f"{key_info['key_code']} --- 떼기"
-        self.key_input.emit(release_info)
-
-    def _get_key_location(self, scan_code):
-        """키의 키보드 위치 정보 반환"""
-        if scan_code in [42, 29, 56, 91]:  # 왼쪽 Shift, Ctrl, Alt, Win
-            return "키보드 왼쪽"
-        elif scan_code in [54, 285, 312, 92]:  # 오른쪽 Shift, Ctrl, Alt, Win
-            return "키보드 오른쪽"
-        elif 71 <= scan_code <= 83:  # 숫자패드 영역
-            return "숫자패드"
-        return "메인 키보드"
-
-    def _get_modifier_text(self, modifiers):
-        """수정자 키 텍스트 생성"""
-        mod_texts = []
-        if modifiers & Qt.ShiftModifier:
-            mod_texts.append("Shift")
-        if modifiers & Qt.ControlModifier:
-            mod_texts.append("Ctrl")
-        if modifiers & Qt.AltModifier:
-            mod_texts.append("Alt")
-        return " + ".join(mod_texts) if mod_texts else "없음"
+        # 떼기 이벤트용 키 상태 정보
+        key_state_info_release = get_entered_key_info.copy()
+        key_state_info_release['display_text'] = f"{get_entered_key_info['key_code']} --- 떼기"
+        self.confirmed_and_added_key_info.emit(key_state_info_release)
 
     def _add_mouse_input(self):
         """마우스 입력 추가"""
