@@ -71,12 +71,12 @@ class KeyInputDialog(QDialog):
         else:
             super().keyPressEvent(event)
 
-    def get_key_info(self):
+    def get_entered_key_info(self):
         """현재 입력된 키 정보 반환"""
-        return self.KeyInputWidget__KeyInputWidget.get_key_info()
+        return self.KeyInputWidget__KeyInputWidget.get_formatted_key_info()
 
     def _on_confirm(self):
         """확인 버튼 클릭 시"""
-        key_info = self.KeyInputWidget__KeyInputWidget.get_key_info()
+        key_info = self.KeyInputWidget__KeyInputWidget.get_formatted_key_info()
         if key_info:
             self.accept()

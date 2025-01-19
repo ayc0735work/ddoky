@@ -89,7 +89,7 @@ class KeyInputWidget(QWidget):
             self.location_label.setText(f"위치: {formatted_key_info['location']}")
             self.modifiers_label.setText(f"수정자 키: {formatted_key_info['modifier_text']}")
             
-    def get_key_info(self):
+    def get_formatted_key_info(self):
         """현재 입력된 키 정보 반환"""
         return self.last_key_info
         

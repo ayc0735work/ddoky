@@ -889,7 +889,7 @@ class LogicDetailWidget(QFrame):
             self.current_logic = logic_info.copy()
             self.current_logic['id'] = self.current_logic_id  # ID 정보 추가
             
-            # UI 업트
+            # UI 업데이트
             self.LogicNameInput__QLineEdit.setText(logic_info.get('name', ''))
             
             # 중첩로직 여부 설정
