@@ -9,6 +9,18 @@ LRESULT = ctypes.c_long
 ULONG_PTR = wintypes.WPARAM
 
 class KBDLLHOOKSTRUCT(ctypes.Structure):
+    """Windows API의 키보드 후킹을 위한 구조체
+    
+    이 구조체는 Windows의 저수준 키보드 후킹에서 사용되며,
+    키보드 이벤트가 발생할 때마다 이벤트의 상세 정보를 전달받습니다.
+    
+    Fields:
+        vkCode (DWORD): 가상 키 코드 (예: 'A' 키는 0x41)
+        scanCode (DWORD): 키보드의 물리적 키 위치에 대한 하드웨어 코드
+        flags (DWORD): 키 이벤트의 추가 정보 (확장 키 여부 등)
+        time (DWORD): 이벤트 발생 시간 (시스템 시작 이후 경과 시간, 밀리초)
+        dwExtraInfo (ULONG_PTR): 추가 정보를 위한 포인터
+    """
     _fields_ = [
         ('vkCode', wintypes.DWORD),
         ('scanCode', wintypes.DWORD),
@@ -31,7 +43,15 @@ HOOKPROC = ctypes.CFUNCTYPE(LRESULT, ctypes.c_int, wintypes.WPARAM, ctypes.POINT
 user32 = ctypes.WinDLL('user32', use_last_error=True)
 
 def get_key_name(vk_code, kb_flags):
-    """가상 키 코드를 키 이름으로 변환"""
+    """가상 키 코드를 사용자가 읽을 수 있는 키 이름으로 변환합니다.
+    
+    Args:
+        vk_code (int): 변환할 가상 키 코드
+        kb_flags (int): 키보드 플래그 (확장 키 여부 등의 추가 정보)
+    
+    Returns:
+        str: 키의 표시 이름 (예: 'A', 'Enter', '방향키 왼쪽 ←' 등)
+    """
     # 특수 키 이름
     special_keys = {
         # 기능 키 (F1-F12: 0x70-0x7B)
@@ -120,7 +140,12 @@ def get_key_name(vk_code, kb_flags):
         return f'키 코드 {vk_code}'
 
 def get_qt_modifiers():
-    """현재 수정자 키 상태 얻기"""
+    """현재 활성화된 수정자 키(Ctrl, Alt, Shift 등)의 상태를 Qt 플래그로 반환합니다.
+    
+    Returns:
+        int: Qt.KeyboardModifier 플래그의 조합
+             예: Qt.ControlModifier | Qt.ShiftModifier
+    """
     modifiers = Qt.NoModifier
     if user32.GetAsyncKeyState(win32con.VK_SHIFT) & 0x8000:
         modifiers |= Qt.ShiftModifier
@@ -131,7 +156,14 @@ def get_qt_modifiers():
     return modifiers
 
 def get_key_location(scan_code):
-    """키의 위치 정보 반환"""
+    """스캔 코드를 기반으로 키의 물리적 위치 정보를 반환합니다.
+    
+    Args:
+        scan_code (int): 키보드 스캔 코드
+    
+    Returns:
+        str: 키의 위치 설명 (예: '왼쪽', '오른쪽', '숫자패드')
+    """
     # 예시적인 위치 판단 (실제 구현 시 더 자세한 매핑 필요)
     if scan_code in [42, 29, 56]:  # 왼쪽 Shift, Ctrl, Alt
         return "왼쪽"
@@ -142,7 +174,20 @@ def get_key_location(scan_code):
     return "메인"
 
 def get_key_display_text(key_info):
-    """키 표시 텍스트 생성"""
+    """키 정보를 사용자에게 표시할 형태의 텍스트로 변환합니다.
+    
+    Args:
+        key_info (dict): 키 정보 딕셔너리
+            {
+                'key_code': int,      # 가상 키 코드
+                'scan_code': int,     # 스캔 코드
+                'modifiers': int,     # 수정자 키 상태
+                'virtual_key': int    # 가상 키
+            }
+    
+    Returns:
+        str: 표시용 텍스트 (예: 'Ctrl + Alt + Delete')
+    """
     key = key_info['key_code']  # 'key'에서 'key_code'로 변경
     location = get_key_location(key_info['scan_code'])  # scan_code를 직접 전달
     
@@ -151,7 +196,14 @@ def get_key_display_text(key_info):
     return f"알 수 없는 키 ({location})"
 
 def get_modifier_text(modifiers):
-    """수정자 키 텍스트 생성"""
+    """수정자 키 상태를 텍스트로 변환합니다.
+    
+    Args:
+        modifiers (int): Qt.KeyboardModifier 플래그의 조합
+    
+    Returns:
+        str: 수정자 키 설명 (예: 'Ctrl + Alt')
+    """
     mod_texts = []
     
     # modifiers가 정수인 경우 Qt.KeyboardModifier로 변환
@@ -168,7 +220,20 @@ def get_modifier_text(modifiers):
     return " + ".join(mod_texts) if mod_texts else "없음"
 
 def format_key_info(key_info):
-    """키 정보를 일관된 형식의 문자열로 변환"""
+    """키 정보를 일관된 형식의 문자열로 변환합니다.
+    
+    Args:
+        key_info (dict): 키 정보 딕셔너리
+            {
+                'key_code': int,      # 가상 키 코드
+                'scan_code': int,     # 스캔 코드
+                'modifiers': int,     # 수정자 키 상태
+                'virtual_key': int    # 가상 키
+            }
+    
+    Returns:
+        str: 포맷된 키 정보 문자열
+    """
     return (
         f"키: {key_info['key_code']}, "
         f"스캔 코드 (하드웨어 고유값): {key_info['scan_code']}, "
@@ -178,6 +243,14 @@ def format_key_info(key_info):
     )
 
 def get_scan_code(key):
+    """키 코드에 해당하는 스캔 코드를 반환합니다.
+    
+    Args:
+        key (int): 가상 키 코드
+    
+    Returns:
+        int: 해당 키의 스캔 코드
+    """
     # 시스템 키 매핑
     key_code_map = {
         '왼쪽 쉬프트': win32con.VK_LSHIFT,
@@ -234,18 +307,39 @@ def get_scan_code(key):
     return scan_code, virtual_key
 
 class KeyboardHook(QObject):
-    """키보드 훅을 관리하는 클래스"""
+    """키보드 입력을 후킹하여 모니터링하는 클래스
     
-    key_pressed = Signal(dict)  # 키가 눌렸을 때 발생하는 시그널
-    key_released = Signal(dict)  # 키가 떼졌을 때 발생하는 시그널
+    이 클래스는 Windows의 저수준 키보드 후킹을 사용하여
+    모든 키보드 입력을 감지하고 처리합니다.
+    
+    Signals:
+        key_pressed (dict): 키가 눌렸을 때 발생하는 시그널
+            - key_info 딕셔너리를 전달:
+                {
+                    'key_code': int,      # 가상 키 코드
+                    'scan_code': int,     # 스캔 코드
+                    'modifiers': int,     # 수정자 키 상태
+                    'virtual_key': int    # 가상 키
+                }
+        key_released (dict): 키가 떼어졌을 때 발생하는 시그널
+            - key_pressed와 동일한 형식의 정보 전달
+    """
+    
+    key_pressed = Signal(dict)
+    key_released = Signal(dict)
     
     def __init__(self):
+        """KeyboardHook 클래스를 초기화합니다."""
         super().__init__()
         self.hook = None
         self.hook_id = None
         
     def start(self):
-        """키보드 훅 시작"""
+        """키보드 후킹을 시작합니다.
+        
+        Windows API를 사용하여 저수준 키보드 후킹을 설정하고,
+        키보드 이벤트 감지를 시작합니다.
+        """
         def hook_callback(nCode, wParam, lParam):
             if nCode >= 0:
                 kb = lParam.contents
@@ -327,7 +421,10 @@ class KeyboardHook(QObject):
         atexit.register(self.stop)
         
     def stop(self):
-        """키보드 훅 중지"""
+        """키보드 후킹을 중지합니다.
+        
+        설정된 후킹을 해제하고 리소스를 정리합니다.
+        """
         if self.hook_id:
             user32.UnhookWindowsHookEx(self.hook_id)
             self.hook_id = None
