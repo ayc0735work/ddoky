@@ -19,7 +19,7 @@ from BE.settings.settings_data_manager import SettingsManager
 from BE.function._common_components.error_handler import ErrorHandler
 from BE.logic.logic_manager import LogicManager
 from BE.logic.logic_executor import LogicExecutor
-from BE.function.components.process.window_process_finder import import ProcessManager
+from BE.function._common_components.window_process_handler import ProcessManager
 from BE.function.constants.dimensions import (MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, BASIC_SECTION_HEIGHT,
                                MIDDLE_SPACE)
 from BE.function.etc_function.countdown.UI.etc_function_widget import EtcFunctionWidget
