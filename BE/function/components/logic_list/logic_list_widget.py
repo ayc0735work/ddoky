@@ -688,7 +688,8 @@ class LogicListWidget(QFrame):
         if not is_nested:
             self.trigger_key_info = logic_data.get('trigger_key')
             if self.trigger_key_info:
-                self.TriggerKeyInfoLabel__QLabel.setText(format_key_info(self.trigger_key_info))
+                formatted_info = create_formatted_key_info(self.trigger_key_info)
+                self.TriggerKeyInfoLabel__QLabel.setText(formatted_info['simple_display_text'])
 
         # 아이템 목록 설정
         items = logic_data.get('items', [])

@@ -162,7 +162,7 @@ def get_modifier_text(modifiers):
         modifiers (int): Qt.KeyboardModifier 플래그의 조합
     
     Returns:
-        str: 수정자 키 설명 (예: 'Ctrl + Alt')
+        str: 수정자 키 설명 (예: 'Ctrl', 'Alt', 'Shift')
     """
     mod_texts = []
     
@@ -228,7 +228,7 @@ def get_scan_code(key):
         '숫자패드 /': win32con.VK_DIVIDE,
     }
 
-    # 가상 키 코드 얻기
+    # 가상 키와 스캔 코드
     if key in key_code_map:
         virtual_key = key_code_map[key]
     else:
@@ -261,28 +261,63 @@ def get_key_location(scan_code):
         return "숫자패드"
     return "메인"
 
-def format_key_info(key_info):
-    """키 정보를 디버깅이나 로깅을 위한 상세한 문자열로 변환합니다.
+def create_formatted_key_info(raw_key_info):
+    """키보드 입력의 raw 정보를 UI 표시와 이벤트 처리에 적합한 형식으로 변환합니다.
+    
+    이 함수는 키보드 이벤트의 raw 데이터를 받아서 애플리케이션 전체에서 사용할
+    표준화된 형식(formatted_key_info)으로 변환합니다.
     
     Args:
-        key_info (dict): 키 정보 딕셔너리
+        raw_key_info (dict): 키보드 입력 원시 정보
             {
                 'key_code': str,      # 키의 표시 이름 (예: 'A', 'Enter', '방향키 왼쪽 ←')
                 'scan_code': int,     # 하드웨어 키보드의 물리적 위치 값
                 'modifiers': int,     # Qt 기반 수정자 키 상태 플래그
-                'virtual_key': int    # Windows API 가상 키 코드
+                'virtual_key': int,   # Windows API 가상 키 코드
+                'is_system_key': bool # ALT 키 눌림 여부
             }
     
     Returns:
-        str: 상세 정보가 포함된 문자열 (예: '키: A, 스캔 코드: 30, 가상 키: 65, 위치: 왼쪽, 수정자 키: Ctrl')
+        formatted_key_info (dict): 표준화된 키 정보
+            {
+                'key_code': str,      # 키의 표시 이름 (예: 'A', 'Enter', '방향키 왼쪽 ←')
+                'scan_code': int,     # 하드웨어 키보드의 물리적 위치 값
+                'virtual_key': int,   # Windows API 가상 키 코드
+                'modifiers': int,     # Qt 기반 수정자 키 상태 플래그
+                'location': str,      # 키보드 위치 (예: '왼쪽', '오른쪽', '숫자패드')
+                'modifier_text': str, # 수정자 키 텍스트 (예: 'Ctrl', 'Alt', 'Shift')
+                'simple_display_text': str   # 간단한 UI 표시용 텍스트 (예: 'A (왼쪽)')
+                'detail_display_text': str   # 상세 UI 표시용 텍스트 (예: 'A (왼쪽) (스캔코드: 42, 가상키코드: 65, 모디프레이어 키: 0)')
+            }
     """
-    return (
-        f"키: {key_info['key_code']}, "
-        f"스캔 코드 (하드웨어 고유값): {key_info['scan_code']}, "
-        f"확장 가상 키 (운영체제 레벨의 고유 값): {key_info['virtual_key']}, "
-        f"키보드 위치: {get_key_location(key_info['scan_code'])}, "
-        f"수정자 키: {get_modifier_text(key_info['modifiers'])}"
-    )
+    
+    location = get_key_location(raw_key_info['scan_code'])
+
+    modifier_text = get_modifier_text(raw_key_info['modifiers'])
+    
+    # 간단한 표시 텍스트 생성
+    simple_display_text = f"{raw_key_info['key_code']} ( 키 위치: {location} )"
+    if not raw_key_info['key_code']:
+        simple_display_text = f"알 수 없는 키 ({location})"
+
+    # 상세 표시 텍스트 생성
+    detail_display_text = f"{raw_key_info['key_code']} (키 위치: {location}) (스캔코드: {raw_key_info['scan_code']}, 가상키코드: {raw_key_info['virtual_key']}, 모디프레이어 키: {raw_key_info['modifiers']})"
+    if not raw_key_info['key_code']:
+        detail_display_text = f"알 수 없는 키 ({location})"
+
+    # 애플리케이션 전체에서 사용할 표준화된 키 정보 생성
+    formatted_key_info = {
+        'key_code': raw_key_info['key_code'],
+        'scan_code': raw_key_info['scan_code'],
+        'virtual_key': raw_key_info['virtual_key'],
+        'modifiers': raw_key_info['modifiers'],
+        'location': location,
+        'modifier_text': modifier_text,
+        'simple_display_text': simple_display_text,
+        'detail_display_text': detail_display_text
+    }
+    
+    return formatted_key_info
 
 class KeyboardHook(QObject):
     """키보드 입력을 후킹하여 모니터링하는 클래스
@@ -292,15 +327,9 @@ class KeyboardHook(QObject):
     
     Signals:
         key_pressed (dict): 키가 눌렸을 때 발생하는 시그널
-            - key_info 딕셔너리를 전달:
-                {
-                    'key_code': str,      # 키의 표시 이름 (예: 'A', 'Enter', '방향키 왼쪽 ←')
-                    'scan_code': int,     # 스캔 코드 (키보드 위치 판단용)
-                    'modifiers': int,     # 수정자 키 상태 (Ctrl, Alt, Shift)
-                    'virtual_key': int    # Windows 가상 키 코드
-                }
+            - create_formatted_key_info 함수가 반환하는 표준화된 키 정보 전달
         key_released (dict): 키가 떼어졌을 때 발생하는 시그널
-            - key_pressed와 동일한 형식의 정보 전달
+            - create_formatted_key_info 함수가 반환하는 표준화된 키 정보 전달
     """
     
     # dict 타입의 데이터를 전달할 수 있는 시그널
@@ -359,7 +388,7 @@ class KeyboardHook(QObject):
                     scan_code = win32api.MapVirtualKey(vk_code, 0) or scan_code
                 
                 # 키 정보 생성
-                key_info = {
+                raw_key_info = {
                     'key_code': get_key_name(vk_code, kb.flags),
                     'scan_code': scan_code,
                     'virtual_key': vk_code,
@@ -367,21 +396,24 @@ class KeyboardHook(QObject):
                     'is_system_key': is_alt_down
                 }
                 
+                # 키 정보 포맷팅
+                formatted_key_info = create_formatted_key_info(raw_key_info)
+                
                 # 시스템 키(알트) 입력시 시그널로 key_info 전달
                 if wParam in [WM_SYSKEYDOWN, WM_SYSKEYUP]:
                     if vk_code == win32con.VK_MENU or vk_code in [win32con.VK_LMENU, win32con.VK_RMENU]:
                         # ALT 키 자체의 이벤트
                         if wParam == WM_SYSKEYDOWN:
-                            self.key_pressed.emit(key_info)
+                            self.key_pressed.emit(formatted_key_info)
                         else:
-                            self.key_released.emit(key_info)
+                            self.key_released.emit(formatted_key_info)
                         return user32.CallNextHookEx(self.hook_id, nCode, wParam, lParam)
                 
                 # 일반 키 입력시 시그널로 key_info 전달
                 if wParam in [WM_KEYDOWN, WM_SYSKEYDOWN]:
-                    self.key_pressed.emit(key_info)
+                    self.key_pressed.emit(formatted_key_info)
                 elif wParam in [WM_KEYUP, WM_SYSKEYUP]:
-                    self.key_released.emit(key_info)
+                    self.key_released.emit(formatted_key_info)
                 
             return user32.CallNextHookEx(self.hook_id, nCode, wParam, lParam)
         

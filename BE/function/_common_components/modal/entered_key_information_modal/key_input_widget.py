@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QLabel
 from PySide6.QtCore import Qt, Signal
-from BE.function._common_components.modal.entered_key_information_modal.keyboard_hook_handler import KeyboardHook, get_key_location, get_modifier_text
+from BE.function._common_components.modal.entered_key_information_modal.keyboard_hook_handler import KeyboardHook
 
 class KeyInputWidget(QWidget):
     """키 입력을 받고 표시하는 공통 위젯"""
@@ -58,39 +58,36 @@ class KeyInputWidget(QWidget):
             self.keyboard_hook.stop()
             self.keyboard_hook = None
             
-    def _on_key_pressed(self, key_info):
+    def _on_key_pressed(self, formatted_key_info):
         """키가 눌렸을 때"""
         # 이전 키 정보와 동일한 경우 무시
         if (self.last_key_info and 
-            self.last_key_info['key_code'] == key_info['key_code'] and
-            self.last_key_info['modifiers'] == key_info['modifiers'] and
-            self.last_key_info['scan_code'] == key_info['scan_code']):
+            self.last_key_info['key_code'] == formatted_key_info['key_code'] and
+            self.last_key_info['modifiers'] == formatted_key_info['modifiers'] and
+            self.last_key_info['scan_code'] == formatted_key_info['scan_code']):
             return
             
         # 키 정보 업데이트
-        self.last_key_info = key_info.copy()  # 딥 카피로 변경
+        self.last_key_info = formatted_key_info.copy()
         
         # UI 업데이트
-        self._update_ui(key_info)
+        self._update_ui(formatted_key_info)
         
         # 키 정보 변경 시그널 발생
-        self.key_input_changed.emit(key_info)
+        self.key_input_changed.emit(formatted_key_info)
         
-    def _update_ui(self, key_info):
+    def _update_ui(self, formatted_key_info):
         """UI 레이블들을 업데이트합니다."""
         # 메인 키 표시
-        key_text = f"{key_info['key_code']} ({get_key_location(key_info['scan_code'])})"
-        if not key_info['key_code']:
-            key_text = f"알 수 없는 키 ({get_key_location(key_info['scan_code'])})"
-        self.key_display.setText(key_text)
+        self.key_display.setText(formatted_key_info['simple_display_text'])
         
         # 상세 정보 표시
         if self.show_details:
-            self.key_code_label.setText(f"키 코드: {key_info['key_code']}")
-            self.scan_code_label.setText(f"스캔 코드: {key_info['scan_code']}")
-            self.virtual_key_label.setText(f"가상 키: {key_info['virtual_key']}")
-            self.location_label.setText(f"위치: {get_key_location(key_info['scan_code'])}")
-            self.modifiers_label.setText(f"수정자 키: {get_modifier_text(key_info['modifiers'])}")
+            self.key_code_label.setText(f"키 코드: {formatted_key_info['key_code']}")
+            self.scan_code_label.setText(f"스캔 코드: {formatted_key_info['scan_code']}")
+            self.virtual_key_label.setText(f"가상 키: {formatted_key_info['virtual_key']}")
+            self.location_label.setText(f"위치: {formatted_key_info['location']}")
+            self.modifiers_label.setText(f"수정자 키: {formatted_key_info['modifier_text']}")
             
     def get_key_info(self):
         """현재 입력된 키 정보 반환"""

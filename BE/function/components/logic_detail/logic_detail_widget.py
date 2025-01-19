@@ -13,7 +13,7 @@ from ...constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE, CONTAINE
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from ...constants.dimensions import (LOGIC_DETAIL_WIDTH, BASIC_SECTION_HEIGHT,
                                  LOGIC_BUTTON_WIDTH)
-from BE.function._common_components.modal.entered_key_information_modal.keyboard_hook_handler import format_key_info
+from BE.function._common_components.modal.entered_key_information_modal.keyboard_hook_handler import create_formatted_key_info
 from ..._common_components.modal.entered_key_information_modal.key_input_widget import KeyInputWidget
 from ..logic_maker.text_input_dialog import TextInputDialog
 
@@ -766,7 +766,8 @@ class LogicDetailWidget(QFrame):
             return
         
         # 중복이 없는 경우 정상적으로 트리거 키 설정
-        self.TriggerKeyInfoLabel__QLabel.setText(format_key_info(key_info))
+        formatted_info = create_formatted_key_info(key_info)
+        self.TriggerKeyInfoLabel__QLabel.setText(formatted_info['detail_display_text'])
         self.trigger_key_info = key_info.copy()  # 깊은 복사로 변경
         self.log_message.emit(f"[DEBUG] 트리거 키가 설정됨: {self.trigger_key_info}")
 
@@ -900,7 +901,8 @@ class LogicDetailWidget(QFrame):
                 trigger_key = logic_info.get('trigger_key', {})
                 if isinstance(trigger_key, dict) and trigger_key:
                     self.trigger_key_info = trigger_key.copy()
-                    self.TriggerKeyInfoLabel__QLabel.setText(format_key_info(trigger_key))
+                    formatted_info = create_formatted_key_info(trigger_key)
+                    self.TriggerKeyInfoLabel__QLabel.setText(formatted_info['detail_display_text'])
                     self.TriggerKeyInputWidget__KeyInputWidget.set_key_info(trigger_key)
             
             # 반복 횟수 설정
