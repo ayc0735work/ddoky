@@ -18,7 +18,7 @@ import logging
 import sys
 import time
 from PySide6.QtCore import QTimer, QObject
-from ....components.process.window_process_finder ProcessManager
+from ....components.process.window_process_finder import ProcessManager
 from .countdown_controller__main import CountdownController
 
 # 로깅 설정

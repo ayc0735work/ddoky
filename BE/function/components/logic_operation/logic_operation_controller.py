@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QFileDialog
 from PySide6.QtCore import QObject, QTimer
 from .logic_operation_widget import LogicOperationWidget
-from BE.process.window_process_finder ProcessManager
+from BE.process.window_process_finder import ProcessManager
 import win32con
 import win32api
 import time
