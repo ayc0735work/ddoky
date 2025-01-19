@@ -7,7 +7,7 @@ from datetime import datetime
 import uuid
 import win32con
 import win32api
-from BE.settings.settings_manager import SettingsManager
+from BE.settings.settings_data_manager import SettingsManager
 from BE.logic.logic_manager import LogicManager
 from ...constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE, CONTAINER_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)

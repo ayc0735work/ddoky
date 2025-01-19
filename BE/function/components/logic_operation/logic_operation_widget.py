@@ -10,7 +10,7 @@ from ...constants.styles import (FRAME_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from BE.function.components.process_selector.process_selector_dialog import ProcessSelectorDialog
 from BE.settings.settings_singleton import Settings
-from BE.settings.settings_manager import SettingsManager  # SettingsManager 추가
+from BE.settings.settings_data_manager import SettingsManager  # SettingsManager 추가
 from ..logic_maker.key_input_dialog import KeyInputDialog  # KeyInputDialog를 여기로 이동
 
 class LogicOperationWidget(QFrame):

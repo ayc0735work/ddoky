@@ -7,7 +7,7 @@ from PySide6.QtWidgets import QApplication
 from BE.function._common_components.key_handler import KeyboardHook
 from BE.function._common_components.mouse_handler import MouseHandler
 import threading
-from ..settings.settings_manager import SettingsManager
+from ..settings.settings_data_manager import SettingsManager
 import keyboard
 
 class LogicExecutor(QObject):

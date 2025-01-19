@@ -12,7 +12,7 @@ import copy
 from ...constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from ...constants.dimensions import LOGIC_LIST_WIDTH, BASIC_SECTION_HEIGHT, LOGIC_BUTTON_WIDTH
-from BE.settings.settings_manager import SettingsManager
+from BE.settings.settings_data_manager import SettingsManager
 
 class LogicListWidget(QFrame):
     """로직 목록을 표시하고 관리하는 위젯"""

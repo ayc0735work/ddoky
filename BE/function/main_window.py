@@ -15,7 +15,7 @@ from BE.function.components.logic_maker.logic_maker_controller import LogicMaker
 from BE.function.components.logic_operation.logic_operation_controller import LogicOperationController
 from BE.function.components.logic_operation.logic_operation_widget import LogicOperationWidget
 from BE.function.components.log.log_widget import LogWidget
-from BE.settings.settings_manager import SettingsManager
+from BE.settings.settings_data_manager import SettingsManager
 from BE.function.utils.error_handler import ErrorHandler
 from BE.logic.logic_manager import LogicManager
 from BE.logic.logic_executor import LogicExecutor
