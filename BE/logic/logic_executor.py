@@ -169,17 +169,17 @@ class LogicExecutor(QObject):
         self.force_stop_key = virtual_key
         self._log_with_time(f"[설정] 강제 중지 키가 변경되었습니다 (가상 키 코드: {virtual_key})")
 
-    def _on_key_released(self, key_info):
+    def _on_key_released(self, formatted_key_info):
         """키를 뗄 때 호출
         
         Args:
-            key_info (dict): 입력된 키 정보
+            formatted_key_info (dict): 입력된 키 정보
         """
-        print(f"[DEBUG] 키 이벤트 감지 - key_info: {key_info}, step_input: {self.is_step_input}, simulated: {self.is_simulated_input}")
-        self._log_with_time("[키 감지 로그] 키 입력 감지: {}".format(key_info))
+        print(f"[DEBUG] 키 이벤트 감지 - formatted_key_info: {formatted_key_info}, step_input: {self.is_step_input}, simulated: {self.is_simulated_input}")
+        self._log_with_time("[키 감지 로그] 키 입력 감지: {}".format(formatted_key_info))
         
         # 강제 중지 키(ESC) 처리 - 시뮬레이션된 입력이 아닐 때만 처리
-        if not self.is_simulated_input and key_info.get('virtual_key') == self.force_stop_key:
+        if not self.is_simulated_input and formatted_key_info.get('virtual_key') == self.force_stop_key:
             # 활성 프로세스와 선택된 프로세스가 동일한지 확인
             active_process = self.process_manager.get_active_process()
             selected_process = self.process_manager.get_selected_process()
@@ -213,7 +213,7 @@ class LogicExecutor(QObject):
         logics = self.logic_manager.get_all_logics(force=True)
         
         for logic_id, logic in logics.items():
-            if self._is_trigger_key_matched(logic, key_info):
+            if self._is_trigger_key_matched(logic, formatted_key_info):
                 found_matching_logic = True
                 if self.execution_state['is_executing']:
                     self._log_with_time("다른 로직이 실행 중입니다.")
@@ -249,7 +249,7 @@ class LogicExecutor(QObject):
                     self._safe_cleanup()
                     
         if not found_matching_logic:
-            self._log_with_time(f"[로그] 일치하는 트리거 키를 찾을 수 없습니다.<br>입력된 키 정보: {key_info}<br>")
+            self._log_with_time(f"[로그] 일치하는 트리거 키를 찾을 수 없습니다.<br>입력된 키 정보: {formatted_key_info}<br>")
     
     def _execute_next_step(self):
         """현재 실행할 스텝이 무엇인지 결정하는 관련자 함수"""
@@ -734,7 +734,7 @@ class LogicExecutor(QObject):
         is_match = selected_process['pid'] == active_process['pid']
         return is_match
 
-    def _is_trigger_key_matched(self, logic, key_info):
+    def _is_trigger_key_matched(self, logic, formatted_key_info):
         """트리거 키 매칭 확인"""
         # 중첩 로직인 경우 매칭하지 않음
         if logic.get('is_nested', False):
@@ -742,17 +742,17 @@ class LogicExecutor(QObject):
         
         trigger_key = logic.get('trigger_key', {})
         
-        # trigger_key나 key_info가 None인 경우 처리
-        if not trigger_key or not key_info:
+        # trigger_key나 formatted_key_info가 None인 경우 처리
+        if not trigger_key or not formatted_key_info:
             return False
         
         # 가상 키와 스캔 코드 비교
-        is_matched = (trigger_key.get('virtual_key') == key_info.get('virtual_key') and
-                     trigger_key.get('scan_code') == key_info.get('scan_code'))
+        is_matched = (trigger_key.get('virtual_key') == formatted_key_info.get('virtual_key') and
+                     trigger_key.get('scan_code') == formatted_key_info.get('scan_code'))
         
         # 매칭된 경우에만 로그 출력
         if is_matched:
-            self._log_with_time("[로그] 트리거 키 매칭 확인 <br>   - 트리거 키: {}, <br>   - 입력 키: {} <br><br>".format(trigger_key, key_info))
+            self._log_with_time("[로그] 트리거 키 매칭 확인 <br>   - 트리거 키: {}, <br>   - 입력 키: {} <br><br>".format(trigger_key, formatted_key_info))
             
         return is_matched
 

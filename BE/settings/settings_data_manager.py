@@ -503,11 +503,11 @@ class SettingsManager:
             "modifiers": 0
         }  # 기본값
 
-    def set_force_stop_key(self, key_info):
+    def set_force_stop_key(self, formatted_key_info):
         """강제 중지 키 설정 업데이트"""
         try:
-            if isinstance(key_info, str):  # key_code만 전달된 경우 (이전 버전 호환성)
-                if key_info == 'ESC':
+            if isinstance(formatted_key_info, str):  # key_code만 전달된 경우 (이전 버전 호환성)
+                if formatted_key_info == 'ESC':
                     force_stop_key = {
                         "is_system_key": False,
                         "key_code": "ESC",
@@ -517,27 +517,27 @@ class SettingsManager:
                     }
                 else:
                     current_key = self._load_force_stop_key()
-                    current_key['key_code'] = key_info
+                    current_key['key_code'] = formatted_key_info
                     force_stop_key = current_key
             else:  # 전체 키 정보가 전달된 경우
                 # modifiers가 KeyboardModifier 객체인 경우 정수로 변환
-                if 'modifiers' in key_info:
+                if 'modifiers' in formatted_key_info:
                     try:
-                        if hasattr(key_info['modifiers'], 'value'):
-                            key_info['modifiers'] = int(key_info['modifiers'].value)
-                        elif isinstance(key_info['modifiers'], int):
+                        if hasattr(formatted_key_info['modifiers'], 'value'):
+                            formatted_key_info['modifiers'] = int(formatted_key_info['modifiers'].value)
+                        elif isinstance(formatted_key_info['modifiers'], int):
                             pass  # 이미 정수인 경우 그대로 사용
                         else:
-                            key_info['modifiers'] = 0  # 기본값
+                            formatted_key_info['modifiers'] = 0  # 기본값
                     except Exception:
-                        key_info['modifiers'] = 0  # 변환 실패시 기본값
+                        formatted_key_info['modifiers'] = 0  # 변환 실패시 기본값
 
                 force_stop_key = {
-                    "is_system_key": key_info.get('is_system_key', False),
-                    "key_code": key_info.get('key_code', ''),
-                    "scan_code": key_info.get('scan_code', 0),
-                    "virtual_key": key_info.get('virtual_key', 0),
-                    "modifiers": key_info.get('modifiers', 0)
+                    "is_system_key": formatted_key_info.get('is_system_key', False),
+                    "key_code": formatted_key_info.get('key_code', ''),
+                    "scan_code": formatted_key_info.get('scan_code', 0),
+                    "virtual_key": formatted_key_info.get('virtual_key', 0),
+                    "modifiers": formatted_key_info.get('modifiers', 0)
                 }
 
             self._save_force_stop_key(force_stop_key)

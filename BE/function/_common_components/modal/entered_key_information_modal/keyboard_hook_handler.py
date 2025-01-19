@@ -313,6 +313,7 @@ def create_formatted_key_info(raw_key_info):
         'modifiers': raw_key_info['modifiers'],
         'location': location,
         'modifier_text': modifier_text,
+        'is_system_key': raw_key_info.get('is_system_key', False),
         'simple_display_text': simple_display_text,
         'detail_display_text': detail_display_text
     }
