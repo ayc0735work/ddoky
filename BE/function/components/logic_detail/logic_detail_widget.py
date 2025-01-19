@@ -70,24 +70,6 @@ class LogicDetailWidget(QFrame):
         TitleRow__QHBoxLayout.addStretch()
         LogicConfigurationLayout__QVBoxLayout.addLayout(TitleRow__QHBoxLayout)
         
-        # 로직 이름 레이아웃
-        LogicNameSection__QHBoxLayout = QHBoxLayout()
-        LogicNameSection__QHBoxLayout.setContentsMargins(0, 0, 0, 0)
-        LogicNameSection__QHBoxLayout.setSpacing(5)
-        
-        # 로직 이름 라벨
-        LogicNameLabel__QLabel = QLabel("로직 이름:")
-        LogicNameLabel__QLabel.setFixedWidth(70)
-        LogicNameSection__QHBoxLayout.addWidget(LogicNameLabel__QLabel)
-        
-        # 로직 이름 입력
-        self.LogicNameInput__QLineEdit = QLineEdit()
-        self.LogicNameInput__QLineEdit.setPlaceholderText("로직의 이름을 입력하세요")
-        self.LogicNameInput__QLineEdit.textChanged.connect(self._check_data_entered)  # 텍스트 변경 시그널 연결
-        LogicNameSection__QHBoxLayout.addWidget(self.LogicNameInput__QLineEdit, 1)  # stretch factor 1을 추가하여 남은 공간을 모 사용
-        
-        LogicConfigurationLayout__QVBoxLayout.addLayout(LogicNameSection__QHBoxLayout)
-        
         # 로직 저장 섹션
         LogicSaveSection__QHBoxLayout = QHBoxLayout()
         LogicSaveSection__QHBoxLayout.setContentsMargins(0, 0, 0, 0)
@@ -107,7 +89,25 @@ class LogicDetailWidget(QFrame):
         LogicSaveSection__QHBoxLayout.addWidget(self.LogicSaveButton__QPushButton)
         
         LogicConfigurationLayout__QVBoxLayout.addLayout(LogicSaveSection__QHBoxLayout)
+
+        # 로직 이름 레이아웃
+        LogicNameSection__QHBoxLayout = QHBoxLayout()
+        LogicNameSection__QHBoxLayout.setContentsMargins(0, 0, 0, 0)
+        LogicNameSection__QHBoxLayout.setSpacing(5)
         
+        # 로직 이름 라벨
+        LogicNameLabel__QLabel = QLabel("로직 이름:")
+        LogicNameLabel__QLabel.setFixedWidth(70)
+        LogicNameSection__QHBoxLayout.addWidget(LogicNameLabel__QLabel)
+        
+        # 로직 이름 입력
+        self.LogicNameInput__QLineEdit = QLineEdit()
+        self.LogicNameInput__QLineEdit.setPlaceholderText("로직의 이름을 입력하세요")
+        self.LogicNameInput__QLineEdit.textChanged.connect(self._check_data_entered)  # 텍스트 변경 시그널 연결
+        LogicNameSection__QHBoxLayout.addWidget(self.LogicNameInput__QLineEdit, 1)  # stretch factor 1을 추가하여 남은 공간을 모 사용
+        
+        LogicConfigurationLayout__QVBoxLayout.addLayout(LogicNameSection__QHBoxLayout)
+
         # 트리거 키 정보 영역
         TriggerKeySection__QVBoxLayout = QVBoxLayout()
         TriggerKeySection__QVBoxLayout.setContentsMargins(0, 0, 0, 0)
