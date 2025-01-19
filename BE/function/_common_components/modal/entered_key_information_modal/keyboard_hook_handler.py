@@ -155,46 +155,6 @@ def get_qt_modifiers():
         modifiers |= Qt.AltModifier
     return modifiers
 
-def get_key_location(scan_code):
-    """스캔 코드를 기반으로 키의 물리적 위치 정보를 반환합니다.
-    
-    Args:
-        scan_code (int): 키보드 스캔 코드
-    
-    Returns:
-        str: 키의 위치 설명 (예: '왼쪽', '오른쪽', '숫자패드')
-    """
-    # 예시적인 위치 판단 (실제 구현 시 더 자세한 매핑 필요)
-    if scan_code in [42, 29, 56]:  # 왼쪽 Shift, Ctrl, Alt
-        return "왼쪽"
-    elif scan_code in [54, 285, 312]:  # 오른쪽 Shift, Ctrl, Alt
-        return "오른쪽"
-    elif 71 <= scan_code <= 83:  # 숫자패드 영역
-        return "숫자패드"
-    return "메인"
-
-def get_key_display_text(key_info):
-    """키 정보를 사용자에게 표시할 형태의 텍스트로 변환합니다.
-    
-    Args:
-        key_info (dict): 키 정보 딕셔너리
-            {
-                'key_code': int,      # 가상 키 코드
-                'scan_code': int,     # 스캔 코드
-                'modifiers': int,     # 수정자 키 상태
-                'virtual_key': int    # 가상 키
-            }
-    
-    Returns:
-        str: 표시용 텍스트 (예: 'Ctrl + Alt + Delete')
-    """
-    key = key_info['key_code']  # 'key'에서 'key_code'로 변경
-    location = get_key_location(key_info['scan_code'])  # scan_code를 직접 전달
-    
-    if key:
-        return f"{key} ({location})"
-    return f"알 수 없는 키 ({location})"
-
 def get_modifier_text(modifiers):
     """수정자 키 상태를 텍스트로 변환합니다.
     
@@ -218,29 +178,6 @@ def get_modifier_text(modifiers):
         mod_texts.append("Alt")
         
     return " + ".join(mod_texts) if mod_texts else "없음"
-
-def format_key_info(key_info):
-    """키 정보를 일관된 형식의 문자열로 변환합니다.
-    
-    Args:
-        key_info (dict): 키 정보 딕셔너리
-            {
-                'key_code': int,      # 가상 키 코드
-                'scan_code': int,     # 스캔 코드
-                'modifiers': int,     # 수정자 키 상태
-                'virtual_key': int    # 가상 키
-            }
-    
-    Returns:
-        str: 포맷된 키 정보 문자열
-    """
-    return (
-        f"키: {key_info['key_code']}, "
-        f"스캔 코드 (하드웨어 고유값): {key_info['scan_code']}, "
-        f"확장 가상 키 (운영체제 레벨의 고유 값): {key_info['virtual_key']}, "
-        f"키보드 위치: {get_key_location(key_info['scan_code'])}, "
-        f"수정자 키: {get_modifier_text(key_info['modifiers'])}"
-    )
 
 def get_scan_code(key):
     """키 코드에 해당하는 스캔 코드를 반환합니다.
@@ -305,6 +242,69 @@ def get_scan_code(key):
         scan_code = win32api.MapVirtualKey(virtual_key, 0)
 
     return scan_code, virtual_key
+
+def get_key_location(scan_code):
+    """스캔 코드를 기반으로 키의 물리적 위치 정보를 반환합니다.
+    
+    Args:
+        scan_code (int): 키보드 스캔 코드
+    
+    Returns:
+        str: 키의 위치 설명 (예: '왼쪽', '오른쪽', '숫자패드')
+    """
+    # 예시적인 위치 판단 (실제 구현 시 더 자세한 매핑 필요)
+    if scan_code in [42, 29, 56]:  # 왼쪽 Shift, Ctrl, Alt
+        return "왼쪽"
+    elif scan_code in [54, 285, 312]:  # 오른쪽 Shift, Ctrl, Alt
+        return "오른쪽"
+    elif 71 <= scan_code <= 83:  # 숫자패드 영역
+        return "숫자패드"
+    return "메인"
+
+def get_key_display_text(key_info):
+    """키 정보를 사용자에게 표시할 형태의 텍스트로 변환합니다.
+    
+    Args:
+        key_info (dict): 키 정보 딕셔너리
+            {
+                'key_code': int,      # 가상 키 코드
+                'scan_code': int,     # 스캔 코드
+                'modifiers': int,     # 수정자 키 상태
+                'virtual_key': int    # 가상 키
+            }
+    
+    Returns:
+        str: 표시용 텍스트 (예: 'Ctrl + Alt + Delete')
+    """
+    key = key_info['key_code']  # 'key'에서 'key_code'로 변경
+    location = get_key_location(key_info['scan_code'])  # scan_code를 직접 전달
+    
+    if key:
+        return f"{key} ({location})"
+    return f"알 수 없는 키 ({location})"
+
+def format_key_info(key_info):
+    """키 정보를 일관된 형식의 문자열로 변환합니다.
+    
+    Args:
+        key_info (dict): 키 정보 딕셔너리
+            {
+                'key_code': int,      # 가상 키 코드
+                'scan_code': int,     # 스캔 코드
+                'modifiers': int,     # 수정자 키 상태
+                'virtual_key': int    # 가상 키
+            }
+    
+    Returns:
+        str: 포맷된 키 정보 문자열
+    """
+    return (
+        f"키: {key_info['key_code']}, "
+        f"스캔 코드 (하드웨어 고유값): {key_info['scan_code']}, "
+        f"확장 가상 키 (운영체제 레벨의 고유 값): {key_info['virtual_key']}, "
+        f"키보드 위치: {get_key_location(key_info['scan_code'])}, "
+        f"수정자 키: {get_modifier_text(key_info['modifiers'])}"
+    )
 
 class KeyboardHook(QObject):
     """키보드 입력을 후킹하여 모니터링하는 클래스
