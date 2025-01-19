@@ -93,13 +93,13 @@ class KeyInputWidget(QWidget):
         """현재 입력된 키 정보 반환"""
         return self.last_key_info
         
-    def set_key_info(self, key_info):
+    def set_key_info(self, formatted_key_info):
         """키 정보 설정"""
-        if not key_info:
+        if not formatted_key_info:
             return
         
-        self.last_key_info = key_info
-        self._update_ui(key_info)
+        self.last_key_info = formatted_key_info
+        self._update_ui(formatted_key_info)
         
     def clear_key(self):
         """키 입력 초기화"""
