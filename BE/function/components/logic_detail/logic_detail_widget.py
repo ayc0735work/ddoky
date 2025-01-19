@@ -14,7 +14,7 @@ from ...constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE, CONTAINE
 from ...constants.dimensions import (LOGIC_DETAIL_WIDTH, BASIC_SECTION_HEIGHT,
                                  LOGIC_BUTTON_WIDTH)
 from BE.function._common_components.key_handler import format_key_info
-from ..._common_components.modal.entered_key_information_input_modal.key_input_widget import KeyInputWidget
+from ..._common_components.modal.entered_key_information_modal.key_input_widget import KeyInputWidget
 from ..logic_maker.text_input_dialog import TextInputDialog
 
 class LogicDetailWidget(QFrame):
