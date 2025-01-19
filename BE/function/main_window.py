@@ -24,7 +24,7 @@ from BE.function.constants.dimensions import (MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEI
                                MIDDLE_SPACE)
 from BE.function.etc_function.countdown.UI.etc_function_widget import EtcFunctionWidget
 from BE.function.etc_function.countdown.Controller.countdown_controller__input_sequence import CountdownControllerInputSequence
-from BE.function._common_components.key_handler import KeyboardHook
+from BE.function._common_components.modal.entered_key_information_modal.keyboard_hook_handler import KeyboardHook
 import logging
 
 class MainWindow(QMainWindow):

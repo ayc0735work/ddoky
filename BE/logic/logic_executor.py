@@ -4,7 +4,7 @@ import win32con
 import win32gui
 from PySide6.QtCore import QObject, Signal, QTimer, Qt
 from PySide6.QtWidgets import QApplication
-from BE.function._common_components.key_handler import KeyboardHook
+from BE.function._common_components.modal.entered_key_information_modal.keyboard_hook_handler import KeyboardHook
 from BE.function._common_components.mouse_handler import MouseHandler
 import threading
 from ..settings.settings_data_manager import SettingsManager

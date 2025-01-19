@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QLabel
 from PySide6.QtCore import Qt, Signal
-from BE.function._common_components.key_handler import KeyboardHook, get_key_display_text, get_key_location, get_modifier_text
+from BE.function._common_components.modal.entered_key_information_modal.keyboard_hook_handler import KeyboardHook, get_key_display_text, get_key_location, get_modifier_text
 
 class KeyInputWidget(QWidget):
     """키 입력을 받고 표시하는 공통 위젯"""
