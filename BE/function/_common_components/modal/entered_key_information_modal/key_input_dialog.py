@@ -77,6 +77,6 @@ class KeyInputDialog(QDialog):
 
     def _on_confirm(self):
         """확인 버튼 클릭 시"""
-        key_info = self.KeyInputWidget__KeyInputWidget.get_formatted_key_info()
-        if key_info:
-            self.accept()
+        confirmed_key_info = self.KeyInputWidget__KeyInputWidget.get_formatted_key_info()
+        if confirmed_key_info:
+            self.accept() # 다이얼로그가 성공적으로 완료되면 창을 닫고 데이터를 사용해도 좋다는 이벤트 전달

@@ -286,6 +286,7 @@ def create_formatted_key_info(raw_key_info):
                 'modifiers': int,     # Qt 기반 수정자 키 상태 플래그
                 'location': str,      # 키보드 위치 (예: '왼쪽', '오른쪽', '숫자패드')
                 'modifier_text': str, # 수정자 키 텍스트 (예: 'Ctrl', 'Alt', 'Shift')
+                'is_system_key': bool # ALT 키 눌림 여부
                 'simple_display_text': str   # 간단한 UI 표시용 텍스트 (예: 'A (왼쪽)')
                 'detail_display_text': str   # 상세 UI 표시용 텍스트 (예: 'A (왼쪽) (스캔코드: 42, 가상키코드: 65, 모디프레이어 키: 0)')
             }

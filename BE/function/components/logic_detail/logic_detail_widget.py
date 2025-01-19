@@ -250,7 +250,7 @@ class LogicDetailWidget(QFrame):
     def add_item(self, item_info):
         """아이템을 리스트에 추가"""
         try:
-            self.log_message.emit(f"[DEBUG] add_item 시작 - 입력받은 데이터: {item_info}")
+            self.log_message.emit(f"[DEBUG] add_item 시작 (logic_detail_widget.py) - 입력받은 데이터: {item_info}")
             item = QListWidgetItem()
             
             # 현재 선택된 아이템의 위치 확인
@@ -1176,7 +1176,7 @@ class LogicDetailWidget(QFrame):
                         self.log_message.emit(f"지연시간이 {delay:.4f}초로 수정되었습니다")
                 except ValueError:
                     self.log_message.emit("지연시간 형식이 올바르지 않습니다")
-            # 키 입 아이템인 경우
+            # 키 입력 아이템인 경우
             elif item_text.startswith("키 입력:"):
                 key_parts = item_text.split(" --- ")
                 if len(key_parts) == 2:

@@ -1,5 +1,9 @@
-class LogicMakerController:
+from PySide6.QtCore import QObject, Signal
+
+class LogicMakerController(QObject):
     """로직 메이커 컨트롤러"""
+    
+    log_message = Signal(str)
     
     def __init__(self, widget):
         """초기화
@@ -7,6 +11,7 @@ class LogicMakerController:
         Args:
             widget (LogicMakerToolWidget): 로직 메이커 위젯
         """
+        super().__init__()
         self.widget = widget
         self._connect_signals()
         
@@ -25,14 +30,15 @@ class LogicMakerController:
             key_info (dict): 입력된 키 정보
         """
         # 디버그 로그 출력
-        print(f"[DEBUG] add_item 시작 - 입력받은 데이터: {key_info.get('display_text', str(key_info))}")
-        print("[DEBUG] 문자열 형식의 데이터 처리 시작")
+        self.log_message.emit(f"[DEBUG] add_item 시작 (logic_maker_controller.py) - 입력받은 데이터: {key_info.get('display_text', str(key_info))}")
+        self.log_message.emit("[DEBUG] 문자열 형식의 데이터 처리 시작")
         
         # 아이템 목록에 추가
         self.widget.items.append(key_info)
+        self.log_message.emit(f"[DEBUG] 아이템이 목록에 추가되었습니다: {key_info}")
         
         # 추가된 위치 로그
-        print(f"[DEBUG] 아이템이 성공적으로 추가되었습니다. 위치: {len(self.widget.items) - 1}")
+        self.log_message.emit(f"[DEBUG] 아이템이 성공적으로 추가되었습니다. 위치: {len(self.widget.items) - 1}")
         
         # item_added 시그널 발생
         self.widget.item_added.emit(key_info)
