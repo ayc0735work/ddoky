@@ -12,7 +12,7 @@ from datetime import datetime
 import time
 import cv2
 import numpy as np
-from ..process_selector.process_selector_dialog import ProcessSelectorDialog
+from BE.function._common_components.modal.window_process_selector.window_process_selector_modal import ProcessSelectorDialog
 
 class CaptureOverlay(QDialog):
     def __init__(self, target_hwnd, parent=None):

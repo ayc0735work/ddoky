@@ -6,7 +6,7 @@ from PySide6.QtGui import QScreen, QPixmap, QColor, QPainter, QPen, QBrush, QIma
 from win32api import GetCursorPos
 import win32gui
 import win32con
-from ..process_selector.process_selector_dialog import ProcessSelectorDialog
+from BE.function._common_components.modal.window_process_selector.window_process_selector_modal import ProcessSelectorDialog
 
 
 class CaptureOverlay(QDialog):
