@@ -261,42 +261,20 @@ def get_key_location(scan_code):
         return "숫자패드"
     return "메인"
 
-def get_key_display_text(key_info):
-    """키 정보를 사용자에게 표시할 형태의 텍스트로 변환합니다.
-    
-    Args:
-        key_info (dict): 키 정보 딕셔너리
-            {
-                'key_code': int,      # 가상 키 코드
-                'scan_code': int,     # 스캔 코드
-                'modifiers': int,     # 수정자 키 상태
-                'virtual_key': int    # 가상 키
-            }
-    
-    Returns:
-        str: 표시용 텍스트 (예: 'Ctrl + Alt + Delete')
-    """
-    key = key_info['key_code']  # 'key'에서 'key_code'로 변경
-    location = get_key_location(key_info['scan_code'])  # scan_code를 직접 전달
-    
-    if key:
-        return f"{key} ({location})"
-    return f"알 수 없는 키 ({location})"
-
 def format_key_info(key_info):
-    """키 정보를 일관된 형식의 문자열로 변환합니다.
+    """키 정보를 디버깅이나 로깅을 위한 상세한 문자열로 변환합니다.
     
     Args:
         key_info (dict): 키 정보 딕셔너리
             {
-                'key_code': int,      # 가상 키 코드
-                'scan_code': int,     # 스캔 코드
-                'modifiers': int,     # 수정자 키 상태
-                'virtual_key': int    # 가상 키
+                'key_code': str,      # 키의 표시 이름 (예: 'A', 'Enter', '방향키 왼쪽 ←')
+                'scan_code': int,     # 하드웨어 키보드의 물리적 위치 값
+                'modifiers': int,     # Qt 기반 수정자 키 상태 플래그
+                'virtual_key': int    # Windows API 가상 키 코드
             }
     
     Returns:
-        str: 포맷된 키 정보 문자열
+        str: 상세 정보가 포함된 문자열 (예: '키: A, 스캔 코드: 30, 가상 키: 65, 위치: 왼쪽, 수정자 키: Ctrl')
     """
     return (
         f"키: {key_info['key_code']}, "
@@ -316,16 +294,17 @@ class KeyboardHook(QObject):
         key_pressed (dict): 키가 눌렸을 때 발생하는 시그널
             - key_info 딕셔너리를 전달:
                 {
-                    'key_code': int,      # 가상 키 코드
-                    'scan_code': int,     # 스캔 코드
-                    'modifiers': int,     # 수정자 키 상태
-                    'virtual_key': int    # 가상 키
+                    'key_code': str,      # 키의 표시 이름 (예: 'A', 'Enter', '방향키 왼쪽 ←')
+                    'scan_code': int,     # 스캔 코드 (키보드 위치 판단용)
+                    'modifiers': int,     # 수정자 키 상태 (Ctrl, Alt, Shift)
+                    'virtual_key': int    # Windows 가상 키 코드
                 }
         key_released (dict): 키가 떼어졌을 때 발생하는 시그널
             - key_pressed와 동일한 형식의 정보 전달
     """
     
-    key_pressed = Signal(dict)
+    # dict 타입의 데이터를 전달할 수 있는 시그널
+    key_pressed = Signal(dict) 
     key_released = Signal(dict)
     
     def __init__(self):
@@ -388,7 +367,7 @@ class KeyboardHook(QObject):
                     'is_system_key': is_alt_down
                 }
                 
-                # 시스템 키(알트) 처리
+                # 시스템 키(알트) 입력시 시그널로 key_info 전달
                 if wParam in [WM_SYSKEYDOWN, WM_SYSKEYUP]:
                     if vk_code == win32con.VK_MENU or vk_code in [win32con.VK_LMENU, win32con.VK_RMENU]:
                         # ALT 키 자체의 이벤트
@@ -398,7 +377,7 @@ class KeyboardHook(QObject):
                             self.key_released.emit(key_info)
                         return user32.CallNextHookEx(self.hook_id, nCode, wParam, lParam)
                 
-                # 일반 키 이벤트 처리
+                # 일반 키 입력시 시그널로 key_info 전달
                 if wParam in [WM_KEYDOWN, WM_SYSKEYDOWN]:
                     self.key_pressed.emit(key_info)
                 elif wParam in [WM_KEYUP, WM_SYSKEYUP]:

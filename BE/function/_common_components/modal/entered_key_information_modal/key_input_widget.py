@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QLabel
 from PySide6.QtCore import Qt, Signal
-from BE.function._common_components.modal.entered_key_information_modal.keyboard_hook_handler import KeyboardHook, get_key_display_text, get_key_location, get_modifier_text
+from BE.function._common_components.modal.entered_key_information_modal.keyboard_hook_handler import KeyboardHook, get_key_location, get_modifier_text
 
 class KeyInputWidget(QWidget):
     """키 입력을 받고 표시하는 공통 위젯"""
@@ -70,21 +70,28 @@ class KeyInputWidget(QWidget):
         # 키 정보 업데이트
         self.last_key_info = key_info.copy()  # 딥 카피로 변경
         
-        # 키 표시 텍스트 설정
-        display_text = get_key_display_text(key_info)
-        self.key_display.setText(display_text)
+        # UI 업데이트
+        self._update_ui(key_info)
         
+        # 키 정보 변경 시그널 발생
+        self.key_input_changed.emit(key_info)
+        
+    def _update_ui(self, key_info):
+        """UI 레이블들을 업데이트합니다."""
+        # 메인 키 표시
+        key_text = f"{key_info['key_code']} ({get_key_location(key_info['scan_code'])})"
+        if not key_info['key_code']:
+            key_text = f"알 수 없는 키 ({get_key_location(key_info['scan_code'])})"
+        self.key_display.setText(key_text)
+        
+        # 상세 정보 표시
         if self.show_details:
-            # 상세 정보 업데이트
             self.key_code_label.setText(f"키 코드: {key_info['key_code']}")
             self.scan_code_label.setText(f"스캔 코드: {key_info['scan_code']}")
             self.virtual_key_label.setText(f"가상 키: {key_info['virtual_key']}")
             self.location_label.setText(f"위치: {get_key_location(key_info['scan_code'])}")
             self.modifiers_label.setText(f"수정자 키: {get_modifier_text(key_info['modifiers'])}")
-        
-        # 키 정보 변경 시그널 발생
-        self.key_input_changed.emit(key_info)
-        
+            
     def get_key_info(self):
         """현재 입력된 키 정보 반환"""
         return self.last_key_info
@@ -95,16 +102,8 @@ class KeyInputWidget(QWidget):
             return
         
         self.last_key_info = key_info
-        display_text = get_key_display_text(key_info)
-        self.key_display.setText(display_text)
+        self._update_ui(key_info)
         
-        if self.show_details:
-            self.key_code_label.setText(f"키 코드: {key_info['key_code']}")
-            self.scan_code_label.setText(f"스캔 코드: {key_info['scan_code']}")
-            self.virtual_key_label.setText(f"가상 키: {key_info['virtual_key']}")
-            self.location_label.setText(f"위치: {get_key_location(key_info['scan_code'])}")
-            self.modifiers_label.setText(f"수정자 키: {get_modifier_text(key_info['modifiers'])}")
-
     def clear_key(self):
         """키 입력 초기화"""
         self.last_key_info = None
