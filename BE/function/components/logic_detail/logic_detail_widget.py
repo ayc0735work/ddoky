@@ -709,19 +709,19 @@ class LogicDetailWidget(QFrame):
         self.copied_items = []            # 복사된 아이템 초기화
         self.is_nested_checkbox.setChecked(True)      # 중첩로직용 체크박스를 선택된 상태로 초기화
 
-    def _on_key_input_changed(self, key_info):
+    def _on_key_input_changed(self, formatted_key_info):
         """키 입력이 변경되었을 때"""
-        self.log_message.emit(f"[DEBUG] 키 입력 변경 - key_info: {key_info}")
+        self.log_message.emit(f"[DEBUG] 키 입력 변경 - 입력된 키 정보: {formatted_key_info}")
         
-        if not key_info:  # 키 정보가 비어있으면 라벨 초기화
+        if not formatted_key_info:  # 키 정보가 비어있으면 라벨 초기화
             self.TriggerKeyInfoLabel__QLabel.clear()
             self.trigger_key_info = None
             self.log_message.emit("[DEBUG] 키 정보가 비어있어 초기화됨")
             return
         
         # modifiers가 이미 정수값인지 확인하고, 아니라면 int() 변환을 건너뜁니다
-        if not isinstance(key_info['modifiers'], int):
-            key_info['modifiers'] = key_info['modifiers'].value
+        if not isinstance(formatted_key_info['modifiers'], int):
+            formatted_key_info['modifiers'] = formatted_key_info['modifiers'].value
         
         # 트리거 키 중복 체크
         logics = self.settings_manager.load_logics(force=True)  # force=True 추가
@@ -733,8 +733,8 @@ class LogicDetailWidget(QFrame):
                 not logic.get('is_nested', False)):  # 중첩로직은 제외
                 trigger_key = logic.get('trigger_key', {})
                 if (trigger_key and  # trigger_key가 None이 아닌 경우에만 체크
-                    trigger_key.get('virtual_key') == key_info.get('virtual_key') and 
-                    trigger_key.get('modifiers') == key_info.get('modifiers')):
+                    trigger_key.get('virtual_key') == formatted_key_info.get('virtual_key') and 
+                    trigger_key.get('modifiers') == formatted_key_info.get('modifiers')):
                     duplicate_logics.append({
                         'name': logic.get('name'),
                         'id': logic_id
@@ -766,9 +766,9 @@ class LogicDetailWidget(QFrame):
             return
         
         # 중복이 없는 경우 정상적으로 트리거 키 설정
-        formatted_info = create_formatted_key_info(key_info)
+        formatted_info = create_formatted_key_info(formatted_key_info)
         self.TriggerKeyInfoLabel__QLabel.setText(formatted_info['detail_display_text'])
-        self.trigger_key_info = key_info.copy()  # 깊은 복사로 변경
+        self.trigger_key_info = formatted_key_info.copy()  # 깊은 복사로 변경
         self.log_message.emit(f"[DEBUG] 트리거 키가 설정됨: {self.trigger_key_info}")
 
     def _save_logic(self):
