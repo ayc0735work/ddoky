@@ -82,7 +82,7 @@ class MouseHandler:
                 screen_y = y
             
             # Settings에서 마우스 입력 지연시간 가져오기
-            from ..settings.settings import Settings
+            from ..settings.settings_singleton import Settings
             settings = Settings()
             delays = settings.get('key_delays', {})
             
