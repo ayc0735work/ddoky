@@ -88,8 +88,8 @@ class EnteredKeyInfoDialog(QDialog):
     
     def _setup_connections(self):
         """시그널/슬롯 연결"""
-        self.entered_key_info_widget.key_focused.connect(self._start_keyboard_hook)
-        self.entered_key_info_widget.key_unfocused.connect(self._stop_keyboard_hook)
+        self.entered_key_info_widget.key_input_area_focused.connect(self._start_keyboard_hook)
+        self.entered_key_info_widget.key_input_area_unfocused.connect(self._stop_keyboard_hook)
     
     def _start_keyboard_hook(self):
         """키보드 훅 시작"""

@@ -10,8 +10,8 @@ class EnteredKeyInfoWidget(QWidget):
     3. 상세 정보 표시 여부 설정
     """
     
-    key_focused = Signal()      # 위젯이 포커스를 얻었을 때
-    key_unfocused = Signal()    # 위젯이 포커스를 잃었을 때
+    key_input_area_focused = Signal()      # 위젯이 포커스를 얻었을 때
+    key_input_area_unfocused = Signal()    # 위젯이 포커스를 잃었을 때
     
     def __init__(self, parent=None, show_details=True):
         """EnteredKeyInfoWidget 초기화
@@ -57,11 +57,11 @@ class EnteredKeyInfoWidget(QWidget):
     
     def _on_focus_in(self, event):
         """입력 박스가 포커스를 얻었을 때 시그널 발생"""
-        self.key_focused.emit()
+        self.key_input_area_focused.emit()
     
     def _on_focus_out(self, event):
         """입력 박스가 포커스를 잃었을 때 시그널 발생"""
-        self.key_unfocused.emit()
+        self.key_input_area_unfocused.emit()
     
     def update_key_info(self, formatted_key_info):
         """구조화된 키 정보로 UI를 업데이트합니다.
