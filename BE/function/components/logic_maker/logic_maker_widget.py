@@ -196,11 +196,6 @@ class LogicMakerToolWidget(QFrame):
 
         Args:
             get_entered_key_info (dict): EnteredKeyInfoDialog에서 받은 키 입력 정보
-                - key_code (str): 키 코드
-                - scan_code (int): 스캔 코드
-                - vk (int): 가상 키 코드
-                - modifiers (int): 수정자 키 상태
-                - is_extended (bool): 확장 키 여부
         """
         # 로그 메시지 생성
         log_msg = (
