@@ -11,7 +11,7 @@ from ...constants.styles import (FRAME_STYLE, BUTTON_STYLE,
 from BE.function._common_components.modal.window_process_selector.window_process_selector_modal import ProcessSelectorDialog
 from BE.settings.settings_singleton import Settings
 from BE.settings.settings_data_manager import SettingsManager
-from BE.function._common_components.modal.entered_key_information_modal.key_input_dialog import KeyInputDialog
+from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import KeyInputDialog
 
 class LogicOperationWidget(QFrame):
     """로직 동작 허용 여부 온오프 위젯"""

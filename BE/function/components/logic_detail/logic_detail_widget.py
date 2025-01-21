@@ -13,8 +13,8 @@ from ...constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE, CONTAINE
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from ...constants.dimensions import (LOGIC_DETAIL_WIDTH, BASIC_SECTION_HEIGHT,
                                  LOGIC_BUTTON_WIDTH)
-from BE.function._common_components.modal.entered_key_information_modal.keyboard_hook_handler import create_formatted_key_info
-from ..._common_components.modal.entered_key_information_modal.key_input_widget import KeyInputWidget
+from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_handler import create_formatted_key_info
+from ..._common_components.modal.entered_key_info_modal.entered_key_info_dialog import KeyInputDialog
 from ..logic_maker.text_input_dialog import TextInputDialog
 
 class LogicDetailWidget(QFrame):
@@ -124,10 +124,10 @@ class LogicDetailWidget(QFrame):
         TriggerKeyInputRow__QHBoxLayout.addWidget(TriggerKeyLabel__QLabel)
         
         # 트리거 키 입력 위젯
-        self.TriggerKeyInputWidget__KeyInputWidget = KeyInputWidget(self, show_details=False)
-        self.TriggerKeyInputWidget__KeyInputWidget.key_input_changed.connect(self._on_key_input_changed)
-        self.TriggerKeyInputWidget__KeyInputWidget.key_input_changed.connect(self._check_data_entered)  # 키 입력 변경 시그널 연결
-        TriggerKeyInputRow__QHBoxLayout.addWidget(self.TriggerKeyInputWidget__KeyInputWidget)
+        self.TriggerKeyInputDialog__KeyInputDialog = KeyInputDialog(self)
+        self.TriggerKeyInputDialog__KeyInputDialog.key_input_changed.connect(self._on_key_input_changed)
+        self.TriggerKeyInputDialog__KeyInputDialog.key_input_changed.connect(self._check_data_entered)  # 키 입력 변경 시그널 연결
+        TriggerKeyInputRow__QHBoxLayout.addWidget(self.TriggerKeyInputDialog__KeyInputDialog)
         
         TriggerKeySection__QVBoxLayout.addLayout(TriggerKeyInputRow__QHBoxLayout)
         
@@ -699,7 +699,7 @@ class LogicDetailWidget(QFrame):
         """모든 입력 상태를 초기화"""
         self.LogicNameInput__QLineEdit.clear()           # 로직 이름 초기화
         self.LogicItemList__QListWidget.clear()          # 목록 초기화
-        self.TriggerKeyInputWidget__KeyInputWidget.clear_key()        # 트리거 키 입력 초기화
+        self.TriggerKeyInputDialog__KeyInputDialog.clear_key()        # 트리거 키 입력 초기화
         self.TriggerKeyInfoLabel__QLabel.clear()       # 트리거 키 정보 초기화
         self.trigger_key_info = None      # 트리거 키 정보 초기화
         self.edit_mode = False            # 수정 모드 해제
@@ -904,7 +904,7 @@ class LogicDetailWidget(QFrame):
                     self.trigger_key_info = trigger_key.copy()
                     formatted_info = create_formatted_key_info(trigger_key)
                     self.TriggerKeyInfoLabel__QLabel.setText(formatted_info['detail_display_text'])
-                    self.TriggerKeyInputWidget__KeyInputWidget.set_key_info(trigger_key)
+                    self.TriggerKeyInputDialog__KeyInputDialog.set_key_info(trigger_key)
             
             # 반복 횟수 설정
             repeat_count = logic_info.get('repeat_count', 1)
@@ -1251,14 +1251,14 @@ class LogicDetailWidget(QFrame):
         is_nested = state == Qt.CheckState.Checked.value
         
         # 트리거 키 입력 UI 비활성화/활성화
-        self.TriggerKeyInputWidget__KeyInputWidget.setEnabled(not is_nested)
+        self.TriggerKeyInputDialog__KeyInputDialog.setEnabled(not is_nested)
         
         if is_nested:
             # 중첩로직용일 경우 트리거 키 보 기화
             self.trigger_key_info = None
             self.TriggerKeyInfoLabel__QLabel.clear()
             # 트리거 키 입력 위젯 초기화
-            self.TriggerKeyInputWidget__KeyInputWidget.clear_key()
+            self.TriggerKeyInputDialog__KeyInputDialog.clear_key()
 
     def get_logic_data(self):
         """기존 메서드 수정"""
@@ -1298,7 +1298,7 @@ class LogicDetailWidget(QFrame):
             self.LogicNameInput__QLineEdit.clear()
             
             # 트리거 키 초기화
-            self.TriggerKeyInputWidget__KeyInputWidget.clear_key()
+            self.TriggerKeyInputDialog__KeyInputDialog.clear_key()
             self.trigger_key_info = {}
             
             # 반복 횟수 초기화
@@ -1372,7 +1372,7 @@ class LogicDetailWidget(QFrame):
 
     def clear_key(self):
         """트리거 키 정보 초기화"""
-        self.TriggerKeyInputWidget__KeyInputWidget.clear_key()
+        self.TriggerKeyInputDialog__KeyInputDialog.clear_key()
         self.TriggerKeyInfoLabel__QLabel.clear()
         self.trigger_key_info = None
         self.log_message.emit("[DEBUG] 트리거 키 정보가 초기화되었습니다")

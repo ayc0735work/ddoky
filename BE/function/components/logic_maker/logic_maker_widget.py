@@ -5,7 +5,7 @@ from PySide6.QtGui import QFont
 from ...constants.styles import (FRAME_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from ...constants.dimensions import LOGIC_MAKER_WIDTH, BASIC_SECTION_HEIGHT
-from BE.function._common_components.modal.entered_key_information_modal.key_input_dialog import KeyInputDialog
+from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import KeyInputDialog
 from .logic_selector_dialog import LogicSelectorDialog
 from .mouse_input_dialog import MouseInputDialog
 from .image_search_area_dialog import ImageSearchAreaDialog
