@@ -651,14 +651,14 @@ class LogicListWidget(QFrame):
         is_nested = state == Qt.CheckState.Checked.value
         
         # 트리거 키 입력 UI 비활성화/활성화
-        self.TriggerKeyInputWidget__KeyInputWidget.setEnabled(not is_nested)
+        self.TriggerEnteredKeyInfoWidget__EnteredKeyInfoWidget.setEnabled(not is_nested)
         
         if is_nested:
             # 중첩로직용일 경우 트리거 키 정보 초기화
             self.trigger_key_info = None
             self.TriggerKeyInfoLabel__QLabel.clear()
             # 트리거 키 입력 위젯 초기화
-            self.TriggerKeyInputWidget__KeyInputWidget.clear_key()
+            self.TriggerEnteredKeyInfoWidget__EnteredKeyInfoWidget.clear_key()
 
     def get_logic_data(self):
         """현재 로직 데이터 반환"""

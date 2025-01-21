@@ -11,7 +11,7 @@ from ...constants.styles import (FRAME_STYLE, BUTTON_STYLE,
 from BE.function._common_components.modal.window_process_selector.window_process_selector_modal import ProcessSelectorDialog
 from BE.settings.settings_singleton import Settings
 from BE.settings.settings_data_manager import SettingsManager
-from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import KeyInputDialog
+from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 
 class LogicOperationWidget(QFrame):
     """로직 동작 허용 여부 온오프 위젯"""
@@ -607,8 +607,8 @@ class LogicOperationWidget(QFrame):
             # 버튼 비활성화
             self.edit_force_stop_key_btn.setEnabled(False)
             
-            # KeyInputDialog를 사용하여 키 입력 받기
-            dialog = KeyInputDialog(self)
+            # EnteredKeyInfoDialog를 사용하여 키 입력 받기
+            dialog = EnteredKeyInfoDialog(self)
             
             # 다이얼로그를 모달로 실행하고 결과 확인
             result = dialog.exec()

@@ -2,14 +2,14 @@ from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QL
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QKeyEvent, QGuiApplication
 
-from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_widget import KeyInputWidget
+from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_widget import EnteredKeyInfoWidget
 from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_handler import KeyboardHook
 
-class KeyInputDialog(QDialog):
+class EnteredKeyInfoDialog(QDialog):
     """키 입력 모달 창을 제공하고 키를 입력 받고 처리하는 다이얼로그
     
     이 다이얼로그는:
-    1. KeyInputWidget을 통한 UI 표시
+    1. EnteredKeyInfoWidget을 통한 UI 표시
     2. KeyboardHook을 통한 키 입력 처리
     3. 키 데이터의 유효성 검사와 저장
     를 담당합니다.
@@ -18,7 +18,7 @@ class KeyInputDialog(QDialog):
     key_input_changed = Signal(dict)  # 키 입력이 변경되었을 때
     
     def __init__(self, parent=None, show_details=True):
-        """KeyInputDialog 초기화
+        """EnteredKeyInfoDialog 초기화
         
         Args:
             parent (QWidget, optional): 부모 위젯
@@ -62,7 +62,7 @@ class KeyInputDialog(QDialog):
         KeyInputLayout__QVBoxLayout.addWidget(self.NumLockWarning__QLabel)
         
         # 키 입력 위젯
-        self.entered_key_info_widget = KeyInputWidget(self, show_details)
+        self.entered_key_info_widget = EnteredKeyInfoWidget(self, show_details)
         KeyInputLayout__QVBoxLayout.addWidget(self.entered_key_info_widget)
         
         # 키 정보 라벨

@@ -5,7 +5,7 @@ from PySide6.QtGui import QFont
 from ...constants.styles import (FRAME_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from ...constants.dimensions import LOGIC_MAKER_WIDTH, BASIC_SECTION_HEIGHT
-from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import KeyInputDialog
+from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 from .logic_selector_dialog import LogicSelectorDialog
 from .mouse_input_dialog import MouseInputDialog
 from .image_search_area_dialog import ImageSearchAreaDialog
@@ -144,10 +144,10 @@ class LogicMakerToolWidget(QFrame):
         """입력하려는 키를 요청하는 다이얼로그를 표시
         
         프로세스:
-        1. KeyInputDialog 인스턴스를 생성하여 모달 다이얼로그로 표시
-        2. 사용자가 키를 입력하면 KeyInputWidget이 keyboard_hook_handler를 통해 키 정보를 캡처
+        1. EnteredKeyInfoDialog 인스턴스를 생성하여 모달 다이얼로그로 표시
+        2. 사용자가 키를 입력하면 EnteredKeyInfoWidget이 keyboard_hook_handler를 통해 키 정보를 캡처
         3. 사용자가 확인(OK)을 클릭하면:
-            - KeyInputDialog.get_entered_key_info()를 통해 formatted_key_info를 가져옴
+            - EnteredKeyInfoDialog.get_entered_key_info()를 통해 formatted_key_info를 가져옴
             - formatted_key_info는 다음 정보를 포함하는 딕셔너리:
                 {
                     'key_code': str,      # 키의 표시 이름 (예: 'A', 'Enter', '방향키 왼쪽 ←')
@@ -161,7 +161,7 @@ class LogicMakerToolWidget(QFrame):
             - 키 정보가 유효하면 _add_confirmed_input_key()를 호출하여 처리
         """
         # 1. 키 입력 다이얼로그 생성 (부모를 self로 지정하여 모달로 표시)
-        dialog = KeyInputDialog(self)
+        dialog = EnteredKeyInfoDialog(self)
         
         # 2. 다이얼로그를 모달로 실행하고 사용자 응답 확인
         # QDialog.Accepted는 사용자가 OK 버튼을 클릭했을 때 반환됨
@@ -176,10 +176,10 @@ class LogicMakerToolWidget(QFrame):
                 self._add_confirmed_input_key(get_entered_key_info)
 
     def _add_confirmed_input_key(self, get_entered_key_info):
-        """KeyInputDialog에서 확인된 키 입력 정보를 처리하여 키 상태 정보를 생성하고 전달합니다.
+        """EnteredKeyInfoDialog에서 확인된 키 입력 정보를 처리하여 키 상태 정보를 생성하고 전달합니다.
 
         데이터 흐름:
-        1. KeyInputDialog에서 키 입력 정보 수신
+        1. EnteredKeyInfoDialog에서 키 입력 정보 수신
            - get_entered_key_info: 사용자가 입력하고 확인한 키 정보
            - 키 코드, 스캔 코드, 가상 키, 위치, 수정자 키 등의 정보 포함
         
@@ -204,7 +204,7 @@ class LogicMakerToolWidget(QFrame):
            - 최종적으로 LogicDetailWidget.add_item()으로 전달되어 목록에 추가
 
         Args:
-            get_entered_key_info (dict): KeyInputDialog에서 받은 키 입력 정보
+            get_entered_key_info (dict): EnteredKeyInfoDialog에서 받은 키 입력 정보
                 - key_code (str): 키 코드
                 - scan_code (int): 스캔 코드
                 - vk (int): 가상 키 코드

@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QLabel
 from PySide6.QtCore import Qt, Signal
 
-class KeyInputWidget(QWidget):
+class EnteredKeyInfoWidget(QWidget):
     """키 입력을 표시하는 UI 위젯
     
     이 위젯은 순수하게 UI 표시만을 담당합니다:
@@ -14,7 +14,7 @@ class KeyInputWidget(QWidget):
     key_unfocused = Signal()    # 위젯이 포커스를 잃었을 때
     
     def __init__(self, parent=None, show_details=True):
-        """KeyInputWidget 초기화
+        """EnteredKeyInfoWidget 초기화
         
         Args:
             parent (QWidget, optional): 부모 위젯
