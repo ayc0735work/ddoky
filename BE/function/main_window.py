@@ -211,7 +211,7 @@ class MainWindow(QMainWindow):
         """LogicMakerToolWidget의 confirmed_and_added_key_info 시그널을 통해 전달된 키 상태 정보를 처리합니다.
 
         데이터 흐름:
-        1. LogicMakerToolWidget._add_confirmed_input_key_info()
+        1. LogicMakerToolWidget._add_confirmed_input_key()
            - key_state_info_press와 key_state_info_release를 생성 (key_state_info)
            - confirmed_and_added_key_info 시그널을 통해 각각 전달
            
