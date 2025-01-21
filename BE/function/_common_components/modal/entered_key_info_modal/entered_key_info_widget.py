@@ -68,12 +68,6 @@ class EnteredKeyInfoWidget(QWidget):
         
         Args:
             formatted_key_info (dict): 구조화된 키 정보
-                - key_code (str): 키 코드
-                - scan_code (int): 스캔 코드
-                - virtual_key (int): 가상 키 코드
-                - location (str): 키보드 위치
-                - modifier_text (str): 수정자 키 텍스트
-                - simple_display_text (str): 화면에 표시할 텍스트
         """
         if not formatted_key_info:
             return

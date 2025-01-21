@@ -148,16 +148,6 @@ class LogicMakerToolWidget(QFrame):
         2. 사용자가 키를 입력하면 EnteredKeyInfoWidget이 keyboard_hook_handler를 통해 키 정보를 캡처
         3. 사용자가 확인(OK)을 클릭하면:
             - EnteredKeyInfoDialog.get_entered_key_info()를 통해 formatted_key_info를 가져옴
-            - formatted_key_info는 다음 정보를 포함하는 딕셔너리:
-                {
-                    'key_code': str,      # 키의 표시 이름 (예: 'A', 'Enter', '방향키 왼쪽 ←')
-                    'scan_code': int,     # 하드웨어 키보드의 물리적 위치 값
-                    'virtual_key': int,   # Windows API 가상 키 코드
-                    'modifiers': int,     # Qt 기반 수정자 키 상태 플래그
-                    'location': str,      # 키보드 위치 (예: '왼쪽', '오른쪽', '숫자패드')
-                    'modifier_text': str, # 수정자 키 텍스트 (예: 'Ctrl + Alt')
-                    'is_system_key': bool # ALT 키 눌림 여부
-                }
             - 키 정보가 유효하면 _add_confirmed_input_key()를 호출하여 처리
         """
         # 1. 키 입력 다이얼로그 생성 (부모를 self로 지정하여 모달로 표시)
@@ -165,7 +155,8 @@ class LogicMakerToolWidget(QFrame):
         
         # 2. 다이얼로그를 모달로 실행하고 사용자 응답 확인
         # QDialog.Accepted는 사용자가 OK 버튼을 클릭했을 때 반환됨
-        if dialog.exec() == QDialog.Accepted:
+        # 사용자가 OK 버튼을 클릭했을 때 키 입력 정보를 가져오고 키 정보를 처리하는 코드
+        if dialog.exec() == QDialog.Accepted: 
             # 3. 입력된 키 정보 가져오기
             # get_entered_key_info는 키 코드, 키 이름 등을 포함하는 딕셔너리
             get_entered_key_info = dialog.get_entered_key_info()

@@ -153,13 +153,7 @@ class EnteredKeyInfoDialog(QDialog):
         구조화한 formatted_key_info를 반환합니다.
         
         Returns:
-            dict or None: 구조화된 키 정보를 포함하는 딕셔너리. 키 정보가 없으면 None
-                - key_code (str): 키 코드 (예: 'A', 'Enter')
-                - scan_code (int): 하드웨어 레벨의 스캔 코드
-                - virtual_key (int): 운영체제 레벨의 가상 키 코드
-                - location (str): 키보드 상의 위치
-                - modifier_text (str): 수정자 키 텍스트 (예: 'Ctrl+Shift')
-                - simple_display_text (str): UI에 표시할 텍스트
+            dict or None: 구조화된 키 정보를 포함하는 딕셔너리. 또는 키 정보가 없으면 None
         
         Note:
             이 메서드는 캡슐화를 통해 키 정보에 대한 안전한 접근을 제공합니다.
