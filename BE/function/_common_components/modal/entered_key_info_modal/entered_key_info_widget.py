@@ -10,8 +10,8 @@ class EnteredKeyInfoWidget(QWidget):
     3. 상세 정보 표시 여부 설정
     """
     
-    key_input_area_focused = Signal()      # 위젯이 포커스를 얻었을 때
-    key_input_area_unfocused = Signal()    # 위젯이 포커스를 잃었을 때
+    key_input_area_focused = Signal()    # 키 입력 영역이 포커스를 얻었을 때
+    key_input_area_unfocused = Signal()  # 키 입력 영역이 포커스를 잃었을 때
     
     def __init__(self, parent=None, show_details=True):
         """EnteredKeyInfoWidget 초기화
