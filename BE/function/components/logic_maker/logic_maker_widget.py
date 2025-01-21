@@ -117,7 +117,7 @@ class LogicMakerToolWidget(QFrame):
         
         현재 이 메서드는 마우스 입력 정보를 처리하는 데 사용됩니다.
         키 입력의 경우 다른 경로로 처리됩니다:
-        1. _add_confirmed_input_key()에서 confirmed_and_added_key_info 시그널 발생
+        1. _add_confirmed_input_key_info()에서 confirmed_and_added_key_info 시그널 발생
         2. LogicDetailWidget의 add_item()이 시그널을 받아서 처리
         3. 아이템 목록 상자에 추가
         
@@ -148,7 +148,7 @@ class LogicMakerToolWidget(QFrame):
         2. 사용자가 키를 입력하면 EnteredKeyInfoWidget이 keyboard_hook_handler를 통해 키 정보를 캡처
         3. 사용자가 확인(OK)을 클릭하면:
             - EnteredKeyInfoDialog.get_entered_key_info()를 통해 formatted_key_info를 가져옴
-            - 키 정보가 유효하면 _add_confirmed_input_key()를 호출하여 처리
+            - 키 정보가 유효하면 _add_confirmed_input_key_info()를 호출하여 처리
         """
         # 1. 키 입력 다이얼로그 생성 (부모를 self로 지정하여 모달로 표시)
         dialog = EnteredKeyInfoDialog(self)
@@ -162,11 +162,11 @@ class LogicMakerToolWidget(QFrame):
             get_entered_key_info = dialog.get_entered_key_info()
             
             # 4. 키 정보가 유효한 경우 처리
-            # _add_confirmed_input_key()는 키 정보를 로직 아이템 목록에 추가
+            # _add_confirmed_input_key_info()는 키 정보를 로직 아이템 목록에 추가
             if get_entered_key_info:
-                self._add_confirmed_input_key(get_entered_key_info)
+                self._add_confirmed_input_key_info(get_entered_key_info)
 
-    def _add_confirmed_input_key(self, get_entered_key_info):
+    def _add_confirmed_input_key_info(self, get_entered_key_info):
         """EnteredKeyInfoDialog에서 확인된 키 입력 정보를 처리하여 키 상태 정보를 생성하고 전달합니다.
 
         데이터 흐름:
