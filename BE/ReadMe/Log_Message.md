@@ -17,15 +17,24 @@
 
 ### 2.1 컴포넌트에 로그 메시지 기능 추가하기
 
-#### 2.1.1 시그널 정의
+#### 2.1.1 시그널 정의 - 컨트롤러의 경우
 ```python
 from PySide6.QtCore import Signal, QObject
 
-class YourController(QObject): # 클래스에 QObject를 상속
+class YourController(QObject): # 컨트롤러는 반드시 QObject를 상속해야 함
     log_message = Signal(str)  # 로그 메시지 시그널 정의
 ```
 
-#### 2.1.2 로그 메시지 발생시키기
+#### 2.1.2 시그널 정의 - 위젯의 경우
+```python
+from PySide6.QtWidgets import QFrame
+from PySide6.QtCore import Signal
+
+class YourWidget(QFrame):  # QWidget, QFrame 등은 이미 QObject를 상속하고 있음
+    log_message = Signal(str)  # 로그 메시지 시그널 정의
+```
+
+#### 2.1.3 로그 메시지 발생시키기
 ```python
 class YourController(QObject):
     def some_method(self):
