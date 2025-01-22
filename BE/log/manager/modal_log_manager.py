@@ -93,6 +93,38 @@ class ModalLogManager(QObject):
             return time.time() - self._timers[modal_name]
         return None
         
+    def _apply_message_style(self, message: str) -> str:
+        """메시지 내용에 따라 스타일을 적용합니다.
+        
+        Args:
+            message (str): 원본 메시지
+            
+        Returns:
+            str: 스타일이 적용된 메시지
+        """
+        # 메시지 스타일 적용
+        if "[ERROR]" in message or "오류" in message:
+            # 오류 메시지 - 주황색
+            return f"<span style='color: #FFA500; font-size: 14px;'>{message}</span>"
+        elif "강제 중지" in message:
+            # 강제 중지 - 빨간색, 굵게
+            return f"<span style='color: #FF0000; font-size: 16px; font-weight: bold;'>{message}</span>"
+        elif "중첩로직" in message:
+            # 중첩로직 - 초록색, 굵게
+            return f"<span style='color: #008000; font-size: 18px; font-weight: bold;'>{message}</span>"
+        elif any(key in message for key in ["키 입력: 숫자패드 9", "키 입력: 숫자패드 8", "키 입력: 숫자패드 1"]):
+            # 특정 키 입력 - 보라색, 굵게
+            return f"<span style='color: #FF00FF; font-size: 12px; font-weight: bold;'>{message}</span>"
+        elif "로직 실행" in message and ("실행 시작" in message or "반복 완료" in message):
+            # 로직 실행 관련 - 파란색, 굵게
+            return f"<span style='color: #0000FF; font-size: 20px; font-weight: bold;'>{message}</span>"
+        elif "마우스 왼쪽 버튼 클릭" in message:
+            # 마우스 클릭 - 노란색, 굵게
+            return f"<span style='color: #E2C000; font-size: 20px; font-weight: bold;'>{message}</span>"
+        
+        # 기본 메시지는 스타일 없이 반환
+        return message
+        
     def log(self, message: str, level: str = "INFO", modal_name: str = "", include_time: bool = False, print_to_terminal: bool = False):
         """로그 메시지를 기록합니다.
 
@@ -119,21 +151,24 @@ class ModalLogManager(QObject):
         # 최종 로그 메시지 구성
         final_message = " ".join(log_parts + [message])
         
+        # 스타일 적용
+        styled_message = self._apply_message_style(final_message)
+        
         # 터미널 출력이 요청된 경우
         if print_to_terminal:
-            print(final_message)
+            print(styled_message)
         
         # 핸들러들에게 로그 전달
         for handler in self._handlers:
-            handler(final_message)
+            handler(styled_message)
         
         # 버퍼에 추가
-        self.log_buffer.append(final_message)
+        self.log_buffer.append(styled_message)
         if len(self.log_buffer) > self.buffer_size:
             self.log_buffer.pop(0)  # 가장 오래된 로그 제거
             
         # 시그널 발생
-        self.log_message.emit(final_message)
+        self.log_message.emit(styled_message)
         
     def clear_buffer(self):
         """로그 버퍼를 비웁니다."""
