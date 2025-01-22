@@ -59,17 +59,15 @@ class LogicOperationController(QObject):
     def _handle_operation_toggle(self, checked):
         """로직 동작 허용 여부 토글 처리"""
         if checked:
-            # 로직 실행 시 사용자의 입력 문자열 복사 및 출력
-            user_input = self.widget.logic_detail_widget.get_user_input()
             self.modal_log_manager.log(
-                message=f"사용자 입력: {user_input}",
+                message="로직 동작이 활성화되었습니다",
                 level="INFO",
-                modal_name="로직동작"
+                modal_name="로직동작",
+                print_to_terminal=True
             )
-            print(f"사용자 입력: {user_input}")
         elif not checked and self.widget.logic_executor:
-            # LogicExecutor의 인스턴스를 사용하여 모든 로직 중지
-            self.widget.logic_executor.stop_all_logic()
+            # LogicExecutor의 인스턴스를 사용하여 모니터링 중지
+            self.widget.logic_executor.stop_monitoring()
             self.modal_log_manager.log(
                 message="프로세스에서 로직 동작을 종료합니다",
                 level="INFO",
