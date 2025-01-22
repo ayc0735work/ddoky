@@ -15,7 +15,20 @@ from ...constants.dimensions import LOGIC_LIST_WIDTH, BASIC_SECTION_HEIGHT, LOGI
 from BE.settings.settings_data_manager import SettingsManager
 
 class LogicListWidget(QFrame):
-    """로직 목록을 표시하고 관리하는 위젯"""
+    """로직 목록 UI 위젯
+    
+    로직 목록을 표시하고 사용자 상호작용을 처리하는 UI 컴포넌트입니다.
+    
+    Signals:
+        logic_move_requested (str, int): 로직 이동 요청 (logic_id, new_position)
+        logic_edit_requested (str, dict): 로직 수정 요청 (logic_id, new_data)
+        logic_delete_requested (str): 로직 삭제 요청 (logic_id)
+        logic_copy_requested (str): 로직 복사 요청 (logic_id)
+        logic_paste_requested: 로직 붙여넣기 요청
+        log_message (str): 로그 메시지
+        logic_selected (str): 로직 선택 시 (로직 이름)
+        edit_logic (dict): 로직 불러오기 (로직 정보)
+    """
     
     # 시그널 정의
     logic_move_requested = Signal(str, int)  # logic_id, new_position
@@ -35,7 +48,24 @@ class LogicListWidget(QFrame):
         self.logic_list.installEventFilter(self)
         
     def init_ui(self):
-        """UI 초기화"""
+        """UI 초기화
+        
+        위젯의 시각적 요소들을 초기화하고 배치합니다.
+        
+        구성요소:
+        1. 타이틀 레이블
+        2. 로직 목록 위젯 (QListWidget)
+        3. 제어 버튼들:
+           - 위로 이동
+           - 아래로 이동
+           - 로직 불러오기
+           - 로직 삭제
+        
+        스타일:
+        - 프레임 스타일 적용
+        - 고정 크기 설정
+        - 버튼 스타일 적용
+        """
         self.setStyleSheet(FRAME_STYLE)
         self.setFixedSize(LOGIC_LIST_WIDTH, BASIC_SECTION_HEIGHT)
         
@@ -91,7 +121,18 @@ class LogicListWidget(QFrame):
         self.delete_btn.clicked.connect(self._on_delete_clicked)
         
     def _on_selection_changed(self):
-        """리스트 아이템 선택이 변경되었을 때의 처리"""
+        """선택 상태 변경 처리
+        
+        리스트 아이템 선택이 변경될 때 호출됩니다.
+        
+        처리내용:
+        1. 현재 선택된 아이템 확인
+        2. 버튼 활성화/비활성화 상태 업데이트:
+           - 위로 이동: 첫 번째 아이템이 아닐 때
+           - 아래로 이동: 마지막 아이템이 아닐 때
+           - 수정: 단일 선택일 때
+           - 삭제: 선택된 아이템이 있을 때
+        """
         selected_items = self.logic_list.selectedItems()
         has_selection = len(selected_items) > 0
         
@@ -103,7 +144,15 @@ class LogicListWidget(QFrame):
         self.delete_btn.setEnabled(has_selection)
         
     def _on_move_up_clicked(self):
-        """위로 버튼 클릭 처리"""
+        """위로 이동 버튼 처리
+        
+        선택된 아이템을 한 칸 위로 이동합니다.
+        
+        프로세스:
+        1. 현재 선택된 아이템 확인
+        2. 이동 가능 여부 확인 (첫 번째 아이템이 아닌지)
+        3. 이동 요청 시그널 발생 (logic_move_requested)
+        """
         current_item = self.logic_list.currentItem()
         if not current_item:
             return
@@ -113,7 +162,15 @@ class LogicListWidget(QFrame):
         self.logic_move_requested.emit(logic_id, current_row - 1)
         
     def _on_move_down_clicked(self):
-        """아래로 버튼 클릭 처리"""
+        """아래로 이동 버튼 처리
+        
+        선택된 아이템을 한 칸 아래로 이동합니다.
+        
+        프로세스:
+        1. 현재 선택된 아이템 확인
+        2. 이동 가능 여부 확인 (마지막 아이템이 아닌지)
+        3. 이동 요청 시그널 발생 (logic_move_requested)
+        """
         current_item = self.logic_list.currentItem()
         if not current_item:
             return
@@ -123,7 +180,15 @@ class LogicListWidget(QFrame):
         self.logic_move_requested.emit(logic_id, current_row + 1)
         
     def _on_edit_clicked(self):
-        """로직 불러오기 버튼 클릭 처리"""
+        """로직 불러오기 버튼 처리
+        
+        선택된 로직을 수정하기 위해 불러옵니다.
+        
+        프로세스:
+        1. 현재 선택된 아이템 확인
+        2. 설정에서 로직 정보 로드
+        3. 로직 정보가 있으면 edit_logic 시그널 발생
+        """
         current_item = self.logic_list.currentItem()
         if not current_item:
             return
@@ -137,7 +202,18 @@ class LogicListWidget(QFrame):
             self.edit_logic.emit(logics[logic_id])
         
     def _on_item_double_clicked(self, item):
-        """아이템 더블클릭 처리"""
+        """아이템 더블클릭 처리
+        
+        로직 아이템이 더블클릭되었을 때 처리합니다.
+        
+        Args:
+            item (QListWidgetItem): 더블클릭된 아이템
+            
+        프로세스:
+        1. 아이템 유효성 확인
+        2. 설정에서 로직 정보 로드
+        3. 로직 정보가 있으면 edit_logic 시그널 발생
+        """
         if not item:
             return
             
@@ -150,7 +226,16 @@ class LogicListWidget(QFrame):
             self.edit_logic.emit(logics[logic_id])
         
     def _on_delete_clicked(self):
-        """삭제 버튼 클릭 처리"""
+        """삭제 버튼 처리
+        
+        선택된 로직(들)을 삭제합니다.
+        
+        프로세스:
+        1. 선택된 아이템 확인
+        2. 삭제 확인 대화상자 표시
+        3. 사용자 확인 시 각 아이템에 대해:
+           - logic_delete_requested 시그널 발생
+        """
         selected_items = self.logic_list.selectedItems()
         if not selected_items:
             return
@@ -175,7 +260,22 @@ class LogicListWidget(QFrame):
                 self.logic_delete_requested.emit(logic_id)
                 
     def eventFilter(self, obj, event):
-        """이벤트 필터"""
+        """이벤트 필터
+        
+        키보드 단축키 등의 이벤트를 처리합니다.
+        
+        Args:
+            obj: 이벤트가 발생한 객체
+            event: 발생한 이벤트
+            
+        처리하는 이벤트:
+        - Ctrl+C: 복사 (logic_copy_requested)
+        - Ctrl+V: 붙여넣기 (logic_paste_requested)
+        - Delete: 삭제 (_on_delete_clicked)
+        
+        Returns:
+            bool: 이벤트 처리 여부
+        """
         if obj == self.logic_list and event.type() == QEvent.KeyPress:
             modifiers = event.modifiers()
             key = event.key()
@@ -200,19 +300,35 @@ class LogicListWidget(QFrame):
                 
         return super().eventFilter(obj, event)
         
-    # UI 업데이트 메서드
     def clear_logic_list(self):
-        """로직 목록 초기화"""
+        """로직 목록 초기화
+        
+        목록의 모든 아이템을 제거합니다.
+        """
         self.logic_list.clear()
         
     def add_logic_item(self, logic_info, logic_id):
-        """로직 아이템 추가"""
+        """로직 아이템 추가
+        
+        새로운 로직 아이템을 목록에 추가합니다.
+        
+        Args:
+            logic_info (dict): 로직 정보 (이름 등)
+            logic_id (str): 로직의 고유 ID
+        """
         item = QListWidgetItem(logic_info.get('name', ''))
         item.setData(Qt.UserRole, logic_id)
         self.logic_list.addItem(item)
         
     def update_logic_item(self, logic_id, logic_info):
-        """로직 아이템 업데이트"""
+        """로직 아이템 업데이트
+        
+        기존 로직 아이템의 정보를 업데이트합니다.
+        
+        Args:
+            logic_id (str): 업데이트할 로직의 ID
+            logic_info (dict): 새로운 로직 정보
+        """
         for i in range(self.logic_list.count()):
             item = self.logic_list.item(i)
             if item and item.data(Qt.UserRole) == logic_id:
@@ -220,7 +336,13 @@ class LogicListWidget(QFrame):
                 break
                 
     def remove_logic_item(self, logic_id):
-        """로직 아이템 제거"""
+        """로직 아이템 제거
+        
+        지정된 로직 아이템을 목록에서 제거합니다.
+        
+        Args:
+            logic_id (str): 제거할 로직의 ID
+        """
         for i in range(self.logic_list.count()):
             item = self.logic_list.item(i)
             if item and item.data(Qt.UserRole) == logic_id:

@@ -4,7 +4,17 @@ import uuid
 import copy
 
 class LogicListController(QObject):
-    """로직 리스트 컨트롤러"""
+    """로직 리스트 컨트롤러
+    
+    로직 목록의 데이터 관리와 상태를 처리하는 컨트롤러입니다.
+    위젯의 UI 이벤트를 처리하고 데이터 저장소와의 상호작용을 관리합니다.
+    
+    Attributes:
+        widget (LogicListWidget): 연결된 로직 리스트 위젯
+        settings_manager (SettingsManager): 설정 관리자
+        saved_logics (dict): 메모리에 저장된 로직 정보
+        clipboard (dict): 복사된 로직 정보 임시 저장
+    """
     
     log_message = Signal(str)
     
@@ -13,6 +23,13 @@ class LogicListController(QObject):
         
         Args:
             widget (LogicListWidget): 로직 리스트 위젯
+            
+        초기화 프로세스:
+        1. 위젯 연결
+        2. 설정 매니저 초기화
+        3. 메모리 상태 초기화
+        4. 시그널 연결
+        5. 저장된 로직 로드
         """
         super().__init__()
         self.widget = widget
@@ -23,7 +40,18 @@ class LogicListController(QObject):
         self.load_saved_logics()
         
     def _connect_signals(self):
-        """시그널 연결"""
+        """시그널 연결 설정
+        
+        위젯에서 발생하는 다양한 이벤트 시그널을 해당하는 처리 메서드에 연결합니다.
+        
+        연결되는 시그널:
+        - logic_move_requested -> process_logic_move
+        - logic_edit_requested -> process_logic_update
+        - logic_delete_requested -> process_logic_delete
+        - logic_copy_requested -> process_logic_copy
+        - logic_paste_requested -> process_logic_paste
+        - log_message -> log_message
+        """
         self.widget.logic_move_requested.connect(self.process_logic_move)
         self.widget.logic_edit_requested.connect(self.process_logic_update)
         self.widget.logic_delete_requested.connect(self.process_logic_delete)
@@ -33,7 +61,19 @@ class LogicListController(QObject):
         self.widget.log_message.connect(self.log_message)
         
     def load_saved_logics(self):
-        """저장된 로직 정보 불러오기"""
+        """저장된 로직 정보 불러오기
+        
+        설정 파일에서 저장된 로직 정보를 로드하고 UI를 업데이트합니다.
+        
+        프로세스:
+        1. 설정 다시 로드
+        2. 로직 정보 가져오기
+        3. order 값 기준으로 정렬
+        4. 위젯 UI 업데이트
+        
+        Raises:
+            Exception: 로직 로드 중 오류 발생 시
+        """
         try:
             # 설정 다시 로드
             self.settings_manager.reload_settings()
@@ -55,7 +95,18 @@ class LogicListController(QObject):
             self.log_message.emit(f"로직 목록 불러오기 중 오류 발생: {str(e)}")
             
     def save_logics_to_settings(self):
-        """현재 로직 목록을 설정에 저장"""
+        """현재 로직 목록을 설정에 저장
+        
+        현재 UI에 표시된 로직 목록의 순서와 정보를 설정 파일에 저장합니다.
+        
+        프로세스:
+        1. 현재 표시된 모든 로직 정보 수집
+        2. 각 로직의 순서 정보 업데이트
+        3. 설정 파일에 저장
+        
+        Raises:
+            Exception: 저장 중 오류 발생 시
+        """
         try:
             self.log_message.emit("[로직 저장 시작] 현재 로직 목록을 설정에 저장합니다.")
             logics = {}
@@ -89,7 +140,21 @@ class LogicListController(QObject):
             self.log_message.emit(f"[오류] 로직 저장 중 오류 발생: {str(e)}")
             
     def process_logic_save(self, logic_info):
-        """새로운 로직 저장 처리"""
+        """새로운 로직 저장 처리
+        
+        새로 생성된 로직을 저장하고 UI에 추가합니다.
+        
+        Args:
+            logic_info (dict): 저장할 로직 정보
+            
+        Returns:
+            str: 생성된 로직 ID. 실패 시 None
+            
+        프로세스:
+        1. 새 UUID 생성
+        2. 설정에 저장
+        3. UI 업데이트
+        """
         try:
             # 새 UUID 생성
             logic_id = str(uuid.uuid4())
@@ -111,7 +176,19 @@ class LogicListController(QObject):
             return None
             
     def process_logic_update(self, logic_id, new_info):
-        """로직 업데이트 처리"""
+        """로직 업데이트 처리
+        
+        기존 로직의 정보를 업데이트합니다.
+        
+        Args:
+            logic_id (str): 업데이트할 로직의 ID
+            new_info (dict): 새로운 로직 정보
+            
+        프로세스:
+        1. 기존 로직 정보 업데이트
+        2. 설정 저장
+        3. UI 업데이트
+        """
         try:
             logics = self.settings_manager.load_logics()
             if logic_id in logics:
@@ -124,7 +201,18 @@ class LogicListController(QObject):
             self.log_message.emit(f"로직 업데이트 중 오류 발생: {str(e)}")
             
     def process_logic_delete(self, logic_id):
-        """로직 삭제 처리"""
+        """로직 삭제 처리
+        
+        지정된 로직을 삭제합니다.
+        
+        Args:
+            logic_id (str): 삭제할 로직의 ID
+            
+        프로세스:
+        1. 설정에서 로직 삭제
+        2. 메모리상의 saved_logics 업데이트
+        3. UI에서 해당 아이템 제거
+        """
         try:
             # 설정 다시 로드하여 최신 상태 확인
             self.settings_manager.reload_settings()
@@ -155,7 +243,19 @@ class LogicListController(QObject):
             self.log_message.emit(traceback.format_exc())
             
     def process_logic_move(self, logic_id, new_position):
-        """로직 이동 처리"""
+        """로직 이동 처리
+        
+        로직의 순서를 변경합니다.
+        
+        Args:
+            logic_id (str): 이동할 로직의 ID
+            new_position (int): 새로운 위치
+            
+        프로세스:
+        1. 순서 값 업데이트
+        2. 설정 저장
+        3. 전체 목록 새로고침
+        """
         try:
             logics = self.settings_manager.load_logics()
             if logic_id in logics:
@@ -172,7 +272,17 @@ class LogicListController(QObject):
             self.log_message.emit(f"로직 이동 중 오류 발생: {str(e)}")
             
     def process_logic_copy(self, logic_id):
-        """로직 복사 처리"""
+        """로직 복사 처리
+        
+        선택된 로직을 클립보드에 복사합니다.
+        
+        Args:
+            logic_id (str): 복사할 로직의 ID
+            
+        프로세스:
+        1. 로직 정보 깊은 복사
+        2. 클립보드에 저장
+        """
         try:
             logics = self.settings_manager.load_logics()
             if logic_id in logics:
@@ -184,7 +294,16 @@ class LogicListController(QObject):
             self.log_message.emit(f"로직 복사 중 오류 발생: {str(e)}")
             
     def process_logic_paste(self):
-        """로직 붙여넣기 처리"""
+        """로직 붙여넣기 처리
+        
+        클립보드에 저장된 로직을 새로운 로직으로 붙여넣기합니다.
+        
+        프로세스:
+        1. 클립보드 데이터 깊은 복사
+        2. 새 이름 설정 (복사본)
+        3. 트리거 키 초기화
+        4. 새 로직으로 저장
+        """
         if not self.clipboard:
             return
             

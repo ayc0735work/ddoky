@@ -28,9 +28,46 @@ from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_h
 import logging
 
 class MainWindow(QMainWindow):
-    """메인 윈도우 클래스"""
+    """메인 윈도우 클래스
+    
+    애플리케이션의 메인 윈도우를 구성하는 클래스입니다.
+    모든 UI 컴포넌트들을 관리하고 이들 간의 상호작용을 조정합니다.
+    
+    Attributes:
+        settings_manager (SettingsManager): 설정 관리자
+        error_handler (ErrorHandler): 전역 예외 처리기
+        process_manager (ProcessManager): 프로세스 관리자
+        logic_manager (LogicManager): 로직 관리자
+        logic_executor (LogicExecutor): 로직 실행기
+        keyboard_hook (KeyboardHook): 키보드 입력 후킹 관리자
+        
+    Components:
+        logic_operation_widget (LogicOperationWidget): 로직 동작 제어 위젯
+        logic_list_widget (LogicListWidget): 로직 목록 위젯
+        logic_detail_widget (LogicDetailWidget): 로직 상세 정보 위젯
+        logic_maker_widget (LogicMakerToolWidget): 로직 생성 도구 위젯
+        etc_function_widget (EtcFunctionWidget): 기타 기능 위젯
+        log_widget (LogWidget): 로그 표시 위젯
+    """
     
     def __init__(self):
+        """메인 윈도우 초기화
+        
+        초기화 프로세스:
+        1. 기본 설정 초기화
+           - 설정 매니저
+           - 전역 예외 처리기
+           - 프로세스 매니저
+           - 로직 관리자와 실행기
+           - 키보드 훅
+           
+        2. UI 초기화
+           - 기본 UI 구성
+           - 컴포넌트 초기화
+           - 시그널/슬롯 연결
+           
+        3. 윈도우 설정 로드
+        """
         super().__init__()
         self.settings_manager = SettingsManager()
         
@@ -53,7 +90,24 @@ class MainWindow(QMainWindow):
         self._load_window_settings()
         
     def init_ui(self):
-        """UI 초기화"""
+        """UI 초기화
+        
+        메인 윈도우의 기본 UI를 구성합니다.
+        
+        구성 프로세스:
+        1. 윈도우 기본 설정
+           - 타이틀 설정
+           - 크기 설정
+           
+        2. 스크롤 영역 설정
+           - 수직 스크롤바 자동 표시
+           - 수평 스크롤바 숨김
+           
+        3. 메인 위젯 구성
+           - 레이아웃 초기화
+           - UI 컴포넌트 초기화
+           - 스크롤 영역에 추가
+        """
         self.setWindowTitle("또끼")        
         self.setMinimumHeight(MAIN_WINDOW_HEIGHT)
         self.setFixedWidth(MAIN_WINDOW_WIDTH)
@@ -83,7 +137,21 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(scroll_area)
         
     def init_layouts(self):
-        """레이아웃 초기화"""
+        """레이아웃 초기화
+        
+        메인 윈도우의 레이아웃 구조를 설정합니다.
+        
+        레이아웃 구조:
+        1. 메인 레이아웃 (QVBoxLayout)
+           - 전체 UI 컴포넌트를 수직으로 배치
+           - 컴포넌트 간 간격 설정
+           
+        2. 기본 기능 영역 레이아웃 (QHBoxLayout)
+           - 로직 관련 주요 기능들을 수평으로 배치
+           
+        3. 로그 영역 레이아웃 (QHBoxLayout)
+           - 로그 위젯을 위한 영역
+        """
         # 메인 레이아웃
         self.main_layout = QVBoxLayout()
         self.main_layout.setSpacing(MIDDLE_SPACE)
@@ -97,7 +165,28 @@ class MainWindow(QMainWindow):
         self.log_layout.setSpacing(0)
     
     def init_components(self):
-        """UI 컴포넌트 초기화"""
+        """UI 컴포넌트 초기화
+        
+        메인 윈도우의 각 UI 컴포넌트를 초기화하고 배치합니다.
+        
+        초기화되는 컴포넌트:
+        1. 로직 동작 제어 위젯
+           - 로직 실행기 설정
+           - 컨트롤러 연결
+           - 로그 메시지 연결
+           
+        2. 기본 기능 영역
+           - 로직 리스트
+           - 로직 상세 정보
+           - 로직 메이커
+           
+        3. 기타 기능 위젯
+           - 카운트다운 컨트롤러 설정
+           - 로그 메시지 연결
+           
+        4. 로그 영역
+           - 로그 위젯 초기화
+        """
         # 로직 동작 허용 여부 온오프 위젯
         self.logic_operation_widget = LogicOperationWidget()
         self.logic_operation_widget.set_logic_executor(self.logic_executor)  # set_logic_executor 메서드 사용
@@ -118,7 +207,25 @@ class MainWindow(QMainWindow):
         self.init_log_features()
         
     def init_basic_features(self):
-        """기본 기능 영역 초기화"""
+        """기본 기능 영역 초기화
+        
+        로직 관련 주요 기능들을 초기화하고 배치합니다.
+        
+        초기화되는 기능:
+        1. 로직 리스트
+           - 위젯과 컨트롤러 생성
+           - 레이아웃에 추가
+           
+        2. 로직 상세 정보
+           - 위젯과 컨트롤러 생성
+           - 레이아웃에 추가
+           
+        3. 로직 메이커
+           - 위젯과 컨트롤러 생성
+           - 저장된 로직 목록 전달
+           - 레이아웃에 추가
+           - 시그널 연결
+        """
         # 로직 리스트 위젯과 컨트롤러
         self.logic_list_widget = LogicListWidget()
         self.logic_list_controller = LogicListController(self.logic_list_widget)
@@ -144,13 +251,51 @@ class MainWindow(QMainWindow):
         self.main_layout.addLayout(self.basic_features_layout)
         
     def init_log_features(self):
-        """로그 영역 초기화"""
+        """로그 영역 초기화
+        
+        로그 표시를 위한 UI를 초기화합니다.
+        
+        구성:
+        - 로그 위젯 생성
+        - 레이아웃에 추가
+        """
         self.log_widget = LogWidget()
         self.log_layout.addWidget(self.log_widget)
         self.main_layout.addLayout(self.log_layout)
         
     def _setup_connections(self):
-        """컴포넌트 간 시그널/슬롯 연결 설정"""
+        """컴포넌트 간 시그널/슬롯 연결 설정
+        
+        각 컴포넌트 간의 상호작용을 위한 시그널과 슬롯을 연결합니다.
+        
+        연결되는 시그널:
+        1. 에러 처리
+           - 전역 에러 핸들러 -> 로그
+           
+        2. 키보드 입력
+           - 키보드 훅 -> 카운트다운 컨트롤러
+           
+        3. 로직 동작 제어
+           - 동작 상태 변경 -> 기타 기능 위젯
+           
+        4. 프로세스 관리
+           - 프로세스 선택 -> 카운트다운 컨트롤러
+           
+        5. 로직 관리
+           - 로직 선택/편집/삭제
+           - 로직 저장/수정
+           
+        6. 로그 메시지
+           - 각 컴포넌트의 로그 -> 로그 위젯
+           
+        7. 로직 메이커
+           - 키/마우스 입력
+           - 로직 추가/수정
+           
+        8. 로직 실행
+           - 실행 상태 변경
+           - 오류 발생
+        """
         # 전역 에러 핸들러 연결
         self.error_handler.error_occurred.connect(self._append_log)
         
@@ -200,33 +345,44 @@ class MainWindow(QMainWindow):
         self.logic_executor.log_message.connect(self.log_widget.append)
     
     def _handle_record_mode(self):
-        # TODO: Implement record mode handling
+        """녹화 모드 처리
+        
+        TODO: 녹화 모드 기능 구현
+        """
         pass
 
     def _append_log(self, message):
-        """로그 메시지 추가"""
+        """로그 메시지 추가
+        
+        로그 위젯에 새로운 메시지를 추가합니다.
+        
+        Args:
+            message (str): 추가할 로그 메시지
+        """
         self.log_widget.append(message)
         
     def _on_key_input(self, key_state_info):
-        """LogicMakerToolWidget의 confirmed_and_added_key_info 시그널을 통해 전달된 키 상태 정보를 처리합니다.
-
+        """키 입력 정보 처리
+        
+        LogicMakerToolWidget에서 전달된 키 입력 정보를 처리하고 표시합니다.
+        
         데이터 흐름:
         1. LogicMakerToolWidget._add_confirmed_input_key()
-           - key_state_info_press와 key_state_info_release를 생성 (key_state_info)
-           - confirmed_and_added_key_info 시그널을 통해 각각 전달
+           - key_state_info_press와 key_state_info_release를 생성
+           - confirmed_and_added_key_info 시그널을 통해 전달
            
         2. MainWindow._on_key_input()
-           - confirmed_and_added_key_info 시그널로 전달된 key_state_info를 받아서 표시 형식으로 변환
-           - 수정자 키(Ctrl, Shift, Alt) 정보 추가
-           - "(main_window.py 최초 입력)" 접두어 추가
+           - key_state_info를 표시 형식으로 변환
+           - 수정자 키 정보 추가
+           - 접두어 추가
            
         3. LogicDetailWidget.add_item()
-           - 변환된 문자열을 아이템 목록에 추가
-
+           - 변환된 문자열을 목록에 추가
+        
         Args:
-            key_state_info (dict): confirmed_and_added_key_info 시그널로 전달된 키 상태 정보 (key_state_info_press와 key_state_info_release)
-                - display_text (str): 키 코드와 상태(누르기/떼기)
-                - modifiers (int): 수정자 키 상태 플래그
+            key_state_info (dict): 키 상태 정보
+                - display_text (str): 키 코드와 상태
+                - modifiers (int): 수정자 키 상태
         """
         # 키 상태 정보를 문자열로 변환
         key_text = key_state_info.get('display_text', '')  # 이벤트 타입이 포함된 텍스트 사용
@@ -244,7 +400,22 @@ class MainWindow(QMainWindow):
         self.logic_detail_widget.add_item(display_text)
         
     def _on_mouse_input(self, mouse_info):
-        """마우스 입력 정보를 받아서 처리"""
+        """마우스 입력 정보 처리
+        
+        LogicMakerToolWidget에서 전달된 마우스 입력 정보를 처리하고 표시합니다.
+        
+        Args:
+            mouse_info (dict): 마우스 입력 정보
+                - x (int): X 좌표
+                - y (int): Y 좌표
+                - button (str): 클릭된 버튼 ('left', 'right', 'middle')
+                - action (str): 동작 유형 ('press', 'release', 'move')
+                
+        프로세스:
+        1. 입력 정보 유효성 검사
+        2. 표시 형식으로 변환
+        3. LogicDetailWidget에 추가
+        """
         try:
             # 로그 메시지 출력
             if isinstance(mouse_info, dict):
@@ -263,7 +434,19 @@ class MainWindow(QMainWindow):
             self.log_widget.append(f"스택 트레이스:\n{traceback.format_exc()}")
         
     def _on_delay_input(self, delay_info):
-        """지연시간이 추가되었을 때 호출"""
+        """지연 시간 입력 처리
+        
+        LogicMakerToolWidget에서 전달된 지연 시간 정보를 처리합니다.
+        
+        Args:
+            delay_info (dict): 지연 시간 정보
+                - duration (float): 지연 시간(초)
+                - type (str): 지연 유형
+                
+        프로세스:
+        1. 지연 정보를 표시 형식으로 변환
+        2. LogicDetailWidget에 추가
+        """
         self.logic_detail_widget.add_item(delay_info)
         
     def _on_record_mode(self, is_recording):
@@ -272,7 +455,21 @@ class MainWindow(QMainWindow):
         pass
 
     def _handle_edit_logic(self, logic_info):
-        """로직 불러오기 처리"""
+        """로직 편집 처리
+        
+        로직 편집이 요청되었을 때 처리합니다.
+        
+        Args:
+            logic_info (dict): 로직 정보
+                - id (str): 로직 ID
+                - name (str): 로직 이름
+                - items (list): 로직 아이템 목록
+                
+        프로세스:
+        1. 로직 정보 검증
+        2. LogicDetailWidget에 로직 정보 전달
+        3. 편집 모드 활성화
+        """
         if self.logic_detail_widget.has_items():
             # 확인 모달 시그널
             reply = QMessageBox.question(
@@ -300,7 +497,15 @@ class MainWindow(QMainWindow):
         self._append_log(f"로직 '{logic_info.get('name', '')}'를(를) 수정합니다")
 
     def _load_window_settings(self):
-        """윈도우 설정 로드"""
+        """윈도우 설정 로드
+        
+        저장된 윈도우 위치와 크기를 로드하고 적용합니다.
+        
+        프로세스:
+        1. 설정 파일에서 윈도우 정보 로드
+        2. 유효성 검사
+        3. 윈도우에 적용
+        """
         settings = self.settings_manager.get_window_settings()
         position = settings["position"]
         size = settings["size"]
@@ -309,7 +514,19 @@ class MainWindow(QMainWindow):
         self.move(position["x"], position["y"])
         
     def closeEvent(self, event):
-        """윈도우가 닫힐 때 호출되는 이벤트 핸들러"""
+        """윈도우 종료 이벤트 처리
+        
+        윈도우가 종료될 때 필요한 정리 작업을 수행합니다.
+        
+        Args:
+            event (QCloseEvent): 종료 이벤트
+            
+        프로세스:
+        1. 현재 윈도우 상태 저장
+        2. 키보드 훅 정리
+        3. 실행 중인 작업 정리
+        4. 이벤트 수락
+        """
         try:
             # 윈도우 위치와 크기 저장
             settings = QSettings()
@@ -329,9 +546,20 @@ class MainWindow(QMainWindow):
             logging.error(f"윈도우 종료 중 오류 발생: {str(e)}")
             event.accept()
 
-    def _on_logic_operation_toggled(self, is_enabled):
-        """로직 동작 허용 여부 체크박스 상태가 변경되었을 때 호출"""
-        if is_enabled:
+    def _on_logic_operation_toggled(self, enabled):
+        """로직 동작 상태 변경 처리
+        
+        로직 실행 활성화/비활성화 상태가 변경되었을 때 처리합니다.
+        
+        Args:
+            enabled (bool): 활성화 여부
+            
+        프로세스:
+        1. 로직 실행기 상태 업데이트
+        2. UI 상태 업데이트
+        3. 로그 메시지 출력
+        """
+        if enabled:
             self.logic_executor.start_monitoring()
             self._append_log("로직 동작 허용 여부가 허용 상태로 변경되었습니다<br>")
         else:
@@ -339,7 +567,21 @@ class MainWindow(QMainWindow):
             self._append_log("로직 동작 허용 여부가 불허용 상태로 변경되었습니다<br>")
     
     def _on_logic_saved(self, logic_info):
-        """로직이 저장되었을 때 호출"""
+        """로직 저장 완료 처리
+        
+        새로운 로직이 저장되었을 때 처리합니다.
+        
+        Args:
+            logic_info (dict): 저장된 로직 정보
+                - id (str): 로직 ID
+                - name (str): 로직 이름
+                - items (list): 로직 아이템 목록
+                
+        프로세스:
+        1. 설정 파일에 저장
+        2. UI 업데이트
+        3. 로그 메시지 출력
+        """
         # 로직 리스트 컨트롤러를 통해 저장된 로직 정보 가져오기
         saved_logics = self.logic_list_controller.get_saved_logics()
         self.logic_maker_widget.update_saved_logics(saved_logics)
@@ -347,7 +589,21 @@ class MainWindow(QMainWindow):
         self.logic_detail_widget.clear_all()
     
     def _on_logic_updated(self, logic_info):
-        """로직이 수정되었을 때 호출"""
+        """로직 수정 완료 처리
+        
+        기존 로직이 수정되었을 때 처리합니다.
+        
+        Args:
+            logic_info (dict): 수정된 로직 정보
+                - id (str): 로직 ID
+                - name (str): 로직 이름
+                - items (list): 로직 아이템 목록
+                
+        프로세스:
+        1. 설정 파일 업데이트
+        2. UI 업데이트
+        3. 로그 메시지 출력
+        """
         # 로직 리스트 컨트롤러를 통해 저장된 로직 정보 가져오기
         saved_logics = self.logic_list_controller.get_saved_logics()
         self.logic_maker_widget.update_saved_logics(saved_logics)
@@ -371,7 +627,22 @@ class MainWindow(QMainWindow):
         self._append_log("프로세스 선택이 초기화되었습니다")
 
     def _on_add_logic(self, logic_name):
-        """로직 메이커에서 로직을 추가할 때 호출"""
+        """새로운 로직 추가 처리
+        
+        LogicMakerToolWidget에서 전달된 새로운 로직 정보를 처리합니다.
+        
+        Args:
+            logic_info (dict): 로직 정보
+                - name (str): 로직 이름
+                - items (list): 로직 아이템 목록
+                - trigger_key (dict): 트리거 키 정보
+                
+        프로세스:
+        1. 로직 정보 유효성 검사
+        2. 설정에 저장
+        3. UI 업데이트
+        4. 로그 메시지 출력
+        """
         if logic_name in self.logic_list_controller.get_saved_logics():
             # 로직 정보에서 이름을 가져와서 아이템으로 추가
             logic_info = self.logic_list_controller.get_logic_by_name(logic_name)
@@ -380,7 +651,20 @@ class MainWindow(QMainWindow):
             self._append_log(f"로직 '{display_name}'이(가) 추가되었습니다")
 
     def _on_wait_click_input(self, wait_click_info):
-        """클릭 대기 입력이 추가되었을 때 호출"""
+        """클릭 대기 입력 처리
+        
+        LogicMakerToolWidget에서 전달된 클릭 대기 정보를 처리합니다.
+        
+        Args:
+            wait_info (dict): 클릭 대기 정보
+                - x (int): 대기할 X 좌표
+                - y (int): 대기할 Y 좌표
+                - timeout (float): 대기 시간 제한
+                
+        프로세스:
+        1. 대기 정보를 표시 형식으로 변환
+        2. LogicDetailWidget에 추가
+        """
         try:
             display_text = wait_click_info.get('display_text', '')
             self.log_widget.append(f"클릭 대기 아이템이 추가되었습니다: {display_text}")
@@ -393,7 +677,19 @@ class MainWindow(QMainWindow):
             self.log_widget.append(f"[경고] 클릭 대기 입력 처리 중 오류 발생: {str(e)}")
 
     def _on_item_added(self, item_info):
-        """아이템이 추가되었을 때 호출"""
+        """로직 아이템 추가 처리
+        
+        LogicMakerToolWidget에서 전달된 새로운 아이템 정보를 처리합니다.
+        
+        Args:
+            item_info (dict): 아이템 정보
+                - type (str): 아이템 유형
+                - data (dict): 아이템 데이터
+                
+        프로세스:
+        1. 아이템 정보를 표시 형식으로 변환
+        2. LogicDetailWidget에 추가
+        """
         if isinstance(item_info, dict) and item_info.get('type') == 'write_text':
             # 텍스트 입력인 경우 깔끔하게 표시
             text = item_info.get('text', '')
