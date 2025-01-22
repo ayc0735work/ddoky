@@ -30,7 +30,7 @@ class LogicMakerController(QObject):
             key_info (dict): 입력된 키 정보
         """
         # 디버그 로그 출력
-        self.log_message.emit(f"[DEBUG] add_item 시작 (logic_maker_controller.py) - 입력받은 데이터: {key_info.get('display_text', str(key_info))}")
+        self.log_message.emit(f"[DEBUG] add_item 시작 (logic_maker_tool_controller.py) - 입력받은 데이터: {key_info.get('display_text', str(key_info))}")
         self.log_message.emit("[DEBUG] 문자열 형식의 데이터 처리 시작")
         
         # 아이템 목록에 추가
@@ -52,7 +52,7 @@ class LogicMakerController(QObject):
         # 아이템 추가
         self.widget.add_item(mouse_info)
         
-        log_msg = f"(logic_maker_controller--_handle_mouse_input)마우스 입력이 추가되었습니다: {mouse_info['display_text']}"
+        log_msg = f"(logic_maker_tool_controller--_handle_mouse_input)마우스 입력이 추가되었습니다: {mouse_info['display_text']}"
         self.widget.log_message.emit(log_msg)
         
     def _handle_delay_input(self, delay_text):

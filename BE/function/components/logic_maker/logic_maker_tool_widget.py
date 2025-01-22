@@ -130,7 +130,7 @@ class LogicMakerToolWidget(QFrame):
             item (dict): 추가할 아이템 정보
                 마우스 입력 정보를 포함하는 딕셔너리
         """
-        self.log_message.emit(f"[DEBUG] add_item 시작 (logic_maker_widget.py) - 입력받은 데이터: {item}")
+        self.log_message.emit(f"[DEBUG] add_item 시작 (logic_maker_tool_widget.py) - 입력받은 데이터: {item}")
         
         if isinstance(item, dict):
             self.log_message.emit("[DEBUG] 딕셔너리 형식의 데이터 처리 시작")

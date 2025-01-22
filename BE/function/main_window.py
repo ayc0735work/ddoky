@@ -10,8 +10,8 @@ from BE.function.components.logic_list.logic_list_widget import LogicListWidget
 from BE.function.components.logic_list.logic_list_controller import LogicListController
 from BE.function.components.logic_detail.logic_detail_widget import LogicDetailWidget
 from BE.function.components.logic_detail.logic_detail_controller import LogicDetailController
-from BE.function.components.logic_maker.logic_maker_widget import LogicMakerToolWidget
-from BE.function.components.logic_maker.logic_maker_controller import LogicMakerController
+from BE.function.components.logic_maker.logic_maker_tool_widget import LogicMakerToolWidget
+from BE.function.components.logic_maker.logic_maker_tool_controller import LogicMakerController
 from BE.function.components.logic_operation.logic_operation_controller import LogicOperationController
 from BE.function.components.logic_operation.logic_operation_widget import LogicOperationWidget
 from BE.function.components.log.log_widget import LogWidget
@@ -45,7 +45,7 @@ class MainWindow(QMainWindow):
         logic_operation_widget (LogicOperationWidget): 로직 동작 제어 위젯
         logic_list_widget (LogicListWidget): 로직 목록 위젯
         logic_detail_widget (LogicDetailWidget): 로직 상세 정보 위젯
-        logic_maker_widget (LogicMakerToolWidget): 로직 생성 도구 위젯
+        logic_maker_tool_widget (LogicMakerToolWidget): 로직 생성 도구 위젯
         etc_function_widget (EtcFunctionWidget): 기타 기능 위젯
         log_widget (LogWidget): 로그 표시 위젯
     """
@@ -237,16 +237,16 @@ class MainWindow(QMainWindow):
         self.basic_features_layout.addWidget(self.logic_detail_widget)
         
         # 로직 메이커
-        self.logic_maker_widget = LogicMakerToolWidget()
-        self.logic_maker_controller = LogicMakerController(self.logic_maker_widget)
+        self.logic_maker_tool_widget = LogicMakerToolWidget()
+        self.logic_maker_tool_controller = LogicMakerController(self.logic_maker_tool_widget)
         
         # 로직 메이커에 저장된 로직 목록 전달
-        self.logic_maker_widget.update_saved_logics(self.logic_list_controller.get_saved_logics())
+        self.logic_maker_tool_widget.update_saved_logics(self.logic_list_controller.get_saved_logics())
         
-        self.basic_features_layout.addWidget(self.logic_maker_widget)
+        self.basic_features_layout.addWidget(self.logic_maker_tool_widget)
         
         # 시그널 연결
-        self.logic_maker_widget.record_mode.connect(self._handle_record_mode)
+        self.logic_maker_tool_widget.record_mode.connect(self._handle_record_mode)
         
         self.main_layout.addLayout(self.basic_features_layout)
         
@@ -323,16 +323,16 @@ class MainWindow(QMainWindow):
         # 로그 메시지 연결
         self.logic_list_widget.log_message.connect(self._append_log)
         self.logic_detail_widget.log_message.connect(self._append_log)
-        self.logic_maker_widget.log_message.connect(self._append_log)
+        self.logic_maker_tool_widget.log_message.connect(self._append_log)
         self.logic_operation_widget.log_message.connect(self._append_log)  # _append_log를 통해 로그 추가
         
         # 로직 메이커 시그널 연결
-        self.logic_maker_widget.confirmed_and_added_key_info.connect(self._on_key_input)
-        self.logic_maker_widget.mouse_input.connect(self._on_mouse_input)
-        self.logic_maker_widget.delay_input.connect(self._on_delay_input)
-        self.logic_maker_widget.add_logic.connect(self._on_add_logic)  # 로직 추가 시그널 연결
-        self.logic_maker_widget.wait_click_input.connect(self._on_wait_click_input)  # 클릭 대기 시그널 연결
-        self.logic_maker_widget.item_added.connect(self._on_item_added)  # 아이템 추가 시그널 연결
+        self.logic_maker_tool_widget.confirmed_and_added_key_info.connect(self._on_key_input)
+        self.logic_maker_tool_widget.mouse_input.connect(self._on_mouse_input)
+        self.logic_maker_tool_widget.delay_input.connect(self._on_delay_input)
+        self.logic_maker_tool_widget.add_logic.connect(self._on_add_logic)  # 로직 추가 시그널 연결
+        self.logic_maker_tool_widget.wait_click_input.connect(self._on_wait_click_input)  # 클릭 대기 시그널 연결
+        self.logic_maker_tool_widget.item_added.connect(self._on_item_added)  # 아이템 추가 시그널 연결
         
         # 로직 실행 관련 시그널 연결
         self.logic_operation_widget.operation_toggled.connect(self._on_logic_operation_toggled)
@@ -584,7 +584,7 @@ class MainWindow(QMainWindow):
         """
         # 로직 리스트 컨트롤러를 통해 저장된 로직 정보 가져오기
         saved_logics = self.logic_list_controller.get_saved_logics()
-        self.logic_maker_widget.update_saved_logics(saved_logics)
+        self.logic_maker_tool_widget.update_saved_logics(saved_logics)
         # 로직 정보 초기화
         self.logic_detail_widget.clear_all()
     
@@ -606,13 +606,13 @@ class MainWindow(QMainWindow):
         """
         # 로직 리스트 컨트롤러를 통해 저장된 로직 정보 가져오기
         saved_logics = self.logic_list_controller.get_saved_logics()
-        self.logic_maker_widget.update_saved_logics(saved_logics)
+        self.logic_maker_tool_widget.update_saved_logics(saved_logics)
 
     def _on_logic_deleted(self, logic_name):
         """로직이 삭제되었을 때 호출"""
         # 로직 리스트 컨트롤러를 통해 저장된 로직 정보 가져오기
         saved_logics = self.logic_list_controller.get_saved_logics()
-        self.logic_maker_widget.update_saved_logics(saved_logics)
+        self.logic_maker_tool_widget.update_saved_logics(saved_logics)
         # 로직 정보 초기화
         self.logic_detail_widget.clear_all()
 
