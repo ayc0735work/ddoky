@@ -1,13 +1,13 @@
 from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QDialog
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
+from BE.log.manager.modal_log_manager import ModalLogManager
 
 class EnteredKeyInfoHandler(QObject):
     """키 입력 처리를 담당하는 핸들러 클래스"""
     
     # 시그널 정의
     confirmed_and_added_key_info = Signal(dict)  # 키 입력이 확인되고 추가되었을 때
-    log_message = Signal(str)  # 로그 메시지 전달용
     
     def __init__(self, parent=None):
         """초기화
@@ -16,6 +16,7 @@ class EnteredKeyInfoHandler(QObject):
             parent (QObject): 부모 객체
         """
         super().__init__(parent)
+        self.modal_log_manager = ModalLogManager.instance()
     
     def request_key_input(self, parent=None):
         """키 입력을 요청하는 다이얼로그를 표시
@@ -53,14 +54,18 @@ class EnteredKeyInfoHandler(QObject):
         2. 키 상태 정보 생성 (누르기/떼기)
         3. confirmed_and_added_key_info 시그널을 통해 키 상태 정보 전달
         """
-        # 로그 메시지 생성
-        self.log_message.emit(
-            f"키 입력이 추가되었습니다 [ <br>"
-            f"키: {get_entered_key_info['key_code']}, <br>"
-            f"스캔 코드 (하드웨어 고유값): {get_entered_key_info['scan_code']}, <br>"
-            f"확장 가상 키 (운영체제 레벨의 고유 값): {get_entered_key_info['virtual_key']}, <br>"
-            f"키보드 위치: {get_entered_key_info['location']}, <br>"
-            f"수정자 키: {get_entered_key_info['modifier_text']} ] <br>"
+        # 키 입력 정보 로그
+        self.modal_log_manager.log(
+            message=(
+                f"키 입력이 추가되었습니다 [ <br>"
+                f"키: {get_entered_key_info['key_code']}, <br>"
+                f"스캔 코드 (하드웨어 고유값): {get_entered_key_info['scan_code']}, <br>"
+                f"확장 가상 키 (운영체제 레벨의 고유 값): {get_entered_key_info['virtual_key']}, <br>"
+                f"키보드 위치: {get_entered_key_info['location']}, <br>"
+                f"수정자 키: {get_entered_key_info['modifier_text']} ] <br>"
+            ),
+            level="INFO",
+            modal_name="키입력핸들러"
         )
         
         # 누르기 이벤트용 키 상태 정보
@@ -71,13 +76,17 @@ class EnteredKeyInfoHandler(QObject):
 
         self.confirmed_and_added_key_info.emit(key_state_info_press)
 
-        # 로그 메시지 전달
-        self.log_message.emit(
-            f"<br>키 상태 정보가 업데이트 되었습니다. <br>"
-            f"type: {key_state_info_press['type']}, <br>"
-            f"action: {key_state_info_press['action']}, <br>"
-            f"display_text: {key_state_info_press['display_text']}, <br>"           
-            )
+        # 키 상태 정보 업데이트 로그 (누르기)
+        self.modal_log_manager.log(
+            message=(
+                f"키 상태 정보가 업데이트 되었습니다. <br>"
+                f"type: {key_state_info_press['type']}, <br>"
+                f"action: {key_state_info_press['action']}, <br>"
+                f"display_text: {key_state_info_press['display_text']}"
+            ),
+            level="DEBUG",
+            modal_name="키입력핸들러"
+        )
         
         # 떼기 이벤트용 키 상태 정보
         key_state_info_release = get_entered_key_info.copy()
@@ -85,16 +94,19 @@ class EnteredKeyInfoHandler(QObject):
         key_state_info_release['action'] = "떼기"
         key_state_info_release['display_text'] = f"{get_entered_key_info['key_code']} --- 떼기"
 
-
         self.confirmed_and_added_key_info.emit(key_state_info_release)
 
-        # 로그 메시지 전달
-        self.log_message.emit(
-            f"<br>키 상태 정보가 업데이트 되었습니다. <br>"
-            f"type: {key_state_info_release['type']}, <br>"
-            f"action: {key_state_info_release['action']}, <br>"
-            f"display_text: {key_state_info_release['display_text']}, <br>"           
-            )
+        # 키 상태 정보 업데이트 로그 (떼기)
+        self.modal_log_manager.log(
+            message=(
+                f"키 상태 정보가 업데이트 되었습니다. <br>"
+                f"type: {key_state_info_release['type']}, <br>"
+                f"action: {key_state_info_release['action']}, <br>"
+                f"display_text: {key_state_info_release['display_text']}"
+            ),
+            level="DEBUG",
+            modal_name="키입력핸들러"
+        )
     
     def handle_key_input(self, key_info):
         """키 입력 데이터 처리
@@ -108,12 +120,24 @@ class EnteredKeyInfoHandler(QObject):
         3. 시그널 발생
         """
         # 디버그 로그 출력
-        self.log_message.emit(f"[DEBUG] 키 입력 처리 시작 - 입력받은 데이터: {key_info.get('display_text', str(key_info))}")
+        self.modal_log_manager.log(
+            message=f"키 입력 처리 시작 - 입력받은 데이터: {key_info.get('display_text', str(key_info))}",
+            level="DEBUG",
+            modal_name="키입력핸들러"
+        )
         
         # 키 정보 검증 및 처리
         if not isinstance(key_info, dict):
-            self.log_message.emit("[ERROR] 잘못된 키 입력 데이터 형식")
+            self.modal_log_manager.log(
+                message="잘못된 키 입력 데이터 형식",
+                level="ERROR",
+                modal_name="키입력핸들러"
+            )
             return
             
         # 처리 완료 로그
-        self.log_message.emit(f"[DEBUG] 키 입력 처리 완료: {key_info}")
+        self.modal_log_manager.log(
+            message=f"키 입력 처리 완료: {key_info}",
+            level="DEBUG",
+            modal_name="키입력핸들러"
+        )

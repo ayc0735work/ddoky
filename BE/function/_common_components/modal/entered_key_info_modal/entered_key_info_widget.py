@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QLabel
 from PySide6.QtCore import Qt, Signal
+from BE.log.manager.modal_log_manager import ModalLogManager
 
 class EnteredKeyInfoWidget(QWidget):
     """키 입력을 표시하는 UI 위젯
@@ -12,7 +13,6 @@ class EnteredKeyInfoWidget(QWidget):
     
     key_input_area_focused = Signal()    # 키 입력 영역이 포커스를 얻었을 때
     key_input_area_unfocused = Signal()  # 키 입력 영역이 포커스를 잃었을 때
-    log_message = Signal(str)  # 로그 메시지 시그널 정의
     
     def __init__(self, parent=None, show_details=True):
         """EnteredKeyInfoWidget 초기화
@@ -23,6 +23,7 @@ class EnteredKeyInfoWidget(QWidget):
         """
         super().__init__(parent)
         self.show_details = show_details
+        self.modal_log_manager = ModalLogManager.instance()
         self._setup_ui()
     
     def _setup_ui(self):

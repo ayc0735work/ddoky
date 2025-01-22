@@ -1,9 +1,8 @@
 from PySide6.QtCore import QObject, Signal
+from BE.log.manager.modal_log_manager import ModalLogManager
 
 class LogicMakerController(QObject):
     """로직 메이커 컨트롤러"""
-    
-    log_message = Signal(str)
     
     def __init__(self, widget):
         """초기화
@@ -13,6 +12,7 @@ class LogicMakerController(QObject):
         """
         super().__init__()
         self.widget = widget
+        self.modal_log_manager = ModalLogManager.instance()
         self._connect_signals()
         
     def _connect_signals(self):
@@ -31,8 +31,11 @@ class LogicMakerController(QObject):
         # 아이템 추가
         self.widget.add_item(mouse_info)
         
-        log_msg = f"(logic_maker_tool_controller--_handle_mouse_input)마우스 입력이 추가되었습니다: {mouse_info['display_text']}"
-        self.widget.log_message.emit(log_msg)
+        self.modal_log_manager.log(
+            message=f"마우스 입력이 추가되었습니다: {mouse_info['display_text']} <br>",
+            level="INFO",
+            modal_name="로직메이커"
+        )
         
     def _handle_delay_input(self, delay_text):
         """지연시간 처리
@@ -40,8 +43,11 @@ class LogicMakerController(QObject):
         Args:
             delay_text (str): 지연시간 텍스트
         """
-        log_msg = f"지연시간이 추가되었습니다: {delay_text}"
-        self.widget.log_message.emit(log_msg)
+        self.modal_log_manager.log(
+            message=f"지연시간이 추가되었습니다: {delay_text} <br>",
+            level="INFO",
+            modal_name="로직메이커"
+        )
         
     def _handle_record_mode(self, is_recording):
         """기록 모드 처리
@@ -50,8 +56,11 @@ class LogicMakerController(QObject):
             is_recording (bool): 기록 모드 활성화 여부
         """
         status = "시작" if is_recording else "중지"
-        log_msg = f"기록 모드가 {status}되었습니다."
-        self.widget.log_message.emit(log_msg)
+        self.modal_log_manager.log(
+            message=f"기록 모드가 {status}되었습니다 <br>",
+            level="INFO",
+            modal_name="로직메이커"
+        )
         
     def _handle_wait_click_input(self, wait_click_info):
         """클릭 대기 입력 처리
@@ -59,8 +68,11 @@ class LogicMakerController(QObject):
         Args:
             wait_click_info (dict): 클릭 대기 정보
         """
-        log_msg = f"클릭 대기 아이템이 추가되었습니다: {wait_click_info['display_text']}"
-        self.widget.log_message.emit(log_msg)
+        self.modal_log_manager.log(
+            message=f"클릭 대기 아이템이 추가되었습니다: {wait_click_info['display_text']} <br>",
+            level="INFO",
+            modal_name="로직메이커"
+        )
         
     def save_logic(self, logic_data):
         """로직 저장"""

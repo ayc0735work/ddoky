@@ -17,7 +17,6 @@ class EnteredKeyInfoDialog(QDialog):
     """
     
     key_input_changed = Signal(dict)  # 키 입력이 변경되었을 때
-    log_message = Signal(str)  # 로그 메시지 시그널 정의
     
     def __init__(self, parent=None, show_details=True):
         """EnteredKeyInfoDialog 초기화
@@ -43,6 +42,7 @@ class EnteredKeyInfoDialog(QDialog):
         
         self.last_key_info = None
         self.keyboard_hook = None
+        self.modal_log_manager = ModalLogManager.instance()
         
         self._setup_ui(show_details)
         self._setup_connections()
@@ -197,7 +197,7 @@ class EnteredKeyInfoDialog(QDialog):
         confirmed_key_info = self.get_entered_key_info()
         if confirmed_key_info: # 키 정보가 있는 경우
             self.accept()  # 다이얼로그가 성공적으로 완료되면 창을 닫고 데이터를 사용해도 좋다는 이벤트 전달
-            ModalLogManager.instance().log(
+            self.modal_log_manager.log(
                 message="키 입력 모달의 확인버튼이 클릭되었습니다.",
                 level="INFO",
                 modal_name="키입력모달"

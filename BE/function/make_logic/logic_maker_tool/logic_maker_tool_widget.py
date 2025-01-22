@@ -10,6 +10,7 @@ from BE.function._common_components.modal.mouse_input_modal.mouse_input_dialog i
 from BE.function._common_components.modal.image_search_area_modal.image_search_area_dialog import ImageSearchAreaDialog
 from BE.function._common_components.modal.text_input_modal.text_input_dialog import TextInputDialog
 from .handlers.entered_key_info_handler import EnteredKeyInfoHandler
+from BE.log.manager.modal_log_manager import ModalLogManager
 
 class LogicMakerToolWidget(QFrame):
     """로직 메이커 위젯"""
@@ -17,7 +18,6 @@ class LogicMakerToolWidget(QFrame):
     mouse_input = Signal(dict)  # 마우스 입력이 추가되었을 때 (마우스 정보를 딕셔너리로 전달)
     delay_input = Signal(str)  # 지연시간이 추가되었을 때
     record_mode = Signal(bool)  # 기록 모드가 토글되었을 때
-    log_message = Signal(str)  # 로그 메시지를 전달하는 시그널
     add_logic = Signal(str)  # 만든 로직 추가 시그널 (로직 이름)
     item_added = Signal(dict)  # 아이템이 추가되었을 때
     wait_click_input = Signal(dict)  # 클릭 대기 입력이 추가되었을 때
@@ -26,12 +26,12 @@ class LogicMakerToolWidget(QFrame):
         super().__init__(parent)
         self.saved_logics = {}  # 저장된 로직들을 관리하는 딕셔너리
         self.items = []  # 아이템 리스트
+        self.modal_log_manager = ModalLogManager.instance()
         
         # 키 입력 핸들러 초기화
         self.key_handler = EnteredKeyInfoHandler(self)
         # 키 핸들러의 시그널을 위젯의 시그널로 연결
         self.key_handler.confirmed_and_added_key_info.connect(self._on_key_info_added)
-        self.key_handler.log_message.connect(self.log_message)
         
         self.init_ui()
         
@@ -136,15 +136,31 @@ class LogicMakerToolWidget(QFrame):
             item (dict): 추가할 아이템 정보
                 마우스 입력 정보를 포함하는 딕셔너리
         """
-        self.log_message.emit(f"[DEBUG] add_item 시작 (logic_maker_tool_widget.py) - 입력받은 데이터: {item}")
+        self.modal_log_manager.log(
+            message=f"아이템 추가 시작 - 입력받은 데이터: {item} <br>",
+            level="DEBUG",
+            modal_name="로직메이커"
+        )
         
         if isinstance(item, dict):
-            self.log_message.emit("[DEBUG] 딕셔너리 형식의 데이터 처리 시작")
+            self.modal_log_manager.log(
+                message="딕셔너리 형식의 데이터 처리 시작 <br>",
+                level="DEBUG",
+                modal_name="로직메이커"
+            )
             self.items.append(item)
             self.item_added.emit(item)
-            self.log_message.emit(f"[DEBUG] 아이템이 성공적으로 추가되었습니다. 위치: {len(self.items)}")
+            self.modal_log_manager.log(
+                message=f"아이템이 성공적으로 추가되었습니다. 위치: {len(self.items)} <br>",
+                level="DEBUG",
+                modal_name="로직메이커"
+            )
         else:
-            self.log_message.emit(f"[ERROR] 잘못된 형식의 데이터: {type(item)}")
+            self.modal_log_manager.log(
+                message=f"잘못된 형식의 데이터: {type(item)} <br>",
+                level="ERROR",
+                modal_name="로직메이커"
+            )
 
     def _request_key_to_input(self):
         """키 입력 요청 - 핸들러로 위임"""
@@ -154,12 +170,16 @@ class LogicMakerToolWidget(QFrame):
         """마우스 입력 추가"""
         dialog = MouseInputDialog(self)
         dialog.mouse_input_selected.connect(self._on_mouse_input_selected)
-        dialog.log_message.connect(self.log_message.emit)
         dialog.exec()
 
     def _on_mouse_input_selected(self, mouse_info):
         """마우스 입력이 선택되었을 때"""
-        self.log_message.emit(f"[DEBUG] 마우스 입력 정보 수신: {mouse_info}")
+        self.modal_log_manager.log(
+            message=f"마우스 입력 정보 수신: {mouse_info} <br>",
+            level="DEBUG",
+            modal_name="로직메이커"
+        )
+        
         # 마우스 입력 정보 처리
         processed_info = {
             'type': 'mouse_input',
@@ -174,10 +194,18 @@ class LogicMakerToolWidget(QFrame):
             'display_text': mouse_info.get('display_text', f'마우스 입력: 마우스클릭 ({mouse_info.get("coordinates_x", 0)}, {mouse_info.get("coordinates_y", 0)})')
         }
         
-        self.log_message.emit(f"[DEBUG] 처리된 마우스 입력 정보: {processed_info}")
+        self.modal_log_manager.log(
+            message=f"처리된 마우스 입력 정보: {processed_info} <br>",
+            level="DEBUG",
+            modal_name="로직메이커"
+        )
         # 아이템 추가
         self.add_item(processed_info)
-        self.log_message.emit(f"마우스 입력이 추가되었습니다: {processed_info['display_text']}")
+        self.modal_log_manager.log(
+            message=f"마우스 입력이 추가되었습니다: {processed_info['display_text']} <br>",
+            level="INFO",
+            modal_name="로직메이커"
+        )
 
     def _add_delay(self):
         """지연시간 추가"""
@@ -203,7 +231,11 @@ class LogicMakerToolWidget(QFrame):
                 'duration': delay
             }
             self.item_added.emit(delay_info)  # item_added 시그널로 전체 정보 전달
-            self.log_message.emit(f"지연시간 {delay:.4f}초가 추가되었습니다")
+            self.modal_log_manager.log(
+                message=f"지연시간 {delay:.4f}초가 추가되었습니다 <br>",
+                level="INFO",
+                modal_name="로직메이커"
+            )
 
     def _add_wait_click(self):
         """왼쪽 버튼 클릭시 다음으로 진행 추가"""
@@ -213,7 +245,11 @@ class LogicMakerToolWidget(QFrame):
             'button': 'left'
         }
         self.item_added.emit(wait_click_info)  # 아이템 목록에 추가
-        self.log_message.emit("왼쪽 버튼 클릭시 다음으로 진행 아이템이 추가되었습니다")
+        self.modal_log_manager.log(
+            message="왼쪽 버튼 클릭시 다음으로 진행 아이템이 추가되었습니다 <br>",
+            level="INFO",
+            modal_name="로직메이커"
+        )
 
     def _toggle_record_mode(self, checked):
         """기록 모드 토글"""
@@ -231,7 +267,11 @@ class LogicMakerToolWidget(QFrame):
         if dialog.exec() == QDialog.Accepted:
             area = dialog.captured_rect
             if area:
-                self.log_message.emit(f"이미지 서치 체크 영역이 추가되었습니다: {area}")
+                self.modal_log_manager.log(
+                    message=f"이미지 서치 체크 영역이 추가되었습니다: {area} <br>",
+                    level="INFO",
+                    modal_name="로직메이커"
+                )
                 self.item_added.emit({
                     'type': 'image_search',
                     'display_text': '이미지 서치 체크',
@@ -245,7 +285,11 @@ class LogicMakerToolWidget(QFrame):
             text_info = dialog.get_text()  # 이미 딕셔너리를 반환
             if text_info:
                 self.item_added.emit(text_info)  # 직접 전달
-                self.log_message.emit(f"텍스트 입력이 추가되었습니다: {text_info['text']}")
+                self.modal_log_manager.log(
+                    message=f"텍스트 입력이 추가되었습니다: {text_info['text']} <br>",
+                    level="INFO",
+                    modal_name="로직메이커"
+                )
 
     def update_saved_logics(self, logics):
         """저장된 로직 정보 업데이트"""

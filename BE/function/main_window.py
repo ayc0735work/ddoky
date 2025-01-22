@@ -328,10 +328,7 @@ class MainWindow(QMainWindow):
         self.logic_detail_widget.logic_updated.connect(self._on_logic_updated)
         
         # 로그 메시지 연결
-        self.logic_list_widget.log_message.connect(self._append_log)
         self.logic_detail_widget.log_message.connect(self._append_log)
-        self.logic_detail_controller.log_message.connect(self._append_log)
-        self.logic_maker_tool_widget.log_message.connect(self._append_log)
         self.logic_operation_widget.log_message.connect(self._append_log)  # _append_log를 통해 로그 추가
         
         # 로직 메이커 시그널 연결
