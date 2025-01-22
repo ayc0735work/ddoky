@@ -31,7 +31,7 @@ class LogicMakerToolWidget(QFrame):
         # 키 입력 핸들러 초기화
         self.key_handler = EnteredKeyInfoHandler(self)
         # 키 핸들러의 시그널을 위젯의 시그널로 연결
-        self.key_handler.confirmed_and_added_key_info.connect(self._on_key_info_added)
+        self.key_handler.confirmed_and_added_key_info.connect(self._on_key_state_info_added)
         
         self.init_ui()
         
@@ -121,20 +121,40 @@ class LogicMakerToolWidget(QFrame):
     def add_item(self, item):
         """아이템을 목록에 추가합니다.
         
-        현재 이 메서드는 마우스 입력 정보를 처리하는 데 사용됩니다.
-        키 입력의 경우 다른 경로로 처리됩니다:
-        1. _add_confirmed_input_key()에서 confirmed_and_added_key_info 시그널 발생
-        2. LogicDetailWidget의 add_item()이 시그널을 받아서 처리
-        3. 아이템 목록 상자에 추가
-        
-        마우스 입력의 경우 이 메서드를 통해 처리됩니다:
-        1. _on_mouse_input()에서 이 메서드 호출
-        2. items 리스트에 추가
-        3. item_added 시그널 발생
+        이 메서드는 다음과 같은 입력 타입을 처리합니다:
+        1. 마우스 입력 정보
+           - _on_mouse_input_selected()에서 호출
+           - 마우스 클릭, 드래그 등의 정보 포함
+           
+        2. 지연시간 정보
+           - _add_delay()에서 호출
+           - 대기 시간 정보 포함
+           
+        3. 클릭 대기 정보
+           - _add_wait_click()에서 호출
+           - 왼쪽 버튼 클릭 대기 정보 포함
+           
+        4. 이미지 서치 정보
+           - _add_image_search()에서 호출
+           - 이미지 검색 영역 정보 포함
+           
+        5. 텍스트 입력 정보
+           - _add_text_input()에서 호출
+           - 입력할 텍스트 정보 포함
+           
+        6. 중첩 로직 정보
+           - _add_logic()에서 호출
+           - 추가할 로직의 이름 정보 포함
+           
+        키보드 입력의 경우 별도로 처리:
+        - EnteredKeyInfoDialog에서 confirmed_and_added_key_info 시그널 발생
+        - _on_key_state_info_added()에서 처리
         
         Args:
-            item (dict): 추가할 아이템 정보
-                마우스 입력 정보를 포함하는 딕셔너리
+            item (dict): 추가할 아이템 정보를 포함하는 딕셔너리
+                type: 아이템 타입 (mouse_input, delay, wait_click 등)
+                action: 수행할 동작
+                기타 타입별 필요 정보
         """
         self.modal_log_manager.log(
             message=f"아이템 추가 시작 - 입력받은 데이터: {item} <br>",
@@ -295,13 +315,52 @@ class LogicMakerToolWidget(QFrame):
         """저장된 로직 정보 업데이트"""
         self.saved_logics = logics
 
-    def _on_key_info_added(self, key_info):
-        """키 입력 정보가 추가되었을 때의 처리
+    def _on_key_state_info_added(self, key_state_info):
+        """키 상태 정보(누르기/떼기)가 추가되었을 때의 처리
         
         Args:
-            key_info (dict): 키 입력 정보
+            key_state_info (dict): 키 상태 정보
+                {
+                    'type': 'key',                # 입력 타입
+                    'action': str,                # '누르기' 또는 '떼기'
+                    'key_code': str,              # 키 이름 (예: 'Space')
+                    'scan_code': int,             # 하드웨어 키보드의 물리적 위치 값
+                    'virtual_key': int,           # Windows API 가상 키 코드
+                    'modifiers': int,             # Qt 기반 수정자 키 상태
+                    'location': str,              # 키보드 위치 (예: '메인')
+                    'modifier_text': str,         # 수정자 키 텍스트 (예: '없음')
+                    'display_text': str,          # UI 표시용 텍스트 (예: 'Space --- 누르기')
+                    'detail_display_text': str    # 상세 정보 표시용 텍스트
+                }
+        
+        데이터 흐름:
+        1. EnteredKeyInfoDialog에서 사용자가 키 입력 후 확인 버튼 클릭
+        2. EnteredKeyInfoHandler.handle_confirmed_key_input()에서 키 정보를 받아 처리
+           - 하나의 키 입력에 대해 누르기/떼기 두 개의 상태 정보 생성
+           - confirmed_and_added_key_info 시그널로 각각 전달
+        3. 본 메서드에서 key_state_info로 받아 처리
+           - items 리스트에 추가
+           - item_added 시그널로 다른 위젯들에게 전달
+           - 로그 메시지 출력
+        
+        Note:
+            현재는 누르기/떼기 동작이 동일하여 통합 처리 방식을 사용.
+            향후 각 동작에 대해 다른 처리가 필요한 경우 아래와 같은 분리 처리 방식 고려 가능:
+            ```python
+            def _on_key_state_info_added(self, key_state_info):
+                if key_state_info['action'] == "누르기":
+                    self._handle_key_press(key_state_info)
+                else:
+                    self._handle_key_release(key_state_info)
+            ```
         """
         # items 리스트에 추가
-        self.items.append(key_info)
+        self.items.append(key_state_info)
         # item_added 시그널 발생
-        self.item_added.emit(key_info)
+        self.item_added.emit(key_state_info)
+        # 로그 메시지 출력
+        self.modal_log_manager.log(
+            message=f"키 입력 정보가 추가되었습니다: {key_state_info.get('display_text', str(key_state_info))} <br>",
+            level="INFO", 
+            modal_name="로직메이커"
+        )
