@@ -109,7 +109,7 @@ class LogicExecutor(QObject):
             self._log_with_time("[로직 강제 중지] 상태 변경 알림 완료")
     
     def start_monitoring(self):
-        """트리거 키 모니터링 작"""
+        """트리거 키 모니터링 시작"""
         with self._hook_lock:
             if self.execution_state['is_executing'] or self.keyboard_hook:
                 return

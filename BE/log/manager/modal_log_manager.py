@@ -1,7 +1,8 @@
 from PySide6.QtCore import QObject, Signal
-from typing import List, Callable
+from typing import List, Callable, Optional
 import logging
 from datetime import datetime
+import time
 
 class ModalLogManager(QObject):
     """모달 다이얼로그의 로그를 중앙에서 관리하는 매니저
@@ -30,7 +31,8 @@ class ModalLogManager(QObject):
             raise RuntimeError("ModalLogManager는 싱글톤입니다. instance()를 사용하세요.")
             
         super().__init__()
-        self.handlers: List[Callable] = []
+        self._handlers = []
+        self._timers = {}  # 각 모달별 타이머 저장
         self.log_buffer = []
         self.buffer_size = 1000  # 버퍼 최대 크기
         
@@ -40,8 +42,8 @@ class ModalLogManager(QObject):
         Args:
             handler: 로그 메시지를 처리할 콜백 함수
         """
-        if handler not in self.handlers:
-            self.handlers.append(handler)
+        if handler not in self._handlers:
+            self._handlers.append(handler)
             
     def remove_handler(self, handler: Callable[[str], None]):
         """로그 핸들러를 제거합니다.
@@ -49,22 +51,64 @@ class ModalLogManager(QObject):
         Args:
             handler: 제거할 핸들러
         """
-        if handler in self.handlers:
-            self.handlers.remove(handler)
+        if handler in self._handlers:
+            self._handlers.remove(handler)
             
-    def log(self, message: str, level: str = "INFO", modal_name: str = None):
+    def start_timer(self, modal_name: str):
+        """특정 모달의 타이머 시작
+        
+        Args:
+            modal_name: 모달 이름
+        """
+        self._timers[modal_name] = time.time()
+        
+    def reset_timer(self, modal_name: str):
+        """특정 모달의 타이머 리셋
+        
+        Args:
+            modal_name: 모달 이름
+        """
+        if modal_name in self._timers:
+            self._timers[modal_name] = time.time()
+            
+    def stop_timer(self, modal_name: str):
+        """특정 모달의 타이머 중지
+        
+        Args:
+            modal_name: 모달 이름
+        """
+        if modal_name in self._timers:
+            del self._timers[modal_name]
+            
+    def get_elapsed_time(self, modal_name: str) -> Optional[float]:
+        """특정 모달의 경과 시간 반환
+        
+        Args:
+            modal_name: 모달 이름
+            
+        Returns:
+            float or None: 경과 시간(초), 타이머가 없으면 None
+        """
+        if modal_name in self._timers:
+            return time.time() - self._timers[modal_name]
+        return None
+        
+    def log(self, message: str, level: str = "INFO", modal_name: str = None, include_time: bool = False):
         """로그 메시지를 처리합니다.
         
         Args:
             message: 로그 메시지
             level: 로그 레벨 ("INFO", "WARNING", "ERROR" 등)
             modal_name: 로그를 발생시킨 모달의 이름
+            include_time: 경과 시간 포함 여부
         """
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        formatted_message = f"[{timestamp}] [{level}] "
-        if modal_name:
-            formatted_message += f"[{modal_name}] "
-        formatted_message += message
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        if include_time and modal_name in self._timers:
+            elapsed = self.get_elapsed_time(modal_name)
+            formatted_message = f"[{current_time}] [{elapsed:.4f}초] [{level}] [{modal_name}]  {message}"
+        else:
+            formatted_message = f"[{current_time}] [{level}] [{modal_name}]  {message}"
         
         # 버퍼에 추가
         self.log_buffer.append(formatted_message)
@@ -72,7 +116,7 @@ class ModalLogManager(QObject):
             self.log_buffer.pop(0)  # 가장 오래된 로그 제거
             
         # 핸들러들에게 전달
-        for handler in self.handlers:
+        for handler in self._handlers:
             try:
                 handler(formatted_message)
             except Exception as e:
