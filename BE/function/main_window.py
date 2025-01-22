@@ -585,7 +585,7 @@ class MainWindow(QMainWindow):
         # 로직 리스트 컨트롤러를 통해 저장된 로직 정보 가져오기
         saved_logics = self.logic_list_controller.get_saved_logics()
         self.logic_maker_widget.update_saved_logics(saved_logics)
-        # 로직 세부 항목 / 로직 만들기 초기화
+        # 로직 정보 초기화
         self.logic_detail_widget.clear_all()
     
     def _on_logic_updated(self, logic_info):
@@ -613,7 +613,7 @@ class MainWindow(QMainWindow):
         # 로직 리스트 컨트롤러를 통해 저장된 로직 정보 가져오기
         saved_logics = self.logic_list_controller.get_saved_logics()
         self.logic_maker_widget.update_saved_logics(saved_logics)
-        # 로직 세부 항목 / 로직 만들기 초기화
+        # 로직 정보 초기화
         self.logic_detail_widget.clear_all()
 
     def _on_process_selected(self, process_info):

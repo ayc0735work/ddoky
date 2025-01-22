@@ -63,7 +63,7 @@ class LogicDetailWidget(QFrame):
         TitleRow__QHBoxLayout = QHBoxLayout()
         
         # 타이틀
-        LogicTitleLabel__QLabel = QLabel("로직 세부 항목 / 로직 만들기")
+        LogicTitleLabel__QLabel = QLabel("로직 정보")
         LogicTitleLabel__QLabel.setFont(QFont(TITLE_FONT_FAMILY, SECTION_FONT_SIZE, QFont.Weight.Bold))
         TitleRow__QHBoxLayout.addWidget(LogicTitleLabel__QLabel)
         
