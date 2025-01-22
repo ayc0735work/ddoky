@@ -88,9 +88,14 @@ class MainWindow(QMainWindow):
         self.keyboard_hook = KeyboardHook()
         self.keyboard_hook.start()
         
-        # 모달 로그 매니저 초기화 및 연결
+        # 모달 로그 매니저 초기화
         self.modal_log_manager = ModalLogManager.instance()
-        self.modal_log_manager.add_handler(self._append_log)
+        
+        # 로그 위젯 초기화
+        self.log_widget = LogWidget()
+        
+        # 로그 핸들러 연결
+        self.modal_log_manager.add_handler(self.log_widget.append_log)
         
         self.init_ui()
         self._setup_connections()  # 시그널/슬롯 연결 설정
@@ -264,7 +269,6 @@ class MainWindow(QMainWindow):
         - 로그 위젯 생성
         - 레이아웃에 추가
         """
-        self.log_widget = LogWidget()
         self.log_layout.addWidget(self.log_widget)
         self.main_layout.addLayout(self.log_layout)
         
@@ -302,7 +306,12 @@ class MainWindow(QMainWindow):
            - 오류 발생
         """
         # 전역 에러 핸들러 연결
-        self.error_handler.error_occurred.connect(self._append_log)
+        self.error_handler.error_occurred.connect(lambda msg: self.modal_log_manager.log(
+            message=msg,
+            level="ERROR",
+            modal_name="시스템",
+            print_to_terminal=True
+        ))
         
         # 키보드 훅 시그널을 CountdownControllerInputSequence에 연결
         self.keyboard_hook.key_pressed.connect(self.countdown_controller__input_sequence._on_key_pressed)
@@ -336,11 +345,29 @@ class MainWindow(QMainWindow):
         self.logic_operation_widget.operation_toggled.connect(self._on_logic_operation_toggled)
         self.logic_operation_widget.process_selected.connect(self._on_process_selected)
         self.logic_operation_widget.process_reset.connect(self._on_process_reset)
-        self.logic_executor.execution_started.connect(lambda: self._append_log("로직 실행이 시작되었습니다"))
-        self.logic_executor.execution_finished.connect(lambda: self._append_log("로직 실행이 완료되었습니다"))
-        self.logic_executor.execution_error.connect(lambda msg: self._append_log(f"로직 실행 중 오류 발생: {msg}"))
-        #self.logic_executor.execution_state_changed.connect(lambda state: self._append_log(f"실행 상태 변경: {state}"))  # 상태 변경 로깅
-        self.logic_executor.log_message.connect(self.log_widget.append)
+        
+        # 로직 실행기 시그널 연결
+        self.logic_executor.execution_started.connect(lambda: self.modal_log_manager.log(
+            message="로직 실행이 시작되었습니다",
+            level="INFO",
+            modal_name="로직실행",
+            include_time=True
+        ))
+        
+        self.logic_executor.execution_finished.connect(lambda: self.modal_log_manager.log(
+            message="로직 실행이 완료되었습니다",
+            level="INFO",
+            modal_name="로직실행",
+            include_time=True
+        ))
+        
+        self.logic_executor.execution_error.connect(lambda msg: self.modal_log_manager.log(
+            message=f"로직 실행 중 오류 발생: {msg}",
+            level="ERROR",
+            modal_name="로직실행",
+            include_time=True,
+            print_to_terminal=True
+        ))
     
     def _handle_record_mode(self):
         """녹화 모드 처리
@@ -357,7 +384,12 @@ class MainWindow(QMainWindow):
         Args:
             message (str): 추가할 로그 메시지
         """
-        self.log_widget.append(message)
+        # 로그 메시지를 ModalLogManager를 통해 전달
+        self.modal_log_manager.log(
+            message=message,
+            level="INFO",
+            modal_name="시스템"
+        )
         
     def _on_mouse_input(self, mouse_info):
         """마우스 입력 정보 처리
@@ -380,19 +412,30 @@ class MainWindow(QMainWindow):
             # 로그 메시지 출력
             if isinstance(mouse_info, dict):
                 display_text = mouse_info.get('display_text', '')
-                self.log_widget.append(f"(main_window--_on_mouse_input)마우스 입력이 추가되었습니다: {display_text}")
+                self.modal_log_manager.log(
+                    message=f"마우스 입력이 추가되었습니다: {display_text}",
+                    level="INFO",
+                    modal_name="로직상세"
+                )
                 
                 # 로직 상세 위젯에 마우스 입력 추가
                 if self.logic_detail_widget:
                     self.logic_detail_widget.add_item(mouse_info)
             else:
-                self.log_widget.append(f"[경고] 잘못된 형식의 마우스 입력 데이터가 전달되었습니다: {mouse_info}")
+                self.modal_log_manager.log(
+                    message=f"잘못된 형식의 마우스 입력 데이터가 전달되었습니다: {mouse_info}",
+                    level="WARNING",
+                    modal_name="로직상세"
+                )
                 
         except Exception as e:
-            import traceback
-            self.log_widget.append(f"마우스 입력 처리 중 오류 발생: {str(e)}")
-            self.log_widget.append(f"스택 트레이스:\n{traceback.format_exc()}")
-        
+            self.modal_log_manager.log(
+                message=f"마우스 입력 처리 중 오류 발생: {str(e)}\n{traceback.format_exc()}",
+                level="ERROR",
+                modal_name="로직상세",
+                print_to_terminal=True
+            )
+
     def _on_delay_input(self, delay_info):
         """지연 시간 입력 처리
         
@@ -441,7 +484,11 @@ class MainWindow(QMainWindow):
             )
             
             if reply == QMessageBox.No:
-                self._append_log("로직 불러오기가 취소되었습니다")
+                self.modal_log_manager.log(
+                    message="로직 불러오기가 취소되었습니다",
+                    level="INFO",
+                    modal_name="로직상세"
+                )
                 return
         
         # logic_info가 문자열(로직 이름)인 경우 로직 정보를 가져옴
@@ -449,12 +496,20 @@ class MainWindow(QMainWindow):
             logic_name = logic_info
             logic_info = self.logic_list_controller.get_logic_by_name(logic_name)
             if not logic_info:
-                self._append_log(f"로직 '{logic_name}'을(를) 찾을 수 없습니다")
+                self.modal_log_manager.log(
+                    message=f"로직 '{logic_name}'을(를) 찾을 수 없습니다",
+                    level="ERROR",
+                    modal_name="로직상세"
+                )
                 return
         
         # 로직 데이터 로드
         self.logic_detail_widget.load_logic(logic_info)
-        self._append_log(f"로직 '{logic_info.get('name', '')}'를(를) 수정합니다")
+        self.modal_log_manager.log(
+            message=f"로직 '{logic_info.get('name', '')}'를(를) 수정합니다",
+            level="INFO",
+            modal_name="로직상세"
+        )
 
     def _load_window_settings(self):
         """윈도우 설정 로드
@@ -503,7 +558,12 @@ class MainWindow(QMainWindow):
             event.accept()
             
         except Exception as e:
-            logging.error(f"윈도우 종료 중 오류 발생: {str(e)}")
+            self.modal_log_manager.log(
+                message=f"윈도우 종료 중 오류 발생: {str(e)}",
+                level="ERROR",
+                modal_name="시스템",
+                print_to_terminal=True
+            )
             event.accept()
 
     def _on_logic_operation_toggled(self, enabled):
@@ -521,10 +581,18 @@ class MainWindow(QMainWindow):
         """
         if enabled:
             self.logic_executor.start_monitoring()
-            self._append_log("로직 동작 허용 여부가 허용 상태로 변경되었습니다<br>")
+            self.modal_log_manager.log(
+                message="로직 동작 허용 여부가 허용 상태로 변경되었습니다<br>",
+                level="INFO",
+                modal_name="로직동작"
+            )
         else:
             self.logic_executor.stop_monitoring()
-            self._append_log("로직 동작 허용 여부가 불허용 상태로 변경되었습니다<br>")
+            self.modal_log_manager.log(
+                message="로직 동작 허용 여부가 불허용 상태로 변경되었습니다<br>",
+                level="INFO",
+                modal_name="로직동작"
+            )
     
     def _on_logic_saved(self, logic_info):
         """로직 저장 완료 처리
@@ -547,6 +615,11 @@ class MainWindow(QMainWindow):
         self.logic_maker_tool_widget.update_saved_logics(saved_logics)
         # 로직 정보 초기화
         self.logic_detail_widget.clear_all()
+        self.modal_log_manager.log(
+            message=f"로직 '{logic_info.get('name', '')}'이(가) 저장되었습니다",
+            level="INFO",
+            modal_name="로직상세"
+        )
     
     def _on_logic_updated(self, logic_info):
         """로직 수정 완료 처리
@@ -567,6 +640,11 @@ class MainWindow(QMainWindow):
         # 로직 리스트 컨트롤러를 통해 저장된 로직 정보 가져오기
         saved_logics = self.logic_list_controller.get_saved_logics()
         self.logic_maker_tool_widget.update_saved_logics(saved_logics)
+        self.modal_log_manager.log(
+            message=f"로직 '{logic_info.get('name', '')}'이(가) 수정되었습니다",
+            level="INFO",
+            modal_name="로직상세"
+        )
 
     def _on_logic_deleted(self, logic_name):
         """로직이 삭제되었을 때 호출"""
@@ -575,16 +653,29 @@ class MainWindow(QMainWindow):
         self.logic_maker_tool_widget.update_saved_logics(saved_logics)
         # 로직 정보 초기화
         self.logic_detail_widget.clear_all()
+        self.modal_log_manager.log(
+            message=f"로직 '{logic_name}'이(가) 삭제되었습니다",
+            level="INFO",
+            modal_name="로직리스트"
+        )
 
     def _on_process_selected(self, process_info):
         """프로세스가 선택되었을 때 호출"""
         self.process_manager.set_selected_process(process_info)
-        self._append_log(f"프로세스를 선택했습니다: {process_info}")
+        self.modal_log_manager.log(
+            message=f"프로세스를 선택했습니다: {process_info}",
+            level="INFO",
+            modal_name="프로세스"
+        )
     
     def _on_process_reset(self):
         """프로세스가 초기화되었을 때 호출"""
         self.process_manager.set_selected_process(None)
-        self._append_log("프로세스 선택이 초기화되었습니다")
+        self.modal_log_manager.log(
+            message="프로세스 선택이 초기화되었습니다",
+            level="INFO",
+            modal_name="프로세스"
+        )
 
     def _on_add_logic(self, logic_name):
         """새로운 로직 추가 처리
@@ -608,7 +699,11 @@ class MainWindow(QMainWindow):
             logic_info = self.logic_list_controller.get_logic_by_name(logic_name)
             display_name = logic_info.get('name', logic_name)
             self.logic_detail_widget.add_item(display_name)
-            self._append_log(f"로직 '{display_name}'이(가) 추가되었습니다")
+            self.modal_log_manager.log(
+                message=f"로직 '{display_name}'이(가) 추가되었습니다",
+                level="INFO",
+                modal_name="로직상세"
+            )
 
     def _on_wait_click_input(self, wait_click_info):
         """클릭 대기 입력 처리
@@ -627,14 +722,23 @@ class MainWindow(QMainWindow):
         """
         try:
             display_text = wait_click_info.get('display_text', '')
-            self.log_widget.append(f"클릭 대기 아이템이 추가되었습니다: {display_text}")
+            self.modal_log_manager.log(
+                message=f"클릭 대기 아이템이 추가되었습니다: {display_text}",
+                level="INFO",
+                modal_name="로직상세"
+            )
             
             # 로직 상세 위젯에 클릭 대기 입력 추가
             if self.logic_detail_widget:
                 self.logic_detail_widget.add_item(wait_click_info)
                 
         except Exception as e:
-            self.log_widget.append(f"[경고] 클릭 대기 입력 처리 중 오류 발생: {str(e)}")
+            self.modal_log_manager.log(
+                message=f"클릭 대기 입력 처리 중 오류 발생: {str(e)}",
+                level="ERROR",
+                modal_name="로직상세",
+                print_to_terminal=True
+            )
 
     def _on_item_added(self, item_info):
         """아이템이 추가되었을 때의 처리
@@ -651,12 +755,19 @@ class MainWindow(QMainWindow):
         if item_type == 'key':
             # 키 입력 처리
             self.logic_detail_widget.add_item(item_info)
-            self.log_widget.append(f"키 입력이 추가되었습니다: {item_info['display_text']}")
+            self.modal_log_manager.log(
+                message=f"키 입력이 추가되었습니다: {item_info['display_text']}", 
+                level="INFO",
+                modal_name="로직상세"
+            )
         else:
             # 다른 타입의 아이템 처리
             self.logic_detail_widget.add_item(item_info)
-            self.log_widget.append(f"아이템이 추가되었습니다: {item_info['display_text']}")
-            
+            self.modal_log_manager.log(
+                message=f"아이템이 추가되었습니다: {item_info['display_text']}",
+                level="INFO", 
+                modal_name="로직상세"
+            )
         # 로직 메이커 도구의 아이템 목록 업데이트
         self.logic_maker_tool_widget.items.append(item_info)
 
@@ -666,6 +777,17 @@ class MainWindow(QMainWindow):
         logic_info = self.logic_list_controller.get_logic_by_name(logic_name)
         if logic_info:
             self.logic_detail_widget.set_logic_data(logic_info)
+            self.modal_log_manager.log(
+                message=f"로직 '{logic_name}'이(가) 선택되었습니다",
+                level="INFO",
+                modal_name="로직리스트"
+            )
+        else:
+            self.modal_log_manager.log(
+                message=f"로직 '{logic_name}'을(를) 찾을 수 없습니다",
+                level="ERROR",
+                modal_name="로직리스트"
+            )
 
     def show_key_info_dialog(self):
         """키 입력 다이얼로그를 생성하고 표시합니다.

@@ -93,37 +93,47 @@ class ModalLogManager(QObject):
             return time.time() - self._timers[modal_name]
         return None
         
-    def log(self, message: str, level: str = "INFO", modal_name: str = None, include_time: bool = False):
-        """로그 메시지를 처리합니다.
-        
+    def log(self, message: str, level: str = "INFO", modal_name: str = "", include_time: bool = False, print_to_terminal: bool = False):
+        """로그 메시지를 기록합니다.
+
         Args:
-            message: 로그 메시지
-            level: 로그 레벨 ("INFO", "WARNING", "ERROR" 등)
-            modal_name: 로그를 발생시킨 모달의 이름
-            include_time: 경과 시간 포함 여부
+            message (str): 로그 메시지
+            level (str, optional): 로그 레벨. Defaults to "INFO".
+            modal_name (str, optional): 모달 이름. Defaults to "".
+            include_time (bool, optional): 경과 시간 포함 여부. Defaults to False.
+            print_to_terminal (bool, optional): 터미널 출력 여부. Defaults to False.
         """
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
+        # 기본 로그 형식 구성
+        log_parts = [f"[{now}]"]
+        
+        # 경과 시간이 필요한 경우 추가
         if include_time and modal_name in self._timers:
-            elapsed = self.get_elapsed_time(modal_name)
-            formatted_message = f"[{current_time}] [{elapsed:.4f}초] [{level}] [{modal_name}]  {message}"
-        else:
-            formatted_message = f"[{current_time}] [{level}] [{modal_name}]  {message}"
+            elapsed = time.time() - self._timers[modal_name]
+            log_parts.append(f"[{elapsed:.4f}초]")
+        
+        # 레벨과 모달 이름 추가
+        log_parts.extend([f"[{level}]", f"[{modal_name}]"])
+        
+        # 최종 로그 메시지 구성
+        final_message = " ".join(log_parts + [message])
+        
+        # 터미널 출력이 요청된 경우
+        if print_to_terminal:
+            print(final_message)
+        
+        # 핸들러들에게 로그 전달
+        for handler in self._handlers:
+            handler(final_message)
         
         # 버퍼에 추가
-        self.log_buffer.append(formatted_message)
+        self.log_buffer.append(final_message)
         if len(self.log_buffer) > self.buffer_size:
             self.log_buffer.pop(0)  # 가장 오래된 로그 제거
             
-        # 핸들러들에게 전달
-        for handler in self._handlers:
-            try:
-                handler(formatted_message)
-            except Exception as e:
-                logging.error(f"로그 핸들러 실행 중 오류 발생: {str(e)}")
-                
         # 시그널 발생
-        self.log_message.emit(formatted_message)
+        self.log_message.emit(final_message)
         
     def clear_buffer(self):
         """로그 버퍼를 비웁니다."""
