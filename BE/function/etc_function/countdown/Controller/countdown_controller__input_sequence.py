@@ -19,7 +19,7 @@ import sys
 import time
 from PySide6.QtCore import QTimer, QObject
 from BE.function._common_components.window_process_handler import ProcessManager
-from .countdown_controller__main import CountdownController
+from BE.function.etc_function.countdown.Controller.countdown_controller__main import CountdownController
 
 # 로깅 설정
 logging.basicConfig(

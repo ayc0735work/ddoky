@@ -43,8 +43,7 @@ def install_requirements():
 
 # BE 폴더 경로를 파이썬 경로에 추가
 current_dir = os.path.dirname(os.path.abspath(__file__))
-be_path = os.path.join(current_dir, 'BE')
-sys.path.append(be_path)
+sys.path.append(current_dir)  # BE의 상위 디렉토리를 추가
 
 def main():
     try:
@@ -52,7 +51,7 @@ def main():
         install_requirements()
         
         # BE/main.py 실행
-        from main import main
+        from BE.main import main
         main()
         
     except Exception as e:

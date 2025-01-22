@@ -6,19 +6,19 @@ from PySide6.QtCore import Qt, QPoint, QSize, QSettings
 from PySide6.QtGui import QFont
 import sys
 import traceback
-from BE.function.components.logic_list.logic_list_widget import LogicListWidget
-from BE.function.components.logic_list.logic_list_controller import LogicListController
-from BE.function.components.logic_detail.logic_detail_widget import LogicDetailWidget
-from BE.function.components.logic_detail.logic_detail_controller import LogicDetailController
-from BE.function.components.logic_maker.logic_maker_tool_widget import LogicMakerToolWidget
-from BE.function.components.logic_maker.logic_maker_tool_controller import LogicMakerController
-from BE.function.components.logic_operation.logic_operation_controller import LogicOperationController
-from BE.function.components.logic_operation.logic_operation_widget import LogicOperationWidget
-from BE.function.components.log.log_widget import LogWidget
+from BE.function.make_logic.logic_list.logic_list_widget import LogicListWidget
+from BE.function.make_logic.logic_list.logic_list_controller import LogicListController
+from BE.function.make_logic.logic_detail.logic_detail_widget import LogicDetailWidget
+from BE.function.make_logic.logic_detail.logic_detail_controller import LogicDetailController
+from BE.function.make_logic.logic_maker_tool.logic_maker_tool_widget import LogicMakerToolWidget
+from BE.function.make_logic.logic_maker_tool.logic_maker_tool_controller import LogicMakerController
+from BE.function.make_logic.logic_operation.logic_operation_controller import LogicOperationController
+from BE.function.make_logic.logic_operation.logic_operation_widget import LogicOperationWidget
+from BE.log.log_widget import LogWidget
 from BE.settings.settings_data_manager import SettingsManager
 from BE.function._common_components.error_handler import ErrorHandler
-from BE.logic.logic_manager import LogicManager
-from BE.logic.logic_executor import LogicExecutor
+from BE.function.manage_logic.logic_manager import LogicManager
+from BE.function.execute_logic.logic_executor import LogicExecutor
 from BE.function._common_components.window_process_handler import ProcessManager
 from BE.function.constants.dimensions import (MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, BASIC_SECTION_HEIGHT,
                                MIDDLE_SPACE)

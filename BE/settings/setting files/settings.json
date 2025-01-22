@@ -13951,33 +13951,6 @@
                     "modifiers": 0
                 }
             ]
-        },
-        "417e0f7b-696d-42be-b0ee-5c7de3274d54": {
-            "order": 126,
-            "name": "aasdf",
-            "created_at": "2025-01-22T11:01:57.495016",
-            "updated_at": "2025-01-22T11:01:57.511317",
-            "trigger_key": null,
-            "repeat_count": 1,
-            "is_nested": true,
-            "items": [
-                {
-                    "order": 1,
-                    "type": "logic",
-                    "display_text": "(main_window.py 최초 입력) 키 입력: 엔터 --- 누르기",
-                    "logic_id": "872a2409-489a-49f8-ad3e-08ef5a1f3710",
-                    "logic_name": "(main_window.py 최초 입력) 키 입력: 엔터 --- 누르기",
-                    "repeat_count": 1
-                },
-                {
-                    "order": 2,
-                    "type": "logic",
-                    "display_text": "(main_window.py 최초 입력) 키 입력: 엔터 --- 떼기",
-                    "logic_id": "25db567b-805a-4978-9516-2e703b44bb14",
-                    "logic_name": "(main_window.py 최초 입력) 키 입력: 엔터 --- 떼기",
-                    "repeat_count": 1
-                }
-            ]
         }
     }
 }

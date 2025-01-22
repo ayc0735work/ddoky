@@ -6,7 +6,7 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont, QDoubleValidator
 import copy
 
-from ...constants.styles import (FRAME_STYLE, BUTTON_STYLE,
+from BE.function.constants.styles import (FRAME_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from BE.function._common_components.modal.window_process_selector.window_process_selector_modal import ProcessSelectorDialog
 from BE.settings.settings_singleton import Settings

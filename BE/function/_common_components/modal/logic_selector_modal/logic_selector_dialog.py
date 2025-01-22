@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout,
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
 
-from ...constants.styles import (BUTTON_STYLE, LIST_STYLE,
+from BE.function.constants.styles import (BUTTON_STYLE, LIST_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 
 class LogicSelectorDialog(QDialog):

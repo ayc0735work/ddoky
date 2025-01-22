@@ -9,9 +9,9 @@ import uuid
 from datetime import datetime
 import copy
 
-from ...constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE,
+from BE.function.constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
-from ...constants.dimensions import LOGIC_LIST_WIDTH, BASIC_SECTION_HEIGHT, LOGIC_BUTTON_WIDTH
+from BE.function.constants.dimensions import LOGIC_LIST_WIDTH, BASIC_SECTION_HEIGHT, LOGIC_BUTTON_WIDTH
 from BE.settings.settings_data_manager import SettingsManager
 
 class LogicListWidget(QFrame):

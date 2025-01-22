@@ -4,9 +4,9 @@ from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                              QFrame)
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QFont
-from ....constants.styles import (TITLE_FONT_FAMILY, SECTION_FONT_SIZE, 
+from BE.function.constants.styles import (TITLE_FONT_FAMILY, SECTION_FONT_SIZE, 
                                CONTAINER_STYLE, ETC_FUNCTION_COUNTDOWN_FONT_SIZE)
-from ....constants.dimensions import (KEY_COUNTDOWN_WIDTH, EMPTY_SECTION_WIDTH,
+from BE.function.constants.dimensions import (KEY_COUNTDOWN_WIDTH, EMPTY_SECTION_WIDTH,
                                    SECTION_MARGIN)
 
 class EtcFunctionWidget(QWidget):

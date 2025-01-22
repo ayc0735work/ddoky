@@ -1,6 +1,6 @@
 import os
 import json
-from .settings_data_manager import SettingsManager
+from BE.settings.settings_data_manager import SettingsManager
 
 class Settings:
     """싱글톤 설정 클래스"""

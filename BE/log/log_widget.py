@@ -3,9 +3,9 @@ from PySide6.QtWidgets import (QFrame, QVBoxLayout, QLabel, QTextEdit,
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 
-from ...constants.styles import (FRAME_STYLE, CONTAINER_STYLE, LOG_TEXT_STYLE,
+from BE.function.constants.styles import (FRAME_STYLE, CONTAINER_STYLE, LOG_TEXT_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
-from ...constants.dimensions import LOG_FRAME_WIDTH, LOG_CONTAINER_MIN_HEIGHT
+from BE.function.constants.dimensions import LOG_FRAME_WIDTH, LOG_CONTAINER_MIN_HEIGHT
 
 class LogWidget(QFrame):
     """로그를 표시하는 위젯"""

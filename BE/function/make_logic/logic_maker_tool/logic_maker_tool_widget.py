@@ -2,14 +2,14 @@ from PySide6.QtWidgets import (QFrame, QVBoxLayout, QPushButton,
                              QLabel, QInputDialog, QDialog)
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
-from ...constants.styles import (FRAME_STYLE, BUTTON_STYLE,
+from BE.function.constants.styles import (FRAME_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
-from ...constants.dimensions import LOGIC_MAKER_WIDTH, BASIC_SECTION_HEIGHT
+from BE.function.constants.dimensions import LOGIC_MAKER_WIDTH, BASIC_SECTION_HEIGHT
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
-from .logic_selector_dialog import LogicSelectorDialog
-from .mouse_input_dialog import MouseInputDialog
-from .image_search_area_dialog import ImageSearchAreaDialog
-from .text_input_dialog import TextInputDialog
+from BE.function._common_components.modal.logic_selector_modal.logic_selector_dialog import LogicSelectorDialog
+from BE.function._common_components.modal.mouse_input_modal.mouse_input_dialog import MouseInputDialog
+from BE.function._common_components.modal.image_search_area_modal.image_search_area_dialog import ImageSearchAreaDialog
+from BE.function._common_components.modal.text_input_modal.text_input_dialog import TextInputDialog
 
 class LogicMakerToolWidget(QFrame):
     """로직 메이커 위젯"""

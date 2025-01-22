@@ -8,14 +8,14 @@ import uuid
 import win32con
 import win32api
 from BE.settings.settings_data_manager import SettingsManager
-from BE.logic.logic_manager import LogicManager
-from ...constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE, CONTAINER_STYLE,
+from BE.function.manage_logic.logic_manager import LogicManager
+from BE.function.constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE, CONTAINER_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
-from ...constants.dimensions import (LOGIC_DETAIL_WIDTH, BASIC_SECTION_HEIGHT,
+from BE.function.constants.dimensions import (LOGIC_DETAIL_WIDTH, BASIC_SECTION_HEIGHT,
                                  LOGIC_BUTTON_WIDTH)
 from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_handler import create_formatted_key_info
-from ..._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
-from ..logic_maker.text_input_dialog import TextInputDialog
+from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
+from BE.function._common_components.modal.text_input_modal.text_input_dialog import TextInputDialog
 
 class LogicDetailWidget(QFrame):
     """로직 상세 내용을 표시하고 관리하는 위젯"""
