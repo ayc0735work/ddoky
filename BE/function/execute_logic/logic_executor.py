@@ -40,6 +40,7 @@ class LogicExecutor(QObject):
         super().__init__()
         self.process_manager = process_manager
         self.logic_manager = logic_manager
+        self.modal_log_manager = ModalLogManager.instance()  # ModalLogManager 초기화
         
         # 로직 활성화 상태 추가
         self.is_logic_enabled = True
@@ -101,12 +102,29 @@ class LogicExecutor(QObject):
 
     def _update_state(self, **kwargs):
         """상태 업데이트 및 알림"""
-        self._log_with_time("[로직 강제 중지] 상태 업데이트 시작: {}".format(kwargs))
+        self.modal_log_manager.start_timer("상태업데이트모달")
+        self.modal_log_manager.log(
+            message=f"상태 업데이트 시작: {kwargs}",
+            level="INFO",
+            modal_name="상태업데이트모달",
+            include_time=True
+        )
         with self._state_lock:
-            self._log_with_time("[로직 강제 중지] 상태 락 획득")
+            self.modal_log_manager.log(
+                message="상태 락 획득",
+                level="INFO", 
+                modal_name="상태업데이트모달",
+                include_time=True
+            )
             self.execution_state.update(kwargs)
             self.execution_state_changed.emit(self.execution_state.copy())
-            self._log_with_time("[로직 강제 중지] 상태 변경 알림 완료")
+            self.modal_log_manager.log(
+                message="상태 변경 알림 완료",
+                level="INFO",
+                modal_name="상태업데이트모달",
+                include_time=True
+            )
+        self.modal_log_manager.stop_timer("상태업데이트모달")
     
     def start_monitoring(self):
         """트리거 키 모니터링 시작"""
@@ -118,9 +136,18 @@ class LogicExecutor(QObject):
                 self.keyboard_hook = KeyboardHook()
                 self.keyboard_hook.key_released.connect(self._on_key_released)
                 self.keyboard_hook.start()
-                self._log_with_time("[중지 로그] 키보드 모니터링 시작")
+                self.modal_log_manager.log(
+                    message="키보드 모니터링 시작",
+                    level="INFO",
+                    modal_name="모니터링모달",
+                    include_time=True
+                )
             except Exception as e:
-                self._log_with_time("[오류] 키보드 모니터링 시작 실패: {}".format(str(e)))
+                self.modal_log_manager.log(
+                    message=f"키보드 모니터링 시작 실패: {str(e)}",
+                    level="ERROR",
+                    modal_name="모니터링모달"
+                )
                 self._safe_cleanup()
     
     def stop_monitoring(self):
@@ -131,35 +158,95 @@ class LogicExecutor(QObject):
                     self.keyboard_hook.stop()
                     self.keyboard_hook.key_released.disconnect()
                     self.keyboard_hook = None
-                    self._log_with_time("[중지 로그] 키보드 모니터링 중지")
+                    self.modal_log_manager.log(
+                        message="키보드 모니터링 중지",
+                        level="INFO",
+                        modal_name="모니터링모달",
+                        include_time=True
+                    )
                 except Exception as e:
-                    self._log_with_time("[오류] 키보드 모니터링 중지 실패: {}".format(str(e)))
+                    self.modal_log_manager.log(
+                        message=f"키보드 모니터링 중지 실패: {str(e)}",
+                        level="ERROR",
+                        modal_name="모니터링모달"
+                    )
     
     def _safe_cleanup(self):
         """안전한 정리 작업"""
-        self._log_with_time("[마무리 로그] 안전한 정리 작업 시작")
+        self.modal_log_manager.start_timer("정리모달")
+        self.modal_log_manager.log(
+            message="안전한 정리 작업 시작",
+            level="INFO",
+            modal_name="정리모달",
+            include_time=True
+        )
         try:
             # 먼저 실행 상태를 False로 설정
-            self._log_with_time("[마무리 로그] 실행 상태 False로 설정 시작")
+            self.modal_log_manager.log(
+                message="실행 상태 False로 설정 시작",
+                level="INFO",
+                modal_name="정리모달",
+                include_time=True
+            )
             self._update_state(is_executing=False)
-            self._log_with_time("[마무리 로그] 실행 상태 False로 설정 완료")
+            self.modal_log_manager.log(
+                message="실행 상태 False로 설정 완료",
+                level="INFO",
+                modal_name="정리모달",
+                include_time=True
+            )
 
             # 중지 상태를 False로 설정
-            self._log_with_time("[마무리 로그] 중지 상태 False로 설정 시작")
+            self.modal_log_manager.log(
+                message="중지 상태 False로 설정 시작",
+                level="INFO",
+                modal_name="정리모달",
+                include_time=True
+            )
             self._update_state(is_stopping=False)
-            self._log_with_time("[마무리 로그] 중지 상태 False로 설정 완료")
+            self.modal_log_manager.log(
+                message="중지 상태 False로 설정 완료",
+                level="INFO",
+                modal_name="정리모달",
+                include_time=True
+            )
 
             # 현재 단계와 반복 횟수 초기화
-            self._log_with_time("[마무리 로그] 단계와 반복 횟수 초기화 시작")
+            self.modal_log_manager.log(
+                message="단계와 반복 횟수 초기화 시작",
+                level="INFO",
+                modal_name="정리모달",
+                include_time=True
+            )
             self._update_state(current_step=0, current_repeat=1)
-            self._log_with_time("[마무리 로그] 단계와 반복 횟수 초기화 완료")
+            self.modal_log_manager.log(
+                message="단계와 반복 횟수 초기화 완료",
+                level="INFO",
+                modal_name="정리모달",
+                include_time=True
+            )
 
-            self._log_with_time("[마무리 로그] 안전한 정리 작업 완료")
+            self.modal_log_manager.log(
+                message="안전한 정리 작업 완료",
+                level="INFO",
+                modal_name="정리모달",
+                include_time=True
+            )
             self.cleanup_finished.emit()
-            self._log_with_time("[마무리 로그] 정리 완료 시그널 발생")
+            self.modal_log_manager.log(
+                message="정리 완료 시그널 발생",
+                level="INFO",
+                modal_name="정리모달",
+                include_time=True
+            )
         except Exception as e:
-            self._log_with_time("[오류] 안전한 정리 작업 중 오류 발생: {}".format(str(e)))
-            self.execution_error.emit("정리 작업 중 오류 발생: {}".format(str(e)))
+            self.modal_log_manager.log(
+                message=f"정리 작업 중 오류 발생: {str(e)}",
+                level="ERROR",
+                modal_name="정리모달"
+            )
+            self.execution_error.emit(f"정리 작업 중 오류 발생: {str(e)}")
+        self.modal_log_manager.stop_timer("정리모달")
     
     def set_force_stop_key(self, virtual_key):
         """강제 중지 키 설정
@@ -168,7 +255,11 @@ class LogicExecutor(QObject):
             virtual_key (int): 설정할 가상 키 코드
         """
         self.force_stop_key = virtual_key
-        self._log_with_time(f"[설정] 강제 중지 키가 변경되었습니다 (가상 키 코드: {virtual_key})")
+        self.modal_log_manager.log(
+            message=f"강제 중지 키가 변경되었습니다 (가상 키 코드: {virtual_key})",
+            level="INFO",
+            modal_name="설정모달"
+        )
 
     def _on_key_released(self, formatted_key_info):
         """키를 뗄 때 호출
@@ -177,7 +268,12 @@ class LogicExecutor(QObject):
             formatted_key_info (dict): 입력된 키 정보
         """
         print(f"[DEBUG] 키 이벤트 감지 - formatted_key_info: {formatted_key_info}, step_input: {self.is_step_input}, simulated: {self.is_simulated_input}")
-        self._log_with_time("[키 감지 로그] 키 입력 감지: {}".format(formatted_key_info))
+        self.modal_log_manager.log(
+            message=f"키 입력 감지: {formatted_key_info}",
+            level="INFO",
+            modal_name="키입력모달",
+            include_time=True
+        )
         
         # 강제 중지 키(ESC) 처리 - 시뮬레이션된 입력이 아닐 때만 처리
         if not self.is_simulated_input and formatted_key_info.get('virtual_key') == self.force_stop_key:
@@ -193,11 +289,20 @@ class LogicExecutor(QObject):
                     
                 print("[DEBUG] 강제 중지 키 감지 - 강제 중지 실행")
                 print("[DEBUG] 키 이벤트 감지 종료 ----\n")
-                self._log_with_time("[키 감지 로그] 강제 중지 키 감지 - 로직 강제 중지 실행")
+                self.modal_log_manager.log(
+                    message="강제 중지 키 감지 - 로직 강제 중지 실행",
+                    level="INFO",
+                    modal_name="키입력모달",
+                    include_time=True
+                )
                 self._should_stop = True
                 self.force_stop()
             else:
-                self._log_with_time("[키 감지 로그] 강제 중지 키가 감지되었으나, 활성 프로세스가 선택된 프로세스와 다르므로 무시됩니다.")
+                self.modal_log_manager.log(
+                    message="강제 중지 키가 감지되었으나, 활성 프로세스가 선택된 프로세스와 다르므로 무시됩니다.",
+                    level="WARNING",
+                    modal_name="키입력모달"
+                )
             return
             
         # 시뮬레이션된 입력 처리
@@ -206,7 +311,11 @@ class LogicExecutor(QObject):
             return
         
         if not self._should_execute_logic():
-            self._log_with_time("[로그] 로직 실행 조건이 맞지 않습니다.")
+            self.modal_log_manager.log(
+                message="로직 실행 조건이 맞지 않습니다.",
+                level="INFO",
+                modal_name="로직실행모달"
+            )
             return
             
         # 최신 로직 정보로 로직 찾기 및 실행
@@ -217,7 +326,11 @@ class LogicExecutor(QObject):
             if self._is_trigger_key_matched(logic, formatted_key_info):
                 found_matching_logic = True
                 if self.execution_state['is_executing']:
-                    self._log_with_time("다른 로직이 실행 중입니다.")
+                    self.modal_log_manager.log(
+                        message="다른 로직이 실행 중입니다.",
+                        level="WARNING",
+                        modal_name="로직실행모달"
+                    )
                     return
                     
                 try:
@@ -230,13 +343,16 @@ class LogicExecutor(QObject):
                     )
                     # 로직 실행 시작 시간 초기화
                     self._start_time = time.time()
-                    self._log_with_time(
-                        f"""
-                        <br>
-                        [로직 실행 시작] <br>
-                        - 로직 이름: {logic.get('name')} <br>
-                        - 로직 UUID: {logic_id}
-                        """
+                    self.modal_log_manager.log(
+                        message=(
+                            f"<br>"
+                            f"[로직 실행 시작] <br>"
+                            f"- 로직 이름: {logic.get('name')} <br>"
+                            f"- 로직 UUID: {logic_id}"
+                        ),
+                        level="INFO",
+                        modal_name="로직실행모달",
+                        include_time=True
                     )
                     
                     self.execution_started.emit()
@@ -246,12 +362,19 @@ class LogicExecutor(QObject):
                     return
                     
                 except Exception as e:
-                    self._log_with_time("[오류] 로직 시작 중 오류 발생: {}".format(str(e)))
+                    self.modal_log_manager.log(
+                        message=f"로직 시작 중 오류 발생: {str(e)}",
+                        level="ERROR",
+                        modal_name="로직실행모달"
+                    )
                     self._safe_cleanup()
                     
         if not found_matching_logic:
-            self._log_with_time(f"[로그] 일치하는 트리거 키를 찾을 수 없습니다.<br>입력된 키 정보: {formatted_key_info}<br>")
-    
+            self.modal_log_manager.log(
+                message=f"일치하는 트리거 키를 찾을 수 없습니다.<br>입력된 키 정보: {formatted_key_info}<br>",
+                level="WARNING",
+                modal_name="키입력모달"
+            )
     def _execute_next_step(self):
         """현재 실행할 스텝이 무엇인지 결정하는 관련자 함수"""
         if not self.selected_logic or self.execution_state['is_stopping']:

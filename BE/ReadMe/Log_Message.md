@@ -43,64 +43,111 @@ class MainWindow(QMainWindow):
 
 ## 3. 로그 메시지 작성 가이드
 
-### 3.1 기본 로그 출력
-```python
-self.modal_log_manager.log(
-    message="작업이 완료되었습니다.",
-    level="INFO",
-    modal_name="작업모달"
-)
+## 기본 형식
+모든 로그 메시지는 다음 형식을 따릅니다:
+```
+[날짜 시간] [레벨] [모달이름] 메시지
+```
+예시:
+```
+[2024-01-01 12:34:56] [INFO] [키입력모달] 키 입력이 완료되었습니다
 ```
 
-### 3.2 로그 레벨
-1. **INFO**: 일반적인 정보
-   ```python
-   self.modal_log_manager.log(
-       message="설정이 저장되었습니다.",
-       level="INFO",
-       modal_name="설정모달"
-   )
-   ```
-
-2. **WARNING**: 주의가 필요한 상황
-   ```python
-   self.modal_log_manager.log(
-       message="저장되지 않은 변경사항이 있습니다.",
-       level="WARNING",
-       modal_name="편집모달"
-   )
-   ```
-
-3. **ERROR**: 오류 상황
-   ```python
-   self.modal_log_manager.log(
-       message="파일 저장 중 오류가 발생했습니다.",
-       level="ERROR",
-       modal_name="저장모달"
-   )
-   ```
-
-4. **DEBUG**: 개발/디버깅용 정보
-   ```python
-   self.modal_log_manager.log(
-       message="함수 호출 - 매개변수: value=42",
-       level="DEBUG",
-       modal_name="처리모달"
-   )
-   ```
-
-### 3.3 HTML 형식 사용
-```python
-self.modal_log_manager.log(
-    message=(
-        f"처리 결과:<br>"
-        f"- 성공: <span style='color: green'>3건</span><br>"
-        f"- 실패: <span style='color: red'>1건</span>"
-    ),
-    level="INFO",
-    modal_name="결과모달"
-)
+## 시간 추적이 필요한 로그 형식
+특정 작업의 경과 시간을 추적해야 하는 경우 다음 형식을 사용합니다:
 ```
+[날짜 시간] [경과시간] [레벨] [모달이름] 메시지
+```
+예시:
+```
+[2024-01-01 12:34:56] [1.2345초] [INFO] [로직실행] 로직 실행을 시작합니다
+```
+
+## 로그 레벨 사용 지침
+- INFO: 일반적인 정보성 메시지
+  - 예: 로직 실행 시작/완료, 설정 변경, 상태 업데이트
+- DEBUG: 디버깅에 필요한 상세 정보
+  - 예: 변수값 변경, 함수 호출 추적, 상세 처리 과정
+- WARNING: 잠재적 문제 상황
+  - 예: 예상치 못한 입력값, 성능 저하 가능성
+- ERROR: 오류 발생 상황
+  - 예: 예외 발생, 필수 데이터 누락, 처리 실패
+
+## 시간 추적이 필요한 메시지 유형
+다음 상황에서는 경과 시간을 포함해야 합니다:
+
+1. 로직 실행 관련
+   - 로직 실행 시작/완료
+   - 중첩 로직 실행
+   - 반복 완료
+   - 스텝 실행
+
+2. 사용자 입력 관련
+   - 키 입력/해제
+   - 마우스 클릭/이동
+   - 텍스트 입력
+
+3. 대기 및 지연
+   - 지연시간 처리
+   - 클릭 대기
+   - 이미지 검색 대기
+
+4. 상태 변경
+   - 강제 중지
+   - 타이머 정리
+   - 키 상태 정리
+   - 프로세스 상태 변경
+
+## 사용 예시
+```python
+# 타이머 시작
+modal_log_manager.start_timer("로직실행")
+
+# 시간 정보 포함 로그
+modal_log_manager.log(
+    message="로직 실행을 시작합니다",
+    level="INFO",
+    modal_name="로직실행",
+    include_time=True
+)
+
+# 일반 로그
+modal_log_manager.log(
+    message="설정을 불러왔습니다",
+    level="DEBUG",
+    modal_name="로직실행"
+)
+
+# 경고 로그
+modal_log_manager.log(
+    message="지연시간이 예상보다 깁니다",
+    level="WARNING",
+    modal_name="로직실행"
+)
+
+# 에러 로그
+modal_log_manager.log(
+    message="프로세스 접근 권한이 없습니다",
+    level="ERROR",
+    modal_name="로직실행"
+)
+
+# 작업 완료 후 타이머 정지
+modal_log_manager.stop_timer("로직실행")
+```
+
+## 주의사항
+1. 모든 로그는 명확하고 간결해야 합니다
+2. 시간 추적이 필요한 경우에만 include_time을 True로 설정합니다
+3. 모달 이름은 일관성 있게 사용합니다
+   - 키입력모달
+   - 로직실행
+   - 로직상세
+   - 로직리스트
+   - 기타기능
+4. 중요한 상태 변경은 반드시 로깅합니다
+5. 불필요한 로그는 피하고, 중요한 정보만 기록합니다
+6. 개인정보나 민감한 데이터는 로그에 포함하지 않습니다
 
 ## 4. 모달 이름 규칙
 
