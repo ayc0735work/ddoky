@@ -54,31 +54,47 @@ class EnteredKeyInfoHandler(QObject):
         3. confirmed_and_added_key_info 시그널을 통해 키 상태 정보 전달
         """
         # 로그 메시지 생성
-        log_msg = (
-            f"키 입력이 추가되었습니다 [ "
-            f"키: {get_entered_key_info['key_code']}, "
-            f"스캔 코드 (하드웨어 고유값): {get_entered_key_info['scan_code']}, "
-            f"확장 가상 키 (운영체제 레벨의 고유 값): {get_entered_key_info['virtual_key']}, "
-            f"키보드 위치: {get_entered_key_info['location']}, "
-            f"수정자 키: {get_entered_key_info['modifier_text']} ]"
+        self.log_message.emit(
+            f"키 입력이 추가되었습니다 [ <br>"
+            f"키: {get_entered_key_info['key_code']}, <br>"
+            f"스캔 코드 (하드웨어 고유값): {get_entered_key_info['scan_code']}, <br>"
+            f"확장 가상 키 (운영체제 레벨의 고유 값): {get_entered_key_info['virtual_key']}, <br>"
+            f"키보드 위치: {get_entered_key_info['location']}, <br>"
+            f"수정자 키: {get_entered_key_info['modifier_text']} ] <br>"
         )
-        
-        # 로그 메시지 전달
-        self.log_message.emit(log_msg)
         
         # 누르기 이벤트용 키 상태 정보
         key_state_info_press = get_entered_key_info.copy()
-        key_state_info_press['display_text'] = f"{get_entered_key_info['key_code']} --- 누르기"
-        key_state_info_press['action'] = "누르기"
         key_state_info_press['type'] = "key"
+        key_state_info_press['action'] = "누르기"
+        key_state_info_press['display_text'] = f"{get_entered_key_info['key_code']} --- 누르기"
+
         self.confirmed_and_added_key_info.emit(key_state_info_press)
+
+        # 로그 메시지 전달
+        self.log_message.emit(
+            f"<br>키 상태 정보가 업데이트 되었습니다. <br>"
+            f"type: {key_state_info_press['type']}, <br>"
+            f"action: {key_state_info_press['action']}, <br>"
+            f"display_text: {key_state_info_press['display_text']}, <br>"           
+            )
         
         # 떼기 이벤트용 키 상태 정보
         key_state_info_release = get_entered_key_info.copy()
-        key_state_info_release['display_text'] = f"{get_entered_key_info['key_code']} --- 떼기"
-        key_state_info_release['action'] = "떼기"
         key_state_info_release['type'] = "key"
+        key_state_info_release['action'] = "떼기"
+        key_state_info_release['display_text'] = f"{get_entered_key_info['key_code']} --- 떼기"
+
+
         self.confirmed_and_added_key_info.emit(key_state_info_release)
+
+        # 로그 메시지 전달
+        self.log_message.emit(
+            f"<br>키 상태 정보가 업데이트 되었습니다. <br>"
+            f"type: {key_state_info_release['type']}, <br>"
+            f"action: {key_state_info_release['action']}, <br>"
+            f"display_text: {key_state_info_release['display_text']}, <br>"           
+            )
     
     def handle_key_input(self, key_info):
         """키 입력 데이터 처리

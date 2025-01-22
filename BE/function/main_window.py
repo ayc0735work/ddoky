@@ -6,6 +6,8 @@ from PySide6.QtCore import Qt, QPoint, QSize, QSettings
 from PySide6.QtGui import QFont
 import sys
 import traceback
+from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_widget import EnteredKeyInfoWidget
+from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 from BE.function.make_logic.logic_list.logic_list_widget import LogicListWidget
 from BE.function.make_logic.logic_list.logic_list_controller import LogicListController
 from BE.function.make_logic.logic_detail.logic_detail_widget import LogicDetailWidget
@@ -26,6 +28,7 @@ from BE.function.etc_function.countdown.UI.etc_function_widget import EtcFunctio
 from BE.function.etc_function.countdown.Controller.countdown_controller__input_sequence import CountdownControllerInputSequence
 from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_handler import KeyboardHook
 import logging
+from BE.log.manager.modal_log_manager import ModalLogManager
 
 class MainWindow(QMainWindow):
     """메인 윈도우 클래스
@@ -84,6 +87,10 @@ class MainWindow(QMainWindow):
         # 키보드 훅 초기화
         self.keyboard_hook = KeyboardHook()
         self.keyboard_hook.start()
+        
+        # 모달 로그 매니저 초기화 및 연결
+        self.modal_log_manager = ModalLogManager.instance()
+        self.modal_log_manager.add_handler(self._append_log)
         
         self.init_ui()
         self._setup_connections()  # 시그널/슬롯 연결 설정
@@ -668,3 +675,26 @@ class MainWindow(QMainWindow):
         logic_info = self.logic_list_controller.get_logic_by_name(logic_name)
         if logic_info:
             self.logic_detail_widget.set_logic_data(logic_info)
+
+    def show_key_info_dialog(self):
+        """키 입력 다이얼로그를 생성하고 표시합니다.
+        
+        이 메서드가 필요한 이유:
+        1. 모달 다이얼로그의 생명주기 관리
+           - 모달은 임시로 사용되는 창으로, 필요할 때만 생성되고 닫히면 제거됨
+           - 메모리 효율성을 위해 필요할 때만 생성하고 사용 후 정리
+           
+        Returns:
+            EnteredKeyInfoDialog: 생성된 다이얼로그 인스턴스
+            
+        사용 예시:
+            dialog = self.show_key_info_dialog()
+            if dialog.exec() == QDialog.Accepted:
+                # 키 입력 처리
+                pass
+        """
+        # 새로운 다이얼로그 생성
+        self.entered_key_info_dialog = EnteredKeyInfoDialog(self)
+        
+        # 다이얼로그 표시
+        return self.entered_key_info_dialog

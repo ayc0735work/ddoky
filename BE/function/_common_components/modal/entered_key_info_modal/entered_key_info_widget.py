@@ -12,6 +12,7 @@ class EnteredKeyInfoWidget(QWidget):
     
     key_input_area_focused = Signal()    # 키 입력 영역이 포커스를 얻었을 때
     key_input_area_unfocused = Signal()  # 키 입력 영역이 포커스를 잃었을 때
+    log_message = Signal(str)  # 로그 메시지 시그널 정의
     
     def __init__(self, parent=None, show_details=True):
         """EnteredKeyInfoWidget 초기화
