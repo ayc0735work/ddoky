@@ -6,6 +6,7 @@ from PySide6.QtGui import QFont
 from BE.function.constants.styles import (FRAME_STYLE, CONTAINER_STYLE, LOG_TEXT_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from BE.function.constants.dimensions import LOG_FRAME_WIDTH, LOG_CONTAINER_MIN_HEIGHT
+from BE.log.manager.modal_log_manager import ModalLogManager
 
 class LogWidget(QFrame):
     """로그를 표시하는 위젯"""
@@ -13,6 +14,8 @@ class LogWidget(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.init_ui()
+        # ModalLogManager에 핸들러로 등록
+        ModalLogManager.instance().add_handler(self.append)
         
     def init_ui(self):
         """UI 초기화"""

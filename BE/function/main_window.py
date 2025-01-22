@@ -94,9 +94,6 @@ class MainWindow(QMainWindow):
         # 로그 위젯 초기화
         self.log_widget = LogWidget()
         
-        # 로그 핸들러 연결
-        self.modal_log_manager.add_handler(self.log_widget.append_log)
-        
         self.init_ui()
         self._setup_connections()  # 시그널/슬롯 연결 설정
         self._load_window_settings()
@@ -376,21 +373,6 @@ class MainWindow(QMainWindow):
         """
         pass
 
-    def _append_log(self, message):
-        """로그 메시지 추가
-        
-        로그 위젯에 새로운 메시지를 추가합니다.
-        
-        Args:
-            message (str): 추가할 로그 메시지
-        """
-        # 로그 메시지를 ModalLogManager를 통해 전달
-        self.modal_log_manager.log(
-            message=message,
-            level="INFO",
-            modal_name="시스템"
-        )
-        
     def _on_mouse_input(self, mouse_info):
         """마우스 입력 정보 처리
         
