@@ -12,6 +12,7 @@ from BE.function._common_components.modal.window_process_selector.window_process
 from BE.settings.settings_singleton import Settings
 from BE.settings.settings_data_manager import SettingsManager
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
+from BE.log.manager.modal_log_manager import ModalLogManager
 
 class LogicOperationWidget(QFrame):
     """로직 동작 허용 여부 온오프 위젯"""
@@ -28,6 +29,7 @@ class LogicOperationWidget(QFrame):
         self.logic_executor = None  # LogicExecutor 인스턴스를 저장할 속성 추가
         self.settings_manager = SettingsManager()  # SettingsManager 인스턴스 추가
         self.force_stop_key = self.settings_manager.get_force_stop_key()  # 강제 중지 키 로드
+        self.modal_log_manager = ModalLogManager.instance()  # ModalLogManager 인스턴스 추가
         self._init_ui()
         self._connect_signals()
         self.load_delay_settings()  # 초기화 시 설정 로드
@@ -256,7 +258,11 @@ class LogicOperationWidget(QFrame):
             self.operation_checkbox.blockSignals(True)  # 시그널 임시 차단
             self.operation_checkbox.setChecked(False)
             self.operation_checkbox.blockSignals(False)  # 시그널 차단 해제
-            self.log_message.emit("선택된 프로세스가 없습니다. 프로세스를 먼저 선택해주세요")
+            self.modal_log_manager.log(
+                message="선택된 프로세스가 없습니다. 프로세스를 먼저 선택해주세요",
+                level="ERROR",
+                modal_name="로직동작"
+            )
             return
         self.operation_toggled.emit(checked)
         
@@ -269,6 +275,11 @@ class LogicOperationWidget(QFrame):
             self.selected_process_label.setText(text)
             self.selected_process = process
             self.process_selected.emit(process)  # 프로세스 정보 전체를 전달
+            self.modal_log_manager.log(
+                message=f"프로세스가 선택되었습니다: {self._get_process_info_text(process)}",
+                level="INFO",
+                modal_name="로직동작"
+            )
         
     def _on_reset_process(self):
         """프로세스 초기화 버튼 클릭 시 호출"""
@@ -276,16 +287,32 @@ class LogicOperationWidget(QFrame):
         self.selected_process = None
         self.selected_process_label.setText("선택된 프로세스: 없음")
         self.operation_checkbox.setChecked(False)
+        self.modal_log_manager.log(
+            message="프로세스 선택이 초기화되었습니다",
+            level="INFO",
+            modal_name="로직동작"
+        )
         
     def _on_force_stop(self):
         """강제 중지 버튼 클릭 시 호출"""
         try:
-            self.log_message.emit("[디버그] 강제 중지 버튼 클릭 - 시작")
+            self.modal_log_manager.log(
+                message="강제 중지 시작",
+                level="DEBUG",
+                modal_name="로직동작"
+            )
             self.force_stop.emit()
-            self.log_message.emit("[디버그] 강제 중지 버튼 클릭 - 완료")
+            self.modal_log_manager.log(
+                message="강제 중지 완료",
+                level="INFO",
+                modal_name="로직동작"
+            )
         except Exception as e:
-            error_msg = f"[오류] 강제 중지 버튼 클릭 중 오류 발생: {str(e)}"
-            self.log_message.emit(error_msg)
+            self.modal_log_manager.log(
+                message=f"강제 중지 중 오류 발생: {str(e)}",
+                level="ERROR",
+                modal_name="로직동작"
+            )
         
     def update_selected_process(self, process_name):
         """선택된 프로세스 업데이트"""
@@ -504,6 +531,11 @@ class LogicOperationWidget(QFrame):
         self.default_delay_input.setEnabled(True)
         self.save_delays_btn.setEnabled(True)
         self.edit_delays_btn.setEnabled(False)
+        self.modal_log_manager.log(
+            message="지연 시간 수정 모드가 활성화되었습니다",
+            level="INFO",
+            modal_name="로직동작"
+        )
     
     def _on_save_delays(self):
         """지연 시간 저장 버튼 클릭 시 호출"""
@@ -539,10 +571,18 @@ class LogicOperationWidget(QFrame):
             self.save_delays_btn.setEnabled(False)
             self.edit_delays_btn.setEnabled(True)
             
-            self.log_message.emit("지연 시간 설정이 저장되었습니다.")
+            self.modal_log_manager.log(
+                message="지연 시간 설정이 저장되었습니다",
+                level="INFO",
+                modal_name="로직동작"
+            )
             
         except ValueError:
-            self.log_message.emit("올바른 숫자 형식을 입력해주세요.")
+            self.modal_log_manager.log(
+                message="올바른 숫자 형식을 입력해주세요",
+                level="ERROR",
+                modal_name="로직동작"
+            )
     
     def load_delay_settings(self):
         """저장된 지연 시간 설정 로드"""
@@ -599,7 +639,11 @@ class LogicOperationWidget(QFrame):
                 '기본': DEFAULT_DELAY
             }
         
-        self.log_message.emit("지연 시간이 기본값으로 초기화되었습니다.")
+        self.modal_log_manager.log(
+            message="지연 시간이 기본값으로 초기화되었습니다",
+            level="INFO",
+            modal_name="로직동작"
+        )
 
     def _on_edit_force_stop_key(self):
         """강제 중지 키 수정 버튼 클릭 시 호출"""
@@ -631,10 +675,18 @@ class LogicOperationWidget(QFrame):
                     # 설정 파일에 저장
                     self.settings_manager.set_force_stop_key(key_info)
                     
-                    self.log_message.emit(f"로직 강제 중지 키가 '{key_info['key_code']}'(으)로 변경되었습니다.")
+                    self.modal_log_manager.log(
+                        message=f"로직 강제 중지 키가 '{key_info['key_code']}'(으)로 변경되었습니다",
+                        level="INFO",
+                        modal_name="로직동작"
+                    )
             
         except Exception as e:
-            self.log_message.emit(f"강제 중지 키 설정 중 오류 발생: {str(e)}")
+            self.modal_log_manager.log(
+                message=f"강제 중지 키 설정 중 오류 발생: {str(e)}",
+                level="ERROR",
+                modal_name="로직동작"
+            )
         finally:
             # 버튼 다시 활성화
             self.edit_force_stop_key_btn.setEnabled(True)
@@ -659,9 +711,17 @@ class LogicOperationWidget(QFrame):
             # 설정 파일에 저장
             self.settings_manager.set_force_stop_key(self.force_stop_key)
                 
-            self.log_message.emit("로직 강제 중지 키가 'ESC'로 초기화되었습니다.")
+            self.modal_log_manager.log(
+                message="로직 강제 중지 키가 'ESC'로 초기화되었습니다",
+                level="INFO",
+                modal_name="로직동작"
+            )
         except Exception as e:
-            self.log_message.emit(f"[오류] 강제 중지 키 초기화 중 오류 발생: {str(e)}")
+            self.modal_log_manager.log(
+                message=f"강제 중지 키 초기화 중 오류 발생: {str(e)}",
+                level="ERROR",
+                modal_name="로직동작"
+            )
 
     def _add_item_at_index(self, item_data, index):
         """특정 인덱스에 아이템 추가"""

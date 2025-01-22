@@ -198,7 +198,6 @@ class MainWindow(QMainWindow):
         self.logic_operation_widget = LogicOperationWidget()
         self.logic_operation_widget.set_logic_executor(self.logic_executor)  # set_logic_executor 메서드 사용
         self.logic_operation_controller = LogicOperationController(self.logic_operation_widget)
-        self.logic_operation_widget.log_message.connect(self._append_log)  # 로그 메시지 연결
         self.main_layout.addWidget(self.logic_operation_widget)
         
         # 기본 기능 영역
@@ -207,7 +206,6 @@ class MainWindow(QMainWindow):
         # 기타 기능 위젯
         self.etc_function_widget = EtcFunctionWidget()
         self.countdown_controller__input_sequence = CountdownControllerInputSequence(self.etc_function_widget)
-        self.etc_function_widget.log_message.connect(self._append_log)  # 로그 메시지 연결
         self.main_layout.addWidget(self.etc_function_widget)
         
         # 로그 영역
@@ -326,10 +324,6 @@ class MainWindow(QMainWindow):
         self.logic_detail_widget.logic_updated.connect(self.logic_list_controller.on_logic_updated)
         self.logic_detail_widget.logic_saved.connect(self._on_logic_saved)
         self.logic_detail_widget.logic_updated.connect(self._on_logic_updated)
-        
-        # 로그 메시지 연결
-        self.logic_detail_widget.log_message.connect(self._append_log)
-        self.logic_operation_widget.log_message.connect(self._append_log)  # _append_log를 통해 로그 추가
         
         # 로직 메이커 시그널 연결
         self.logic_maker_tool_widget.item_added.connect(self._on_item_added)  # 아이템 추가 시그널 연결

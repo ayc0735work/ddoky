@@ -8,12 +8,11 @@ from BE.function.constants.styles import (TITLE_FONT_FAMILY, SECTION_FONT_SIZE,
                                CONTAINER_STYLE, ETC_FUNCTION_COUNTDOWN_FONT_SIZE)
 from BE.function.constants.dimensions import (KEY_COUNTDOWN_WIDTH, EMPTY_SECTION_WIDTH,
                                    SECTION_MARGIN)
+from BE.log.manager.modal_log_manager import ModalLogManager
 
 class EtcFunctionWidget(QWidget):
     """기타 기능 위젯"""
     
-    # 시그널 정의
-    log_message = Signal(str)  # 로그 메시지 시그널
     countdown_value_changed = Signal(float)  # 카운트다운 값 변경 시그널
     
     def __init__(self):
@@ -21,8 +20,13 @@ class EtcFunctionWidget(QWidget):
         self.is_logic_enabled = False
         self.controller = None  # 컨트롤러 참조 저장
         self._process_active = False  # 프로세스 활성 상태
+        self.modal_log_manager = ModalLogManager.instance()
         self.init_ui()
-        logging.debug("[위젯] 초기화 완료")
+        self.modal_log_manager.log(
+            message="기타 기능 위젯 초기화 완료",
+            level="DEBUG",
+            modal_name="기타기능"
+        )
         
     def init_ui(self):
         """UI 초기화"""
@@ -123,7 +127,11 @@ class EtcFunctionWidget(QWidget):
             controller: CountdownControllerInputSequence 인스턴스
         """
         self.controller = controller
-        logging.debug("[위젯] 컨트롤러 설정 완료")
+        self.modal_log_manager.log(
+            message="컨트롤러 설정 완료",
+            level="DEBUG",
+            modal_name="기타기능"
+        )
         
     def set_logic_enabled(self, enabled):
         """로직 활성화 상태 설정
@@ -131,20 +139,29 @@ class EtcFunctionWidget(QWidget):
         Args:
             enabled (bool): 활성화 여부
         """
-        logging.debug(f"[위젯] 로직 활성화 상태 변경: {enabled}")
-        self.log_message.emit(f"[위젯] 로직 활성화 상태 변경: {enabled}")  # 로그 메시지 발생
+        self.modal_log_manager.log(
+            message=f"로직 활성화 상태 변경: {enabled}",
+            level="INFO",
+            modal_name="기타기능"
+        )
         
         self.is_logic_enabled = enabled
         
         # 상태 변경을 컨트롤러에 알림
         if self.controller:
             if enabled and self.is_process_active():
-                logging.debug("[위젯] 조건 충족 - 카운트다운 시작 요청")
-                self.log_message.emit("[위젯] 조건 충족 - 카운트다운 시작 요청")
+                self.modal_log_manager.log(
+                    message="조건 충족 - 카운트다운 시작 요청",
+                    level="INFO",
+                    modal_name="기타기능"
+                )
                 self.controller.start_hellfire_countdown()
             else:
-                logging.debug("[위젯] 조건 불충족 - 카운트다운 중지 요청")
-                self.log_message.emit("[위젯] 조건 불충족 - 카운트다운 중지 요청")
+                self.modal_log_manager.log(
+                    message="조건 불충족 - 카운트다운 중지 요청",
+                    level="INFO",
+                    modal_name="기타기능"
+                )
                 self.controller.stop_hellfire_countdown()
                 
     def is_process_active(self):
@@ -157,18 +174,38 @@ class EtcFunctionWidget(QWidget):
         Args:
             is_active (bool): 프로세스 활성화 여부
         """
-        logging.debug(f"[위젯] 프로세스 상태 업데이트: {is_active}")
+        self.modal_log_manager.log(
+            message=f"프로세스 상태 업데이트: {is_active}",
+            level="DEBUG",
+            modal_name="기타기능"
+        )
         if self._process_active != is_active:
-            logging.debug(f"[위젯] 프로세스 상태 변경: {is_active}")
+            self.modal_log_manager.log(
+                message=f"프로세스 상태 변경: {is_active}",
+                level="DEBUG",
+                modal_name="기타기능"
+            )
             self._process_active = is_active
             if self.is_logic_enabled and is_active and self.controller:
-                logging.debug("[위젯] 프로세스 활성화로 인한 카운트다운 시작 요청")
+                self.modal_log_manager.log(
+                    message="프로세스 활성화로 인한 카운트다운 시작 요청",
+                    level="INFO",
+                    modal_name="기타기능"
+                )
                 self.controller.start_hellfire_countdown()
             elif not is_active and self.controller:
-                logging.debug("[위젯] 프로세스 비활성화로 인한 카운트다운 중지 요청")
+                self.modal_log_manager.log(
+                    message="프로세스 비활성화로 인한 카운트다운 중지 요청",
+                    level="INFO",
+                    modal_name="기타기능"
+                )
                 self.controller.stop_hellfire_countdown()
                 
     def _on_countdown_value_changed(self, value):
         """카운트다운 값이 변경되었을 때 호출"""
         self.countdown_value_changed.emit(value)
-        self.log_message.emit(f"키 입력 카운트다운 시간이 {value}초로 설정되었습니다.")
+        self.modal_log_manager.log(
+            message=f"키 입력 카운트다운 시간이 {value}초로 설정되었습니다",
+            level="INFO",
+            modal_name="기타기능"
+        )
