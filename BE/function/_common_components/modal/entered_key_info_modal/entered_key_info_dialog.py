@@ -194,6 +194,8 @@ class EnteredKeyInfoDialog(QDialog):
         """확인 버튼 클릭 시"""
         confirmed_key_info = self.get_entered_key_info()
         if confirmed_key_info: # 키 정보가 있는 경우
+            print("키 입력 모달에서 확인 버튼이 클릭되었습니다.")
+            print(f"입력된 키 정보: {confirmed_key_info}")
             self.accept()  # 다이얼로그가 성공적으로 완료되면 창을 닫고 데이터를 사용해도 좋다는 이벤트 전달
 
     def closeEvent(self, event):

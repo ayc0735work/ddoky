@@ -17,31 +17,10 @@ class LogicMakerController(QObject):
         
     def _connect_signals(self):
         """시그널 연결"""
-        self.widget.confirmed_and_added_key_info.connect(self._handle_key_input)
         self.widget.mouse_input.connect(self._handle_mouse_input)
         self.widget.delay_input.connect(self._handle_delay_input)
         self.widget.record_mode.connect(self._handle_record_mode)
         self.widget.wait_click_input.connect(self._handle_wait_click_input)
-        
-    def _handle_key_input(self, key_info):
-        """키 입력 처리
-        
-        Args:
-            key_info (dict): 입력된 키 정보
-        """
-        # 디버그 로그 출력
-        self.log_message.emit(f"[DEBUG] add_item 시작 (logic_maker_tool_controller.py) - 입력받은 데이터: {key_info.get('display_text', str(key_info))}")
-        self.log_message.emit("[DEBUG] 문자열 형식의 데이터 처리 시작")
-        
-        # 아이템 목록에 추가
-        self.widget.items.append(key_info)
-        self.log_message.emit(f"[DEBUG] 아이템이 목록에 추가되었습니다: {key_info}")
-        
-        # 추가된 위치 로그
-        self.log_message.emit(f"[DEBUG] 아이템이 성공적으로 추가되었습니다. 위치: {len(self.widget.items) - 1}")
-        
-        # item_added 시그널 발생
-        self.widget.item_added.emit(key_info)
         
     def _handle_mouse_input(self, mouse_info):
         """마우스 입력 처리

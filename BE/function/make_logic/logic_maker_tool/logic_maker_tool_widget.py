@@ -5,16 +5,15 @@ from PySide6.QtGui import QFont
 from BE.function.constants.styles import (FRAME_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from BE.function.constants.dimensions import LOGIC_MAKER_WIDTH, BASIC_SECTION_HEIGHT
-from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 from BE.function._common_components.modal.logic_selector_modal.logic_selector_dialog import LogicSelectorDialog
 from BE.function._common_components.modal.mouse_input_modal.mouse_input_dialog import MouseInputDialog
 from BE.function._common_components.modal.image_search_area_modal.image_search_area_dialog import ImageSearchAreaDialog
 from BE.function._common_components.modal.text_input_modal.text_input_dialog import TextInputDialog
+from .handlers.entered_key_info_handler import EnteredKeyInfoHandler
 
 class LogicMakerToolWidget(QFrame):
     """로직 메이커 위젯"""
     # 시그널 정의
-    confirmed_and_added_key_info = Signal(dict)  # 키 입력이 컨펌되고 추가되었을 때 (키 정보를 딕셔너리로 전달)
     mouse_input = Signal(dict)  # 마우스 입력이 추가되었을 때 (마우스 정보를 딕셔너리로 전달)
     delay_input = Signal(str)  # 지연시간이 추가되었을 때
     record_mode = Signal(bool)  # 기록 모드가 토글되었을 때
@@ -27,6 +26,13 @@ class LogicMakerToolWidget(QFrame):
         super().__init__(parent)
         self.saved_logics = {}  # 저장된 로직들을 관리하는 딕셔너리
         self.items = []  # 아이템 리스트
+        
+        # 키 입력 핸들러 초기화
+        self.key_handler = EnteredKeyInfoHandler(self)
+        # 키 핸들러의 시그널을 위젯의 시그널로 연결
+        self.key_handler.confirmed_and_added_key_info.connect(self._on_key_info_added)
+        self.key_handler.log_message.connect(self.log_message)
+        
         self.init_ui()
         
     def init_ui(self):
@@ -141,84 +147,8 @@ class LogicMakerToolWidget(QFrame):
             self.log_message.emit(f"[ERROR] 잘못된 형식의 데이터: {type(item)}")
 
     def _request_key_to_input(self):
-        """입력하려는 키를 요청하는 다이얼로그를 표시
-        
-        프로세스:
-        1. EnteredKeyInfoDialog 인스턴스를 생성하여 모달 다이얼로그로 표시
-        2. 사용자가 키를 입력하면 EnteredKeyInfoWidget이 keyboard_hook_handler를 통해 키 정보를 캡처
-        3. 사용자가 확인(OK)을 클릭하면:
-            - EnteredKeyInfoDialog.get_entered_key_info()를 통해 formatted_key_info를 가져옴
-            - 키 정보가 유효하면 _add_confirmed_input_key()를 호출하여 처리
-        """
-        # 1. 키 입력 다이얼로그 생성 (부모를 self로 지정하여 모달로 표시)
-        dialog = EnteredKeyInfoDialog(self)
-        
-        # 2. 다이얼로그를 모달로 실행하고 사용자 응답 확인
-        # QDialog.Accepted는 사용자가 OK 버튼을 클릭했을 때 반환됨
-        # 사용자가 OK 버튼을 클릭했을 때 키 입력 정보를 가져오고 키 정보를 처리하는 코드
-        if dialog.exec() == QDialog.Accepted: 
-            # 3. 입력된 키 정보 가져오기
-            # get_entered_key_info는 키 코드, 키 이름 등을 포함하는 딕셔너리
-            get_entered_key_info = dialog.get_entered_key_info()
-            
-            # 4. 키 정보가 유효한 경우 처리
-            # _add_confirmed_input_key()는 키 정보를 로직 아이템 목록에 추가
-            if get_entered_key_info:
-                self._add_confirmed_input_key(get_entered_key_info)
-
-    def _add_confirmed_input_key(self, get_entered_key_info):
-        """EnteredKeyInfoDialog에서 확인된 키 입력 정보를 처리하여 키 상태 정보를 생성하고 전달합니다.
-
-        데이터 흐름:
-        1. EnteredKeyInfoDialog에서 키 입력 정보 수신
-           - get_entered_key_info: 사용자가 입력하고 확인한 키 정보
-           - 키 코드, 스캔 코드, 가상 키, 위치, 수정자 키 등의 정보 포함
-        
-        2. 로그 메시지 생성 및 전달
-           - 상세 키 정보를 포함한 로그 메시지 생성
-           - log_message 시그널을 통해 로그 전달
-           
-        3. 키 상태 정보 생성 및 전달
-           3.1 누르기(Press) 이벤트
-               - key_state_info_press 생성 (원본 키 정보 복사)
-               - display_text에 "--- 누르기" 추가
-               - confirmed_and_added_key_info 시그널로 전달
-               
-           3.2 떼기(Release) 이벤트
-               - key_state_info_release 생성 (원본 키 정보 복사)
-               - display_text에 "--- 떼기" 추가
-               - confirmed_and_added_key_info 시그널로 전달
-               
-        4. 시그널 수신 및 처리 (MainWindow)
-           - confirmed_and_added_key_info 시그널을 통해 전달된 키 상태 정보를
-           - MainWindow._on_key_input()에서 수신하여 처리
-           - 최종적으로 LogicDetailWidget.add_item()으로 전달되어 목록에 추가
-
-        Args:
-            get_entered_key_info (dict): EnteredKeyInfoDialog에서 받은 키 입력 정보
-        """
-        # 로그 메시지 생성
-        log_msg = (
-            f"키 입력이 추가되었습니다 [ "
-            f"키: {get_entered_key_info['key_code']}, "
-            f"스캔 코드 (하드웨어 고유값): {get_entered_key_info['scan_code']}, "
-            f"확장 가상 키 (운영체제 레벨의 고유 값): {get_entered_key_info['virtual_key']}, "
-            f"키보드 위치: {get_entered_key_info['location']}, "
-            f"수정자 키: {get_entered_key_info['modifier_text']} ]"
-        )
-
-        # 로그 메시지 전달
-        self.log_message.emit(log_msg)
-
-        # 누르기 이벤트용 키 상태 정보
-        key_state_info_press = get_entered_key_info.copy()
-        key_state_info_press['display_text'] = f"{get_entered_key_info['key_code']} --- 누르기"
-        self.confirmed_and_added_key_info.emit(key_state_info_press)
-        
-        # 떼기 이벤트용 키 상태 정보
-        key_state_info_release = get_entered_key_info.copy()
-        key_state_info_release['display_text'] = f"{get_entered_key_info['key_code']} --- 떼기"
-        self.confirmed_and_added_key_info.emit(key_state_info_release)
+        """키 입력 요청 - 핸들러로 위임"""
+        self.key_handler.request_key_input(self)
 
     def _add_mouse_input(self):
         """마우스 입력 추가"""
@@ -290,7 +220,6 @@ class LogicMakerToolWidget(QFrame):
         self.record_mode.emit(checked)
 
     def _add_logic(self):
-
         """만든 로직 추가"""
         dialog = LogicSelectorDialog(self.saved_logics, self)
         dialog.logic_selected.connect(lambda name: self.add_logic.emit(name))
@@ -321,3 +250,14 @@ class LogicMakerToolWidget(QFrame):
     def update_saved_logics(self, logics):
         """저장된 로직 정보 업데이트"""
         self.saved_logics = logics
+
+    def _on_key_info_added(self, key_info):
+        """키 입력 정보가 추가되었을 때의 처리
+        
+        Args:
+            key_info (dict): 키 입력 정보
+        """
+        # items 리스트에 추가
+        self.items.append(key_info)
+        # item_added 시그널 발생
+        self.item_added.emit(key_info)

@@ -323,16 +323,16 @@ class MainWindow(QMainWindow):
         # 로그 메시지 연결
         self.logic_list_widget.log_message.connect(self._append_log)
         self.logic_detail_widget.log_message.connect(self._append_log)
+        self.logic_detail_controller.log_message.connect(self._append_log)
         self.logic_maker_tool_widget.log_message.connect(self._append_log)
         self.logic_operation_widget.log_message.connect(self._append_log)  # _append_log를 통해 로그 추가
         
         # 로직 메이커 시그널 연결
-        self.logic_maker_tool_widget.confirmed_and_added_key_info.connect(self._on_key_input)
+        self.logic_maker_tool_widget.item_added.connect(self._on_item_added)  # 아이템 추가 시그널 연결
         self.logic_maker_tool_widget.mouse_input.connect(self._on_mouse_input)
         self.logic_maker_tool_widget.delay_input.connect(self._on_delay_input)
         self.logic_maker_tool_widget.add_logic.connect(self._on_add_logic)  # 로직 추가 시그널 연결
-        self.logic_maker_tool_widget.wait_click_input.connect(self._on_wait_click_input)  # 클릭 대기 시그널 연결
-        self.logic_maker_tool_widget.item_added.connect(self._on_item_added)  # 아이템 추가 시그널 연결
+        self.logic_maker_tool_widget.wait_click_input.connect(self._on_wait_click_input)
         
         # 로직 실행 관련 시그널 연결
         self.logic_operation_widget.operation_toggled.connect(self._on_logic_operation_toggled)
@@ -360,44 +360,6 @@ class MainWindow(QMainWindow):
             message (str): 추가할 로그 메시지
         """
         self.log_widget.append(message)
-        
-    def _on_key_input(self, key_state_info):
-        """키 입력 정보 처리
-        
-        LogicMakerToolWidget에서 전달된 키 입력 정보를 처리하고 표시합니다.
-        
-        데이터 흐름:
-        1. LogicMakerToolWidget._add_confirmed_input_key()
-           - key_state_info_press와 key_state_info_release를 생성
-           - confirmed_and_added_key_info 시그널을 통해 전달
-           
-        2. MainWindow._on_key_input()
-           - key_state_info를 표시 형식으로 변환
-           - 수정자 키 정보 추가
-           - 접두어 추가
-           
-        3. LogicDetailWidget.add_item()
-           - 변환된 문자열을 목록에 추가
-        
-        Args:
-            key_state_info (dict): 키 상태 정보
-                - display_text (str): 키 코드와 상태
-                - modifiers (int): 수정자 키 상태
-        """
-        # 키 상태 정보를 문자열로 변환
-        key_text = key_state_info.get('display_text', '')  # 이벤트 타입이 포함된 텍스트 사용
-        modifiers = key_state_info.get('modifiers', 0)
-        modifier_text = ""
-        
-        if modifiers & Qt.ControlModifier:
-            modifier_text += "Ctrl+"
-        if modifiers & Qt.ShiftModifier:
-            modifier_text += "Shift+"
-        if modifiers & Qt.AltModifier:
-            modifier_text += "Alt+"
-            
-        display_text = f"(main_window.py 최초 입력) 키 입력: {modifier_text}{key_text}"
-        self.logic_detail_widget.add_item(display_text)
         
     def _on_mouse_input(self, mouse_info):
         """마우스 입력 정보 처리
@@ -677,28 +639,28 @@ class MainWindow(QMainWindow):
             self.log_widget.append(f"[경고] 클릭 대기 입력 처리 중 오류 발생: {str(e)}")
 
     def _on_item_added(self, item_info):
-        """로직 아이템 추가 처리
-        
-        LogicMakerToolWidget에서 전달된 새로운 아이템 정보를 처리합니다.
+        """아이템이 추가되었을 때의 처리
         
         Args:
-            item_info (dict): 아이템 정보
-                - type (str): 아이템 유형
-                - data (dict): 아이템 데이터
-                
-        프로세스:
-        1. 아이템 정보를 표시 형식으로 변환
-        2. LogicDetailWidget에 추가
+            item_info (dict): 추가된 아이템 정보
+                type: 아이템 타입 ('key', 'mouse_input', 'delay', 'image_search', 'text', 'wait_click' 등)
+                display_text: 표시될 텍스트
+                기타 타입별 필요한 정보들
         """
-        if isinstance(item_info, dict) and item_info.get('type') == 'write_text':
-            # 텍스트 입력인 경우 깔끔하게 표시
-            text = item_info.get('text', '')
-            display_text = f"텍스트 입력: {text}"
-            item_info['display_text'] = display_text
+        # 아이템 타입에 따른 처리
+        item_type = item_info.get('type')
+        
+        if item_type == 'key':
+            # 키 입력 처리
             self.logic_detail_widget.add_item(item_info)
+            self.log_widget.append(f"키 입력이 추가되었습니다: {item_info['display_text']}")
         else:
-            # 다른 타입의 아이템은 그대로 전달
+            # 다른 타입의 아이템 처리
             self.logic_detail_widget.add_item(item_info)
+            self.log_widget.append(f"아이템이 추가되었습니다: {item_info['display_text']}")
+            
+        # 로직 메이커 도구의 아이템 목록 업데이트
+        self.logic_maker_tool_widget.items.append(item_info)
 
     def _on_logic_selected(self, logic_name):
         """로직이 선택되었을 때 호출"""
