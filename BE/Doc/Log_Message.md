@@ -6,7 +6,7 @@
 로그 메시지 시스템은 중앙 집중식 로그 관리를 통해 애플리케이션의 모든 로그를 체계적으로 관리합니다.
 
 ### 1.2 주요 컴포넌트
-1. **ModalLogManager** (BE/log/manager/modal_log_manager.py)
+1. **BaseLogManager** (BE/log/manager/modal_log_manager.py)
    - 로그 메시지의 중앙 관리자
    - 싱글톤 패턴으로 구현
    - 로그 레벨, 시간, 출처 정보 관리
@@ -22,14 +22,14 @@
 
 #### 2.1.1 필요한 import
 ```python
-from BE.log.manager.modal_log_manager import ModalLogManager
+from BE.log.manager.modal_log_manager import BaseLogManager
 ```
 
 #### 2.1.2 클래스에서 초기화
 ```python
 class YourClass:
     def __init__(self):
-        self.modal_log_manager = ModalLogManager.instance()
+        self.modal_log_manager = BaseLogManager.instance()
 ```
 
 ### 2.2 로그 메시지 작성 가이드

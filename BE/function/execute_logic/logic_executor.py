@@ -9,7 +9,7 @@ from BE.function._common_components.mouse_handler import MouseHandler
 import threading
 from BE.settings.settings_data_manager import SettingsManager
 import keyboard
-from BE.log.manager.modal_log_manager import ModalLogManager
+from BE.log.manager.base_log_manager import BaseLogManager
 
 class LogicExecutor(QObject):
     """로직 실행기"""
@@ -40,7 +40,7 @@ class LogicExecutor(QObject):
         super().__init__()
         self.process_manager = process_manager
         self.logic_manager = logic_manager
-        self.modal_log_manager = ModalLogManager.instance()  # ModalLogManager 초기화
+        self.modal_log_manager = BaseLogManager.instance()  # BaseLogManager 초기화
         
         # 로직 활성화 상태 추가
         self.is_logic_enabled = True
@@ -1195,7 +1195,7 @@ class LogicExecutor(QObject):
         else:
             formatted_message = message
 
-        # ModalLogManager를 통해 로그 출력
+        # BaseLogManager를 통해 로그 출력
         self.modal_log_manager.log(
             message=formatted_message,
             level="INFO",

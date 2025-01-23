@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
                              QSizePolicy, QMessageBox)
 from PySide6.QtCore import Qt, Signal, QEvent
 from PySide6.QtGui import QFont
-from BE.log.manager.modal_log_manager import ModalLogManager
+from BE.log.manager.base_log_manager import BaseLogManager
 import json
 import os
 import uuid
@@ -41,7 +41,7 @@ class LogicListWidget(QFrame):
     
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.modal_log_manager = ModalLogManager.instance()
+        self.modal_log_manager = BaseLogManager.instance()
         self.init_ui()
         
         # 이벤트 필터 설치

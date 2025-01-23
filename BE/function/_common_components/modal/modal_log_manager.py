@@ -3,7 +3,7 @@ from typing import List, Callable
 import logging
 from datetime import datetime
 
-class ModalLogManager(QObject):
+class BaseLogManager(QObject):
     """모달 다이얼로그의 로그를 중앙에서 관리하는 매니저
     
     이 클래스는 싱글톤 패턴을 사용하여 모든 모달 다이얼로그의 로그를 
@@ -26,8 +26,8 @@ class ModalLogManager(QObject):
         Note:
             직접 인스턴스화하지 말고 instance() 클래스 메서드를 사용하세요.
         """
-        if ModalLogManager._instance is not None:
-            raise RuntimeError("ModalLogManager는 싱글톤입니다. instance()를 사용하세요.")
+        if BaseLogManager._instance is not None:
+            raise RuntimeError("BaseLogManager는 싱글톤입니다. instance()를 사용하세요.")
             
         super().__init__()
         self.handlers: List[Callable] = []

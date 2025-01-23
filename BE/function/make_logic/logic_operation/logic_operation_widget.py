@@ -12,7 +12,7 @@ from BE.function._common_components.modal.window_process_selector.window_process
 from BE.settings.settings_singleton import Settings
 from BE.settings.settings_data_manager import SettingsManager
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
-from BE.log.manager.modal_log_manager import ModalLogManager
+from BE.log.manager.base_log_manager import BaseLogManager
 
 class LogicOperationWidget(QFrame):
     """로직 동작 허용 여부 온오프 위젯"""
@@ -29,7 +29,7 @@ class LogicOperationWidget(QFrame):
         self.logic_executor = None  # LogicExecutor 인스턴스를 저장할 속성 추가
         self.settings_manager = SettingsManager()  # SettingsManager 인스턴스 추가
         self.force_stop_key = self.settings_manager.get_force_stop_key()  # 강제 중지 키 로드
-        self.modal_log_manager = ModalLogManager.instance()  # ModalLogManager 인스턴스 추가
+        self.modal_log_manager = BaseLogManager.instance()  # BaseLogManager 인스턴스 추가
         self._init_ui()
         self._connect_signals()
         self.load_delay_settings()  # 초기화 시 설정 로드

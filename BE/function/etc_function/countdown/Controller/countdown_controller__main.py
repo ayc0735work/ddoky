@@ -22,7 +22,7 @@
 import threading
 from time import perf_counter
 from PySide6.QtCore import QObject, QThread, Qt, QTimer, Signal
-from BE.log.manager.modal_log_manager import ModalLogManager
+from BE.log.manager.base_log_manager import BaseLogManager
 
 class CountdownWorker(QThread):
     """카운트다운 워커 스레드 클래스
@@ -54,7 +54,7 @@ class CountdownWorker(QThread):
             _lock: 스레드 동기화를 위한 Lock
         """
         super().__init__(parent)
-        self.modal_log_manager = ModalLogManager.instance()
+        self.modal_log_manager = BaseLogManager.instance()
         self._target_end_time = None
         self._is_running = False
         self._lock = threading.Lock()
@@ -207,7 +207,7 @@ class CountdownController(QObject):
            - max_delay: 최대 지연 시간
         """
         super().__init__()
-        self.modal_log_manager = ModalLogManager.instance()
+        self.modal_log_manager = BaseLogManager.instance()
         self._countdown_value = 10.00
         self._is_running = False
         self._start_time = None

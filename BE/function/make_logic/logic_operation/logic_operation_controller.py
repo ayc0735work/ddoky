@@ -2,7 +2,7 @@ from PySide6.QtWidgets import QFileDialog
 from PySide6.QtCore import QObject, QTimer
 from BE.function.make_logic.logic_operation.logic_operation_widget import LogicOperationWidget
 from BE.function._common_components.window_process_handler import ProcessManager
-from BE.log.manager.modal_log_manager import ModalLogManager
+from BE.log.manager.base_log_manager import BaseLogManager
 import win32con
 import win32api
 import time
@@ -13,7 +13,7 @@ class LogicOperationController(QObject):
     def __init__(self, widget):
         try:
             self.widget = widget
-            self.modal_log_manager = ModalLogManager.instance()
+            self.modal_log_manager = BaseLogManager.instance()
             self.modal_log_manager.log(
                 message="LogicOperationController 초기화 시작",
                 level="DEBUG",

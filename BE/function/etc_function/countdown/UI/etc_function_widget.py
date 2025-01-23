@@ -8,7 +8,7 @@ from BE.function.constants.styles import (TITLE_FONT_FAMILY, SECTION_FONT_SIZE,
                                CONTAINER_STYLE, ETC_FUNCTION_COUNTDOWN_FONT_SIZE)
 from BE.function.constants.dimensions import (KEY_COUNTDOWN_WIDTH, EMPTY_SECTION_WIDTH,
                                    SECTION_MARGIN)
-from BE.log.manager.modal_log_manager import ModalLogManager
+from BE.log.manager.base_log_manager import BaseLogManager
 
 class EtcFunctionWidget(QWidget):
     """기타 기능 위젯"""
@@ -20,7 +20,7 @@ class EtcFunctionWidget(QWidget):
         self.is_logic_enabled = False
         self.controller = None  # 컨트롤러 참조 저장
         self._process_active = False  # 프로세스 활성 상태
-        self.modal_log_manager = ModalLogManager.instance()
+        self.modal_log_manager = BaseLogManager.instance()
         self.init_ui()
         self.modal_log_manager.log(
             message="기타 기능 위젯 초기화 완료",

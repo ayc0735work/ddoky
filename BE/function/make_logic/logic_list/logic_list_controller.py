@@ -1,6 +1,6 @@
 from PySide6.QtCore import QObject, Signal
 from BE.settings.settings_data_manager import SettingsManager
-from BE.log.manager.modal_log_manager import ModalLogManager
+from BE.log.manager.base_log_manager import BaseLogManager
 import uuid
 import copy
 
@@ -35,7 +35,7 @@ class LogicListController(QObject):
         self.settings_manager = SettingsManager()
         self.saved_logics = {}  # 저장된 로직들을 관리하는 딕셔너리
         self.clipboard = None  # 복사된 로직 저장용
-        self.modal_log_manager = ModalLogManager.instance()
+        self.modal_log_manager = BaseLogManager.instance()
         self._connect_signals()
         self.load_saved_logics()
         

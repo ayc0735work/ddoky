@@ -10,7 +10,7 @@ from BE.function._common_components.modal.mouse_input_modal.mouse_input_dialog i
 from BE.function._common_components.modal.image_search_area_modal.image_search_area_dialog import ImageSearchAreaDialog
 from BE.function._common_components.modal.text_input_modal.text_input_dialog import TextInputDialog
 from .handlers.entered_key_info_handler import EnteredKeyInfoHandler
-from BE.log.manager.modal_log_manager import ModalLogManager
+from BE.log.manager.base_log_manager import BaseLogManager
 
 class LogicMakerToolWidget(QFrame):
     """로직 메이커 위젯"""
@@ -26,7 +26,7 @@ class LogicMakerToolWidget(QFrame):
         super().__init__(parent)
         self.saved_logics = {}  # 저장된 로직들을 관리하는 딕셔너리
         self.items = []  # 아이템 리스트
-        self.modal_log_manager = ModalLogManager.instance()
+        self.modal_log_manager = BaseLogManager.instance()
         
         # 키 입력 핸들러 초기화
         self.key_handler = EnteredKeyInfoHandler(self)

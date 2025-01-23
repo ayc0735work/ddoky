@@ -16,7 +16,7 @@ from BE.function.constants.dimensions import (LOGIC_DETAIL_WIDTH, BASIC_SECTION_
 from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_handler import create_formatted_key_info
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 from BE.function._common_components.modal.text_input_modal.text_input_dialog import TextInputDialog
-from BE.log.manager.modal_log_manager import ModalLogManager
+from BE.log.manager.base_log_manager import BaseLogManager
 
 class LogicDetailWidget(QFrame):
     """로직 상세 내용을 표시하고 관리하는 위젯"""
@@ -30,7 +30,7 @@ class LogicDetailWidget(QFrame):
     
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.modal_log_manager = ModalLogManager.instance()
+        self.modal_log_manager = BaseLogManager.instance()
         self.init_ui()
         self.edit_mode = False  # 수정 모드 여부
         self.last_key_info = None

@@ -1,5 +1,5 @@
 from PySide6.QtCore import Signal, QObject
-from BE.log.manager.modal_log_manager import ModalLogManager
+from BE.log.manager.base_log_manager import BaseLogManager
 
 class LogicDetailController(QObject):
     """로직 상세 위젯의 동작을 제어하는 컨트롤러"""
@@ -11,7 +11,7 @@ class LogicDetailController(QObject):
         """
         super().__init__()
         self.widget = widget
-        self.modal_log_manager = ModalLogManager.instance()
+        self.modal_log_manager = BaseLogManager.instance()
         self.connect_signals()
         
     def connect_signals(self):

@@ -18,7 +18,7 @@ import time
 from PySide6.QtCore import QTimer, QObject
 from BE.function._common_components.window_process_handler import ProcessManager
 from BE.function.etc_function.countdown.Controller.countdown_controller__main import CountdownController
-from BE.log.manager.modal_log_manager import ModalLogManager
+from BE.log.manager.base_log_manager import BaseLogManager
 
 class CountdownControllerInputSequence(QObject):
     """기타 기능 컨트롤러 클래스
@@ -37,7 +37,7 @@ class CountdownControllerInputSequence(QObject):
     
     def __init__(self, widget):
         super().__init__()
-        self.modal_log_manager = ModalLogManager.instance()
+        self.modal_log_manager = BaseLogManager.instance()
         self.modal_log_manager.log(
             message="컨트롤러 초기화 시작",
             level="DEBUG",

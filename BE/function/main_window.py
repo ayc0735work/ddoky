@@ -28,7 +28,7 @@ from BE.function.etc_function.countdown.UI.etc_function_widget import EtcFunctio
 from BE.function.etc_function.countdown.Controller.countdown_controller__input_sequence import CountdownControllerInputSequence
 from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_handler import KeyboardHook
 import logging
-from BE.log.manager.modal_log_manager import ModalLogManager
+from BE.log.manager.base_log_manager import BaseLogManager
 
 class MainWindow(QMainWindow):
     """메인 윈도우 클래스
@@ -89,7 +89,7 @@ class MainWindow(QMainWindow):
         self.keyboard_hook.start()
         
         # 모달 로그 매니저 초기화
-        self.modal_log_manager = ModalLogManager.instance()
+        self.modal_log_manager = BaseLogManager.instance()
         
         # 로그 위젯 초기화
         self.log_widget = LogWidget()

@@ -1,5 +1,5 @@
 from PySide6.QtCore import QObject, Signal
-from BE.log.manager.modal_log_manager import ModalLogManager
+from BE.log.manager.base_log_manager import BaseLogManager
 
 class LogicMakerController(QObject):
     """로직 메이커 컨트롤러"""
@@ -12,7 +12,7 @@ class LogicMakerController(QObject):
         """
         super().__init__()
         self.widget = widget
-        self.modal_log_manager = ModalLogManager.instance()
+        self.modal_log_manager = BaseLogManager.instance()
         self._connect_signals()
         
     def _connect_signals(self):

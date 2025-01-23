@@ -4,7 +4,7 @@ from PySide6.QtGui import QKeyEvent, QGuiApplication
 
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_widget import EnteredKeyInfoWidget
 from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_handler import KeyboardHook
-from BE.log.manager.modal_log_manager import ModalLogManager
+from BE.log.manager.base_log_manager import BaseLogManager
 
 class EnteredKeyInfoDialog(QDialog):
     """키 입력 모달 창을 제공하고 키를 입력 받고 처리하는 다이얼로그
@@ -42,7 +42,7 @@ class EnteredKeyInfoDialog(QDialog):
         
         self.last_key_info = None
         self.keyboard_hook = None
-        self.modal_log_manager = ModalLogManager.instance()
+        self.modal_log_manager = BaseLogManager.instance()
         
         self._setup_ui(show_details)
         self._setup_connections()

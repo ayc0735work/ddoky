@@ -1,7 +1,7 @@
 from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QDialog
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
-from BE.log.manager.modal_log_manager import ModalLogManager
+from BE.log.manager.base_log_manager import BaseLogManager
 
 class EnteredKeyInfoHandler(QObject):
     """키 입력 처리를 담당하는 핸들러 클래스"""
@@ -16,7 +16,7 @@ class EnteredKeyInfoHandler(QObject):
             parent (QObject): 부모 객체
         """
         super().__init__(parent)
-        self.modal_log_manager = ModalLogManager.instance()
+        self.modal_log_manager = BaseLogManager.instance()
     
     def request_key_input(self, parent=None):
         """키 입력을 요청하는 다이얼로그를 표시
