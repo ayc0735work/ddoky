@@ -60,38 +60,34 @@
            self.key_controller.handle_confirmed_key_input(get_entered_key_info)
    ```
 
-5. **키 상태 정보 생성**
+5. **키 상태 정보 생성 및 처리**
    - 파일: `logic_maker_tool_key_info_controller.py`
    - 메서드: `handle_confirmed_key_input()`
    - 동작: 
      * 하나의 키 입력을 누르기/떼기 두 상태로 변환
      * 각 상태별 표시 텍스트 생성
-     * 이벤트 순서 보장 (누르기 → 떼기)
-     * 수정자 키 상태 보존
+     * 각 상태 정보를 내부 처리 메서드로 전달
    ```python
-   # 누르기 이벤트 생성
+   # 누르기 이벤트 생성 및 처리
    key_state_info_press = get_entered_key_info.copy()
    key_state_info_press['type'] = "key"
    key_state_info_press['action'] = "누르기"
-   key_state_info_press['display_text'] = f"{get_entered_key_info['key_code']} --- 누르기"
+   self._process_key_state_info(key_state_info_press)
    
-   # 떼기 이벤트 생성
+   # 떼기 이벤트 생성 및 처리
    key_state_info_release = get_entered_key_info.copy()
    key_state_info_release['type'] = "key"
    key_state_info_release['action'] = "떼기"
-   key_state_info_release['display_text'] = f"{get_entered_key_info['key_code']} --- 떼기"
+   self._process_key_state_info(key_state_info_release)
    ```
 
-6. **컨트롤러의 아이템 처리**
+6. **키 상태 정보 내부 처리**
    - 파일: `logic_maker_tool_key_info_controller.py`
-   - 메서드: `_on_key_state_info_added()`
+   - 메서드: `_process_key_state_info()`
    - 동작: 
-     * 내부 아이템 리스트에 추가
      * UI 업데이트 시그널 발생
-     * 로그 기록 (디버깅 및 추적용)
-     * 메모리 관리 (깊은 복사 사용)
+     * 로그 기록
    ```python
-   self.items.append(key_state_info)  # 내부 리스트에 추가
    self.item_added.emit(key_state_info)  # UI 업데이트 시그널
    ```
 
@@ -153,11 +149,13 @@ BE/function/
          ↓
 [LogicMakerToolWidget]
          ↓
-[LogicMakerToolKeyInfoController] --- confirmed_and_added_key_info --> [자체 처리]
-         |                                                              ↓
-         |                                                        [아이템 추가]
-         |                                                              ↓
-    item_added                                                    [로그 기록]
+[LogicMakerToolKeyInfoController]
+         |
+         | handle_confirmed_key_input()
+         ↓
+    _process_key_state_info()
+         |
+    item_added 시그널
          ↓
 [LogicMakerToolWidget] --- item_added --> [LogicDetailWidget]
 ```
@@ -171,11 +169,10 @@ class LogicMakerToolKeyInfoController(QObject):
     item_added = Signal(dict)  # UI 업데이트용
     
     def __init__(self):
-        self.items = []  # 키 입력 관련 아이템 관리
+        self.modal_log_manager = BaseLogManager.instance()
     
     def handle_confirmed_key_input(self, key_info):
         # 키 정보를 누르기/떼기 상태로 변환
-        # 아이템 리스트에 추가
         # UI 업데이트 시그널 발생
 ```
 
@@ -213,8 +210,7 @@ class LogicMakerToolWidget(QFrame):
 
 ### 6.1 컨트롤러 (LogicMakerToolKeyInfoController)
 - 키 입력 데이터 처리
-- 상태 정보 생성 및 관리
-- 아이템 리스트 관리
+- 상태 정보 생성
 - UI 업데이트 시그널 발생
 
 ### 6.2 위젯 (LogicMakerToolWidget)

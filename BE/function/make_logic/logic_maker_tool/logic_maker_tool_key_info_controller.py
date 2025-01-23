@@ -17,8 +17,6 @@ class LogicMakerToolKeyInfoController(QObject):
         """
         super().__init__(parent)
         self.modal_log_manager = BaseLogManager.instance()
-        self.items = []  # 키 입력 관련 아이템 리스트
-    
     
     def handle_confirmed_key_input(self, get_entered_key_info):
         """확인된 키 입력 정보를 처리
@@ -67,16 +65,12 @@ class LogicMakerToolKeyInfoController(QObject):
         # 떼기 이벤트 처리
         self._process_key_state_info(key_state_info_release)
 
-
     def _process_key_state_info(self, key_state_info):
         """키 상태 정보를 처리하는 내부 메서드
         
         Args:
             key_state_info (dict): 처리할 키 상태 정보
         """
-        # 내부 아이템 리스트에 추가
-        self.items.append(key_state_info)
-        
         # UI 업데이트를 위한 시그널 발생
         self.item_added.emit(key_state_info)
         
