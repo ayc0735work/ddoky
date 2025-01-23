@@ -244,10 +244,24 @@ class LogicMakerToolWidget(QFrame):
                 'display_text': delay_text,
                 'duration': delay
             }
-            self.item_added.emit(delay_info)  # item_added 시그널로 전체 정보 전달
+            self._on_delay_input(delay_info)
+
+    def _on_delay_input(self, delay_info):
+        """지연시간 입력 처리"""
+        try:
             self.modal_log_manager.log(
-                message=f"지연시간 {delay:.4f}초가 추가되었습니다",
+                message=f"지연시간 {delay_info.get('duration', 0.0):.4f}초가 추가되었습니다",
                 level="INFO",
+                file_name="logic_maker_tool_widget"
+            )
+            # Repository를 통해 아이템 추가
+            self.repository.add_item(delay_info)
+            # UI 업데이트를 위한 시그널 발생
+            self.item_added.emit(delay_info)
+        except Exception as e:
+            self.modal_log_manager.log(
+                message=f"지연시간 입력 처리 중 오류 발생: {str(e)}",
+                level="ERROR",
                 file_name="logic_maker_tool_widget"
             )
 
@@ -258,12 +272,26 @@ class LogicMakerToolWidget(QFrame):
             'display_text': '왼쪽 버튼 클릭시 다음으로 진행',
             'button': 'left'
         }
-        self.item_added.emit(wait_click_info)  # 아이템 목록에 추가
-        self.modal_log_manager.log(
-            message="왼쪽 버튼 클릭시 다음으로 진행 아이템이 추가되었습니다",
-            level="INFO",
-            file_name="logic_maker_tool_widget"
-        )
+        self._on_wait_click_input(wait_click_info)
+
+    def _on_wait_click_input(self, wait_click_info):
+        """클릭 대기 입력 처리"""
+        try:
+            self.modal_log_manager.log(
+                message=f"{wait_click_info.get('display_text', '')} 아이템이 추가되었습니다",
+                level="INFO",
+                file_name="logic_maker_tool_widget"
+            )
+            # Repository를 통해 아이템 추가
+            self.repository.add_item(wait_click_info)
+            # UI 업데이트를 위한 시그널 발생
+            self.item_added.emit(wait_click_info)
+        except Exception as e:
+            self.modal_log_manager.log(
+                message=f"클릭 대기 입력 처리 중 오류 발생: {str(e)}",
+                level="ERROR",
+                file_name="logic_maker_tool_widget"
+            )
 
     def _toggle_record_mode(self, checked):
         """기록 모드 토글"""
@@ -281,16 +309,20 @@ class LogicMakerToolWidget(QFrame):
         if dialog.exec() == QDialog.Accepted:
             area = dialog.captured_rect
             if area:
+                image_search_info = {
+                    'type': 'image_search',
+                    'display_text': '이미지 서치 체크',
+                    'area': area
+                }
+                # Repository를 통해 아이템 추가
+                self.repository.add_item(image_search_info)
+                # UI 업데이트를 위한 시그널 발생
+                self.item_added.emit(image_search_info)
                 self.modal_log_manager.log(
                     message=f"이미지 서치 체크 영역이 추가되었습니다: {area}",
                     level="INFO",
                     file_name="logic_maker_tool_widget"
                 )
-                self.item_added.emit({
-                    'type': 'image_search',
-                    'display_text': '이미지 서치 체크',
-                    'area': area
-                })
 
     def _add_text_input(self):
         """텍스트 입력 추가"""
@@ -298,7 +330,10 @@ class LogicMakerToolWidget(QFrame):
         if dialog.exec() == QDialog.Accepted:
             text_info = dialog.get_text()  # 이미 딕셔너리를 반환
             if text_info:
-                self.item_added.emit(text_info)  # 직접 전달
+                # Repository를 통해 아이템 추가
+                self.repository.add_item(text_info)
+                # UI 업데이트를 위한 시그널 발생
+                self.item_added.emit(text_info)
                 self.modal_log_manager.log(
                     message=f"텍스트 입력이 추가되었습니다: {text_info['text']}",
                     level="INFO",
