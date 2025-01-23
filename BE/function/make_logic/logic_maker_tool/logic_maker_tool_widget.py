@@ -401,15 +401,6 @@ class LogicMakerToolWidget(QFrame):
                     self._handle_key_release(key_state_info)
             ```
         """
-
-        self.modal_log_manager.log(
-            message=f"111키 입력 정보가 추가되었습니다: {key_state_info.get('display_text', str(key_state_info))} <br>",
-            level="INFO", 
-            modal_name="로직메이커(_on_key_state_info_added)"
-        )
-
-        # items 리스트에 추가
-        #self.items.append(key_state_info)
         # item_added 시그널 발생
         self.item_added.emit(key_state_info)
         # 로그 메시지 출력
