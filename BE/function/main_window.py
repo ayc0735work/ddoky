@@ -733,7 +733,12 @@ class MainWindow(QMainWindow):
         """
         # 아이템 타입에 따른 처리
         item_type = item_info.get('type')
-        
+        self.modal_log_manager.log(
+            message=f"아이템이 추가되었습니다: {item_info.get('display_text', str(item_info))}",
+            level="INFO",
+            modal_name="로직상세(_on_item_added)"
+        )
+
         if item_type == 'key':
             # 키 입력 처리
             self.logic_detail_widget.add_item(item_info)
@@ -770,6 +775,7 @@ class MainWindow(QMainWindow):
                 level="ERROR",
                 modal_name="로직리스트"
             )
+
 
     def show_key_info_dialog(self):
         """키 입력 다이얼로그를 생성하고 표시합니다.

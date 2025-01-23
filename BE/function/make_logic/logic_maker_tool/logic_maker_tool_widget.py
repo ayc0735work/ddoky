@@ -60,7 +60,7 @@ class LogicMakerToolWidget(QFrame):
         # 키 입력 버튼
         self.key_btn = QPushButton("키 입력 추가")
         self.key_btn.setStyleSheet(BUTTON_STYLE)
-        self.key_btn.clicked.connect(self._request_key_to_input)
+        self.key_btn.clicked.connect(self._open_key_input_dialog)
         button_layout.addWidget(self.key_btn)
 
         # 마우스 입력 버튼
@@ -183,7 +183,7 @@ class LogicMakerToolWidget(QFrame):
                 modal_name="로직메이커"
             )
 
-    def _request_key_to_input(self):
+    def _open_key_input_dialog(self):
         """키 입력을 요청하는 다이얼로그를 표시하고 입력된 키 정보를 처리합니다.
         
         이 메서드는 다음과 같은 처리를 수행합니다:
@@ -401,13 +401,20 @@ class LogicMakerToolWidget(QFrame):
                     self._handle_key_release(key_state_info)
             ```
         """
+
+        self.modal_log_manager.log(
+            message=f"111키 입력 정보가 추가되었습니다: {key_state_info.get('display_text', str(key_state_info))} <br>",
+            level="INFO", 
+            modal_name="로직메이커(_on_key_state_info_added)"
+        )
+
         # items 리스트에 추가
-        self.items.append(key_state_info)
+        #self.items.append(key_state_info)
         # item_added 시그널 발생
         self.item_added.emit(key_state_info)
         # 로그 메시지 출력
         self.modal_log_manager.log(
             message=f"키 입력 정보가 추가되었습니다: {key_state_info.get('display_text', str(key_state_info))} <br>",
             level="INFO", 
-            modal_name="로직메이커"
+            modal_name="로직메이커(_on_key_state_info_added)"
         )

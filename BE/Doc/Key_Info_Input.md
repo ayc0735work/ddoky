@@ -10,7 +10,61 @@
   버튼 클릭 → 모달 다이얼로그 → 데이터 포맷팅 → 누르기/떼기 변환 → 위젯 간 통신 → 목록 상자 표시
 ```
 
-### 1.2 주요 컴포넌트 역할
+### 1.2 상세 처리 순서
+1. **다이얼로그 생성 및 표시**
+   - 파일: `logic_maker_tool_widget.py`
+   - 메서드: `_open_key_input_dialog()`
+   ```python
+   dialog = EnteredKeyInfoDialog(self)  # 다이얼로그 생성
+   ```
+
+2. **키 입력 감지 및 저장**
+   - 파일: `entered_key_info_dialog.py`
+   - 메서드: `get_entered_key_info()`
+   ```python
+   return self.last_key_info  # 키보드 훅으로 캡처된 키 정보 반환
+   ```
+
+3. **확인 버튼 클릭 처리**
+   - 파일: `entered_key_info_dialog.py`
+   - 메서드: `_on_confirm()`
+   ```python
+   confirmed_key_info = self.get_entered_key_info()
+   if confirmed_key_info:
+       self.accept()  # 다이얼로그 성공적 종료
+   ```
+
+4. **다이얼로그 결과 처리**
+   - 파일: `logic_maker_tool_widget.py`
+   - 메서드: `_open_key_input_dialog()`
+   ```python
+   if dialog.exec() == QDialog.Accepted:
+       get_entered_key_info = dialog.get_entered_key_info()
+       if get_entered_key_info:
+           self.key_handler.handle_confirmed_key_input(get_entered_key_info)
+   ```
+
+5. **키 상태 정보 생성**
+   - 파일: `entered_key_info_handler.py`
+   - 메서드: `handle_confirmed_key_input()`
+   - 동작: 하나의 키 입력을 누르기/떼기 두 상태로 변환
+   - 시그널: `confirmed_and_added_key_info` 발생
+
+6. **최종 처리**
+   - 파일: `logic_maker_tool_widget.py`
+   - 메서드: `_on_key_state_info_added()`
+   - 동작: 
+     * 아이템 리스트에 추가
+     * UI 업데이트 시그널 발생
+     * 로그 기록
+
+### 1.3 시그널 흐름
+```
+[EnteredKeyInfoHandler] → confirmed_and_added_key_info → [LogicMakerToolWidget]
+[LogicMakerToolWidget] → item_added → [LogicDetailWidget]
+```
+
+### 1.4 주요 컴포넌트 역할
 - **키 입력 모달**: 사용자의 키 입력을 받고 표시
 - **키보드 훅**: 저수준 키보드 이벤트 캡처
 - **키 정보 핸들러**: 키 정보 가공 및 전달
@@ -50,7 +104,7 @@ BE/function/
    - 버튼 위치: 로직 메이커 도구 위젯의 상단
    - 버튼 상태: 활성화 (다른 모달이 열려있지 않은 경우)
 
-2. `LogicMakerToolWidget._request_key_to_input()` 메서드 호출
+2. `LogicMakerToolWidget._open_key_input_dialog()` 메서드 호출
    - 키 입력 다이얼로그 생성 및 표시
    - 모달 형태로 화면에 표시
    - 기존 UI와의 상호작용 차단
