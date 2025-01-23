@@ -18,31 +18,6 @@ class EnteredKeyInfoHandler(QObject):
         super().__init__(parent)
         self.modal_log_manager = BaseLogManager.instance()
     
-    def request_key_input(self, parent=None):
-        """키 입력을 요청하는 다이얼로그를 표시
-        
-        Args:
-            parent (QWidget): 다이얼로그의 부모 위젯
-            
-        프로세스:
-        1. EnteredKeyInfoDialog 인스턴스를 생성하여 모달 다이얼로그로 표시
-        2. 사용자가 키를 입력하면 EnteredKeyInfoWidget이 keyboard_hook_handler를 통해 키 정보를 캡처
-        3. 사용자가 확인(OK)을 클릭하면:
-            - EnteredKeyInfoDialog.get_entered_key_info()를 통해 formatted_key_info를 가져옴
-            - 키 정보가 유효하면 handle_confirmed_key_input()를 호출하여 처리
-        """
-        # 키 입력 다이얼로그 생성
-        dialog = EnteredKeyInfoDialog(parent)
-        
-        # 다이얼로그를 모달로 실행하고 사용자 응답 확인
-        if dialog.exec() == QDialog.Accepted:
-            # 입력된 키 정보 가져오기
-            get_entered_key_info = dialog.get_entered_key_info()
-            
-            # 키 정보가 유효한 경우 처리
-            if get_entered_key_info:
-                self.handle_confirmed_key_input(get_entered_key_info)
-    
     def handle_confirmed_key_input(self, get_entered_key_info):
         """확인된 키 입력 정보를 처리
         

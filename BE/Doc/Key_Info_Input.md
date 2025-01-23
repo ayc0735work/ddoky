@@ -14,7 +14,7 @@
 - **키 입력 모달**: 사용자의 키 입력을 받고 표시
 - **키보드 훅**: 저수준 키보드 이벤트 캡처
 - **키 정보 핸들러**: 키 정보 가공 및 전달
-- **로직 메이커**: 키 입력 정보 중계 및 관리
+- **로직 메이커**: 키 입력 정보 중계 및 관리, UI 표시 담당
 - **로직 상세**: 최종 UI 표시 및 사용자 상호작용
 
 ## 2. 파일 구조 및 역할
@@ -25,7 +25,7 @@ BE/function/
 │   ├── entered_key_info_widget.py     # 키 입력 UI 위젯 (키 입력 표시 및 상세 정보 표시)
 │   └── keyboard_hook_handler.py       # 키보드 훅 처리기 (저수준 키보드 이벤트 캡처)
 ├── make_logic/logic_maker_tool/
-│   ├── logic_maker_tool_widget.py     # 로직 메이커 도구 위젯 (키 입력 시작점 및 중계자)
+│   ├── logic_maker_tool_widget.py     # 로직 메이커 도구 위젯 (키 입력 UI 처리 및 중계자)
 │   └── handlers/
 │       └── entered_key_info_handler.py # 키 입력 정보 핸들러 (키 정보 가공 및 전달)
 └── make_logic/logic_detail/
@@ -51,15 +51,12 @@ BE/function/
    - 버튼 상태: 활성화 (다른 모달이 열려있지 않은 경우)
 
 2. `LogicMakerToolWidget._request_key_to_input()` 메서드 호출
-   - 키 입력 핸들러 존재 여부 확인
-   - 이전 키 입력 모달이 있다면 정리
-
-3. `EnteredKeyInfoHandler.request_key_input()` 메서드 호출
-   - 키 입력 모달 다이얼로그 생성
+   - 키 입력 다이얼로그 생성 및 표시
    - 모달 형태로 화면에 표시
    - 기존 UI와의 상호작용 차단
+   - 사용자 입력 대기
 
-4. 모달 다이얼로그 초기화
+3. 모달 다이얼로그 초기화
    - 키 입력 영역 포커스 설정
    - 안내 메시지 표시
    - ESC 키 처리 방지 설정

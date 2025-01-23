@@ -11,6 +11,7 @@ from BE.function._common_components.modal.image_search_area_modal.image_search_a
 from BE.function._common_components.modal.text_input_modal.text_input_dialog import TextInputDialog
 from .handlers.entered_key_info_handler import EnteredKeyInfoHandler
 from BE.log.manager.base_log_manager import BaseLogManager
+from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 
 class LogicMakerToolWidget(QFrame):
     """로직 메이커 위젯"""
@@ -183,8 +184,54 @@ class LogicMakerToolWidget(QFrame):
             )
 
     def _request_key_to_input(self):
-        """키 입력 요청 - 핸들러로 위임"""
-        self.key_handler.request_key_input(self)
+        """키 입력을 요청하는 다이얼로그를 표시하고 입력된 키 정보를 처리합니다.
+        
+        이 메서드는 다음과 같은 처리를 수행합니다:
+        1. 키 입력 다이얼로그 표시
+           - EnteredKeyInfoDialog 인스턴스 생성
+           - 모달 형태로 다이얼로그 표시
+           - 사용자의 키 입력 대기
+           
+        2. 키 입력 감지 및 캡처
+           - EnteredKeyInfoWidget이 keyboard_hook_handler를 통해 키 정보 캡처
+           - 캡처된 정보는 formatted_key_info 형태로 구조화
+           - NumLock 상태 등 특수 상황 처리
+           
+        3. 키 정보 처리 및 전달
+           - 사용자가 확인(OK) 버튼 클릭 시 처리 시작
+           - EnteredKeyInfoDialog.get_entered_key_info()로 키 정보 획득
+           - key_handler.handle_confirmed_key_input()을 통해 처리
+           - 키 정보는 누르기/떼기 두 가지 상태로 변환되어 처리
+           
+        데이터 흐름:
+        1. 사용자 키 입력 → 키보드 훅 → 키 정보 구조화
+        2. 확인 버튼 클릭 → 키 정보 검증 → 핸들러 전달
+        3. 핸들러 처리 → 시그널 발생 → UI 업데이트
+        
+        Note:
+            키보드 입력은 다른 입력(마우스, 지연시간 등)과 달리 
+            EnteredKeyInfoHandler를 통해 별도로 처리됩니다.
+            이는 키 입력의 특수성(누르기/떼기 상태, 수정자 키 등)을 
+            고려한 설계입니다.
+        """
+        # 키 입력 다이얼로그 생성
+        dialog = EnteredKeyInfoDialog(self)
+        
+        # 다이얼로그를 모달로 실행하고 사용자 응답 확인
+        # dialog.exec()는 모달 다이얼로그를 화면에 표시하고 사용자 입력을 기다리는 메서드
+        # 다이얼로그가 닫힐 때까지 코드 실행을 일시 중지하고, 닫힐 때 다음 값들 중 하나를 반환:
+        # - QDialog.Accepted (1): 사용자가 OK/확인 버튼을 클릭한 경우
+        # - QDialog.Rejected (0): 사용자가 Cancel/취소 버튼을 클릭하거나 다이얼로그를 닫은 경우
+        # 따라서 이 조건문은 사용자가 OK 버튼으로 다이얼로그를 닫았을 때만 키 입력 처리를 진행
+        if dialog.exec() == QDialog.Accepted:
+            # get_entered_key_info 변수에 dialog.get_entered_key_info()의 반환값(키 정보)을 저장
+            # dialog.get_entered_key_info()는 사용자가 입력한 키의 정보를 반환하는 메서드
+
+            get_entered_key_info = dialog.get_entered_key_info()
+            
+            # 키 정보가 유효한 경우 핸들러에 전달하여 처리
+            if get_entered_key_info:
+                self.key_handler.handle_confirmed_key_input(get_entered_key_info)
 
     def _add_mouse_input(self):
         """마우스 입력 추가"""
