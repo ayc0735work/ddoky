@@ -39,7 +39,7 @@ class CountdownControllerInputSequence(QObject):
         super().__init__()
         self.modal_log_manager = BaseLogManager.instance()
         self.modal_log_manager.log(
-            message="컨트롤러 초기화 시작",
+            message="컨트롤러 초기화 시작<br>",
             level="DEBUG",
             modal_name="카운트다운"
         )
@@ -73,13 +73,13 @@ class CountdownControllerInputSequence(QObject):
         self._connect_signals()
         self.widget.set_controller(self)  # 위젯에 컨트롤러 참조 설정
         self.modal_log_manager.log(
-            message="컨트롤러 초기화 완료",
+            message="컨트롤러 초기화 완료<br>",
             level="DEBUG",
             modal_name="카운트다운"
         )
         
         self.modal_log_manager.log(
-            message="CountdownControllerInputSequence 초기화 완료",
+            message="CountdownControllerInputSequence 초기화 완료<br>",
             level="INFO",
             modal_name="카운트다운"
         )
@@ -90,7 +90,7 @@ class CountdownControllerInputSequence(QObject):
         self.countdown_controller.countdown_updated.connect(self._update_countdown_label)
         self.countdown_controller.countdown_finished.connect(self._on_countdown_finished)
         self.modal_log_manager.log(
-            message="시그널 연결 완료",
+            message="시그널 연결 완료<br>",
             level="DEBUG",
             modal_name="카운트다운"
         )
@@ -118,11 +118,6 @@ class CountdownControllerInputSequence(QObject):
         2. A그룹 키(숫자1) 처리
         3. B그룹 키(엔터) 처리
         """
-        self.modal_log_manager.log(
-            message=f"키 눌림 감지: {key_info}",
-            level="DEBUG",
-            modal_name="카운트다운"
-        )
         current_time = time.time()
         
         # 1. 탭키 처리
@@ -132,7 +127,7 @@ class CountdownControllerInputSequence(QObject):
                 'tab_sequence_used': False  # 탭 시퀀스 초기화
             })
             self.modal_log_manager.log(
-                message="탭키 감지됨, 시퀀스 초기화",
+                message="탭키 감지됨, 시퀀스 초기화<br>",
                 level="DEBUG",
                 modal_name="카운트다운"
             )
@@ -148,7 +143,7 @@ class CountdownControllerInputSequence(QObject):
                 self._key_state['tab_sequence_used'] = True  # 탭 시퀀스 사용 처리
                 self._key_state['tab_cooldown_time'] = current_time  # 쿨다운 시작
                 self.modal_log_manager.log(
-                    message="탭 시퀀스로 카운트다운 시작",
+                    message="탭 시퀀스로 카운트다운 시작<br>",
                     level="DEBUG",
                     modal_name="카운트다운"
                 )
@@ -164,7 +159,7 @@ class CountdownControllerInputSequence(QObject):
                 })
                 self._sequence_timer.start()
                 self.modal_log_manager.log(
-                    message="일반 시퀀스 시작",
+                    message="일반 시퀀스 시작<br>",
                     level="DEBUG",
                     modal_name="카운트다운"
                 )
@@ -172,7 +167,7 @@ class CountdownControllerInputSequence(QObject):
         # 3. B그룹 키(엔터) 처리
         elif self._is_group_b_key(key_info) and self._key_state['group_a_pressed']:
             self.modal_log_manager.log(
-                message="B그룹 키 감지됨 (A그룹 키 활성화 상태)",
+                message="B그룹 키 감지됨 (A그룹 키 활성화 상태)<br>",
                 level="DEBUG",
                 modal_name="카운트다운"
             )
@@ -186,15 +181,10 @@ class CountdownControllerInputSequence(QObject):
         2. 시퀀스 유효성 검사
         3. 카운트다운 시작
         """
-        self.modal_log_manager.log(
-            message=f"키 뗌 감지: {key_info}",
-            level="DEBUG",
-            modal_name="카운트다운"
-        )
-        
+
         if self._is_group_b_key(key_info) and self._validate_key_sequence():
             self.modal_log_manager.log(
-                message="유효한 키 시퀀스 감지됨, 카운트다운 시작",
+                message="유효한 키 시퀀스 감지됨, 카운트다운 시작<br>",
                 level="DEBUG",
                 modal_name="카운트다운"
             )
@@ -234,14 +224,14 @@ class CountdownControllerInputSequence(QObject):
         if (self._key_state['group_a_pressed'] and 
             self._key_state['group_b_pressed']):
             self.modal_log_manager.log(
-                message="키 시퀀스 검증 성공",
+                message="키 시퀀스 검증 성공<br>",
                 level="DEBUG",
                 modal_name="카운트다운"
             )
             self._key_state['sequence_valid'] = True
             return True
         self.modal_log_manager.log(
-            message="키 시퀀스 검증 실패",
+            message="키 시퀀스 검증 실패<br>",
             level="DEBUG",
             modal_name="카운트다운"
         )
@@ -254,7 +244,7 @@ class CountdownControllerInputSequence(QObject):
         1. 키 상태 초기화
         """
         self.modal_log_manager.log(
-            message="키 시퀀스 타임아웃 발생",
+            message="키 시퀀스 타임아웃 발생<br>",
             level="DEBUG",
             modal_name="카운트다운"
         )
@@ -268,7 +258,7 @@ class CountdownControllerInputSequence(QObject):
         2. 탭 시퀀스 쿨다운 체크
         """
         self.modal_log_manager.log(
-            message="키 상태 초기화",
+            message="키 상태 초기화<br>",
             level="DEBUG",
             modal_name="카운트다운"
         )
@@ -279,7 +269,7 @@ class CountdownControllerInputSequence(QObject):
             current_time - self._key_state['tab_cooldown_time'] > 10):  # 10초 쿨다운
             self._key_state['tab_sequence_used'] = False
             self.modal_log_manager.log(
-                message="탭 시퀀스 쿨다운 완료",
+                message="탭 시퀀스 쿨다운 완료<br>  ",
                 level="DEBUG",
                 modal_name="카운트다운"
             )
@@ -305,7 +295,7 @@ class CountdownControllerInputSequence(QObject):
             if not self.process_manager.is_selected_process_active():
                 if self.countdown_controller.is_running():
                     self.modal_log_manager.log(
-                        message="프로세스 비활성화로 카운트다운 중지",
+                        message="프로세스 비활성화로 카운트다운 중지<br>",
                         level="INFO",
                         modal_name="카운트다운"
                     )
@@ -313,7 +303,7 @@ class CountdownControllerInputSequence(QObject):
                     
         except Exception as e:
             self.modal_log_manager.log(
-                message=f"프로세스 상태 체크 중 오류 발생: {e}",
+                message=f"프로세스 상태 체크 중 오류 발생: {e}<br>",
                 level="ERROR",
                 modal_name="카운트다운"
             )
@@ -327,7 +317,7 @@ class CountdownControllerInputSequence(QObject):
         """
         if self._check_conditions():
             self.modal_log_manager.log(
-                message="카운트다운 시작",
+                message="카운트다운 시작<br>",
                 level="DEBUG",
                 modal_name="카운트다운"
             )
@@ -347,7 +337,7 @@ class CountdownControllerInputSequence(QObject):
         1. 키 상태 초기화
         """
         self.modal_log_manager.log(
-            message="카운트다운 완료",
+            message="카운트다운 완료<br>",
             level="DEBUG",
             modal_name="카운트다운"
         )
@@ -383,19 +373,19 @@ class CountdownControllerInputSequence(QObject):
         """
         if not self.process_manager.is_selected_process_active():
             self.modal_log_manager.log(
-                message="프로세스가 활성화되지 않음, 카운트다운 시작 불가",
+                message="프로세스가 활성화되지 않음, 카운트다운 시작 불가<br>",
                 level="INFO",
                 modal_name="카운트다운"
             )
             return
             
         self.modal_log_manager.log(
-            message="헬파이어 카운트다운 시작 요청",
+            message="헬파이어 카운트다운 시작 요청<br>",
             level="INFO",
             modal_name="카운트다운"
         )
         self.modal_log_manager.log(
-            message="헬파이어 카운트다운 시작",
+            message="헬파이어 카운트다운 시작<br>",
             level="INFO",
             modal_name="카운트다운"
         )
@@ -415,12 +405,12 @@ class CountdownControllerInputSequence(QObject):
         2. 로그 기록
         """
         self.modal_log_manager.log(
-            message="헬파이어 카운트다운 중지 요청",
+            message="헬파이어 카운트다운 중지 요청<br>",
             level="INFO",
             modal_name="카운트다운"
         )
         self.modal_log_manager.log(
-            message="헬파이어 카운트다운 중지",
+            message="헬파이어 카운트다운 중지<br>",
             level="INFO",
             modal_name="카운트다운"
         )
@@ -447,7 +437,7 @@ class CountdownControllerInputSequence(QObject):
         is_valid = self._key_state['sequence_valid']
         
         self.modal_log_manager.log(
-            message=f"조건 체크: 로직 활성화={is_enabled}, 프로세스 활성화={is_active}, 시퀀스 유효={is_valid}",
+            message=f"조건 체크: 로직 활성화={is_enabled}, 프로세스 활성화={is_active}, 시퀀스 유효={is_valid}<br>",
             level="DEBUG",
             modal_name="카운트다운"
         )

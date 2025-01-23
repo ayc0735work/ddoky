@@ -198,7 +198,7 @@ class EnteredKeyInfoDialog(QDialog):
         if confirmed_key_info: # 키 정보가 있는 경우
             self.accept()  # 다이얼로그가 성공적으로 완료되면 창을 닫고 데이터를 사용해도 좋다는 이벤트 전달
             self.modal_log_manager.log(
-                message="키 입력 모달의 확인버튼이 클릭되었습니다.",
+                message="키 입력 모달의 확인버튼이 클릭되었습니다.<br>",
                 level="INFO",
                 modal_name="키입력모달"
             )

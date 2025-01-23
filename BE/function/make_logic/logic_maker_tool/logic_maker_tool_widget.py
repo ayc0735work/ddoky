@@ -29,10 +29,10 @@ class LogicMakerToolWidget(QFrame):
         self.items = []  # 아이템 리스트
         self.modal_log_manager = BaseLogManager.instance()
         
-        # 키 입력 핸들러 초기화
-        self.key_handler = LogicMakerToolKeyInfoController(self)
-        # 키 핸들러의 시그널을 위젯의 시그널로 연결
-        self.key_handler.confirmed_and_added_key_info.connect(self._on_key_state_info_added)
+        # 키 입력 컨트롤러 초기화
+        self.key_controller = LogicMakerToolKeyInfoController(self)
+        # 키 컨트롤러의 item_added 시그널을 위젯의 item_added 시그널로 연결
+        self.key_controller.item_added.connect(self.item_added.emit)
         
         self.init_ui()
         
@@ -200,38 +200,16 @@ class LogicMakerToolWidget(QFrame):
         3. 키 정보 처리 및 전달
            - 사용자가 확인(OK) 버튼 클릭 시 처리 시작
            - EnteredKeyInfoDialog.get_entered_key_info()로 키 정보 획득
-           - key_handler.handle_confirmed_key_input()을 통해 처리
+           - key_controller.handle_confirmed_key_input()을 통해 처리
            - 키 정보는 누르기/떼기 두 가지 상태로 변환되어 처리
-           
-        데이터 흐름:
-        1. 사용자 키 입력 → 키보드 훅 → 키 정보 구조화
-        2. 확인 버튼 클릭 → 키 정보 검증 → 핸들러 전달
-        3. 핸들러 처리 → 시그널 발생 → UI 업데이트
-        
-        Note:
-            키보드 입력은 다른 입력(마우스, 지연시간 등)과 달리 
-            LogicMakerToolKeyInfoController를 통해 별도로 처리됩니다.
-            이는 키 입력의 특수성(누르기/떼기 상태, 수정자 키 등)을 
-            고려한 설계입니다.
         """
         # 키 입력 다이얼로그 생성
         dialog = EnteredKeyInfoDialog(self)
         
-        # 다이얼로그를 모달로 실행하고 사용자 응답 확인
-        # dialog.exec()는 모달 다이얼로그를 화면에 표시하고 사용자 입력을 기다리는 메서드
-        # 다이얼로그가 닫힐 때까지 코드 실행을 일시 중지하고, 닫힐 때 다음 값들 중 하나를 반환:
-        # - QDialog.Accepted (1): 사용자가 OK/확인 버튼을 클릭한 경우
-        # - QDialog.Rejected (0): 사용자가 Cancel/취소 버튼을 클릭하거나 다이얼로그를 닫은 경우
-        # 따라서 이 조건문은 사용자가 OK 버튼으로 다이얼로그를 닫았을 때만 키 입력 처리를 진행
         if dialog.exec() == QDialog.Accepted:
-            # get_entered_key_info 변수에 dialog.get_entered_key_info()의 반환값(키 정보)을 저장
-            # dialog.get_entered_key_info()는 사용자가 입력한 키의 정보를 반환하는 메서드
-
             get_entered_key_info = dialog.get_entered_key_info()
-            
-            # 키 정보가 유효한 경우 핸들러에 전달하여 처리
             if get_entered_key_info:
-                self.key_handler.handle_confirmed_key_input(get_entered_key_info)
+                self.key_controller.handle_confirmed_key_input(get_entered_key_info)
 
     def _add_mouse_input(self):
         """마우스 입력 추가"""
@@ -361,51 +339,3 @@ class LogicMakerToolWidget(QFrame):
     def update_saved_logics(self, logics):
         """저장된 로직 정보 업데이트"""
         self.saved_logics = logics
-
-    def _on_key_state_info_added(self, key_state_info):
-        """키 상태 정보(누르기/떼기)가 추가되었을 때의 처리
-        
-        Args:
-            key_state_info (dict): 키 상태 정보
-                {
-                    'type': 'key',                # 입력 타입
-                    'action': str,                # '누르기' 또는 '떼기'
-                    'key_code': str,              # 키 이름 (예: 'Space')
-                    'scan_code': int,             # 하드웨어 키보드의 물리적 위치 값
-                    'virtual_key': int,           # Windows API 가상 키 코드
-                    'modifiers': int,             # Qt 기반 수정자 키 상태
-                    'location': str,              # 키보드 위치 (예: '메인')
-                    'modifier_text': str,         # 수정자 키 텍스트 (예: '없음')
-                    'display_text': str,          # UI 표시용 텍스트 (예: 'Space --- 누르기')
-                    'detail_display_text': str    # 상세 정보 표시용 텍스트
-                }
-        
-        데이터 흐름:
-        1. EnteredKeyInfoDialog에서 사용자가 키 입력 후 확인 버튼 클릭
-        2. LogicMakerToolKeyInfoController.handle_confirmed_key_input()에서 키 정보를 받아 처리
-           - 하나의 키 입력에 대해 누르기/떼기 두 개의 상태 정보 생성
-           - confirmed_and_added_key_info 시그널로 각각 전달
-        3. 본 메서드에서 key_state_info로 받아 처리
-           - items 리스트에 추가
-           - item_added 시그널로 다른 위젯들에게 전달
-           - 로그 메시지 출력
-        
-        Note:
-            현재는 누르기/떼기 동작이 동일하여 통합 처리 방식을 사용.
-            향후 각 동작에 대해 다른 처리가 필요한 경우 아래와 같은 분리 처리 방식 고려 가능:
-            ```python
-            def _on_key_state_info_added(self, key_state_info):
-                if key_state_info['action'] == "누르기":
-                    self._handle_key_press(key_state_info)
-                else:
-                    self._handle_key_release(key_state_info)
-            ```
-        """
-        # item_added 시그널을 통해 key_state_info 정보 전달
-        self.item_added.emit(key_state_info)
-        # 로그 메시지 출력
-        self.modal_log_manager.log(
-            message=f"키 입력 정보가 전달되었습니다.: {key_state_info.get(str(key_state_info))} <br>",
-            level="INFO", 
-            modal_name="로직메이커"
-        )
