@@ -107,37 +107,3 @@ class EnteredKeyInfoHandler(QObject):
             level="DEBUG",
             modal_name="키입력핸들러"
         )
-    
-    def handle_key_input(self, key_info):
-        """키 입력 데이터 처리
-        
-        Args:
-            key_info (dict): 입력된 키 정보
-            
-        처리 과정:
-        1. 디버그 로그 출력
-        2. 키 정보 검증
-        3. 시그널 발생
-        """
-        # 디버그 로그 출력
-        self.modal_log_manager.log(
-            message=f"키 입력 처리 시작 - 입력받은 데이터: {key_info.get('display_text', str(key_info))}",
-            level="DEBUG",
-            modal_name="키입력핸들러"
-        )
-        
-        # 키 정보 검증 및 처리
-        if not isinstance(key_info, dict):
-            self.modal_log_manager.log(
-                message="잘못된 키 입력 데이터 형식",
-                level="ERROR",
-                modal_name="키입력핸들러"
-            )
-            return
-            
-        # 처리 완료 로그
-        self.modal_log_manager.log(
-            message=f"키 입력 처리 완료: {key_info}",
-            level="DEBUG",
-            modal_name="키입력핸들러"
-        )
