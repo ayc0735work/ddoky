@@ -252,7 +252,7 @@ class LogicDetailWidget(QFrame):
         """아이템을 리스트에 추가"""
         try:
             self.modal_log_manager.log( 
-                message=f"add_item 시작 - 입력받은 데이터: {item_info} \n",
+                message=f"add_item 시작 - 입력받은 데이터: {item_info}",
                 level="DEBUG",
                 modal_name="로직상세(add_item)"
             )

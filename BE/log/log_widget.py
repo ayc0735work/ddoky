@@ -89,7 +89,7 @@ class LogWidget(QFrame):
     def append(self, message):
         """로그 메시지 추가"""
         if message and message.strip():  # 빈 메시지가 아닌 경우에만 추가
-            self.log_text.append(message.rstrip())  # 오른쪽 공백과 줄바꿈 제거
+            self.log_text.append(message)
             
     def clear_log(self):
         """로그 메시지 초기화"""
