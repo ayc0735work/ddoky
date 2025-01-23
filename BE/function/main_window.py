@@ -775,27 +775,3 @@ class MainWindow(QMainWindow):
                 level="ERROR",
                 modal_name="로직리스트"
             )
-
-
-    def show_key_info_dialog(self):
-        """키 입력 다이얼로그를 생성하고 표시합니다.
-        
-        이 메서드가 필요한 이유:
-        1. 모달 다이얼로그의 생명주기 관리
-           - 모달은 임시로 사용되는 창으로, 필요할 때만 생성되고 닫히면 제거됨
-           - 메모리 효율성을 위해 필요할 때만 생성하고 사용 후 정리
-           
-        Returns:
-            EnteredKeyInfoDialog: 생성된 다이얼로그 인스턴스
-            
-        사용 예시:
-            dialog = self.show_key_info_dialog()
-            if dialog.exec() == QDialog.Accepted:
-                # 키 입력 처리
-                pass
-        """
-        # 새로운 다이얼로그 생성
-        self.entered_key_info_dialog = EnteredKeyInfoDialog(self)
-        
-        # 다이얼로그 표시
-        return self.entered_key_info_dialog
