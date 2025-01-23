@@ -57,7 +57,7 @@
    if dialog.exec() == QDialog.Accepted:
        get_entered_key_info = dialog.get_entered_key_info()
        if get_entered_key_info:
-           self.key_controller.handle_confirmed_key_input(get_entered_key_info)
+           self.key_info_controller.handle_confirmed_key_input(get_entered_key_info)
    ```
 
 5. **키 상태 정보 생성 및 처리**
@@ -183,9 +183,9 @@ class LogicMakerToolWidget(QFrame):
     item_added = Signal(dict)  # UI 업데이트용
     
     def __init__(self):
-        self.key_controller = LogicMakerToolKeyInfoController()
+        self.key_info_controller = LogicMakerToolKeyInfoController()
         # 컨트롤러의 시그널을 위젯의 시그널로 연결
-        self.key_controller.item_added.connect(self.item_added.emit)
+        self.key_info_controller.item_added.connect(self.item_added.emit)
 ```
 
 ## 5. 데이터 구조
