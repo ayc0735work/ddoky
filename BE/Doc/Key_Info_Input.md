@@ -294,7 +294,7 @@ confirmed_and_added_key_info
 
 2. 키 입력 정보 처리 시작
    ```
-   [INFO] [키입력핸들러] 키 입력이 추가되었습니다 [ 
+   [INFO] [입력된_키_정보_핸들러] 키 입력이 추가되었습니다 [ 
    키: Space, 
    스캔 코드 (하드웨어 고유값): 57, 
    확장 가상 키 (운영체제 레벨의 고유 값): 32, 
@@ -317,7 +317,7 @@ confirmed_and_added_key_info
 
 4. 떼기 이벤트 처리
    ```
-   [DEBUG] [키입력핸들러] 키 상태 정보가 업데이트 되었습니다.
+   [DEBUG] [입력된_키_정보_핸들러] 키 상태 정보가 업데이트 되었습니다.
    type: key, 
    action: 떼기,
    display_text: Space --- 떼기

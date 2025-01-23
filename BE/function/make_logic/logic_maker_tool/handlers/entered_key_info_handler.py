@@ -65,7 +65,7 @@ class EnteredKeyInfoHandler(QObject):
                 f"수정자 키: {get_entered_key_info['modifier_text']} ] <br>"
             ),
             level="INFO",
-            modal_name="키입력핸들러"
+            modal_name="입력된_키_정보_핸들러"
         )
         
         # 누르기 이벤트용 키 상태 정보
@@ -85,7 +85,7 @@ class EnteredKeyInfoHandler(QObject):
                 f"display_text: {key_state_info_press['display_text']}"
             ),
             level="DEBUG",
-            modal_name="키입력핸들러"
+            modal_name="입력된_키_정보_핸들러"
         )
         
         # 떼기 이벤트용 키 상태 정보
@@ -105,5 +105,5 @@ class EnteredKeyInfoHandler(QObject):
                 f"display_text: {key_state_info_release['display_text']}"
             ),
             level="DEBUG",
-            modal_name="키입력핸들러"
+            modal_name="입력된_키_정보_핸들러"
         )
