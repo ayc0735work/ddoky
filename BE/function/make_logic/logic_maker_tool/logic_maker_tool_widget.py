@@ -9,7 +9,7 @@ from BE.function._common_components.modal.logic_selector_modal.logic_selector_di
 from BE.function._common_components.modal.mouse_input_modal.mouse_input_dialog import MouseInputDialog
 from BE.function._common_components.modal.image_search_area_modal.image_search_area_dialog import ImageSearchAreaDialog
 from BE.function._common_components.modal.text_input_modal.text_input_dialog import TextInputDialog
-from .handlers.entered_key_info_handler import EnteredKeyInfoHandler
+from .logic_maker_tool_key_info_controller import LogicMakerToolKeyInfoController
 from BE.log.manager.base_log_manager import BaseLogManager
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 
@@ -30,7 +30,7 @@ class LogicMakerToolWidget(QFrame):
         self.modal_log_manager = BaseLogManager.instance()
         
         # 키 입력 핸들러 초기화
-        self.key_handler = EnteredKeyInfoHandler(self)
+        self.key_handler = LogicMakerToolKeyInfoController(self)
         # 키 핸들러의 시그널을 위젯의 시그널로 연결
         self.key_handler.confirmed_and_added_key_info.connect(self._on_key_state_info_added)
         
@@ -210,7 +210,7 @@ class LogicMakerToolWidget(QFrame):
         
         Note:
             키보드 입력은 다른 입력(마우스, 지연시간 등)과 달리 
-            EnteredKeyInfoHandler를 통해 별도로 처리됩니다.
+            LogicMakerToolKeyInfoController를 통해 별도로 처리됩니다.
             이는 키 입력의 특수성(누르기/떼기 상태, 수정자 키 등)을 
             고려한 설계입니다.
         """
@@ -382,7 +382,7 @@ class LogicMakerToolWidget(QFrame):
         
         데이터 흐름:
         1. EnteredKeyInfoDialog에서 사용자가 키 입력 후 확인 버튼 클릭
-        2. EnteredKeyInfoHandler.handle_confirmed_key_input()에서 키 정보를 받아 처리
+        2. LogicMakerToolKeyInfoController.handle_confirmed_key_input()에서 키 정보를 받아 처리
            - 하나의 키 입력에 대해 누르기/떼기 두 개의 상태 정보 생성
            - confirmed_and_added_key_info 시그널로 각각 전달
         3. 본 메서드에서 key_state_info로 받아 처리
@@ -401,11 +401,11 @@ class LogicMakerToolWidget(QFrame):
                     self._handle_key_release(key_state_info)
             ```
         """
-        # item_added 시그널 발생
+        # item_added 시그널을 통해 key_state_info 정보 전달
         self.item_added.emit(key_state_info)
         # 로그 메시지 출력
         self.modal_log_manager.log(
-            message=f"키 입력 정보가 추가되었습니다: {key_state_info.get('display_text', str(key_state_info))} <br>",
+            message=f"키 입력 정보가 전달되었습니다.: {key_state_info.get(str(key_state_info))} <br>",
             level="INFO", 
-            modal_name="로직메이커(_on_key_state_info_added)"
+            modal_name="로직메이커"
         )

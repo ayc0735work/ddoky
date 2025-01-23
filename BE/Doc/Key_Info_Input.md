@@ -45,7 +45,7 @@
    ```
 
 5. **키 상태 정보 생성**
-   - 파일: `entered_key_info_handler.py`
+   - 파일: `logic_maker_tool_key_info_controller.py`
    - 메서드: `handle_confirmed_key_input()`
    - 동작: 하나의 키 입력을 누르기/떼기 두 상태로 변환
    - 시그널: `confirmed_and_added_key_info` 발생
@@ -60,7 +60,7 @@
 
 ### 1.3 시그널 흐름
 ```
-[EnteredKeyInfoHandler] → confirmed_and_added_key_info → [LogicMakerToolWidget]
+[LogicMakerToolKeyInfoController] → confirmed_and_added_key_info → [LogicMakerToolWidget]
 [LogicMakerToolWidget] → item_added → [LogicDetailWidget]
 ```
 
@@ -81,7 +81,7 @@ BE/function/
 ├── make_logic/logic_maker_tool/
 │   ├── logic_maker_tool_widget.py     # 로직 메이커 도구 위젯 (키 입력 UI 처리 및 중계자)
 │   └── handlers/
-│       └── entered_key_info_handler.py # 키 입력 정보 핸들러 (키 정보 가공 및 전달)
+│       └── logic_maker_tool_key_info_controller.py # 키 입력 정보 핸들러 (키 정보 가공 및 전달)
 └── make_logic/logic_detail/
     └── logic_detail_widget.py         # 로직 상세 위젯 (최종 UI 표시 담당)
 ```
@@ -92,7 +92,7 @@ BE/function/
            ↑                         ↑
            └─────── [keyboard_hook_handler.py]
                          ↑
-[logic_maker_tool_widget.py] ←→ [entered_key_info_handler.py]
+[logic_maker_tool_widget.py] ←→ [logic_maker_tool_key_info_controller.py]
            ↓
 [logic_detail_widget.py]
 ```
@@ -200,11 +200,11 @@ BE/function/
      * 필수 필드 존재 확인
      * 값 형식 검증
      * 범위 검증
-   - 키 정보를 `EnteredKeyInfoHandler`로 전달
+   - 키 정보를 `LogicMakerToolKeyInfoController`로 전달
      * 깊은 복사로 전달
      * 원본 데이터 보존
 
-3. `EnteredKeyInfoHandler.handle_confirmed_key_input()` 호출
+3. `LogicMakerToolKeyInfoController.handle_confirmed_key_input()` 호출
    - 키 정보를 누르기/떼기 두 가지 상태로 변환
    - 각 상태별로 추가 정보 구성
    - 이벤트 순서 보장
@@ -266,7 +266,7 @@ key_state_info_release = {
 ```
 
 ### 3.6 시그널 전파 단계
-1. `EnteredKeyInfoHandler`에서 각 상태 정보에 대해:
+1. `LogicMakerToolKeyInfoController`에서 각 상태 정보에 대해:
    ```python
    # 누르기 이벤트 전파
    self.confirmed_and_added_key_info.emit(key_state_info_press)
@@ -294,7 +294,7 @@ key_state_info_release = {
 
 3. 시그널 전파 흐름도:
 ```
-[EnteredKeyInfoHandler]
+[LogicMakerToolKeyInfoController]
          ↓
 confirmed_and_added_key_info
          ↓

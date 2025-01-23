@@ -3,7 +3,7 @@ from PySide6.QtWidgets import QDialog
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 from BE.log.manager.base_log_manager import BaseLogManager
 
-class EnteredKeyInfoHandler(QObject):
+class LogicMakerToolKeyInfoController(QObject):
     """키 입력 처리를 담당하는 핸들러 클래스"""
     
     # 시그널 정의
