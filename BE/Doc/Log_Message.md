@@ -79,14 +79,14 @@ class YourClass:
 self.modal_log_manager.log(
     message="설정이 변경되었습니다",
     level="INFO",
-    modal_name="설정모달"
+    file_name="설정모달"
 )
 
 # 시간 추적이 필요한 로그
 self.modal_log_manager.log(
     message="로직 실행을 시작합니다",
     level="INFO",
-    modal_name="로직실행",
+    file_name="로직실행",
     include_time=True
 )
 
@@ -94,15 +94,15 @@ self.modal_log_manager.log(
 self.modal_log_manager.log(
     message="중요한 오류가 발생했습니다",
     level="ERROR",
-    modal_name="시스템",
+    file_name="시스템",
     print_to_terminal=True
 )
 ```
 
-### 2.4 모달 이름 규칙
+### 2.4 파일 이름 규칙
 - 한글 사용
 - 띄어쓰기 없이 작성
-- 표준 모달 이름:
+- 표준 파일 이름:
   - 키입력모달
   - 로직실행
   - 로직상세
@@ -115,7 +115,7 @@ self.modal_log_manager.log(
 1. 모든 로그는 명확하고 간결하게 작성
 2. 시간 추적이 필요한 경우에만 `include_time=True` 사용
 3. 터미널 출력은 중요한 이벤트에만 `print_to_terminal=True` 사용
-4. 모달 이름은 일관성 있게 사용
+4. 파일 이름은 일관성 있게 사용
 5. 개인정보나 민감한 데이터는 로그에 포함하지 않음
 6. HTML 스타일 태그는 UI 표시용으로만 사용
 

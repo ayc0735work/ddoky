@@ -260,7 +260,7 @@ class LogicDetailWidget(QFrame):
         self.modal_log_manager.log(
             message=f"아이템 추가 시작 - 입력받은 데이터: {item_info}",
             level="DEBUG",
-            modal_name="로직상세"
+            file_name="로직상세"
         )
         
         if isinstance(item_info, dict):
@@ -268,13 +268,13 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message=f"아이템이 성공적으로 추가되었습니다",
                 level="DEBUG",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
         else:
             self.modal_log_manager.log(
                 message=f"잘못된 형식의 데이터: {type(item_info)}",
                 level="ERROR",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
 
     def _delete_item(self):
@@ -290,7 +290,7 @@ class LogicDetailWidget(QFrame):
                 self.modal_log_manager.log(
                     message=f"아이템이 삭제되었습니다: {item_data.get('display_text', '')}",
                     level="INFO",
-                    modal_name="로직상세"
+                    file_name="로직상세"
                 )
 
     def _move_item_up(self):
@@ -303,7 +303,7 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message=f"아이템을 위로 이동했습니다: {item_data.get('display_text', '')}",
                 level="INFO",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
 
     def _move_item_down(self):
@@ -316,7 +316,7 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message=f"아이템을 아래로 이동했습니다: {item_data.get('display_text', '')}",
                 level="INFO",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
 
     def get_items(self):
@@ -329,7 +329,7 @@ class LogicDetailWidget(QFrame):
         self.modal_log_manager.log(
             message="모든 아이템이 삭제되었습니다",
             level="INFO",
-            modal_name="로직상세"
+            file_name="로직상세"
         )
 
     def _on_key_input_changed(self, formatted_key_info):
@@ -337,7 +337,7 @@ class LogicDetailWidget(QFrame):
         self.modal_log_manager.log(
             message=f"키 입력 변경 - 입력된 키 정보: {formatted_key_info}",
             level="DEBUG",
-            modal_name="로직상세"
+            file_name="로직상세"
         )
         
         if not formatted_key_info:  # 키 정보가 비어있으면 라벨 초기화
@@ -346,7 +346,7 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message="키 정보가 비어있어 초기화됨",
                 level="DEBUG",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
             return
         
@@ -390,7 +390,7 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message=f"중복된 트리거 키 발견: {len(duplicate_logics)}개의 로직에서 사용 중",
                 level="WARNING", 
-                modal_name="로직상세"
+                file_name="로직상세"
             )
             
             # 키 입력 초기화
@@ -406,7 +406,7 @@ class LogicDetailWidget(QFrame):
         self.modal_log_manager.log(
             message=f"트리거 키 설정 완료: {self.trigger_key_info}",
             level="DEBUG",
-            modal_name="로직상세"
+            file_name="로직상세"
         )
 
     def _save_logic(self):
@@ -415,7 +415,7 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message="로직 저장을 시작합니다",
                 level="INFO",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
             print(f"[DEBUG] LogicDetailWidget._save_logic 시작")
             name = self.LogicNameInput__QLineEdit.text().strip()
@@ -423,7 +423,7 @@ class LogicDetailWidget(QFrame):
                 self.modal_log_manager.log(
                     message="로직 이름이 입력되지 않았습니다",
                     level="ERROR",
-                    modal_name="로직상세"
+                    file_name="로직상세"
                 )
                 return False
 
@@ -431,7 +431,7 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message=f"로직 정보 - 이름: {name}, 중첩여부: {is_nested}",
                 level="DEBUG",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
             print(f"[DEBUG] 로직 정보 - 이름: {name}, 중첩여부: {is_nested}")
 
@@ -440,7 +440,7 @@ class LogicDetailWidget(QFrame):
                 self.modal_log_manager.log(
                     message="트리거 키가 설정되지 않았습니다",
                     level="ERROR",
-                    modal_name="로직상세"
+                    file_name="로직상세"
                 )
                 QMessageBox.warning(self, "저장 실패", "트리거 키를 정해주세요.", QMessageBox.Ok)
                 return False
@@ -449,7 +449,7 @@ class LogicDetailWidget(QFrame):
                 self.modal_log_manager.log(
                     message="로직에 아이템이 추가되지 않았습니다",
                     level="ERROR",
-                    modal_name="로직상세"
+                    file_name="로직상세"
                 )
                 return False
 
@@ -458,7 +458,7 @@ class LogicDetailWidget(QFrame):
                 self.modal_log_manager.log(
                     message="새 로직 저장 - 이름 중복 검사 중...",
                     level="DEBUG",
-                    modal_name="로직상세"
+                    file_name="로직상세"
                 )
                 print(f"[DEBUG] 새 로직 저장 - 이름 중복 검사")
                 logics = self.settings_manager.load_logics()
@@ -474,14 +474,14 @@ class LogicDetailWidget(QFrame):
                         self.modal_log_manager.log(
                             message=f"이미 '{name}' 이름의 로직이 존재합니다",
                             level="ERROR",
-                            modal_name="로직상세"
+                            file_name="로직상세"
                         )
                         return False
 
             self.modal_log_manager.log(
                 message="로직 정보를 구성합니다",
                 level="DEBUG",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
             print(f"[DEBUG] 로직 정보 구성 시작")
             # 현재 로직 정보 구성
@@ -498,20 +498,20 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message=f"구성된 로직 정보: {logic_info}",
                 level="DEBUG",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
             print(f"[DEBUG] 로직 정보: {logic_info}")
 
             self.modal_log_manager.log(
                 message=f"트리거 키 정보: {self.trigger_key_info}, 중첩로직 여부: {is_nested}",
                 level="DEBUG",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
             
             self.modal_log_manager.log(
                 message=f"LogicManager.save_logic 호출 - ID: {self.current_logic_id}",
                 level="DEBUG",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
             print(f"[DEBUG] LogicManager.save_logic 호출 전 - ID: {self.current_logic_id}")
             # LogicManager를 통해 저장
@@ -519,7 +519,7 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message=f"LogicManager.save_logic 결과: {success}, {result}",
                 level="DEBUG",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
             print(f"[DEBUG] LogicManager.save_logic 호출 후 - 결과: {success}, {result}")
             
@@ -529,14 +529,14 @@ class LogicDetailWidget(QFrame):
                     self.modal_log_manager.log(
                         message=f"로직 '{name}'이(가) 업데이트되었습니다",
                         level="INFO",
-                        modal_name="로직상세"
+                        file_name="로직상세"
                     )
                 else:  # 새 로직
                     self.logic_saved.emit(logic_info)
                     self.modal_log_manager.log(
                         message=f"새 로직 '{name}'이(가) 저장되었습니다",
                         level="INFO",
-                        modal_name="로직상세"
+                        file_name="로직상세"
                     )
                 
                 self.clear_all()
@@ -546,7 +546,7 @@ class LogicDetailWidget(QFrame):
                 self.modal_log_manager.log(
                     message=f"저장 실패: {result}",
                     level="ERROR",
-                    modal_name="로직상세"
+                    file_name="로직상세"
                 )
                 return False
 
@@ -555,7 +555,7 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message=f"로직 저장 중 오류 발생: {str(e)}",
                 level="ERROR",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
             return False
 
@@ -566,7 +566,7 @@ class LogicDetailWidget(QFrame):
                 self.modal_log_manager.log(
                     message="잘못된 로직 정보입니다",
                     level="ERROR",
-                    modal_name="로직상세"
+                    file_name="로직상세"
                 )
                 return
 
@@ -590,7 +590,7 @@ class LogicDetailWidget(QFrame):
                 self.modal_log_manager.log(
                     message=f"로직 '{logic_info.get('name')}'의 ID를 찾을 수 없습니다",
                     level="WARNING",
-                    modal_name="로직상세"
+                    file_name="로직상세"
                 )
                 return
             
@@ -636,14 +636,14 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message=f"로직 '{logic_info.get('name')}'이(가) 로드되었습니다",
                 level="INFO",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
 
         except Exception as e:
             self.modal_log_manager.log(
                 message=f"로직 로드 중 오류 발생: {str(e)}",
                 level="ERROR",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
             self.clear_all()
 
@@ -705,7 +705,7 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message=f"중첩로직 '{logic_name}'이(가) UUID {logic_id}로 처리되었습니다",
                 level="INFO",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
             return item, True
             
@@ -713,7 +713,7 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message=f"중첩로직 처리 중 오류 발생: {str(e)}",
                 level="ERROR", 
-                modal_name="로직상세"
+                file_name="로직상세"
             )
             return None, False
     
@@ -722,14 +722,14 @@ class LogicDetailWidget(QFrame):
         self.modal_log_manager.log(
             message=f"로직 아이템 추가 시작 - 아이템 정보: {item_info}",
             level="DEBUG",
-            modal_name="로직상세"
+            file_name="로직상세"
         )
         
         if not isinstance(item_info, dict):
             self.modal_log_manager.log(
                 message="오류: 잘못된 아이템 정보 형식",
                 level="ERROR",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
             return
             
@@ -744,7 +744,7 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message=f"로직 타입 아이템 처리 - 이름: {logic_name}, ID: {logic_id}",
                 level="DEBUG",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
             
             # 공통 메서드 사용
@@ -762,7 +762,7 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message=f"로직 아이템 추가 완료 - 순서: {current_count + 1}",
                 level="INFO",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
         else:
             # 일반 아이템 처리
@@ -774,7 +774,7 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message=f"일반 아이템 추가 완료 - 타입: {item_info.get('type')}, 순서: {current_count + 1}",
                 level="INFO",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
     
     def _paste_item(self):
@@ -783,7 +783,7 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message="복사된 아이템이 없습니다",
                 level="WARNING",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
             return
             
@@ -836,7 +836,7 @@ class LogicDetailWidget(QFrame):
         self.modal_log_manager.log(
             message=f"{items_count}개의 로직 구성 아이템이 붙여넣기되었습니다",
             level="INFO",
-            modal_name="로직상세"
+            file_name="로직상세"
         )
 
     def eventFilter(self, obj, event):
@@ -892,7 +892,7 @@ class LogicDetailWidget(QFrame):
         self.modal_log_manager.log(
             message="새 로직 생성을 시작합니다",
             level="INFO",
-            modal_name="로직상세"
+            file_name="로직상세"
         )
 
     def _edit_item(self):
@@ -932,13 +932,13 @@ class LogicDetailWidget(QFrame):
                         self.modal_log_manager.log(
                             message=f"지연시간이 {delay:.4f}초로 수정되었습니다",
                             level="INFO",
-                            modal_name="로직상세"
+                            file_name="로직상세"
                         )
                 except ValueError:
                     self.modal_log_manager.log(
                         message="지연시간 형식이 올바르지 않습니다",
                         level="ERROR",
-                        modal_name="로직상세"
+                        file_name="로직상세"
                     )
             # 키 입력 아이템인 경우
             elif item_text.startswith("(logic_detail_widget.py) 키 입력:"):
@@ -980,7 +980,7 @@ class LogicDetailWidget(QFrame):
                             self.modal_log_manager.log(
                                 message=f"키 입력 액션이 '{new_action}'으로 변경되었습니다",
                                 level="INFO",
-                                modal_name="로직상세"
+                                file_name="로직상세"
                             )
             # 텍스트 입력 아이템인 경우
             elif user_data and user_data.get('type') == 'write_text':
@@ -998,7 +998,7 @@ class LogicDetailWidget(QFrame):
                     self.modal_log_manager.log(
                         message="텍스트 입력 아이템이 수정되었습니다",
                         level="INFO",
-                        modal_name="로직상세"
+                        file_name="로직상세"
                     )
 
     def _on_nested_checkbox_changed(self, state):
@@ -1074,14 +1074,14 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message="로직 정보가 초기화되었습니다",
                 level="INFO",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
             
         except Exception as e:
             self.modal_log_manager.log(
                 message=f"로직 정보 초기화 중 오류 발생: {str(e)}",
                 level="ERROR", 
-                modal_name="로직상세"
+                file_name="로직상세"
             )
 
     def save_logic(self):
@@ -1094,7 +1094,7 @@ class LogicDetailWidget(QFrame):
                 self.modal_log_manager.log(
                     message=f"로직 '{logic_data['name']}'이(가) 저장되었습니다",
                     level="INFO",
-                    modal_name="로직상세"
+                    file_name="로직상세"
                 )
                 return True
             else:
@@ -1111,7 +1111,7 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message=f"로직 저장 중 오류 발생: {str(e)}",
                 level="ERROR",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
             return False
 
@@ -1127,7 +1127,7 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message="트리거 키 정보가 클립보드에 복사되었습니다",
                 level="INFO",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
 
     def _copy_item(self):
@@ -1146,7 +1146,7 @@ class LogicDetailWidget(QFrame):
             self.modal_log_manager.log(
                 message=f"{items_count}개의 로직 구성 아이템이 복사되었습니다",
                 level="INFO",
-                modal_name="로직상세"
+                file_name="로직상세"
             )
 
     def clear_key(self):
@@ -1157,7 +1157,7 @@ class LogicDetailWidget(QFrame):
         self.modal_log_manager.log(
             message="트리거 키 정보가 초기화되었습니다",
             level="DEBUG",
-            modal_name="로직상세"
+            file_name="로직상세"
         )
 
     def _on_item_added(self, item_info):
@@ -1165,7 +1165,7 @@ class LogicDetailWidget(QFrame):
         self.modal_log_manager.log(
             message=f"아이템이 추가되었습니다: {item_info}",
             level="INFO",
-            modal_name="로직상세"
+            file_name="로직상세"
         )
         self._update_list_widget()
 
@@ -1174,7 +1174,7 @@ class LogicDetailWidget(QFrame):
         self.modal_log_manager.log(
             message=f"아이템이 삭제되었습니다: {item_info}",
             level="INFO",
-            modal_name="로직상세"
+            file_name="로직상세"
         )
         self._update_list_widget()
 

@@ -54,43 +54,43 @@ class BaseLogManager(QObject):
         if handler in self._handlers:
             self._handlers.remove(handler)
             
-    def start_timer(self, modal_name: str):
+    def start_timer(self, file_name: str):
         """특정 모달의 타이머 시작
         
         Args:
-            modal_name: 모달 이름
+            file_name: 파일 이름
         """
-        self._timers[modal_name] = time.time()
+        self._timers[file_name] = time.time()
         
-    def reset_timer(self, modal_name: str):
+    def reset_timer(self, file_name: str):
         """특정 모달의 타이머 리셋
         
         Args:
-            modal_name: 모달 이름
+            file_name: 파일 이름
         """
-        if modal_name in self._timers:
-            self._timers[modal_name] = time.time()
+        if file_name in self._timers:
+            self._timers[file_name] = time.time()
             
-    def stop_timer(self, modal_name: str):
+    def stop_timer(self, file_name: str):
         """특정 모달의 타이머 중지
         
         Args:
-            modal_name: 모달 이름
+            file_name: 파일 이름
         """
-        if modal_name in self._timers:
-            del self._timers[modal_name]
+        if file_name in self._timers:
+            del self._timers[file_name]
             
-    def get_elapsed_time(self, modal_name: str) -> Optional[float]:
+    def get_elapsed_time(self, file_name: str) -> Optional[float]:
         """특정 모달의 경과 시간 반환
         
         Args:
-            modal_name: 모달 이름
+            file_name: 파일 이름
             
         Returns:
             float or None: 경과 시간(초), 타이머가 없으면 None
         """
-        if modal_name in self._timers:
-            return time.time() - self._timers[modal_name]
+        if file_name in self._timers:
+            return time.time() - self._timers[file_name]
         return None
         
     def _apply_message_style(self, message: str) -> str:
@@ -125,13 +125,13 @@ class BaseLogManager(QObject):
         # 기본 메시지는 스타일 없이 반환
         return message
         
-    def log(self, message: str, level: str = "INFO", modal_name: str = "", include_time: bool = False, print_to_terminal: bool = False):
+    def log(self, message: str, level: str = "INFO", file_name: str = "", include_time: bool = False, print_to_terminal: bool = False):
         """로그 메시지를 기록합니다.
 
         Args:
             message (str): 로그 메시지
             level (str, optional): 로그 레벨. Defaults to "INFO".
-            modal_name (str, optional): 모달 이름. Defaults to "".
+            file_name (str, optional): 파일 이름. Defaults to "".
             include_time (bool, optional): 경과 시간 포함 여부. Defaults to False.
             print_to_terminal (bool, optional): 터미널 출력 여부. Defaults to False.
         """
@@ -141,12 +141,12 @@ class BaseLogManager(QObject):
         log_parts = [f"[{now}]"]
         
         # 경과 시간이 필요한 경우 추가
-        if include_time and modal_name in self._timers:
-            elapsed = time.time() - self._timers[modal_name]
+        if include_time and file_name in self._timers:
+            elapsed = time.time() - self._timers[file_name]
             log_parts.append(f"[{elapsed:.4f}초]")
         
-        # 레벨과 모달 이름 추가
-        log_parts.extend([f"[{level}]", f"[{modal_name}]"])
+        # 레벨과 파일 이름 추가
+        log_parts.extend([f"[{level}]", f"[{file_name}]"])
         
         # 최종 로그 메시지 구성 (메시지 끝에 개행 추가)
         final_message = " ".join(log_parts + [message]) + "\n"

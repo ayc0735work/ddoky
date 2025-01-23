@@ -52,18 +52,18 @@ class BaseLogManager(QObject):
         if handler in self.handlers:
             self.handlers.remove(handler)
             
-    def log(self, message: str, level: str = "INFO", modal_name: str = None):
+    def log(self, message: str, level: str = "INFO", file_name: str = None):
         """로그 메시지를 처리합니다.
         
         Args:
             message: 로그 메시지
             level: 로그 레벨 ("INFO", "WARNING", "ERROR" 등)
-            modal_name: 로그를 발생시킨 모달의 이름
+            file_name: 로그를 발생시킨 모달의 이름
         """
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         formatted_message = f"[{timestamp}] [{level}] "
-        if modal_name:
-            formatted_message += f"[{modal_name}] "
+        if file_name:
+            formatted_message += f"[{file_name}] "
         formatted_message += message
         
         # 버퍼에 추가

@@ -74,7 +74,7 @@ class CountdownWorker(QThread):
             self.modal_log_manager.log(
                 message=f"카운트다운 시작: {remaining_time:.2f}초",
                 level="DEBUG",
-                modal_name="카운트다운워커"
+                file_name="카운트다운워커"
             )
         
     def stop(self):
@@ -86,7 +86,7 @@ class CountdownWorker(QThread):
         self.modal_log_manager.log(
             message="정지 요청",
             level="DEBUG",
-            modal_name="카운트다운워커"
+            file_name="카운트다운워커"
         )
         with self._lock:
             self._is_running = False
@@ -113,7 +113,7 @@ class CountdownWorker(QThread):
                 self.modal_log_manager.log(
                     message="목표 시간이 설정되지 않음",
                     level="ERROR",
-                    modal_name="카운트다운워커"
+                    file_name="카운트다운워커"
                 )
                 return
                 
@@ -122,7 +122,7 @@ class CountdownWorker(QThread):
             self.modal_log_manager.log(
                 message=f"카운트다운 시작. 목표 시간: {target_time}",
                 level="DEBUG",
-                modal_name="카운트다운워커"
+                file_name="카운트다운워커"
             )
         
         while True:
@@ -131,14 +131,14 @@ class CountdownWorker(QThread):
                     self.modal_log_manager.log(
                         message="정지 신호 감지",
                         level="DEBUG",
-                        modal_name="카운트다운워커"
+                        file_name="카운트다운워커"
                     )
                     break
                 if self._target_end_time != target_time:
                     self.modal_log_manager.log(
                         message="목표 시간 변경 감지",
                         level="DEBUG",
-                        modal_name="카운트다운워커"
+                        file_name="카운트다운워커"
                     )
                     break
             
@@ -151,7 +151,7 @@ class CountdownWorker(QThread):
                 self.modal_log_manager.log(
                     message="카운트다운 완료",
                     level="DEBUG",
-                    modal_name="카운트다운워커"
+                    file_name="카운트다운워커"
                 )
                 break
             
@@ -160,7 +160,7 @@ class CountdownWorker(QThread):
         self.modal_log_manager.log(
             message="스레드 종료",
             level="DEBUG",
-            modal_name="카운트다운워커"
+            file_name="카운트다운워커"
         )
         with self._lock:
             self._is_running = False
@@ -234,7 +234,7 @@ class CountdownController(QObject):
         self.modal_log_manager.log(
             message="초기화 완료",
             level="DEBUG",
-            modal_name="카운트다운컨트롤러"
+            file_name="카운트다운컨트롤러"
         )
     
     def _create_worker(self):
@@ -260,7 +260,7 @@ class CountdownController(QObject):
         self.modal_log_manager.log(
             message="새로운 워커 생성",
             level="DEBUG",
-            modal_name="카운트다운컨트롤러"
+            file_name="카운트다운컨트롤러"
         )
     
     def is_running(self):
@@ -287,7 +287,7 @@ class CountdownController(QObject):
         self.modal_log_manager.log(
             message="카운트다운 리셋 시작",
             level="DEBUG",
-            modal_name="카운트다운컨트롤러"
+            file_name="카운트다운컨트롤러"
         )
         
         # 워커 스레드 중지 및 대기
@@ -316,7 +316,7 @@ class CountdownController(QObject):
             self.modal_log_manager.log(
                 message="카운트다운 리셋 완료, 새로운 카운트다운 시작",
                 level="DEBUG",
-                modal_name="카운트다운컨트롤러"
+                file_name="카운트다운컨트롤러"
             )
     
     def start_countdown(self):
@@ -336,7 +336,7 @@ class CountdownController(QObject):
             self.modal_log_manager.log(
                 message="카운트다운 중지",
                 level="DEBUG",
-                modal_name="카운트다운컨트롤러"
+                file_name="카운트다운컨트롤러"
             )
             with self._lock:
                 self._is_running = False
@@ -367,7 +367,7 @@ class CountdownController(QObject):
         self.modal_log_manager.log(
             message="워커 스레드 완료",
             level="DEBUG",
-            modal_name="카운트다운컨트롤러"
+            file_name="카운트다운컨트롤러"
         )
         with self._lock:
             if self._countdown_value <= 0:  # 카운트다운이 정상적으로 완료된 경우에만
@@ -377,7 +377,7 @@ class CountdownController(QObject):
                 self.modal_log_manager.log(
                     message="카운트다운 정상 완료",
                     level="DEBUG",
-                    modal_name="카운트다운컨트롤러"
+                    file_name="카운트다운컨트롤러"
                 )
         
     def _on_timeout(self):
@@ -400,7 +400,7 @@ class CountdownController(QObject):
                     self.modal_log_manager.log(
                         message=f"타이머 지연 감지: {update_delay:.3f}초",
                         level="WARNING",
-                        modal_name="카운트다운컨트롤러"
+                        file_name="카운트다운컨트롤러"
                     )
             
             self._performance_stats['updates'] += 1
