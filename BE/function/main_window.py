@@ -29,6 +29,7 @@ from BE.function.etc_function.countdown.Controller.countdown_controller__input_s
 from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_handler import KeyboardHook
 import logging
 from BE.log.manager.base_log_manager import BaseLogManager
+from BE.function.make_logic.repository.logic_item_repository import LogicItemRepository
 
 class MainWindow(QMainWindow):
     """메인 윈도우 클래스
@@ -43,6 +44,7 @@ class MainWindow(QMainWindow):
         logic_manager (LogicManager): 로직 관리자
         logic_executor (LogicExecutor): 로직 실행기
         keyboard_hook (KeyboardHook): 키보드 입력 후킹 관리자
+        logic_item_repository (LogicItemRepository): 로직 아이템 저장소
         
     Components:
         logic_operation_widget (LogicOperationWidget): 로직 동작 제어 위젯
@@ -63,6 +65,7 @@ class MainWindow(QMainWindow):
            - 프로세스 매니저
            - 로직 관리자와 실행기
            - 키보드 훅
+           - 로직 아이템 저장소
            
         2. UI 초기화
            - 기본 UI 구성
@@ -90,6 +93,9 @@ class MainWindow(QMainWindow):
         
         # 모달 로그 매니저 초기화
         self.modal_log_manager = BaseLogManager.instance()
+        
+        # 로직 아이템 저장소 초기화
+        self.logic_item_repository = LogicItemRepository()
         
         # 로그 위젯 초기화
         self.log_widget = LogWidget()
@@ -239,12 +245,12 @@ class MainWindow(QMainWindow):
         self.basic_features_layout.addWidget(self.logic_list_widget)
         
         # 로직 상세 정보 위젯과 컨트롤러
-        self.logic_detail_widget = LogicDetailWidget()
+        self.logic_detail_widget = LogicDetailWidget(self.logic_item_repository)
         self.logic_detail_controller = LogicDetailController(self.logic_detail_widget)
         self.basic_features_layout.addWidget(self.logic_detail_widget)
         
         # 로직 메이커
-        self.logic_maker_tool_widget = LogicMakerToolWidget()
+        self.logic_maker_tool_widget = LogicMakerToolWidget(self.logic_item_repository)
         self.logic_maker_tool_controller = LogicMakerController(self.logic_maker_tool_widget)
         
         # 로직 메이커에 저장된 로직 목록 전달
@@ -727,36 +733,12 @@ class MainWindow(QMainWindow):
         
         Args:
             item_info (dict): 추가된 아이템 정보
-                type: 아이템 타입 ('key', 'mouse_input', 'delay', 'image_search', 'text', 'wait_click' 등)
-                display_text: 표시될 텍스트
-                기타 타입별 필요한 정보들
         """
-        # 아이템 타입에 따른 처리
-        item_type = item_info.get('type')
         self.modal_log_manager.log(
-            message=f"아이템이 추가되었습니다: {item_info.get('display_text', str(item_info))}",
+            message=f"아이템이 추가되었습니다: {item_info}",
             level="INFO",
-            modal_name="로직상세(_on_item_added)"
+            modal_name="로직상세"
         )
-
-        if item_type == 'key':
-            # 키 입력 처리
-            self.logic_detail_widget.add_item(item_info)
-            self.modal_log_manager.log(
-                message=f"키 입력이 추가되었습니다: {item_info['display_text']}", 
-                level="INFO",
-                modal_name="로직상세"
-            )
-        else:
-            # 다른 타입의 아이템 처리
-            self.logic_detail_widget.add_item(item_info)
-            self.modal_log_manager.log(
-                message=f"아이템이 추가되었습니다: {item_info['display_text']}",
-                level="INFO", 
-                modal_name="로직상세"
-            )
-        # 로직 메이커 도구의 아이템 목록 업데이트
-        self.logic_maker_tool_widget.items.append(item_info)
 
     def _on_logic_selected(self, logic_name):
         """로직이 선택되었을 때 호출"""

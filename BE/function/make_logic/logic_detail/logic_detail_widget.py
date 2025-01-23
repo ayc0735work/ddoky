@@ -17,6 +17,7 @@ from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_h
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 from BE.function._common_components.modal.text_input_modal.text_input_dialog import TextInputDialog
 from BE.log.manager.base_log_manager import BaseLogManager
+from BE.function.make_logic.repository.logic_item_repository import LogicItemRepository
 
 class LogicDetailWidget(QFrame):
     """로직 상세 내용을 표시하고 관리하는 위젯"""
@@ -28,8 +29,9 @@ class LogicDetailWidget(QFrame):
     logic_saved = Signal(dict)
     logic_updated = Signal(str, dict)
     
-    def __init__(self, parent=None):
+    def __init__(self, repository: LogicItemRepository, parent=None):
         super().__init__(parent)
+        self.repository = repository
         self.modal_log_manager = BaseLogManager.instance()
         self.init_ui()
         self.edit_mode = False  # 수정 모드 여부
@@ -42,6 +44,11 @@ class LogicDetailWidget(QFrame):
         self.current_logic = None  # 현재 로직 정보
         self.settings_manager = SettingsManager()  # SettingsManager 인스턴스 생성
         self.logic_manager = LogicManager(self.settings_manager)  # LogicManager 인스턴스 추가
+        
+        # Repository 시그널 연결
+        self.repository.item_added.connect(self._on_item_added)
+        self.repository.item_deleted.connect(self._on_item_deleted)
+        self.repository.item_moved.connect(self._on_item_moved)
         
         # 중첩로직용 체크박스 초기 상태 설정
         self.is_nested_checkbox.setChecked(True)
@@ -249,547 +256,81 @@ class LogicDetailWidget(QFrame):
         self.DeleteItemButton__QPushButton.setEnabled(has_selection)  # 삭제는 다중 선택 가능
 
     def add_item(self, item_info):
-        """아이템을 리스트에 추가"""
-        try:
-            self.modal_log_manager.log( 
-                message=f"add_item 시작 - 입력받은 데이터: {item_info}",
+        """아이템을 목록에 추가합니다."""
+        self.modal_log_manager.log(
+            message=f"아이템 추가 시작 - 입력받은 데이터: {item_info}",
+            level="DEBUG",
+            modal_name="로직상세"
+        )
+        
+        if isinstance(item_info, dict):
+            self.repository.add_item(item_info)
+            self.modal_log_manager.log(
+                message=f"아이템이 성공적으로 추가되었습니다",
                 level="DEBUG",
-                modal_name="로직상세(add_item)"
+                modal_name="로직상세"
+            )
+        else:
+            self.modal_log_manager.log(
+                message=f"잘못된 형식의 데이터: {type(item_info)}",
+                level="ERROR",
+                modal_name="로직상세"
             )
 
-            item = QListWidgetItem()
+    def _delete_item(self):
+        """선택된 아이템을 삭제합니다."""
+        selected_items = self.LogicItemList__QListWidget.selectedItems()
+        if not selected_items:
+            return
             
-            # 현재 선택된 아이템의 위치 확인
-            current_row = self.LogicItemList__QListWidget.currentRow()
-            insert_position = current_row + 1 if current_row >= 0 else self.LogicItemList__QListWidget.count()
-            
-            # 아이템 타입에 따라 처리
-            if isinstance(item_info, dict):
+        for item in selected_items:
+            item_data = item.data(Qt.UserRole)
+            if item_data:
+                self.repository.delete_item(item_data)
                 self.modal_log_manager.log(
-                    message="딕셔너리 형식의 데이터 처리 시작",
-                    level="DEBUG",
-                    modal_name="로직상세(add_item)"
-                )
-                item_type = item_info.get('type')
-                if item_type == 'key':
-                    # 키 입력 처리
-                    user_data = {
-                        "type": "key",
-                        "key": item_info.get('key'),
-                        "display_text": item_info.get('display_text', f"키 입력: {item_info.get('key')}"),
-                        "modifiers": item_info.get('modifiers', []),
-                        "order": insert_position + 1
-                    }
-                elif item_type == 'delay':
-                    # 지연 시간 처리
-                    duration = item_info.get('duration', 0)
-                    user_data = {
-                        "type": "delay",
-                        "duration": duration,
-                        "display_text": f"지연시간 : {duration}초",
-                        "order": insert_position + 1
-                    }
-                elif item_type == 'mouse_input':
-                    # 마우스 입력 처리
-                    user_data = {
-                        "type": "mouse_input",
-                        "action": item_info.get('action', '클릭'),
-                        "button": item_info.get('button', '왼쪽 버튼'),
-                        "name": item_info.get('name', ''),
-                        "coordinates_x": item_info.get('coordinates_x', 0),
-                        "coordinates_y": item_info.get('coordinates_y', 0),
-                        "ratios_x": item_info.get('ratios_x', 0),
-                        "ratios_y": item_info.get('ratios_y', 0),
-                        "display_text": item_info.get('display_text', '')
-                    }
-                elif item_type == 'logic':
-                    # 중첩 로직 처리
-                    user_data = {
-                        'type': 'logic',
-                        'logic_name': item_info.get('logic_name'),
-                        'repeat_count': item_info.get('repeat_count', 1),
-                        'display_text': item_info.get('display_text'),
-                        'order': insert_position + 1,
-                        'logic_id': item_info.get('logic_id')
-                    }
-                elif item_type == 'wait_click':
-                    # 클릭 대기 처리
-                    user_data = {
-                        "type": "wait_click",
-                        "display_text": item_info.get('display_text', "클릭 대기"),
-                        "order": insert_position + 1
-                    }            
-                elif item_type == 'write_text':
-                    # 텍스트 입력 처리
-                    user_data = {
-                        'type': 'write_text',
-                        'text': item_info.get('text'),
-                        'display_text': item_info.get('display_text'),
-                        'order': insert_position + 1
-                    }
-                else:
-                    self.modal_log_manager.log(
-                        message=f"알 수 없는 아이템 타입입니다: {item_type}",
-                        level="ERROR",
-                        modal_name="로직상세"
-                    )
-                    return
-
-            else:
-                # 문자열인 경우 (이전 코드와의 호환성을 위해 유지)
-                self.modal_log_manager.log(
-                    message="문자열 형식의 데이터 처리 시작",
-                    level="DEBUG",
+                    message=f"아이템이 삭제되었습니다: {item_data.get('display_text', '')}",
+                    level="INFO",
                     modal_name="로직상세"
                 )
-                item_text = str(item_info)
-                
-                if item_text.startswith("키 입력:"):
-                    key_parts = item_text.split(" --- ")
-                    if len(key_parts) == 2:
-                        key_text = key_parts[0].replace("키 입력: ", "").strip()
-                        action = key_parts[1]  # "누르기" 또는 "떼기"
-                        
-                        
-                        # 수정자 키가 있는지 확인
-                        if "+" in key_text:
-                            modifiers_text, key = key_text.rsplit("+", 1)
-                            modifiers = modifiers_text.strip()
-                        else:
-                            modifiers = "없음"
-                            key = key_text.strip()
-                            
-                        user_data = {
-                            "type": "key",
-                            "key": key,
-                            "action": action,
-                            "display_text": item_text,
-                            "modifiers": modifiers,
-                            "order": insert_position + 1
-                        }
 
-                else:
-                    # 그 외의 경우는 중첩 로직으로 처리
-                    user_data = {
-                        'type': 'logic',
-                        'logic_name': item_text,
-                        'repeat_count': 1,
-                        'display_text': item_text,
-                        'order': insert_position + 1
-                    }
-                    
-            # 아이템 설정
-            item.setText(user_data.get('display_text', str(item_info)))
-            item.setData(Qt.UserRole, user_data)
-            
-            # 아이템을 선택된 위치 다음에 삽입
-            self.LogicItemList__QListWidget.insertItem(insert_position, item)
-            self.LogicItemList__QListWidget.setCurrentItem(item)
-            
-            # 다음 아이템들의 order 값 업데이트
-            for i in range(insert_position + 1, self.LogicItemList__QListWidget.count()):
-                next_item = self.LogicItemList__QListWidget.item(i)
-                if next_item:
-                    next_data = next_item.data(Qt.UserRole)
-                    if next_data:
-                        next_data['order'] = i + 1
-                        next_item.setData(Qt.UserRole, next_data)
-            
+    def _move_item_up(self):
+        """선택된 아이템을 위로 이동합니다."""
+        current_row = self.LogicItemList__QListWidget.currentRow()
+        if current_row > 0:
+            item = self.LogicItemList__QListWidget.item(current_row)
+            item_data = item.data(Qt.UserRole)
+            self.repository.move_item_up(item_data)
             self.modal_log_manager.log(
-                message=f"아이템이 성공적으로 추가되었습니다. 위치: {insert_position}",
+                message=f"아이템을 위로 이동했습니다: {item_data.get('display_text', '')}",
                 level="INFO",
                 modal_name="로직상세"
             )
-            
-        except Exception as e:
-            self.modal_log_manager.log(
-                message=f"아이템 추가 중 오류 발생: {str(e)}",
-                level="ERROR",
-                modal_name="로직상세"
-            )
-            import traceback
-            self.modal_log_manager.log(
-                message=f"상세 오류: {traceback.format_exc()}",
-                level="ERROR",
-                modal_name="로직상세"
-            )
-            
-    def _move_item_up(self):
-        """현재 선택된 아이템을 위로 이동"""
-        current_row = self.LogicItemList__QListWidget.currentRow()
-        if current_row > 0:
-            current_item = self.LogicItemList__QListWidget.takeItem(current_row)
-            prev_item = self.LogicItemList__QListWidget.item(current_row - 1)
-            
-            # 현재 order 값 가져오기 (없으면 현재 위치 + 1 사용)
-            current_data = current_item.data(Qt.UserRole) or {}
-            prev_data = prev_item.data(Qt.UserRole) or {}
-            
-            # order 값이 1 미만인 경우 새로운 order 값 할당
-            current_order = max(1, current_data.get('order', current_row + 1))
-            prev_order = max(1, prev_data.get('order', (current_row - 1) + 1))
-            
-            # order 값 교환 (최소값 1 보장)
-            current_data['order'] = prev_order
-            prev_data['order'] = current_order
-            
-            # 데이터 업데이트
-            current_item.setData(Qt.UserRole, current_data)
-            prev_item.setData(Qt.UserRole, prev_data)
-            
-            # 위치 이동
-            self.LogicItemList__QListWidget.insertItem(current_row - 1, current_item)
-            self.LogicItemList__QListWidget.setCurrentItem(current_item)
-            self.item_moved.emit()
 
     def _move_item_down(self):
-        """현재 선택된 아이템을 아래로 이동"""
+        """선택된 아이템을 아래로 이동합니다."""
         current_row = self.LogicItemList__QListWidget.currentRow()
         if current_row < self.LogicItemList__QListWidget.count() - 1:
-            current_item = self.LogicItemList__QListWidget.takeItem(current_row)
-            next_item = self.LogicItemList__QListWidget.item(current_row)
-            
-            # 현재 order 값 가져오기 (없으면 현재 위치 + 1 사용)
-            current_data = current_item.data(Qt.UserRole) or {}
-            next_data = next_item.data(Qt.UserRole) or {}
-            
-            # order 값이 1 미만인 경우 새로운 order 값 할당
-            current_order = max(1, current_data.get('order', current_row + 1))
-            next_order = max(1, next_data.get('order', (current_row + 1) + 1))
-            
-            # order 값 교환 (최소값 1 보장)
-            current_data['order'] = next_order
-            next_data['order'] = current_order
-            
-            # 데이터 업데이트
-            current_item.setData(Qt.UserRole, current_data)
-            next_item.setData(Qt.UserRole, next_data)
-            
-            # 위치 이동
-            self.LogicItemList__QListWidget.insertItem(current_row + 1, current_item)
-            self.LogicItemList__QListWidget.setCurrentItem(current_item)
-            self.item_moved.emit()
+            item = self.LogicItemList__QListWidget.item(current_row)
+            item_data = item.data(Qt.UserRole)
+            self.repository.move_item_down(item_data)
+            self.modal_log_manager.log(
+                message=f"아이템을 아래로 이동했습니다: {item_data.get('display_text', '')}",
+                level="INFO",
+                modal_name="로직상세"
+            )
 
     def get_items(self):
-        """현재 로직의 아이템 목록을 반환"""
-        items = []
-        logics = self.settings_manager.load_logics()  # 모든 로직 정보 로드
-        self.modal_log_manager.log(
-            message="get_items() 시작 - 아이템 정보 수집",
-            level="DEBUG",
-            modal_name="로직상세"
-        )
-        
-        # 정렬 전 아이템 목록 출력
-        self.modal_log_manager.log(
-            message="정렬 전 아이템 목록:",
-            level="DEBUG",
-            modal_name="로직상세"
-        )
-        for i in range(self.LogicItemList__QListWidget.count()):
-            item = self.LogicItemList__QListWidget.item(i)
-            self.modal_log_manager.log(
-                message=f"위치 {i}: {item.text()}",
-                level="DEBUG",
-                modal_name="로직상세"
-            )
-            self.modal_log_manager.log(
-                message=f"데이터: {item.data(Qt.UserRole)}",
-                level="DEBUG", 
-                modal_name="로직상세"
-            )
-                
-        for i in range(self.LogicItemList__QListWidget.count()):
-            item = self.LogicItemList__QListWidget.item(i)
-            if not item:
-                continue
-                
-            item_text = item.text()
-            user_data = item.data(Qt.UserRole)
-            order = user_data.get('order', i + 1)
-            
-            self.modal_log_manager.log(
-                message=f"아이템 {i+1} 처리 시작 - 텍스트: {item_text}",
-                level="DEBUG",
-                modal_name="로직상세"
-            )
-            self.modal_log_manager.log(
-                message=f"아이템 {i+1} 원본 데이터: {user_data}",
-                level="DEBUG",
-                modal_name="로직상세"
-            )
-            # 로직 타입 아이템인 경우
-            if user_data.get('type') == 'logic':
-                logic_name = user_data.get('logic_name')
-                
-                # 기존 로직의 UUID를 우선적으로 사용
-                logic_id = user_data.get('logic_id')
-                
-                # UUID가 없거나 유효하지 않은 경우
-                if not logic_id or logic_id not in logics:
-                    # 이름이 일치하는 모든 로직 찾기
-                    matching_logics = [(id, logic) for id, logic in logics.items() 
-                                     if logic.get('name') == logic_name]
-                    
-                    if matching_logics:
-                        # 오래된 로직의 UUID 사용
-                        matching_logics.sort(key=lambda x: x[1].get('created_at', ''))
-                        logic_id = matching_logics[0][0]
-                        
-                        # 다른 모든 일치하는 로직들도 같은 UUID로 업데이트
-                        for other_id, other_logic in logics.items():
-                            if other_logic.get('name') == logic_name:
-                                other_logic['id'] = logic_id
-                                self.settings_manager.save_logic(other_id, other_logic)
-                    else:
-                        # 일치하는 로직이 없는 경우 새 UUID 생성
-                        logic_id = str(uuid.uuid4())
+        """현재 아이템 목록을 반환합니다."""
+        return self.repository.get_items()
 
-                repeat_count = user_data.get('repeat_count', 1)
-                items.append({
-                    'type': 'logic',
-                    'logic_id': logic_id,
-                    'logic_name': logic_name,
-                    'repeat_count': repeat_count,
-                    'display_text': item_text,
-                    'order': order,
-                    'logic_data': {
-                        'logic_id': logic_id,
-                        'logic_name': logic_name,
-                        'repeat_count': repeat_count
-                    }
-                })
-                
-            # 키 입력 아이템인 경우
-            elif item_text.startswith("키 입력:"):
-                key_parts = item_text.split(" --- ")
-                if len(key_parts) == 2:
-                    key_text = key_parts[0].replace("키 입력: ", "").strip()
-                    action = key_parts[1]  # "누르기" 또는 "떼기"
-                    
-                    # 수정자 키가 있는지 확인
-                    if "+" in key_text:
-                        modifiers_text, key = key_text.rsplit("+", 1)
-                        modifiers = modifiers_text.strip()
-                    else:
-                        modifiers = "없음"
-                        key = key_text
-                    
-                    key = key.strip()
-                    
-                    # 가상 키 코드와 스캔 코드 가져오기
-                    import win32con
-                    import win32api
-                    
-                    # 키 코드 매핑
-                    key_code_map = {
-                        '왼쪽 쉬프트': win32con.VK_LSHIFT,
-                        '오른쪽 쉬프트': win32con.VK_RSHIFT,
-                        '왼쪽 컨트롤': win32con.VK_LCONTROL,
-                        '오른쪽 컨트롤': win32con.VK_RCONTROL,
-                        '왼쪽 알트': win32con.VK_LMENU,
-                        '오른쪽 알트': win32con.VK_RMENU,
-                        'Home': win32con.VK_HOME,
-                        '엔터': win32con.VK_RETURN,
-                        '숫자패드 엔터': win32con.VK_RETURN,  # 일반 엔터와 같은 가상 키 코드 사용
-                        'Tab': win32con.VK_TAB,
-                        'ESC': win32con.VK_ESCAPE,
-                        'Space': win32con.VK_SPACE,
-                        'Backspace': win32con.VK_BACK,
-                        'Delete': win32con.VK_DELETE,
-                        'Insert': win32con.VK_INSERT,
-                        'End': win32con.VK_END,
-                        'Page Up': win32con.VK_PRIOR,
-                        'Page Down': win32con.VK_NEXT,
-                        '방향키 왼쪽 ←': win32con.VK_LEFT,
-                        '방향키 오른쪽 →': win32con.VK_RIGHT,
-                        '방향키 위쪽 ↑': win32con.VK_UP,
-                        '방향키 아래쪽 ↓': win32con.VK_DOWN,
-                        '숫자패드 0': win32con.VK_NUMPAD0,
-                        '숫자패드 1': win32con.VK_NUMPAD1,
-                        '숫자패드 2': win32con.VK_NUMPAD2,
-                        '숫자패드 3': win32con.VK_NUMPAD3,
-                        '숫자패드 4': win32con.VK_NUMPAD4,
-                        '숫자패드 5': win32con.VK_NUMPAD5,
-                        '숫자패드 6': win32con.VK_NUMPAD6,
-                        '숫자패드 7': win32con.VK_NUMPAD7,
-                        '숫자패드 8': win32con.VK_NUMPAD8,
-                        '숫자패드 9': win32con.VK_NUMPAD9,
-                        '숫자패드 *': win32con.VK_MULTIPLY,
-                        '숫자패드 +': win32con.VK_ADD,
-                        '숫자패드 -': win32con.VK_SUBTRACT,
-                        '숫자패드 .': win32con.VK_DECIMAL,
-                        '숫자패드 /': win32con.VK_DIVIDE,
-                        'F1': win32con.VK_F1,
-                        'F2': win32con.VK_F2,
-                        'F3': win32con.VK_F3,
-                        'F4': win32con.VK_F4,
-                        'F5': win32con.VK_F5,
-                        'F6': win32con.VK_F6,
-                        'F7': win32con.VK_F7,
-                        'F8': win32con.VK_F8,
-                        'F9': win32con.VK_F9,
-                        'F10': win32con.VK_F10,
-                        'F11': win32con.VK_F11,
-                        'F12': win32con.VK_F12,
-                    }
-                    
-                    # 가상 키 코드 얻기
-                    if key in key_code_map:
-                        virtual_key = key_code_map[key]
-                    else:
-                        # 일반 문자키인 경우
-                        if len(key) == 1:
-                            virtual_key = ord(key.upper())
-                        else:
-                            virtual_key = 0  # 알 수 없는 키
-                    
-                    # 스캔 코드 얻기
-                    if key == '숫자패드 엔터':
-                        scan_code = 0x1C + 0xE0  # 252 (숫자패드 엔터의 확장 코드)
-                    else:
-                        scan_code = win32api.MapVirtualKey(virtual_key, 0)
-                    
-                    # 수정자 키를 정수값으로 매핑
-                    modifier_map = {
-                        'Shift': 0x02000000,  # Qt.ShiftModifier 값
-                        'Ctrl': 0x04000000,   # Qt.ControlModifier 값
-                        'Alt': 0x08000000,    # Qt.AltModifier 값
-                    }
-                    
-                    modifier_value = 0
-                    if modifiers != "없음":
-                        for mod in modifiers.split('+'):
-                            mod = mod.strip()
-                            if mod in modifier_map:
-                                modifier_value |= modifier_map[mod]
-                    
-                    # 구조화된 형태로 저장
-                    item_data = {
-                        "type": "key_input",
-                        "key_code": key,
-                        "scan_code": scan_code,
-                        "virtual_key": virtual_key,
-                        "modifiers": modifier_value,
-                        "action": action,
-                        "display_text": item_text,
-                        "order": order
-                    }
-                    items.append(item_data)
-                else:
-                    items.append({"type": "text", "content": item_text, "order": order})
-                    
-            # 마우스 입력 아이템인 경우
-            elif item_text.startswith("마우스 입력:"):
-                self.modal_log_manager.log(
-                    message="마우스 입력 아이템 처리를 시작합니다",
-                    level="DEBUG",
-                    modal_name="로직상세"
-                )
-                self.modal_log_manager.log(
-                    message=f"마우스 입력 처리 - 원본 데이터: {user_data}",
-                    level="DEBUG", 
-                    modal_name="로직상세"
-                )
-                
-                # 마우스 입력 데이터 유지
-                processed_data = {
-                    'type': 'mouse_input',
-                    'action': user_data.get('action', '클릭'),
-                    'button': user_data.get('button', '왼쪽 버튼'),
-                    'name': user_data.get('name', ''),
-                    'coordinates_x': user_data.get('coordinates_x', 0),
-                    'coordinates_y': user_data.get('coordinates_y', 0),
-                    'ratios_x': user_data.get('ratios_x', 0),
-                    'ratios_y': user_data.get('ratios_y', 0),
-                    'order': order,
-                    'display_text': user_data.get('display_text', '')
-                }
-                
-                self.modal_log_manager.log(
-                    message=f"마우스 입력 처리 - 처리된 데이터: {processed_data}",
-                    level="DEBUG",
-                    modal_name="로직상세"
-                )
-                items.append(processed_data)
-                
-            # 지연시간 아이템인 경우
-            elif item_text.startswith("지연시간"):
-                items.append({
-                    "type": "delay",
-                    "duration": float(item_text.split(":")[1].replace("초", "").strip()),
-                    "display_text": item_text,
-                    "order": order
-                })
-            # wait_click 타입인 경우
-            elif user_data.get('type') == 'wait_click':
-                items.append({
-                    'type': 'wait_click',
-                    'button': user_data.get('button', 'left'),
-                    'display_text': item_text,
-                    'order': order
-                })
-            # 텍스트 입력 아이템인 경우
-            elif item_text.startswith("텍스트 입력:"):
-                user_data = item.data(Qt.UserRole)
-                if user_data and user_data.get('type') == 'write_text':
-                    items.append(user_data)  # 원본 데이터 그대로 사용
-                    continue
-            # 기타 아이템
-            else:
-                # 일반 텍스트 아이템을 로직 타입으로 변환
-                items.append({
-                    'type': 'undefined_type',
-                    'logic_name': item_text,
-                    'display_text': f"정의되지 않은 로직: {item_text}",
-                    'repeat_count': 1,
-                    'order': order
-                })
-                self.modal_log_manager.log(
-                    message=f"정의되지 않은 아이템 타입: {item_text}",
-                    level="ERROR",
-                    modal_name="로직상세"
-                )
-                import traceback
-                self.modal_log_manager.log(
-                    message=f"오류 상세 정보:\n{traceback.format_exc()}",
-                    level="ERROR",
-                    modal_name="로직상세"
-                )
-        
-        # order 값으로 정렬하기 전 로그
+    def clear_items(self):
+        """모든 아이템을 삭제합니다."""
+        self.repository.clear_items()
         self.modal_log_manager.log(
-            message=f"정렬 전 아이템 목록: {items}",
-            level="DEBUG",
+            message="모든 아이템이 삭제되었습니다",
+            level="INFO",
             modal_name="로직상세"
         )
-        
-        # order 값으로 정렬
-        sorted_items = sorted(items, key=lambda x: x.get('order', float('inf')))
-        
-        # 정렬 후 로그
-        self.modal_log_manager.log(
-            message=f"정렬 후 아이템 목록: {sorted_items}",
-            level="DEBUG",
-            modal_name="로직상세"
-        )
-        
-        return sorted_items
-
-    def clear_all(self):
-        """모든 입력 상태를 초기화"""
-        self.LogicNameInput__QLineEdit.clear()           # 로직 이름 초기화
-        self.LogicItemList__QListWidget.clear()          # 목록 초기화
-        self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.clear_key()        # 트리거 키 입력 초기화
-        self.TriggerKeyInfoLabel__QLabel.clear()       # 트리거 키 정보 초기화
-        self.trigger_key_info = None      # 트리거 키 정보 초기화
-        self.edit_mode = False            # 수정 모드 해제
-        self.original_name = None         # 원래 이름 초기화
-        self.current_logic_id = None     # UUID도 초기화
-        self.RepeatCountInput__QSpinBox.setValue(1)    # 반복 횟수를 기본값(1)으로 초기화
-        self.current_logic = None         # 현재 로직 정보 초기화
-        self.copied_items = []            # 복사된 아이템 초기화
-        self.is_nested_checkbox.setChecked(True)      # 중첩로직용 체크박스를 선택된 상태로 초기화
 
     def _on_key_input_changed(self, formatted_key_info):
         """키 입력이 변경되었을 때"""
@@ -1460,26 +1001,6 @@ class LogicDetailWidget(QFrame):
                         modal_name="로직상세"
                     )
 
-    def _delete_item(self):
-        """선택된 아이템 삭제"""
-        selected_items = self.LogicItemList__QListWidget.selectedItems()
-        if selected_items:
-            for item in selected_items:
-                row = self.LogicItemList__QListWidget.row(item)
-                item = self.LogicItemList__QListWidget.takeItem(row)
-                self.item_deleted.emit(item.text())
-            # 아이템 삭제 후 순서 정렬
-            for i in range(self.LogicItemList__QListWidget.count()):
-                item = self.LogicItemList__QListWidget.item(i)
-                item_data = item.data(Qt.UserRole)
-                item_data['order'] = i + 1
-                item.setData(Qt.UserRole, item_data)
-            self.modal_log_manager.log(
-                message=f"{len(selected_items)}개의 로직 구성 아이템이 삭제되었습니다",
-                level="INFO",
-                modal_name="로직상세"
-            )
-
     def _on_nested_checkbox_changed(self, state):
         """중첩로직용 체크박스 상태 변경 시 호출"""
         is_nested = state == Qt.CheckState.Checked.value
@@ -1638,3 +1159,34 @@ class LogicDetailWidget(QFrame):
             level="DEBUG",
             modal_name="로직상세"
         )
+
+    def _on_item_added(self, item_info):
+        """Repository에서 아이템이 추가되었을 때 호출되는 메서드"""
+        self.modal_log_manager.log(
+            message=f"아이템이 추가되었습니다: {item_info}",
+            level="INFO",
+            modal_name="로직상세"
+        )
+        self._update_list_widget()
+
+    def _on_item_deleted(self, item_info):
+        """Repository에서 아이템이 삭제되었을 때 호출되는 메서드"""
+        self.modal_log_manager.log(
+            message=f"아이템이 삭제되었습니다: {item_info}",
+            level="INFO",
+            modal_name="로직상세"
+        )
+        self._update_list_widget()
+
+    def _on_item_moved(self):
+        """Repository에서 아이템이 이동되었을 때 호출되는 메서드"""
+        self._update_list_widget()
+
+    def _update_list_widget(self):
+        """Repository의 아이템 목록으로 ListWidget을 업데이트"""
+        self.LogicItemList__QListWidget.clear()
+        items = self.repository.get_items()
+        for item in items:
+            list_item = QListWidgetItem(item.get('display_text', ''))
+            list_item.setData(Qt.UserRole, item)
+            self.LogicItemList__QListWidget.addItem(list_item)

@@ -5,9 +5,9 @@
 
 ### 1.1 전체 흐름도
 ```
-[사용자 키 입력] → [키보드 훅] → [키 정보 구조화] → [상태 정보 생성] → [시그널 전파] → [UI 표시]
+[사용자 키 입력] → [키보드 훅] → [키 정보 구조화] → [상태 정보 생성] → [Repository 저장] → [UI 표시]
      ↓                 ↓              ↓                  ↓                ↓              ↓
-  버튼 클릭 → 모달 다이얼로그 → 데이터 포맷팅 → 누르기/떼기 변환 → 위젯 간 통신 → 목록 상자 표시
+  버튼 클릭 → 모달 다이얼로그 → 데이터 포맷팅 → 누르기/떼기 변환 → 중앙 저장소 저장 → 목록 상자 표시
 ```
 
 ### 1.2 상세 처리 순서
@@ -66,113 +66,60 @@
    - 동작: 
      * 하나의 키 입력을 누르기/떼기 두 상태로 변환
      * 각 상태별 표시 텍스트 생성
-     * 각 상태 정보를 내부 처리 메서드로 전달
+     * 각 상태 정보를 시그널로 전달
    ```python
-   # 누르기 이벤트 생성 및 처리
-   key_state_info_press = get_entered_key_info.copy()
-   key_state_info_press['type'] = "key"
-   key_state_info_press['action'] = "누르기"
-   self._process_key_state_info(key_state_info_press)
+   # 키 누르기 상태 정보 생성
+   press_info = {
+       'type': 'key',
+       'key': key_info.get('key_code'),
+       'modifiers': key_info.get('modifiers', []),
+       'display_text': f"{key_info.get('simple_display_text')} --- 누르기",
+       'action': '누르기',
+       'scan_code': key_info.get('scan_code'),
+       'virtual_key': key_info.get('virtual_key')
+   }
    
-   # 떼기 이벤트 생성 및 처리
-   key_state_info_release = get_entered_key_info.copy()
-   key_state_info_release['type'] = "key"
-   key_state_info_release['action'] = "떼기"
-   self._process_key_state_info(key_state_info_release)
+   # 키 떼기 상태 정보 생성
+   release_info = {
+       'type': 'key',
+       'key': key_info.get('key_code'),
+       'modifiers': key_info.get('modifiers', []),
+       'display_text': f"{key_info.get('simple_display_text')} --- 떼기",
+       'action': '떼기',
+       'scan_code': key_info.get('scan_code'),
+       'virtual_key': key_info.get('virtual_key')
+   }
+   
+   # 시그널 발생
+   self.item_added.emit(press_info)
+   self.item_added.emit(release_info)
    ```
 
-6. **키 상태 정보 내부 처리**
-   - 파일: `logic_maker_tool_key_info_controller.py`
-   - 메서드: `_process_key_state_info()`
-   - 동작: 
-     * UI 업데이트 시그널 발생
-     * 로그 기록
-   ```python
-   self.item_added.emit(key_state_info)  # UI 업데이트 시그널
-   ```
-
-7. **메인 윈도우에서의 시그널 처리**
-   - 파일: `main_window.py`
-   - 메서드: `_on_item_added()`
-   - 동작:
-     * LogicMakerToolWidget의 item_added 시그널 수신
-     * 아이템 타입 확인 및 로그 기록
-     * LogicDetailWidget으로 아이템 전달
-     * LogicMakerToolWidget의 items 리스트에 추가
-   ```python
-   def _on_item_added(self, item_info):
-       self.logic_detail_widget.add_item(item_info)
-       self.logic_maker_tool_widget.items.append(item_info)
-   ```
-
-8. **로직 상세 위젯에서의 아이템 추가**
-   - 파일: `logic_detail_widget.py`
+6. **Repository를 통한 아이템 저장**
+   - 파일: `logic_maker_tool_widget.py`
    - 메서드: `add_item()`
-   - 동작:
-     * 아이템 정보 유효성 검사
-     * 아이템 타입에 따른 처리 (키 입력, 마우스 입력 등)
-     * QListWidgetItem 생성 및 설정
-     * 리스트 위젯에 아이템 추가
-     * 아이템 순서 업데이트
+   - 동작: 
+     * 아이템 정보 검증
+     * 순서(order) 값 설정
+     * Repository를 통한 아이템 저장
    ```python
    def add_item(self, item_info):
-       item = QListWidgetItem()
-       item.setText(item_info.get('display_text'))
-       item.setData(Qt.UserRole, item_info)
-       self.LogicItemList__QListWidget.addItem(item)
+       if isinstance(item_info, dict):
+           if 'order' not in item_info:
+               item_info['order'] = self.get_next_order()
+           self.repository.add_item(item_info)
    ```
 
-### 1.3 주요 컴포넌트 역할
-- **키 입력 모달**: 사용자의 키 입력을 받고 표시
-- **키보드 훅**: 저수준 키보드 이벤트 캡처
-- **키 입력 컨트롤러**: 키 입력 데이터 처리 및 상태 관리
-- **로직 메이커 위젯**: UI 표시 및 사용자 상호작용
-- **로직 상세 위젯**: 최종 UI 표시
+7. **UI 업데이트**
+   - 파일: `logic_detail_widget.py`
+   - 메서드: Repository의 `item_added` 시그널 핸들러
+   - 동작:
+     * Repository로부터 아이템 추가 시그널 수신
+     * QListWidgetItem 생성 및 설정
+     * 리스트 위젯에 아이템 추가
+     * 로그 기록
 
-## 2. 파일 구조 및 역할
-```
-BE/function/
-├── _common_components/modal/entered_key_info_modal/
-│   ├── entered_key_info_dialog.py     # 키 입력 모달 다이얼로그
-│   ├── entered_key_info_widget.py     # 키 입력 UI 위젯
-│   └── keyboard_hook_handler.py       # 키보드 훅 처리기
-├── make_logic/logic_maker_tool/
-│   ├── logic_maker_tool_widget.py            # UI 표시 및 사용자 입력 처리
-│   └── logic_maker_tool_key_info_controller.py  # 키 입력 데이터 처리 및 상태 관리
-└── make_logic/logic_detail/
-    └── logic_detail_widget.py         # 최종 UI 표시
-```
-
-### 2.1 파일 간 상호작용
-```
-[entered_key_info_dialog.py] ←→ [entered_key_info_widget.py]
-           ↑                         ↑
-           └─────── [keyboard_hook_handler.py]
-                         ↑
-[logic_maker_tool_widget.py] ←→ [logic_maker_tool_key_info_controller.py]
-           ↓
-[logic_detail_widget.py]
-```
-
-## 3. 데이터 흐름
-
-### 3.1 키 입력 시작
-1. 사용자가 `LogicMakerToolWidget`의 "키 입력 추가" 버튼 클릭
-2. `_open_key_input_dialog()` 메서드에서 `EnteredKeyInfoDialog` 생성
-3. 모달 다이얼로그 표시 및 사용자 입력 대기
-
-### 3.2 키 입력 감지
-1. 키보드 훅이 키 입력 이벤트 캡처
-2. `EnteredKeyInfoDialog`에서 키 정보 구조화
-3. 사용자가 확인 버튼 클릭 시 `get_entered_key_info()` 호출
-
-### 3.3 컨트롤러 처리
-1. `LogicMakerToolKeyInfoController`가 키 정보 수신
-2. 누르기/떼기 상태 정보 생성
-3. 내부 아이템 리스트에 추가
-4. UI 업데이트를 위한 시그널 발생
-
-### 3.4 시그널 흐름
+### 1.3 시그널 흐름
 ```
 [키보드 훅 이벤트]
          ↓
@@ -184,76 +131,109 @@ BE/function/
          |
          | handle_confirmed_key_input()
          ↓
-    _process_key_state_info()
-         |
     item_added 시그널
          ↓
-[MainWindow._on_item_added()]
+[LogicMakerToolWidget.add_item()]
          |
-         | 아이템 정보 전달
+         | Repository 저장
          ↓
-[LogicDetailWidget.add_item()]
+[LogicItemRepository.add_item()]
          |
-         | UI 업데이트
+         | Repository item_added 시그널
          ↓
-[QListWidget에 아이템 표시]
+[LogicDetailWidget UI 업데이트]
 ```
 
-## 4. 주요 클래스 설명
+## 2. 파일 구조 및 역할
+```
+BE/function/
+├── _common_components/modal/entered_key_info_modal/
+│   ├── entered_key_info_dialog.py     # 키 입력 모달 다이얼로그
+│   ├── entered_key_info_widget.py     # 키 입력 UI 위젯
+│   └── keyboard_hook_handler.py       # 키보드 훅 처리기
+├── make_logic/
+│   ├── logic_maker_tool/
+│   │   ├── logic_maker_tool_widget.py            # UI 표시 및 사용자 입력 처리
+│   │   └── logic_maker_tool_key_info_controller.py  # 키 입력 데이터 처리
+│   ├── repository/
+│   │   └── logic_item_repository.py    # 아이템 중앙 저장소
+│   └── logic_detail/
+│       └── logic_detail_widget.py      # 최종 UI 표시
+```
 
-### 4.1 LogicMakerToolKeyInfoController
+## 3. 주요 클래스 설명
+
+### 3.1 LogicItemRepository
+```python
+class LogicItemRepository:
+    # 시그널
+    item_added = Signal(dict)    # 아이템 추가 시그널
+    item_deleted = Signal(dict)  # 아이템 삭제 시그널
+    
+    def __init__(self):
+        self.items = []         # 아이템 저장 리스트
+    
+    def add_item(self, item_info):
+        # 아이템 추가 및 시그널 발생
+        self.items.append(item_info)
+        self.item_added.emit(item_info)
+```
+
+### 3.2 LogicMakerToolKeyInfoController
 ```python
 class LogicMakerToolKeyInfoController(QObject):
     # 시그널
     item_added = Signal(dict)  # UI 업데이트용
     
-    def __init__(self):
-        self.modal_log_manager = BaseLogManager.instance()
-    
     def handle_confirmed_key_input(self, key_info):
         # 키 정보를 누르기/떼기 상태로 변환
-        # UI 업데이트 시그널 발생
+        # item_added 시그널 발생
 ```
 
-### 4.2 LogicMakerToolWidget
+### 3.3 LogicMakerToolWidget
 ```python
 class LogicMakerToolWidget(QFrame):
-    # 시그널
-    item_added = Signal(dict)  # UI 업데이트용
-    
-    def __init__(self):
+    def __init__(self, repository: LogicItemRepository):
+        self.repository = repository
         self.key_info_controller = LogicMakerToolKeyInfoController()
-        # 컨트롤러의 시그널을 위젯의 시그널로 연결
-        self.key_info_controller.item_added.connect(self.item_added.emit)
+        # 컨트롤러의 시그널을 add_item 메서드에 연결
+        self.key_info_controller.item_added.connect(self.add_item)
 ```
 
-## 5. 데이터 구조
+## 4. 데이터 구조
 
-### 5.1 키 상태 정보
+### 4.1 키 상태 정보
 ```python
 {
     'type': 'key',                # 입력 타입
-    'action': '누르기' or '떼기',  # 동작 유형
-    'key_code': str,              # 키 이름
-    'scan_code': int,             # 하드웨어 코드
-    'virtual_key': int,           # 가상 키 코드
+    'key': str,                   # 키 코드
     'modifiers': KeyboardModifier, # 수정자 키 상태
-    'location': str,              # 키 위치
-    'modifier_text': str,         # 수정자 키 텍스트
     'display_text': str,          # UI 표시용 텍스트
-    'detail_display_text': str    # 상세 정보
+    'action': str,                # '누르기' 또는 '떼기'
+    'scan_code': int,             # 스캔 코드
+    'virtual_key': int,           # 가상 키 코드
+    'order': int                  # 순서
 }
 ```
 
-## 6. 책임 분리
+## 5. 책임 분리
 
-### 6.1 컨트롤러 (LogicMakerToolKeyInfoController)
+### 5.1 Repository (LogicItemRepository)
+- 아이템 데이터 중앙 관리
+- 아이템 추가/삭제/수정 기능
+- 상태 변경 시그널 발생
+
+### 5.2 컨트롤러 (LogicMakerToolKeyInfoController)
 - 키 입력 데이터 처리
 - 상태 정보 생성
 - UI 업데이트 시그널 발생
 
-### 6.2 위젯 (LogicMakerToolWidget)
+### 5.3 위젯 (LogicMakerToolWidget)
 - UI 컴포넌트 표시
 - 사용자 입력 처리
-- 컨트롤러와의 시그널 연결
-- UI 업데이트 시그널 전달
+- Repository를 통한 아이템 관리
+
+### 5.4 UI 위젯 (LogicDetailWidget)
+- Repository 시그널 구독
+- UI 업데이트 처리
+- 아이템 목록 표시

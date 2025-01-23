@@ -12,6 +12,7 @@ from BE.function._common_components.modal.text_input_modal.text_input_dialog imp
 from .logic_maker_tool_key_info_controller import LogicMakerToolKeyInfoController
 from BE.log.manager.base_log_manager import BaseLogManager
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
+from BE.function.make_logic.repository.logic_item_repository import LogicItemRepository
 
 class LogicMakerToolWidget(QFrame):
     """로직 메이커 위젯"""
@@ -23,16 +24,16 @@ class LogicMakerToolWidget(QFrame):
     item_added = Signal(dict)  # 아이템이 추가되었을 때
     wait_click_input = Signal(dict)  # 클릭 대기 입력이 추가되었을 때
 
-    def __init__(self, parent=None):
+    def __init__(self, repository: LogicItemRepository, parent=None):
         super().__init__(parent)
+        self.repository = repository
         self.saved_logics = {}  # 저장된 로직들을 관리하는 딕셔너리
-        self.items = []  # 아이템 리스트
         self.modal_log_manager = BaseLogManager.instance()
         
         # 키 입력 컨트롤러 초기화
         self.key_info_controller = LogicMakerToolKeyInfoController(self)
-        # 키 컨트롤러의 item_added 시그널을 위젯의 item_added 시그널로 연결
-        self.key_info_controller.item_added.connect(self.item_added.emit)
+        # key_info_controller의 item_added 시그널을 add_item 메서드에 연결
+        self.key_info_controller.item_added.connect(self.add_item)
         
         self.init_ui()
         
@@ -117,68 +118,36 @@ class LogicMakerToolWidget(QFrame):
 
     def get_items(self):
         """아이템 목록을 반환합니다."""
-        return self.items
+        return self.repository.get_items()
 
-    def add_item(self, item):
-        """아이템을 목록에 추가합니다.
-        
-        이 메서드는 다음과 같은 입력 타입을 처리합니다:
-        1. 마우스 입력 정보
-           - _on_mouse_input_selected()에서 호출
-           - 마우스 클릭, 드래그 등의 정보 포함
-           
-        2. 지연시간 정보
-           - _add_delay()에서 호출
-           - 대기 시간 정보 포함
-           
-        3. 클릭 대기 정보
-           - _add_wait_click()에서 호출
-           - 왼쪽 버튼 클릭 대기 정보 포함
-           
-        4. 이미지 서치 정보
-           - _add_image_search()에서 호출
-           - 이미지 검색 영역 정보 포함
-           
-        5. 텍스트 입력 정보
-           - _add_text_input()에서 호출
-           - 입력할 텍스트 정보 포함
-           
-        6. 중첩 로직 정보
-           - _add_logic()에서 호출
-           - 추가할 로직의 이름 정보 포함
-           
-        키보드 입력의 경우 별도로 처리:
-        - EnteredKeyInfoDialog에서 confirmed_and_added_key_info 시그널 발생
-        - _on_key_state_info_added()에서 처리
-        
-        Args:
-            item (dict): 추가할 아이템 정보를 포함하는 딕셔너리
-                type: 아이템 타입 (mouse_input, delay, wait_click 등)
-                action: 수행할 동작
-                기타 타입별 필요 정보
-        """
+    def add_item(self, item_info):
+        """아이템을 목록에 추가합니다."""
         self.modal_log_manager.log(
-            message=f"아이템 추가 시작 - 입력받은 데이터: {item}",
+            message=f"아이템 추가 시작 - 입력받은 데이터: {item_info}",
             level="DEBUG",
             modal_name="로직메이커"
         )
         
-        if isinstance(item, dict):
+        if isinstance(item_info, dict):
             self.modal_log_manager.log(
                 message="딕셔너리 형식의 데이터 처리 시작",
                 level="DEBUG",
                 modal_name="로직메이커"
             )
-            self.items.append(item)
-            self.item_added.emit(item)
+            # order 값이 없으면 설정
+            if 'order' not in item_info:
+                item_info['order'] = self.get_next_order()
+            
+            self.repository.add_item(item_info)  # repository를 통해 아이템 추가
+            
             self.modal_log_manager.log(
-                message=f"아이템이 성공적으로 추가되었습니다. 위치: {len(self.items)}",
+                message=f"아이템이 성공적으로 추가되었습니다",
                 level="DEBUG",
                 modal_name="로직메이커"
             )
         else:
             self.modal_log_manager.log(
-                message=f"잘못된 형식의 데이터: {type(item)}",
+                message=f"잘못된 형식의 데이터: {type(item_info)}",
                 level="ERROR",
                 modal_name="로직메이커"
             )
