@@ -91,6 +91,37 @@
    self.item_added.emit(key_state_info)  # UI 업데이트 시그널
    ```
 
+7. **메인 윈도우에서의 시그널 처리**
+   - 파일: `main_window.py`
+   - 메서드: `_on_item_added()`
+   - 동작:
+     * LogicMakerToolWidget의 item_added 시그널 수신
+     * 아이템 타입 확인 및 로그 기록
+     * LogicDetailWidget으로 아이템 전달
+     * LogicMakerToolWidget의 items 리스트에 추가
+   ```python
+   def _on_item_added(self, item_info):
+       self.logic_detail_widget.add_item(item_info)
+       self.logic_maker_tool_widget.items.append(item_info)
+   ```
+
+8. **로직 상세 위젯에서의 아이템 추가**
+   - 파일: `logic_detail_widget.py`
+   - 메서드: `add_item()`
+   - 동작:
+     * 아이템 정보 유효성 검사
+     * 아이템 타입에 따른 처리 (키 입력, 마우스 입력 등)
+     * QListWidgetItem 생성 및 설정
+     * 리스트 위젯에 아이템 추가
+     * 아이템 순서 업데이트
+   ```python
+   def add_item(self, item_info):
+       item = QListWidgetItem()
+       item.setText(item_info.get('display_text'))
+       item.setData(Qt.UserRole, item_info)
+       self.LogicItemList__QListWidget.addItem(item)
+   ```
+
 ### 1.3 주요 컴포넌트 역할
 - **키 입력 모달**: 사용자의 키 입력을 받고 표시
 - **키보드 훅**: 저수준 키보드 이벤트 캡처
@@ -157,7 +188,15 @@ BE/function/
          |
     item_added 시그널
          ↓
-[LogicMakerToolWidget] --- item_added --> [LogicDetailWidget]
+[MainWindow._on_item_added()]
+         |
+         | 아이템 정보 전달
+         ↓
+[LogicDetailWidget.add_item()]
+         |
+         | UI 업데이트
+         ↓
+[QListWidget에 아이템 표시]
 ```
 
 ## 4. 주요 클래스 설명
