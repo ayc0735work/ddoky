@@ -251,11 +251,12 @@ class LogicDetailWidget(QFrame):
     def add_item(self, item_info):
         """아이템을 리스트에 추가"""
         try:
-            self.modal_log_manager.log(
-                message=f"add_item 시작 - 입력받은 데이터: {item_info}",
+            self.modal_log_manager.log( 
+                message=f"add_item 시작 - 입력받은 데이터: {item_info} \n",
                 level="DEBUG",
-                modal_name="로직상세"
+                modal_name="로직상세(add_item)"
             )
+
             item = QListWidgetItem()
             
             # 현재 선택된 아이템의 위치 확인
@@ -267,7 +268,7 @@ class LogicDetailWidget(QFrame):
                 self.modal_log_manager.log(
                     message="딕셔너리 형식의 데이터 처리 시작",
                     level="DEBUG",
-                    modal_name="로직상세"
+                    modal_name="로직상세(add_item)"
                 )
                 item_type = item_info.get('type')
                 if item_type == 'key':

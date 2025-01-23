@@ -296,7 +296,6 @@ class LogicExecutor(QObject):
                 if self._should_stop:
                     return
                     
-                print("[DEBUG] 강이벤트 감지 종료 ----\n")
                 self.modal_log_manager.log(
                     message="강제 중지 키 감지 - 로직 강제 중지 실행",
                     level="INFO",
@@ -358,9 +357,9 @@ class LogicExecutor(QObject):
                     self._start_time = time.time()
                     self.modal_log_manager.log(
                         message=(
-                            f"<br>"
-                            f"[로직 실행 시작] <br>"
-                            f"- 로직 이름: {logic.get('name')} <br>"
+                            f""
+                            f"[로직 실행 시작]"
+                            f"- 로직 이름: {logic.get('name')}"
                             f"- 로직 UUID: {logic_id}"
                         ),
                         level="INFO",
@@ -384,7 +383,7 @@ class LogicExecutor(QObject):
                     
         if not found_matching_logic:
             self.modal_log_manager.log(
-                message=f"일치하는 트리거 키를 찾을 수 없습니다.<br>입력된 키 정보: {formatted_key_info}<br>",
+                message=f"일치하는 트리거 키를 찾을 수 없습니다.입력된 키 정보: {formatted_key_info}",
                 level="WARNING",
                 modal_name="키입력모달"
             )
@@ -415,11 +414,11 @@ class LogicExecutor(QObject):
                     
                     self.modal_log_manager.log(
                         message=(
-                            f"[중첩로직 반복 완료] <br>"
-                            f"- 반복횟수: {current_repeat}/{repeat_count} 반복 완료 <br>"
-                            f"- 부모 로직: {parent_name} <br>"
-                            f"- 중첩로직 이름: {current_logic_name} <br>"
-                            f"- 중첩로직 UUID: {current_logic_id} <br>"
+                            f"[중첩로직 반복 완료]"
+                            f"- 반복횟수: {current_repeat}/{repeat_count} 반복 완료"
+                            f"- 부모 로직: {parent_name}"
+                            f"- 중첩로직 이름: {current_logic_name}"
+                            f"- 중첩로직 UUID: {current_logic_id}"
                         ),
                         level="INFO",
                         modal_name="로직실행",
@@ -429,10 +428,10 @@ class LogicExecutor(QObject):
                     # 일반 로직의 경우
                     self.modal_log_manager.log(
                         message=(
-                            f"[로직 실행] <br>"
-                            f"- 반복횟수: {current_repeat}/{repeat_count} 반복 완료 <br>"
-                            f"- 로직 이름: {current_logic_name} <br>"
-                            f"- 로직 UUID: {current_logic_id} <br>"
+                            f"[로직 실행]"
+                            f"- 반복횟수: {current_repeat}/{repeat_count} 반복 완료"
+                            f"- 로직 이름: {current_logic_name}"
+                            f"- 로직 UUID: {current_logic_id}"
                         ),
                         level="INFO",
                         modal_name="로직실행",
@@ -667,7 +666,7 @@ class LogicExecutor(QObject):
             logic_id = step.get('logic_id')
             logic_name = step.get('logic_name')
             if not logic_id:
-                raise Exception("중첩로직의 ID가 없습니다.<br>")
+                raise Exception("중첩로직의 ID가 없습니다.")
             
             # 현재 상태를 스택에 저장
             self._logic_stack.append((
@@ -684,10 +683,10 @@ class LogicExecutor(QObject):
             if not nested_logic:
                 raise Exception(
                     f"""
-                    <br>
+                   
                     중첩로직을 찾을 수 없습니다
-                    - 중첩로직 이름: {logic_name} <br>
-                    - 중첩로직 UUID: {logic_id} <br>
+                    - 중첩로직 이름: {logic_name}
+                    - 중첩로직 UUID: {logic_id}
                     """
                     )
             
@@ -699,9 +698,9 @@ class LogicExecutor(QObject):
             )
             self.modal_log_manager.log(
                 message=f"""
-                [중첩로직 실행 시작] <br>
-                - 중첩로직 이름: {nested_logic.get('name')} <br>
-                - 중첩로직 UUID: {nested_logic.get('id')} <br>
+                [중첩로직 실행 시작]
+                - 중첩로직 이름: {nested_logic.get('name')}
+                - 중첩로직 UUID: {nested_logic.get('id')}
                 """,
                 level="INFO",
                 modal_name="로직실행",
@@ -763,13 +762,13 @@ class LogicExecutor(QObject):
             # 마우스 입력 상세 정보 로깅
             self.modal_log_manager.log(
                 message=f"""
-                [마우스 입력 상세 정보] <br>
-                - DPI 배율: {scale_factor:.2f} <br>
-                - 클라이언트 크기: 너비 {client_width}, 높이 {client_height} <br>
-                - 클라이언트 시작점: X {client_point[0]}, Y {client_point[1]} <br>
-                - 저장된 비율: X {x_ratio:.3f}, Y {y_ratio:.3f} <br>
-                - 클라이언트 내 좌표: X {client_x}, Y {client_y} <br>
-                - 화면 좌표: X {screen_x}, Y {screen_y} <br>
+                [마우스 입력 상세 정보]
+                - DPI 배율: {scale_factor:.2f}
+                - 클라이언트 크기: 너비 {client_width}, 높이 {client_height}
+                - 클라이언트 시작점: X {client_point[0]}, Y {client_point[1]}
+                - 저장된 비율: X {x_ratio:.3f}, Y {y_ratio:.3f}
+                - 클라이언트 내 좌표: X {client_x}, Y {client_y}
+                - 화면 좌표: X {screen_x}, Y {screen_y}
                 """,
                 level="DEBUG",
                 modal_name="로직실행",
@@ -1042,7 +1041,7 @@ class LogicExecutor(QObject):
             )
 
             self.modal_log_manager.log(
-                message="로직 강제 중지 -- 로직 강제 중지가 완료되었습니다 <br>",
+                message="로직 강제 중지 -- 로직 강제 중지가 완료되었습니다",
                 level="INFO",
                 modal_name="로직실행", 
                 include_time=True,

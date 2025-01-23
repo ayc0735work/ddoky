@@ -148,8 +148,8 @@ class BaseLogManager(QObject):
         # 레벨과 모달 이름 추가
         log_parts.extend([f"[{level}]", f"[{modal_name}]"])
         
-        # 최종 로그 메시지 구성
-        final_message = " ".join(log_parts + [message])
+        # 최종 로그 메시지 구성 (메시지 끝에 개행 추가)
+        final_message = " ".join(log_parts + [message]) + "\n"
         
         # 스타일 적용
         styled_message = self._apply_message_style(final_message)

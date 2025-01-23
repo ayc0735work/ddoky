@@ -32,7 +32,7 @@ class LogicMakerController(QObject):
         self.widget.add_item(mouse_info)
         
         self.modal_log_manager.log(
-            message=f"마우스 입력이 추가되었습니다: {mouse_info['display_text']} <br>",
+            message=f"마우스 입력이 추가되었습니다: {mouse_info['display_text']}",
             level="INFO",
             modal_name="로직메이커"
         )
@@ -44,7 +44,7 @@ class LogicMakerController(QObject):
             delay_text (str): 지연시간 텍스트
         """
         self.modal_log_manager.log(
-            message=f"지연시간이 추가되었습니다: {delay_text} <br>",
+            message=f"지연시간이 추가되었습니다: {delay_text}",
             level="INFO",
             modal_name="로직메이커"
         )
@@ -57,7 +57,7 @@ class LogicMakerController(QObject):
         """
         status = "시작" if is_recording else "중지"
         self.modal_log_manager.log(
-            message=f"기록 모드가 {status}되었습니다 <br>",
+            message=f"기록 모드가 {status}되었습니다",
             level="INFO",
             modal_name="로직메이커"
         )
@@ -69,7 +69,7 @@ class LogicMakerController(QObject):
             wait_click_info (dict): 클릭 대기 정보
         """
         self.modal_log_manager.log(
-            message=f"클릭 대기 아이템이 추가되었습니다: {wait_click_info['display_text']} <br>",
+            message=f"클릭 대기 아이템이 추가되었습니다: {wait_click_info['display_text']}",
             level="INFO",
             modal_name="로직메이커"
         )

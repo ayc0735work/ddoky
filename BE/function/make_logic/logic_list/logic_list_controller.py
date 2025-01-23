@@ -87,14 +87,14 @@ class LogicListController(QObject):
                 self.widget.add_logic_item(logic_info, logic_id)
                 
             self.modal_log_manager.log(
-                message="로직 목록을 불러왔습니다 <br>",
+                message="로직 목록을 불러왔습니다",
                 level="INFO",
                 modal_name="로직리스트"
             )
             
         except Exception as e:
             self.modal_log_manager.log(
-                message=f"로직 목록 불러오기 중 오류 발생: {str(e)} <br>",
+                message=f"로직 목록 불러오기 중 오류 발생: {str(e)}",
                 level="ERROR",
                 modal_name="로직리스트"
             )
@@ -114,7 +114,7 @@ class LogicListController(QObject):
         """
         try:
             self.modal_log_manager.log(
-                message="[로직 저장 시작] 현재 로직 목록을 설정에 저장합니다 <br>",
+                message="[로직 저장 시작] 현재 로직 목록을 설정에 저장합니다",
                 level="INFO",
                 modal_name="로직리스트"
             )
@@ -125,14 +125,14 @@ class LogicListController(QObject):
                 logic_id = self.widget.get_logic_id_at(i)
                 if not logic_id:
                     self.modal_log_manager.log(
-                        message=f"[경고] 아이템 {i}에 로직 ID가 없습니다 <br>",
+                        message=f"[경고] 아이템 {i}에 로직 ID가 없습니다",
                         level="WARNING",
                         modal_name="로직리스트"
                     )
                     continue
                 
                 self.modal_log_manager.log(
-                    message=f"[로직 처리] 로직 ID: {logic_id} 처리 시작 <br>",
+                    message=f"[로직 처리] 로직 ID: {logic_id} 처리 시작",
                     level="DEBUG",
                     modal_name="로직리스트"
                 )
@@ -141,7 +141,7 @@ class LogicListController(QObject):
                 logic_info = self.settings_manager.load_logics(force=True).get(logic_id)
                 if not logic_info:
                     self.modal_log_manager.log(
-                        message=f"[경고] 로직 ID {logic_id}에 해당하는 로직 정보를 찾을 수 없습니다 <br>",
+                        message=f"[경고] 로직 ID {logic_id}에 해당하는 로직 정보를 찾을 수 없습니다",
                         level="WARNING",
                         modal_name="로직리스트"
                     )
@@ -156,14 +156,14 @@ class LogicListController(QObject):
             settings['logics'] = logics
             self.settings_manager._save_settings(settings)
             self.modal_log_manager.log(
-                message="[설정 저장 완료] 로직 정보가 성공적으로 저장되었습니다 <br>",
+                message="[설정 저장 완료] 로직 정보가 성공적으로 저장되었습니다",
                 level="INFO",
                 modal_name="로직리스트"
             )
             
         except Exception as e:
             self.modal_log_manager.log(
-                message=f"[오류] 로직 저장 중 오류 발생: {str(e)} <br>",
+                message=f"[오류] 로직 저장 중 오류 발생: {str(e)}",
                 level="ERROR",
                 modal_name="로직리스트"
             )
@@ -197,7 +197,7 @@ class LogicListController(QObject):
             # UI 업데이트
             self.widget.add_logic_item(logic_info, logic_id)
             self.modal_log_manager.log(
-                message=f"로직 '{logic_info.get('name', '')}'이(가) 저장되었습니다 <br>",
+                message=f"로직 '{logic_info.get('name', '')}'이(가) 저장되었습니다",
                 level="INFO",
                 modal_name="로직리스트"
             )
@@ -206,7 +206,7 @@ class LogicListController(QObject):
             
         except Exception as e:
             self.modal_log_manager.log(
-                message=f"로직 저장 중 오류 발생: {str(e)} <br>",
+                message=f"로직 저장 중 오류 발생: {str(e)}",
                 level="ERROR",
                 modal_name="로직리스트"
             )
@@ -233,14 +233,14 @@ class LogicListController(QObject):
                 self.settings_manager.save_logics(logics)
                 self.widget.update_logic_item(logic_id, logics[logic_id])
                 self.modal_log_manager.log(
-                    message=f"로직 '{new_info.get('name', '')}'이(가) 업데이트되었습니다 <br>",
+                    message=f"로직 '{new_info.get('name', '')}'이(가) 업데이트되었습니다",
                     level="INFO",
                     modal_name="로직리스트"
                 )
                 
         except Exception as e:
             self.modal_log_manager.log(
-                message=f"로직 업데이트 중 오류 발생: {str(e)} <br>",
+                message=f"로직 업데이트 중 오류 발생: {str(e)}",
                 level="ERROR",
                 modal_name="로직리스트"
             )
@@ -281,20 +281,20 @@ class LogicListController(QObject):
                 self.widget.remove_logic_item(logic_id)
                 
                 self.modal_log_manager.log(
-                    message=f"로직 '{logic_name}'이(가) 삭제되었습니다 <br>",
+                    message=f"로직 '{logic_name}'이(가) 삭제되었습니다",
                     level="INFO",
                     modal_name="로직리스트"
                 )
                 
         except Exception as e:
             self.modal_log_manager.log(
-                message=f"로직 삭제 중 오류 발생: {str(e)} <br>",
+                message=f"로직 삭제 중 오류 발생: {str(e)}",
                 level="ERROR",
                 modal_name="로직리스트"
             )
             import traceback
             self.modal_log_manager.log(
-                message=f"스택 트레이스:\n{traceback.format_exc()} <br>",
+                message=f"스택 트레이스:\n{traceback.format_exc()}",
                 level="ERROR",
                 modal_name="로직리스트"
             )
@@ -327,7 +327,7 @@ class LogicListController(QObject):
                 
         except Exception as e:
             self.modal_log_manager.log(
-                message=f"로직 이동 중 오류 발생: {str(e)} <br>",
+                message=f"로직 이동 중 오류 발생: {str(e)}",
                 level="ERROR",
                 modal_name="로직리스트"
             )
@@ -350,14 +350,14 @@ class LogicListController(QObject):
                 self.clipboard = copy.deepcopy(logics[logic_id])
                 self.clipboard['id'] = logic_id
                 self.modal_log_manager.log(
-                    message=f"로직 '{self.clipboard.get('name', '')}'이(가) 복사되었습니다 <br>",
+                    message=f"로직 '{self.clipboard.get('name', '')}'이(가) 복사되었습니다",
                     level="INFO",
                     modal_name="로직리스트"
                 )
                 
         except Exception as e:
             self.modal_log_manager.log(
-                message=f"로직 복사 중 오류 발생: {str(e)} <br>",
+                message=f"로직 복사 중 오류 발생: {str(e)}",
                 level="ERROR",
                 modal_name="로직리스트"
             )
@@ -387,7 +387,7 @@ class LogicListController(QObject):
             
         except Exception as e:
             self.modal_log_manager.log(
-                message=f"로직 붙여넣기 중 오류 발생: {str(e)} <br>",
+                message=f"로직 붙여넣기 중 오류 발생: {str(e)}",
                 level="ERROR",
                 modal_name="로직리스트"
             )
@@ -447,7 +447,7 @@ class LogicListController(QObject):
             
         except Exception as e:
             self.modal_log_manager.log(
-                message=f"로직 정보 검색 중 오류 발생: {str(e)} <br>",
+                message=f"로직 정보 검색 중 오류 발생: {str(e)}",
                 level="ERROR",
                 modal_name="로직리스트"
             )
@@ -459,7 +459,7 @@ class LogicListController(QObject):
         self.saved_logics[logic_id] = logic_info
         self.widget.add_logic_item(logic_info, logic_id)
         self.modal_log_manager.log(
-            message=f"로직 '{logic_info.get('name')}'이(가) 저장되었습니다 <br>",
+            message=f"로직 '{logic_info.get('name')}'이(가) 저장되었습니다",
             level="INFO",
             modal_name="로직리스트"
         )
@@ -471,7 +471,7 @@ class LogicListController(QObject):
             self.saved_logics[logic_id].update(logic_info)
             self.widget.update_logic_item(logic_id, self.saved_logics[logic_id])
             self.modal_log_manager.log(
-                message=f"로직 '{logic_info.get('name')}'이(가) 업데이트되었습니다 <br>",
+                message=f"로직 '{logic_info.get('name')}'이(가) 업데이트되었습니다",
                 level="INFO",
                 modal_name="로직리스트"
             )

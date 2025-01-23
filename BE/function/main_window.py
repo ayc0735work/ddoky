@@ -564,14 +564,14 @@ class MainWindow(QMainWindow):
         if enabled:
             self.logic_executor.start_monitoring()
             self.modal_log_manager.log(
-                message="로직 동작 허용 여부가 허용 상태로 변경되었습니다<br>",
+                message="로직 동작 허용 여부가 허용 상태로 변경되었습니다",
                 level="INFO",
                 modal_name="로직동작"
             )
         else:
             self.logic_executor.stop_monitoring()
             self.modal_log_manager.log(
-                message="로직 동작 허용 여부가 불허용 상태로 변경되었습니다<br>",
+                message="로직 동작 허용 여부가 불허용 상태로 변경되었습니다",
                 level="INFO",
                 modal_name="로직동작"
             )

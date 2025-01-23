@@ -30,7 +30,7 @@ class LogicMakerToolKeyInfoController(QObject):
         3. 각 상태 정보를 내부 처리 메서드로 전달
         """
         self.modal_log_manager.log(
-            message=f"키 입력 정보가 전달되었습니다.: {get_entered_key_info.get(str(get_entered_key_info))} <br>",
+            message=f"키 입력 정보가 전달되었습니다.: {get_entered_key_info.get(str(get_entered_key_info))}",
             level="INFO", 
             modal_name="로직_메이커_툴_키_정보_컨트롤러"
         )
@@ -42,7 +42,7 @@ class LogicMakerToolKeyInfoController(QObject):
         key_state_info_press['display_text'] = f"{get_entered_key_info['key_code']} --- 누르기"
 
         self.modal_log_manager.log(
-            message=f"키 상태 정보가 생성되었습니다. : {key_state_info_press.get(str(key_state_info_press))} <br>",
+            message=f"키 상태 정보가 생성되었습니다. : {key_state_info_press.get(str(key_state_info_press))}",
             level="INFO", 
             modal_name="로직_메이커_툴_키_정보_컨트롤러"
         )
@@ -57,7 +57,7 @@ class LogicMakerToolKeyInfoController(QObject):
         key_state_info_release['display_text'] = f"{get_entered_key_info['key_code']} --- 떼기"
 
         self.modal_log_manager.log(
-            message=f"키 상태 정보가 생성되었습니다. : {key_state_info_release.get(str(key_state_info_release))} <br>",
+            message=f"키 상태 정보가 생성되었습니다. : {key_state_info_release.get(str(key_state_info_release))}",
             level="INFO", 
             modal_name="로직_메이커_툴_키_정보_컨트롤러"
         )
@@ -76,7 +76,7 @@ class LogicMakerToolKeyInfoController(QObject):
         
         # 로그 메시지 출력
         self.modal_log_manager.log(
-            message=f"키 입력 정보가 전달되었습니다.: {key_state_info.get(str(key_state_info))} <br>",
+            message=f"키 입력 정보가 전달되었습니다.: {key_state_info.get(str(key_state_info))}",
             level="INFO", 
             modal_name="로직_메이커_툴_키_정보_컨트롤러"
         )
