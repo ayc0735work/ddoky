@@ -31,14 +31,14 @@ class LogicMakerToolKeyInfoController(QObject):
         self.modal_log_manager.log(
             message=f"키 입력 처리 시작 - 입력받은 데이터: {key_info}",
             level="DEBUG",
-            modal_name="로직메이커"
+            modal_name="logic_maker_tool_key_info_controller"
         )
         
         if not isinstance(key_info, dict):
             self.modal_log_manager.log(
                 message=f"잘못된 형식의 데이터: {type(key_info)}",
                 level="ERROR",
-                modal_name="로직메이커"
+                modal_name="logic_maker_tool_key_info_controller"
             )
             return
             
@@ -71,5 +71,5 @@ class LogicMakerToolKeyInfoController(QObject):
         self.modal_log_manager.log(
             message="키 입력 처리가 완료되었습니다",
             level="INFO",
-            modal_name="로직메이커"
+            modal_name="logic_maker_tool_key_info_controller"
         )

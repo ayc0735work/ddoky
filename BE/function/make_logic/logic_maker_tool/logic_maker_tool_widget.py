@@ -125,14 +125,14 @@ class LogicMakerToolWidget(QFrame):
         self.modal_log_manager.log(
             message=f"아이템 추가 시작 - 입력받은 데이터: {item_info}",
             level="DEBUG",
-            modal_name="로직메이커"
+            modal_name="logic_maker_tool_widget"
         )
         
         if isinstance(item_info, dict):
             self.modal_log_manager.log(
                 message="딕셔너리 형식의 데이터 처리 시작",
                 level="DEBUG",
-                modal_name="로직메이커"
+                modal_name="logic_maker_tool_widget"
             )
             # order 값이 없으면 설정
             if 'order' not in item_info:
@@ -143,13 +143,13 @@ class LogicMakerToolWidget(QFrame):
             self.modal_log_manager.log(
                 message=f"아이템이 성공적으로 추가되었습니다",
                 level="DEBUG",
-                modal_name="로직메이커"
+                modal_name="logic_maker_tool_widget"
             )
         else:
             self.modal_log_manager.log(
                 message=f"잘못된 형식의 데이터: {type(item_info)}",
                 level="ERROR",
-                modal_name="로직메이커"
+                modal_name="logic_maker_tool_widget"
             )
 
     def _open_key_input_dialog(self):
@@ -191,7 +191,7 @@ class LogicMakerToolWidget(QFrame):
         self.modal_log_manager.log(
             message=f"마우스 입력 정보 수신: {mouse_info}",
             level="DEBUG",
-            modal_name="로직메이커"
+            modal_name="logic_maker_tool_widget"
         )
         
         # 마우스 입력 정보 처리
@@ -211,14 +211,14 @@ class LogicMakerToolWidget(QFrame):
         self.modal_log_manager.log(
             message=f"처리된 마우스 입력 정보: {processed_info}",
             level="DEBUG",
-            modal_name="로직메이커"
+            modal_name="logic_maker_tool_widget"
         )
         # 아이템 추가
         self.add_item(processed_info)
         self.modal_log_manager.log(
             message=f"마우스 입력이 추가되었습니다: {processed_info['display_text']}",
             level="INFO",
-            modal_name="로직메이커"
+            modal_name="logic_maker_tool_widget"
         )
 
     def _add_delay(self):
@@ -248,7 +248,7 @@ class LogicMakerToolWidget(QFrame):
             self.modal_log_manager.log(
                 message=f"지연시간 {delay:.4f}초가 추가되었습니다",
                 level="INFO",
-                modal_name="로직메이커"
+                modal_name="logic_maker_tool_widget"
             )
 
     def _add_wait_click(self):
@@ -262,7 +262,7 @@ class LogicMakerToolWidget(QFrame):
         self.modal_log_manager.log(
             message="왼쪽 버튼 클릭시 다음으로 진행 아이템이 추가되었습니다",
             level="INFO",
-            modal_name="로직메이커"
+            modal_name="logic_maker_tool_widget"
         )
 
     def _toggle_record_mode(self, checked):
@@ -284,7 +284,7 @@ class LogicMakerToolWidget(QFrame):
                 self.modal_log_manager.log(
                     message=f"이미지 서치 체크 영역이 추가되었습니다: {area}",
                     level="INFO",
-                    modal_name="로직메이커"
+                    modal_name="logic_maker_tool_widget"
                 )
                 self.item_added.emit({
                     'type': 'image_search',
@@ -302,7 +302,7 @@ class LogicMakerToolWidget(QFrame):
                 self.modal_log_manager.log(
                     message=f"텍스트 입력이 추가되었습니다: {text_info['text']}",
                     level="INFO",
-                    modal_name="로직메이커"
+                    modal_name="logic_maker_tool_widget"
                 )
 
     def update_saved_logics(self, logics):
