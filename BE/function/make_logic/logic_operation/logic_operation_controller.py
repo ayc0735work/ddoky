@@ -17,7 +17,7 @@ class LogicOperationController(QObject):
             self.modal_log_manager.log(
                 message="LogicOperationController 초기화 시작",
                 level="DEBUG",
-                file_name="로직동작"
+                file_name="logic_operation_controller"
             )
             super().__init__()
             self.setup_connections()
@@ -29,13 +29,13 @@ class LogicOperationController(QObject):
             self.modal_log_manager.log(
                 message="LogicOperationController 초기화 완료",
                 level="DEBUG",
-                file_name="로직동작"
+                file_name="logic_operation_controller"
             )
         except Exception as e:
             self.modal_log_manager.log(
                 message=f"컨트롤러 초기화 중 오류 발생: {str(e)}",
                 level="ERROR",
-                file_name="로직동작"
+                file_name="logic_operation_controller"
             )
         
     def setup_connections(self):
@@ -43,7 +43,7 @@ class LogicOperationController(QObject):
         self.modal_log_manager.log(
             message="컨트롤러의 시그널 연결을 설정합니다",
             level="DEBUG",
-            file_name="로직동작"
+            file_name="logic_operation_controller"
         )
         self.widget.operation_toggled.connect(self._handle_operation_toggle)
         self.widget.process_reset.connect(self._handle_process_reset)
@@ -53,7 +53,7 @@ class LogicOperationController(QObject):
         self.modal_log_manager.log(
             message="시그널 연결이 완료되었습니다",
             level="DEBUG",
-            file_name="로직동작"
+            file_name="logic_operation_controller"
         )
         
     def _handle_operation_toggle(self, checked):
@@ -62,7 +62,7 @@ class LogicOperationController(QObject):
             self.modal_log_manager.log(
                 message="로직 동작이 활성화되었습니다",
                 level="INFO",
-                file_name="로직동작",
+                file_name="logic_operation_controller",
                 print_to_terminal=True
             )
         elif not checked and self.widget.logic_executor:
@@ -71,7 +71,7 @@ class LogicOperationController(QObject):
             self.modal_log_manager.log(
                 message="프로세스에서 로직 동작을 종료합니다",
                 level="INFO",
-                file_name="로직동작"
+                file_name="logic_operation_controller"
             )
         
     def _handle_process_reset(self):
@@ -79,7 +79,7 @@ class LogicOperationController(QObject):
         self.modal_log_manager.log(
             message="선택된 프로세스를 초기화 했습니다",
             level="INFO",
-            file_name="로직동작"
+            file_name="logic_operation_controller"
         )
         
     def _handle_process_selected(self, process_info):
@@ -101,13 +101,13 @@ class LogicOperationController(QObject):
                 self.modal_log_manager.log(
                     message="logic_executor가 None입니다",
                     level="DEBUG",
-                    file_name="로직동작"
+                    file_name="logic_operation_controller"
                 )
         else:
             self.modal_log_manager.log(
                 message="logic_executor가 존재하지 않습니다",
                 level="DEBUG",
-                file_name="로직동작"
+                file_name="logic_operation_controller"
             )
         
     def _on_force_stop_cleanup_finished(self):
@@ -119,7 +119,7 @@ class LogicOperationController(QObject):
                 self.modal_log_manager.log(
                     message="강제 중지 정리 작업이 완료되었습니다",
                     level="INFO",
-                    file_name="로직동작"
+                    file_name="logic_operation_controller"
                 )
 
     def _log_with_time(self, message):
@@ -127,7 +127,7 @@ class LogicOperationController(QObject):
         self.modal_log_manager.log(
             message=message,
             level="INFO",
-            file_name="로직동작"
+            file_name="logic_operation_controller"
         )
         
     def _update_active_process(self):

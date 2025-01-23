@@ -13,10 +13,10 @@ class LogicItemRepository(QObject):
         super().__init__()
         self.items = []  # 아이템 목록
         
-    def add_item(self, item_info):
+    def add_item(self, item_info: dict):
         """아이템을 추가합니다."""
         if not isinstance(item_info, dict):
-            return
+            raise ValueError("item_info must be a dictionary")
             
         # order 값이 없으면 마지막 순서로 설정
         if 'order' not in item_info:
@@ -25,32 +25,36 @@ class LogicItemRepository(QObject):
         self.items.append(item_info)
         self.item_added.emit(item_info)
         
-    def delete_item(self, item_info):
+    def delete_item(self, item_info: dict):
         """아이템을 삭제합니다."""
         if item_info in self.items:
             self.items.remove(item_info)
             self.item_deleted.emit(item_info)
             self._reorder_items()
             
-    def move_item_up(self, item_info):
+    def move_item_up(self, item_info: dict):
         """아이템을 위로 이동합니다."""
         index = self.items.index(item_info)
         if index > 0:
-            self.items[index], self.items[index-1] = self.items[index-1], self.items[index]
+            self.items[index], self.items[index - 1] = self.items[index - 1], self.items[index]
             self._reorder_items()
             self.item_moved.emit()
             
-    def move_item_down(self, item_info):
+    def move_item_down(self, item_info: dict):
         """아이템을 아래로 이동합니다."""
         index = self.items.index(item_info)
         if index < len(self.items) - 1:
-            self.items[index], self.items[index+1] = self.items[index+1], self.items[index]
+            self.items[index], self.items[index + 1] = self.items[index + 1], self.items[index]
             self._reorder_items()
             self.item_moved.emit()
             
-    def get_items(self):
+    def get_items(self) -> list:
         """모든 아이템을 반환합니다."""
         return self.items
+        
+    def get_items_count(self) -> int:
+        """아이템 개수를 반환합니다."""
+        return len(self.items)
         
     def clear_items(self):
         """모든 아이템을 삭제합니다."""

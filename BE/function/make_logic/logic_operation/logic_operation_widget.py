@@ -261,7 +261,7 @@ class LogicOperationWidget(QFrame):
             self.modal_log_manager.log(
                 message="선택된 프로세스가 없습니다. 프로세스를 먼저 선택해주세요",
                 level="ERROR",
-                file_name="로직동작"
+                file_name="logic_operation_widget"
             )
             return
         self.operation_toggled.emit(checked)
@@ -278,7 +278,7 @@ class LogicOperationWidget(QFrame):
             self.modal_log_manager.log(
                 message=f"프로세스가 선택되었습니다: {self._get_process_info_text(process)}",
                 level="INFO",
-                file_name="로직동작"
+                file_name="logic_operation_widget"
             )
         
     def _on_reset_process(self):
@@ -290,7 +290,7 @@ class LogicOperationWidget(QFrame):
         self.modal_log_manager.log(
             message="프로세스 선택이 초기화되었습니다",
             level="INFO",
-            file_name="로직동작"
+            file_name="logic_operation_widget"
         )
         
     def _on_force_stop(self):
@@ -299,19 +299,19 @@ class LogicOperationWidget(QFrame):
             self.modal_log_manager.log(
                 message="강제 중지 시작",
                 level="DEBUG",
-                file_name="로직동작"
+                file_name="logic_operation_widget"
             )
             self.force_stop.emit()
             self.modal_log_manager.log(
                 message="강제 중지 완료",
                 level="INFO",
-                file_name="로직동작"
+                file_name="logic_operation_widget"
             )
         except Exception as e:
             self.modal_log_manager.log(
                 message=f"강제 중지 중 오류 발생: {str(e)}",
                 level="ERROR",
-                file_name="로직동작"
+                file_name="logic_operation_widget"
             )
         
     def update_selected_process(self, process_name):
@@ -534,7 +534,7 @@ class LogicOperationWidget(QFrame):
         self.modal_log_manager.log(
             message="지연 시간 수정 모드가 활성화되었습니다",
             level="INFO",
-            file_name="로직동작"
+            file_name="logic_operation_widget"
         )
     
     def _on_save_delays(self):
@@ -574,14 +574,14 @@ class LogicOperationWidget(QFrame):
             self.modal_log_manager.log(
                 message="지연 시간 설정이 저장되었습니다",
                 level="INFO",
-                file_name="로직동작"
+                file_name="logic_operation_widget"
             )
             
         except ValueError:
             self.modal_log_manager.log(
                 message="올바른 숫자 형식을 입력해주세요",
                 level="ERROR",
-                file_name="로직동작"
+                file_name="logic_operation_widget"
             )
     
     def load_delay_settings(self):
@@ -642,7 +642,7 @@ class LogicOperationWidget(QFrame):
         self.modal_log_manager.log(
             message="지연 시간이 기본값으로 초기화되었습니다",
             level="INFO",
-            file_name="로직동작"
+            file_name="logic_operation_widget"
         )
 
     def _on_edit_force_stop_key(self):
@@ -678,14 +678,14 @@ class LogicOperationWidget(QFrame):
                     self.modal_log_manager.log(
                         message=f"로직 강제 중지 키가 '{key_info['key_code']}'(으)로 변경되었습니다",
                         level="INFO",
-                        file_name="로직동작"
+                        file_name="logic_operation_widget"
                     )
             
         except Exception as e:
             self.modal_log_manager.log(
                 message=f"강제 중지 키 설정 중 오류 발생: {str(e)}",
                 level="ERROR",
-                file_name="로직동작"
+                file_name="logic_operation_widget"
             )
         finally:
             # 버튼 다시 활성화
@@ -714,13 +714,13 @@ class LogicOperationWidget(QFrame):
             self.modal_log_manager.log(
                 message="로직 강제 중지 키가 'ESC'로 초기화되었습니다",
                 level="INFO",
-                file_name="로직동작"
+                file_name="logic_operation_widget"
             )
         except Exception as e:
             self.modal_log_manager.log(
                 message=f"강제 중지 키 초기화 중 오류 발생: {str(e)}",
                 level="ERROR",
-                file_name="로직동작"
+                file_name="logic_operation_widget"
             )
 
     def _add_item_at_index(self, item_data, index):

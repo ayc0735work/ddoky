@@ -25,7 +25,7 @@ class EtcFunctionWidget(QWidget):
         self.modal_log_manager.log(
             message="기타 기능 위젯 초기화 완료",
             level="DEBUG",
-            file_name="기타기능"
+            file_name="etc_function_widget"
         )
         
     def init_ui(self):
@@ -130,7 +130,7 @@ class EtcFunctionWidget(QWidget):
         self.modal_log_manager.log(
             message="컨트롤러 설정 완료",
             level="DEBUG",
-            file_name="기타기능"
+            file_name="etc_function_widget"
         )
         
     def set_logic_enabled(self, enabled):
@@ -142,7 +142,7 @@ class EtcFunctionWidget(QWidget):
         self.modal_log_manager.log(
             message=f"로직 활성화 상태 변경: {enabled}",
             level="INFO",
-            file_name="기타기능"
+            file_name="etc_function_widget"
         )
         
         self.is_logic_enabled = enabled
@@ -153,14 +153,14 @@ class EtcFunctionWidget(QWidget):
                 self.modal_log_manager.log(
                     message="조건 충족 - 카운트다운 시작 요청",
                     level="INFO",
-                    file_name="기타기능"
+                    file_name="etc_function_widget"
                 )
                 self.controller.start_hellfire_countdown()
             else:
                 self.modal_log_manager.log(
                     message="조건 불충족 - 카운트다운 중지 요청",
                     level="INFO",
-                    file_name="기타기능"
+                    file_name="etc_function_widget"
                 )
                 self.controller.stop_hellfire_countdown()
                 
@@ -177,27 +177,27 @@ class EtcFunctionWidget(QWidget):
         self.modal_log_manager.log(
             message=f"프로세스 상태 업데이트: {is_active}",
             level="DEBUG",
-            file_name="기타기능"
+            file_name="etc_function_widget"
         )
         if self._process_active != is_active:
             self.modal_log_manager.log(
                 message=f"프로세스 상태 변경: {is_active}",
                 level="DEBUG",
-                file_name="기타기능"
+                file_name="etc_function_widget"
             )
             self._process_active = is_active
             if self.is_logic_enabled and is_active and self.controller:
                 self.modal_log_manager.log(
                     message="프로세스 활성화로 인한 카운트다운 시작 요청",
                     level="INFO",
-                    file_name="기타기능"
+                    file_name="etc_function_widget"
                 )
                 self.controller.start_hellfire_countdown()
             elif not is_active and self.controller:
                 self.modal_log_manager.log(
                     message="프로세스 비활성화로 인한 카운트다운 중지 요청",
                     level="INFO",
-                    file_name="기타기능"
+                    file_name="etc_function_widget"
                 )
                 self.controller.stop_hellfire_countdown()
                 
@@ -207,5 +207,5 @@ class EtcFunctionWidget(QWidget):
         self.modal_log_manager.log(
             message=f"키 입력 카운트다운 시간이 {value}초로 설정되었습니다",
             level="INFO",
-            file_name="기타기능"
+            file_name="etc_function_widget"
         )

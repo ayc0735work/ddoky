@@ -200,7 +200,7 @@ class EnteredKeyInfoDialog(QDialog):
             self.modal_log_manager.log(
                 message="키 입력 모달의 확인버튼이 클릭되었습니다.",
                 level="INFO",
-                file_name="키입력모달"
+                file_name="entered_key_info_dialog"
             )
     
     def closeEvent(self, event):

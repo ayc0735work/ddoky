@@ -25,7 +25,7 @@ class LogicDetailController(QObject):
         self.modal_log_manager.log(
             message="로직 구성 순서가 변경되었습니다",
             level="INFO",
-            file_name="로직상세"
+            file_name="logic_detail_controller"
         )
         
     def _handle_item_edited(self, item_text):
@@ -33,7 +33,7 @@ class LogicDetailController(QObject):
         self.modal_log_manager.log(
             message=f"수정된 로직 구성: {item_text}",
             level="INFO",
-            file_name="로직상세"
+            file_name="logic_detail_controller"
         )
         
     def _handle_item_deleted(self, item_text):
@@ -41,7 +41,7 @@ class LogicDetailController(QObject):
         self.modal_log_manager.log(
             message=f"삭제된 로직 구성: {item_text}",
             level="INFO",
-            file_name="로직상세"
+            file_name="logic_detail_controller"
         )
         
     def on_logic_selected(self, logic_name):
@@ -53,5 +53,5 @@ class LogicDetailController(QObject):
         self.modal_log_manager.log(
             message=f"로직 '{logic_name}'이(가) 선택되었습니다",
             level="INFO",
-            file_name="로직상세"
+            file_name="logic_detail_controller"
         )
