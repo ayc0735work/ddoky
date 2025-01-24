@@ -1,6 +1,6 @@
 from PySide6.QtCore import QObject, Signal
 
-class LogicItemRepository(QObject):
+class LogicItemManageRepository(QObject):
     """로직 아이템을 관리하는 저장소 클래스"""
     
     # 시그널 정의

@@ -12,7 +12,7 @@ from BE.function._common_components.modal.text_input_modal.text_input_dialog imp
 from .logic_maker_tool_key_info_controller import LogicMakerToolKeyInfoController
 from BE.log.manager.base_log_manager import BaseLogManager
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
-from BE.function.make_logic.repository.logic_item_repository import LogicItemRepository
+from BE.function.make_logic.repository.logic_item_manage_repository import LogicItemManageRepository
 
 class LogicMakerToolWidget(QFrame):
     """로직 메이커 위젯"""
@@ -24,7 +24,7 @@ class LogicMakerToolWidget(QFrame):
     item_added = Signal(dict)  # 아이템이 추가되었을 때
     wait_click_input = Signal(dict)  # 클릭 대기 입력이 추가되었을 때
 
-    def __init__(self, repository: LogicItemRepository, parent=None):
+    def __init__(self, repository: LogicItemManageRepository, parent=None):
         super().__init__(parent)
         self.repository = repository
         self.saved_logics = {}  # 저장된 로직들을 관리하는 딕셔너리

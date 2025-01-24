@@ -137,7 +137,7 @@
          |
          | Repository 저장
          ↓
-[LogicItemRepository.add_item()]
+[LogicItemManageRepository.add_item()]
          |
          | Repository item_added 시그널
          ↓
@@ -163,9 +163,9 @@ BE/function/
 
 ## 3. 주요 클래스 설명
 
-### 3.1 LogicItemRepository
+### 3.1 LogicItemManageRepository
 ```python
-class LogicItemRepository:
+class LogicItemManageRepository:
     # 시그널
     item_added = Signal(dict)    # 아이템 추가 시그널
     item_deleted = Signal(dict)  # 아이템 삭제 시그널
@@ -193,7 +193,7 @@ class LogicMakerToolKeyInfoController(QObject):
 ### 3.3 LogicMakerToolWidget
 ```python
 class LogicMakerToolWidget(QFrame):
-    def __init__(self, repository: LogicItemRepository):
+    def __init__(self, repository: LogicItemManageRepository):
         self.repository = repository
         self.key_info_controller = LogicMakerToolKeyInfoController()
         # 컨트롤러의 시그널을 add_item 메서드에 연결
@@ -218,7 +218,7 @@ class LogicMakerToolWidget(QFrame):
 
 ## 5. 책임 분리
 
-### 5.1 Repository (LogicItemRepository)
+### 5.1 Repository (LogicItemManageRepository)
 - 아이템 데이터 중앙 관리
 - 아이템 추가/삭제/수정 기능
 - 상태 변경 시그널 발생
