@@ -30,7 +30,7 @@
      * 키 이벤트 필터링 (시스템 예약 키, 중복 이벤트 제거)
      * NumLock, CapsLock 등 특수 상태 처리
    ```python
-   return self.last_key_info  # 키보드 훅으로 캡처된 키 정보 반환
+   return self.last_formatted_key_info  # 키보드 훅으로 캡처된 키 정보 반환
    ```
 
 3. **확인 버튼 클릭 처리**

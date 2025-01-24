@@ -40,7 +40,7 @@ class EnteredKeyInfoDialog(QDialog):
             | Qt.WindowCloseButtonHint
         )
         
-        self.last_key_info = None
+        self.last_formatted_key_info = None
         self.keyboard_hook = None
         self.modal_log_manager = BaseLogManager.instance()
         
@@ -112,16 +112,33 @@ class EnteredKeyInfoDialog(QDialog):
         Args:
             formatted_key_info (dict): 구조화된 키 정보
         """
-        # 이전 키 정보와 동일한 경우 무시
-        if (self.last_key_info and 
-            self.last_key_info['key_code'] == formatted_key_info['key_code'] and
-            self.last_key_info['modifiers'] == formatted_key_info['modifiers'] and
-            self.last_key_info['scan_code'] == formatted_key_info['scan_code']):
-            return
+        self.modal_log_manager.log(
+            message=f"_on_key_pressed - formatted_key_info - 입력받은 데이터: {formatted_key_info}",
+            level="DEBUG",
+            file_name="entered_key_info_dialog"
+        )
         
-        # 키 정보 업데이트
-        self.last_key_info = formatted_key_info.copy()
+        # 1. 마지막으로 저장된 키 정보가 없거나 (self.last_formatted_key_info is None)
+        # 2. 새로 입력된 키가 마지막 키와 다른 경우 (self.last_formatted_key_info != formatted_key_info)
+        # 위 두 조건 중 하나라도 만족하면 새로운 키 정보를 업데이트
+        # 이를 통해 동일한 키가 연속으로 입력되는 경우는 처리하지 않음 (중복 처리 방지)
+        # if (self.last_formatted_key_info is None or 
+        #     self.last_formatted_key_info != formatted_key_info):
+            # copy() 메서드로 깊은 복사를 수행하여 
+                # 깊은 복사(Deep Copy)란?
+                # - 객체의 모든 내용을 새로운 메모리 공간에 완전히 복사하는 것
+                # - 원본 객체와 복사된 객체가 완전히 독립적으로 존재
+                # - 복사본을 수정해도 원본에 영향을 주지 않음
+                # - 중첩된 객체(딕셔너리, 리스트 등)도 모두 새로운 객체로 복사됨
+            # formatted_key_info의 변경이 last_formatted_key_info에 영향을 주지 않도록 함
+        self.last_formatted_key_info = formatted_key_info.copy()
         
+        self.modal_log_manager.log(
+            message=f"_on_key_pressed - last_formatted_key_info - 업데이트된 키 정보: {self.last_formatted_key_info}",
+            level="DEBUG",
+            file_name="entered_key_info_dialog"
+        )
+
         # UI 업데이트
         self.entered_key_info_widget.update_key_info(formatted_key_info)
         
@@ -133,7 +150,7 @@ class EnteredKeyInfoDialog(QDialog):
     
     def _check_numlock_state(self):
         """NumLock 상태를 체크하고 경고 메시지를 표시"""
-        if self.last_key_info and self.last_key_info.get('is_numpad'):
+        if self.last_formatted_key_info and self.last_formatted_key_info.get('is_numpad'):
             self.NumLockWarning__QLabel.setText(
                 "주의: 숫자 패드 키를 입력했습니다. NumLock 상태에 따라 키가 다르게 동작할 수 있습니다."
             )
@@ -159,10 +176,15 @@ class EnteredKeyInfoDialog(QDialog):
         
         Note:
             이 메서드는 캡슐화를 통해 키 정보에 대한 안전한 접근을 제공합니다.
-            외부에서는 last_key_info 속성에 직접 접근하지 않고 이 메서드를 통해
+            외부에서는 last_formatted_key_info 속성에 직접 접근하지 않고 이 메서드를 통해
             구조화된 키 정보를 얻을 수 있습니다.
         """
-        return self.last_key_info
+        self.modal_log_manager.log(
+            message=f"get_entered_key_info - last_formatted_key_info - 키 정보: {self.last_formatted_key_info}",
+            level="DEBUG",
+            file_name="entered_key_info_dialog"
+        )
+        return self.last_formatted_key_info
     
     def set_formatted_key_info(self, formatted_key_info):
         """구조화된 키 정보를 설정하고 관련 UI를 업데이트합니다.
@@ -172,22 +194,27 @@ class EnteredKeyInfoDialog(QDialog):
                 None이거나 빈 딕셔너리인 경우 무시됩니다.
                 
         동작:
-            1. 키 정보를 내부 상태(last_key_info)에 저장
+            1. 키 정보를 내부 상태(last_formatted_key_info)에 저장
             2. UI 위젯 업데이트
             3. NumLock 상태 확인
             4. key_input_changed 시그널 발생
         """
+        self.modal_log_manager.log(
+            message=f"set_formatted_key_info - formatted_key_info - 입력받은 데이터: {formatted_key_info}",
+            level="DEBUG",
+            file_name="entered_key_info_dialog"
+        )
         if not formatted_key_info:  # None이거나 빈 딕셔너리인 경우 설정하지 않음
             return
         
-        self.last_key_info = formatted_key_info
+        self.last_formatted_key_info = formatted_key_info
         self.entered_key_info_widget.set_key_info(formatted_key_info)
         self._check_numlock_state()
         self.key_input_changed.emit(formatted_key_info)  # 시그널 발생
     
     def clear_key(self):
         """키 입력 초기화"""
-        self.last_key_info = None
+        self.last_formatted_key_info = None
         self.entered_key_info_widget.clear_key()
         self.NumLockWarning__QLabel.clear()
         self.key_input_changed.emit({})

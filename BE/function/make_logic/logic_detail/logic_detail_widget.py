@@ -35,7 +35,7 @@ class LogicDetailWidget(QFrame):
         self.modal_log_manager = BaseLogManager.instance()
         self.init_ui()
         self.edit_mode = False  # 수정 모드 여부
-        self.last_key_info = None
+        self.last_formatted_key_info = None
         self.keyboard_hook = None
         self.trigger_key_info = None  # 트리거 키 정보
         self.original_name = None  # 원래 이름
