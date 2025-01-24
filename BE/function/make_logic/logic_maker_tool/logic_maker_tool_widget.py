@@ -31,9 +31,9 @@ class LogicMakerToolWidget(QFrame):
         self.modal_log_manager = BaseLogManager.instance()
         
         # 키 입력 컨트롤러 초기화
-        self.key_info_controller = LogicMakerToolKeyInfoController(self)
-        # key_info_controller의 item_added 시그널을 add_item 메서드에 연결
-        self.key_info_controller.item_added.connect(self.add_item)
+        self._Logic_Maker_Tool_key_info_controller = LogicMakerToolKeyInfoController(self)
+        # _Logic_Maker_Tool_key_info_controller의 item_added 시그널을 add_item 메서드에 연결
+        self._Logic_Maker_Tool_key_info_controller.item_added.connect(self.add_item)
         
         self.init_ui()
         
@@ -169,7 +169,7 @@ class LogicMakerToolWidget(QFrame):
         3. 키 정보 처리 및 전달
            - 사용자가 확인(OK) 버튼 클릭 시 처리 시작
            - EnteredKeyInfoDialog.get_entered_key_info()로 키 정보 획득
-           - key_info_controller.handle_confirmed_key_input()을 통해 처리
+           - _Logic_Maker_Tool_key_info_controller.key_state_info_process()을 통해 처리
            - 키 정보는 누르기/떼기 두 가지 상태로 변환되어 처리
         """
         # 키 입력 다이얼로그 생성
@@ -177,8 +177,12 @@ class LogicMakerToolWidget(QFrame):
         
         if dialog.exec() == QDialog.Accepted:
             get_entered_key_info = dialog.get_entered_key_info()
+            # 다이얼로그에서 입력된 키 정보가 존재하는지 확인
+            # get_entered_key_info는 키 코드, 수정자 키(modifier), 스캔 코드 등을 포함하는 딕셔너리
             if get_entered_key_info:
-                self.key_info_controller.handle_confirmed_key_input(get_entered_key_info)
+                # _Logic_Maker_Tool_key_info_controller를 통해 입력된 키 정보를 처리
+                # 키 누르기/떼기 이벤트로 변환하여 로직 아이템으로 추가됨
+                self._Logic_Maker_Tool_key_info_controller.key_state_info_process(get_entered_key_info)
 
     def _add_mouse_input(self):
         """마우스 입력 추가"""

@@ -19,7 +19,7 @@ class LogicMakerToolKeyInfoController(QObject):
         super().__init__(parent)
         self.modal_log_manager = BaseLogManager.instance()
     
-    def handle_confirmed_key_input(self, key_info):
+    def key_state_info_process(self, key_info):
         """확인된 키 입력을 처리합니다.
         
         Args:

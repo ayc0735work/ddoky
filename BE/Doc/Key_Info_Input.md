@@ -57,12 +57,12 @@
    if dialog.exec() == QDialog.Accepted:
        get_entered_key_info = dialog.get_entered_key_info()
        if get_entered_key_info:
-           self.key_info_controller.handle_confirmed_key_input(get_entered_key_info)
+           self._Logic_Maker_Tool_key_info_controller.key_state_info_process(get_entered_key_info)
    ```
 
 5. **키 상태 정보 생성 및 처리**
    - 파일: `logic_maker_tool_key_info_controller.py`
-   - 메서드: `handle_confirmed_key_input()`
+   - 메서드: `key_state_info_process()`
    - 동작: 
      * 하나의 키 입력을 누르기/떼기 두 상태로 변환
      * 각 상태별 표시 텍스트 생성
@@ -129,7 +129,7 @@
          ↓
 [LogicMakerToolKeyInfoController]
          |
-         | handle_confirmed_key_input()
+         | key_state_info_process()
          ↓
     item_added 시그널
          ↓
@@ -185,7 +185,7 @@ class LogicMakerToolKeyInfoController(QObject):
     # 시그널
     item_added = Signal(dict)  # UI 업데이트용
     
-    def handle_confirmed_key_input(self, key_info):
+    def key_state_info_process(self, key_info):
         # 키 정보를 누르기/떼기 상태로 변환
         # item_added 시그널 발생
 ```
@@ -195,9 +195,9 @@ class LogicMakerToolKeyInfoController(QObject):
 class LogicMakerToolWidget(QFrame):
     def __init__(self, repository: LogicItemManageRepository):
         self.repository = repository
-        self.key_info_controller = LogicMakerToolKeyInfoController()
+        self._Logic_Maker_Tool_key_info_controller = LogicMakerToolKeyInfoController()
         # 컨트롤러의 시그널을 add_item 메서드에 연결
-        self.key_info_controller.item_added.connect(self.add_item)
+        self._Logic_Maker_Tool_key_info_controller.item_added.connect(self.add_item)
 ```
 
 ## 4. 데이터 구조
