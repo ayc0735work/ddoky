@@ -249,9 +249,9 @@ class MainWindow(QMainWindow):
         self.logic_detail_controller = LogicDetailController(self.logic_detail_widget)
         self.basic_features_layout.addWidget(self.logic_detail_widget)
         
-        # 로직 메이커
-        self.logic_maker_tool_widget = LogicMakerToolWidget(self.logic_item_repository)
-        self.logic_maker_tool_controller = LogicMakerController(self.logic_maker_tool_widget)
+        # 로직 메이커 도구 위젯 초기화
+        self.logic_maker_tool_widget = LogicMakerToolWidget(parent=self)
+        self.logic_maker_tool_widget.repository = self.logic_item_repository  # repository 따로 설정
         
         # 로직 메이커에 저장된 로직 목록 전달
         self.logic_maker_tool_widget.update_saved_logics(self.logic_list_controller.get_saved_logics())
@@ -336,13 +336,6 @@ class MainWindow(QMainWindow):
         self.logic_detail_widget.logic_updated.connect(self.logic_list_controller.on_logic_updated)
         self.logic_detail_widget.logic_saved.connect(self._on_logic_saved)
         self.logic_detail_widget.logic_updated.connect(self._on_logic_updated)
-        
-        # 로직 메이커 시그널 연결
-        self.logic_maker_tool_widget.item_added.connect(self._on_item_added)  # 아이템 추가 시그널 연결
-        self.logic_maker_tool_widget.mouse_input.connect(self._on_mouse_input)
-        self.logic_maker_tool_widget.delay_input.connect(self._on_delay_input)
-        self.logic_maker_tool_widget.add_logic.connect(self._on_add_logic)  # 로직 추가 시그널 연결
-        self.logic_maker_tool_widget.wait_click_input.connect(self._on_wait_click_input)
         
         # 로직 실행 관련 시그널 연결
         self.logic_operation_widget.operation_toggled.connect(self._on_logic_operation_toggled)
@@ -714,19 +707,6 @@ class MainWindow(QMainWindow):
                 file_name="main_window",
                 print_to_terminal=True
             )
-
-    def _on_item_added(self, item_info):
-        """아이템이 추가되었을 때의 처리
-        
-        Args:
-            item_info (dict): 추가된 아이템 정보
-        """
-        # 단순히 로그만 남기고, 실제 아이템 추가는 Repository에서 처리
-        self.modal_log_manager.log(
-            message=f"아이템 추가 요청이 처리되었습니다: {item_info}",
-            level="INFO",
-            file_name="main_window"
-        )
 
     def _on_logic_selected(self, logic_name):
         """로직이 선택되었을 때 호출"""

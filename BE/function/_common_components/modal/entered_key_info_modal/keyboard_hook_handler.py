@@ -283,8 +283,8 @@ def create_formatted_key_info(raw_key_info):
                 'key_code': str,      # 키의 표시 이름 (예: 'A', 'Enter', '방향키 왼쪽 ←')
                 'scan_code': int,     # 하드웨어 키보드의 물리적 위치 값
                 'virtual_key': int,   # Windows API 가상 키 코드
-                'modifiers': int,     # Qt 기반 수정자 키 상태 플래그
                 'location': str,      # 키보드 위치 (예: '왼쪽', '오른쪽', '숫자패드')
+                'modifiers': int,     # Qt 기반 수정자 키 상태 플래그
                 'modifier_text': str, # 수정자 키 텍스트 (예: 'Ctrl', 'Alt', 'Shift')
                 'is_system_key': bool # ALT 키 눌림 여부
                 'simple_display_text': str   # 간단한 UI 표시용 텍스트 (예: 'A (왼쪽)')
@@ -311,8 +311,8 @@ def create_formatted_key_info(raw_key_info):
         'key_code': raw_key_info['key_code'],
         'scan_code': raw_key_info['scan_code'],
         'virtual_key': raw_key_info['virtual_key'],
+        'location': location,        
         'modifiers': raw_key_info['modifiers'],
-        'location': location,
         'modifier_text': modifier_text,
         'is_system_key': raw_key_info.get('is_system_key', False),
         'simple_display_text': simple_display_text,
@@ -322,122 +322,89 @@ def create_formatted_key_info(raw_key_info):
     return formatted_key_info
 
 class KeyboardHook(QObject):
-    """키보드 입력을 후킹하여 모니터링하는 클래스
+    """키보드 후킹을 담당하는 클래스
     
-    이 클래스는 Windows의 저수준 키보드 후킹을 사용하여
-    모든 키보드 입력을 감지하고 처리합니다.
-    
-    Signals:
-        key_pressed (dict): 키가 눌렸을 때 발생하는 시그널
-            - create_formatted_key_info 함수가 반환하는 표준화된 키 정보 전달
-        key_released (dict): 키가 떼어졌을 때 발생하는 시그널
-            - create_formatted_key_info 함수가 반환하는 표준화된 키 정보 전달
+    이 클래스는 Windows API의 저수준 키보드 후킹을 통해
+    키보드 입력을 감지하고 처리합니다.
     """
     
-    # dict 타입의 데이터를 전달할 수 있는 시그널
-    key_pressed = Signal(dict) 
-    key_released = Signal(dict)
+    key_pressed = Signal(dict)  # 키가 눌렸을 때 발생하는 시그널
+    key_released = Signal(dict)  # 키가 떼졌을 때 발생하는 시그널
     
     def __init__(self):
-        """KeyboardHook 클래스를 초기화합니다."""
+        """KeyboardHook 초기화"""
         super().__init__()
-        self.hook = None
-        self.hook_id = None
+        self._hook = None
+        self._hook_id = None
+        self._last_formatted_key_info = None  # 마지막 키 정보 저장
+    
+    @property
+    def last_formatted_key_info(self):
+        """마지막으로 입력된 키 정보를 반환합니다.
         
-    def start(self):
-        """키보드 후킹을 시작합니다.
-        
-        Windows API를 사용하여 저수준 키보드 후킹을 설정하고,
-        키보드 이벤트 감지를 시작합니다.
+        Returns:
+            dict or None: 마지막으로 입력된 키의 formatted_key_info
         """
+        return self._last_formatted_key_info
+    
+    def start(self):
+        """키보드 후킹을 시작합니다."""
         def hook_callback(nCode, wParam, lParam):
-            if nCode >= 0:
-                kb = lParam.contents
-                # 확장 키 플래그 (0x1)
-                is_extended = (kb.flags & 0x1) == 0x1
-                # ALT 키 플래그 (0x20)
-                is_alt_down = (kb.flags & 0x20) == 0x20
+            """키보드 이벤트 콜백 함수
+            
+            Args:
+                nCode (int): 후킹 코드
+                wParam (int): 이벤트 타입
+                lParam (KBDLLHOOKSTRUCT): 키보드 이벤트 데이터
+            
+            Returns:
+                LRESULT: 후킹 체인 처리 결과
+            """
+            if nCode < 0:
+                return user32.CallNextHookEx(self._hook_id, nCode, wParam, lParam)
                 
-                # 가상 키와 스캔 코드
-                vk_code = kb.vkCode
-                scan_code = kb.scanCode
-                
-                # 확장 키 처리 (시스템 키 포함)
-                if is_extended:
-                    if vk_code == win32con.VK_RETURN:
-                        vk_code = win32con.VK_RETURN
-                        scan_code = 0x1C + 0xE0  # 252 (숫자패드 엔터의 확장 스캔 코드)
-                    elif vk_code == win32con.VK_CONTROL:
-                        vk_code = win32con.VK_RCONTROL
-                        scan_code = scan_code | 0xE0  # 확장 키 플래그 추가
-                    elif vk_code == win32con.VK_MENU:
-                        vk_code = win32con.VK_RMENU
-                        scan_code = scan_code | 0xE0  # 확장 키 플래그 추가
-                elif not is_extended:
-                    if vk_code == win32con.VK_SHIFT:
-                        vk_code = win32con.VK_LSHIFT if scan_code == 42 else win32con.VK_RSHIFT
-                    elif vk_code == win32con.VK_CONTROL:
-                        vk_code = win32con.VK_LCONTROL
-                    elif vk_code == win32con.VK_MENU:
-                        vk_code = win32con.VK_LMENU
-                
-                # 특수 키 처리 (쉼표 등)
-                if vk_code in [44, 188]:  # 쉼표 키 (VK_OEM_COMMA 또는 대체 코드)
-                    vk_code = 44  # VK_OEM_COMMA로 통일
-                    scan_code = 84  # 쉼표 키의 스캔 코드
-                else:
-                    # 시스템 키의 스캔 코드 처리
-                    scan_code = win32api.MapVirtualKey(vk_code, 0) or scan_code
-                
-                # 키 정보 생성
-                raw_key_info = {
-                    'key_code': get_key_name(vk_code, kb.flags),
-                    'scan_code': scan_code,
-                    'virtual_key': vk_code,
-                    'modifiers': get_qt_modifiers(),
-                    'is_system_key': is_alt_down
-                }
-                
-                # 키 정보 포맷팅
-                formatted_key_info = create_formatted_key_info(raw_key_info)
-                
-                # 시스템 키(알트) 입력시 시그널로 key_info 전달
-                if wParam in [WM_SYSKEYDOWN, WM_SYSKEYUP]:
-                    if vk_code == win32con.VK_MENU or vk_code in [win32con.VK_LMENU, win32con.VK_RMENU]:
-                        # ALT 키 자체의 이벤트
-                        if wParam == WM_SYSKEYDOWN:
-                            self.key_pressed.emit(formatted_key_info)
-                        else:
-                            self.key_released.emit(formatted_key_info)
-                        return user32.CallNextHookEx(self.hook_id, nCode, wParam, lParam)
-                
-                # 일반 키 입력시 시그널로 key_info 전달
-                if wParam in [WM_KEYDOWN, WM_SYSKEYDOWN]:
-                    self.key_pressed.emit(formatted_key_info)
-                elif wParam in [WM_KEYUP, WM_SYSKEYUP]:
-                    self.key_released.emit(formatted_key_info)
-                
-            return user32.CallNextHookEx(self.hook_id, nCode, wParam, lParam)
+            kb = lParam.contents
+            raw_key_info = {
+                'key_code': get_key_name(kb.vkCode, kb.flags),
+                'scan_code': kb.scanCode,
+                'virtual_key': kb.vkCode,
+                'modifiers': get_qt_modifiers(),
+                'is_system_key': wParam in (WM_SYSKEYDOWN, WM_SYSKEYUP)
+            }
+            
+            formatted_key_info = create_formatted_key_info(raw_key_info)
+            
+            # 키가 눌렸을 때의 이벤트 처리 (WM_KEYDOWN: 일반 키, WM_SYSKEYDOWN: ALT와 함께 눌린 시스템 키)
+            if wParam in (WM_KEYDOWN, WM_SYSKEYDOWN):
+                # 현재 입력된 키 정보를 마지막 키 정보로 저장
+                self._last_formatted_key_info = formatted_key_info
+                # key_pressed 시그널을 발생시켜 구조화된 키 정보를 전달
+                self.key_pressed.emit(formatted_key_info)
+            
+            # 키가 떼졌을 때의 이벤트 처리 (WM_KEYUP: 일반 키, WM_SYSKEYUP: ALT와 함께 떼진 시스템 키)
+            elif wParam in (WM_KEYUP, WM_SYSKEYUP):
+                # key_released 시그널을 발생시켜 구조화된 키 정보를 전달
+                self.key_released.emit(formatted_key_info)
+            
+            return user32.CallNextHookEx(self._hook_id, nCode, wParam, lParam)
         
-        self.hook = HOOKPROC(hook_callback)
-        self.hook_id = user32.SetWindowsHookExW(
+        # 후킹 프로시저 생성
+        self._hook = HOOKPROC(hook_callback)
+        # 후킹 설치
+        self._hook_id = user32.SetWindowsHookExW(
             WH_KEYBOARD_LL,
-            self.hook,
+            self._hook,
             None,
             0
         )
-        if not self.hook_id:
-            raise ctypes.WinError(ctypes.get_last_error())
         
-        # 정리 함수 등록
-        import atexit
-        atexit.register(self.stop)
-        
+        if not self._hook_id:
+            raise RuntimeError('키보드 후킹 설치 실패')
+    
     def stop(self):
-        """키보드 후킹을 중지합니다.
-        
-        설정된 후킹을 해제하고 리소스를 정리합니다.
-        """
-        if self.hook_id:
-            user32.UnhookWindowsHookEx(self.hook_id)
-            self.hook_id = None
+        """키보드 후킹을 중지합니다."""
+        if self._hook_id:
+            user32.UnhookWindowsHookEx(self._hook_id)
+            self._hook_id = None
+            self._hook = None
+            self._last_formatted_key_info = None  # 키 정보 초기화

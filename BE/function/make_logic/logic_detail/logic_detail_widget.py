@@ -46,9 +46,9 @@ class LogicDetailWidget(QFrame):
         self.logic_manager = LogicManager(self.settings_manager)  # LogicManager 인스턴스 추가
         
         # Repository 시그널 연결
-        self.repository.item_added.connect(self._on_item_added)
-        self.repository.item_deleted.connect(self._on_item_deleted)
-        self.repository.item_moved.connect(self._on_item_moved)
+        self.repository.item_added.connect(self._update_list_widget)
+        self.repository.item_deleted.connect(self._update_list_widget)
+        self.repository.item_moved.connect(self._update_list_widget)
         
         # 중첩로직용 체크박스 초기 상태 설정
         self.is_nested_checkbox.setChecked(True)
@@ -133,8 +133,8 @@ class LogicDetailWidget(QFrame):
         
         # 트리거 키 입력 위젯
         self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog = EnteredKeyInfoDialog(self)
-        self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.key_input_changed.connect(self._on_key_input_changed)
-        self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.key_input_changed.connect(self._check_data_entered)  # 키 입력 변경 시그널 연결
+        self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.formatted_key_info_changed.connect(self._on_formatted_key_info_changed)
+        self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.formatted_key_info_changed.connect(self._check_data_entered)  # 키 입력 변경 시그널 연결
         TriggerKeyInputRow__QHBoxLayout.addWidget(self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog)
         
         TriggerKeySection__QVBoxLayout.addLayout(TriggerKeyInputRow__QHBoxLayout)
@@ -332,7 +332,7 @@ class LogicDetailWidget(QFrame):
             file_name="logic_detail_widget"
         )
 
-    def _on_key_input_changed(self, formatted_key_info):
+    def _on_formatted_key_info_changed(self, formatted_key_info):
         """키 입력이 변경되었을 때"""
         self.modal_log_manager.log(
             message=f"키 입력 변경 - 입력된 키 정보: {formatted_key_info}",
@@ -1159,28 +1159,6 @@ class LogicDetailWidget(QFrame):
             level="DEBUG",
             file_name="logic_detail_widget"
         )
-
-    def _on_item_added(self, item_info):
-        """Repository에서 아이템이 추가되었을 때 호출되는 메서드"""
-        self.modal_log_manager.log(
-            message=f"아이템이 추가되었습니다: {item_info}",
-            level="INFO",
-            file_name="logic_detail_widget"
-        )
-        self._update_list_widget()
-
-    def _on_item_deleted(self, item_info):
-        """Repository에서 아이템이 삭제되었을 때 호출되는 메서드"""
-        self.modal_log_manager.log(
-            message=f"아이템이 삭제되었습니다: {item_info}",
-            level="INFO",
-            file_name="logic_detail_widget"
-        )
-        self._update_list_widget()
-
-    def _on_item_moved(self):
-        """Repository에서 아이템이 이동되었을 때 호출되는 메서드"""
-        self._update_list_widget()
 
     def _update_list_widget(self):
         """Repository의 아이템 목록으로 ListWidget을 업데이트"""

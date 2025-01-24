@@ -24,6 +24,7 @@ class EnteredKeyInfoWidget(QWidget):
         super().__init__(parent)
         self.show_details = show_details
         self.modal_log_manager = BaseLogManager.instance()
+        self._current_formatted_key_info = None
         self._setup_ui()
     
     def _setup_ui(self):
@@ -66,27 +67,42 @@ class EnteredKeyInfoWidget(QWidget):
         self.key_input_area_unfocused.emit()
     
     def update_key_info(self, formatted_key_info):
-        """구조화된 키 정보로 UI를 업데이트합니다.
+        """키 정보 업데이트 및 UI 표시
         
         Args:
             formatted_key_info (dict): 구조화된 키 정보
         """
-        if not formatted_key_info:
-            return
-            
-        # 메인 키 표시
-        self.key_display.setText(formatted_key_info['simple_display_text'])
+        self._current_formatted_key_info = formatted_key_info
+        if formatted_key_info:
+            self.key_display.setText(formatted_key_info['simple_display_text'])
+            if self.show_details:
+                self.key_code_label.setText(f"키 코드: {formatted_key_info['key_code']}")
+                self.scan_code_label.setText(f"스캔 코드: {formatted_key_info['scan_code']}")
+                self.virtual_key_label.setText(f"가상 키: {formatted_key_info['virtual_key']}")
+                self.location_label.setText(f"위치: {formatted_key_info['location']}")
+                self.modifiers_label.setText(f"수정자 키: {formatted_key_info['modifier_text']}")
+        else:
+            self.clear_key()
+    
+    def get_current_formatted_key_info(self):
+        """현재 저장된 키 정보를 반환합니다.
         
-        # 상세 정보 표시
-        if self.show_details:
-            self.key_code_label.setText(f"키 코드: {formatted_key_info['key_code']}")
-            self.scan_code_label.setText(f"스캔 코드: {formatted_key_info['scan_code']}")
-            self.virtual_key_label.setText(f"가상 키: {formatted_key_info['virtual_key']}")
-            self.location_label.setText(f"위치: {formatted_key_info['location']}")
-            self.modifiers_label.setText(f"수정자 키: {formatted_key_info['modifier_text']}")
+        Returns:
+            dict or None: 현재 저장된 키 정보
+        """
+        return self._current_formatted_key_info
+    
+    def set_key_info(self, formatted_key_info):
+        """키 정보 설정
+        
+        Args:
+            formatted_key_info (dict): 구조화된 키 정보
+        """
+        self.update_key_info(formatted_key_info)
     
     def clear_key(self):
-        """키 입력 표시를 초기화합니다."""
+        """키 정보 초기화"""
+        self._current_formatted_key_info = None
         self.key_display.clear()
         if self.show_details:
             self.key_code_label.setText("키 코드: ")

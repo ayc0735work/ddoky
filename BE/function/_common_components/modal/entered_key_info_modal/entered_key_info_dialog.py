@@ -14,9 +14,12 @@ class EnteredKeyInfoDialog(QDialog):
     2. KeyboardHook을 통한 키 입력 처리
     3. 키 데이터의 유효성 검사와 저장
     를 담당합니다.
+    
+    Returns:
+        dict or None: 다이얼로그가 accept로 닫힌 경우 키 정보를, reject로 닫힌 경우 None을 반환
     """
     
-    key_input_changed = Signal(dict)  # 키 입력이 변경되었을 때
+    formatted_key_info_changed = Signal(dict)  # 키 입력이 변경되었을 때
     
     def __init__(self, parent=None, show_details=True):
         """EnteredKeyInfoDialog 초기화
@@ -40,9 +43,9 @@ class EnteredKeyInfoDialog(QDialog):
             | Qt.WindowCloseButtonHint
         )
         
-        self.last_formatted_key_info = None
         self.keyboard_hook = None
         self.modal_log_manager = BaseLogManager.instance()
+        self._result_key_info = None  # 다이얼로그 결과값 저장
         
         self._setup_ui(show_details)
         self._setup_connections()
@@ -78,6 +81,7 @@ class EnteredKeyInfoDialog(QDialog):
         # 확인 버튼
         self.ConfirmButton__QPushButton = QPushButton("입력된 키 정보 저장")
         self.ConfirmButton__QPushButton.clicked.connect(self._on_confirm)
+        self.ConfirmButton__QPushButton.setEnabled(False)  # 초기에는 비활성화
         KeyInputButtonSection__QHBoxLayout.addWidget(self.ConfirmButton__QPushButton)
         
         # 취소 버튼
@@ -97,7 +101,7 @@ class EnteredKeyInfoDialog(QDialog):
         """키보드 훅 시작"""
         if not self.keyboard_hook:
             self.keyboard_hook = KeyboardHook()
-            self.keyboard_hook.key_pressed.connect(self._on_key_pressed)
+            self.keyboard_hook.key_pressed.connect(self._on_key_pressed) # key_pressed만 사용. 즉 키가 눌린 시점에 정보가 전달됨. key_released는 현재는 사용하지 않음.
             self.keyboard_hook.start()
     
     def _stop_keyboard_hook(self):
@@ -107,55 +111,32 @@ class EnteredKeyInfoDialog(QDialog):
             self.keyboard_hook = None
     
     def _on_key_pressed(self, formatted_key_info):
-        """키가 눌렸을 때의 처리
-        
-        Args:
-            formatted_key_info (dict): 구조화된 키 정보
+        """키가 눌렸을 때 formatted_key_info를 받아와서 처리 하는 로직
+        UI 업데이트를 하고, Numlock 상태 체크를 하고, 키 정보 변경 시그널을 보내고, 확인 버튼 활성화 상태 업데이트를 한다
+
         """
         self.modal_log_manager.log(
-            message=f"_on_key_pressed - formatted_key_info - 입력받은 데이터: {formatted_key_info}",
+            message=f"_on_key_pressed - 입력받은 데이터(formatted_key_info): {formatted_key_info}",
             level="DEBUG",
             file_name="entered_key_info_dialog"
         )
         
-        # 1. 마지막으로 저장된 키 정보가 없거나 (self.last_formatted_key_info is None)
-        # 2. 새로 입력된 키가 마지막 키와 다른 경우 (self.last_formatted_key_info != formatted_key_info)
-        # 위 두 조건 중 하나라도 만족하면 새로운 키 정보를 업데이트
-        # 이를 통해 동일한 키가 연속으로 입력되는 경우는 처리하지 않음 (중복 처리 방지)
-        # if (self.last_formatted_key_info is None or 
-        #     self.last_formatted_key_info != formatted_key_info):
-            # copy() 메서드로 깊은 복사를 수행하여 
-                # 깊은 복사(Deep Copy)란?
-                # - 객체의 모든 내용을 새로운 메모리 공간에 완전히 복사하는 것
-                # - 원본 객체와 복사된 객체가 완전히 독립적으로 존재
-                # - 복사본을 수정해도 원본에 영향을 주지 않음
-                # - 중첩된 객체(딕셔너리, 리스트 등)도 모두 새로운 객체로 복사됨
-            # formatted_key_info의 변경이 last_formatted_key_info에 영향을 주지 않도록 함
-        self.last_formatted_key_info = formatted_key_info.copy()
-        
-        self.modal_log_manager.log(
-            message=f"_on_key_pressed - last_formatted_key_info - 업데이트된 키 정보: {self.last_formatted_key_info}",
-            level="DEBUG",
-            file_name="entered_key_info_dialog"
-        )
-
         # UI 업데이트
         self.entered_key_info_widget.update_key_info(formatted_key_info)
         
         # NumLock 상태 체크 및 경고
-        self._check_numlock_state()
-        
-        # 키 정보 변경 시그널 발생
-        self.key_input_changed.emit(formatted_key_info)
-    
-    def _check_numlock_state(self):
-        """NumLock 상태를 체크하고 경고 메시지를 표시"""
-        if self.last_formatted_key_info and self.last_formatted_key_info.get('is_numpad'):
+        if formatted_key_info and formatted_key_info.get('is_numpad'):
             self.NumLockWarning__QLabel.setText(
                 "주의: 숫자 패드 키를 입력했습니다. NumLock 상태에 따라 키가 다르게 동작할 수 있습니다."
             )
         else:
             self.NumLockWarning__QLabel.clear()
+        
+        # 키 정보 변경 시그널 발생
+        self.formatted_key_info_changed.emit(formatted_key_info)
+        
+        # 확인 버튼 활성화 상태 업데이트
+        self.ConfirmButton__QPushButton.setEnabled(bool(formatted_key_info))
     
     def keyPressEvent(self, event: QKeyEvent):
         """키 이벤트 처리"""
@@ -164,71 +145,61 @@ class EnteredKeyInfoDialog(QDialog):
             event.ignore()
         else:
             super().keyPressEvent(event)
-    
-    def get_entered_key_info(self):
-        """현재 입력된 키 정보를 반환합니다.
-        
-        이 메서드는 키보드 훅을 통해 캡처된 raw_key_info를 create_formatted_key_info()를 통해
-        구조화한 formatted_key_info를 반환합니다.
-        
-        Returns:
-            dict or None: 구조화된 키 정보를 포함하는 딕셔너리. 또는 키 정보가 없으면 None
-        
-        Note:
-            이 메서드는 캡슐화를 통해 키 정보에 대한 안전한 접근을 제공합니다.
-            외부에서는 last_formatted_key_info 속성에 직접 접근하지 않고 이 메서드를 통해
-            구조화된 키 정보를 얻을 수 있습니다.
-        """
-        self.modal_log_manager.log(
-            message=f"get_entered_key_info - last_formatted_key_info - 키 정보: {self.last_formatted_key_info}",
-            level="DEBUG",
-            file_name="entered_key_info_dialog"
-        )
-        return self.last_formatted_key_info
-    
-    def set_formatted_key_info(self, formatted_key_info):
-        """구조화된 키 정보를 설정하고 관련 UI를 업데이트합니다.
-        
-        Args:
-            formatted_key_info (dict): 구조화된 키 정보 딕셔너리
-                None이거나 빈 딕셔너리인 경우 무시됩니다.
-                
-        동작:
-            1. 키 정보를 내부 상태(last_formatted_key_info)에 저장
-            2. UI 위젯 업데이트
-            3. NumLock 상태 확인
-            4. key_input_changed 시그널 발생
-        """
-        self.modal_log_manager.log(
-            message=f"set_formatted_key_info - formatted_key_info - 입력받은 데이터: {formatted_key_info}",
-            level="DEBUG",
-            file_name="entered_key_info_dialog"
-        )
-        if not formatted_key_info:  # None이거나 빈 딕셔너리인 경우 설정하지 않음
-            return
-        
-        self.last_formatted_key_info = formatted_key_info
-        self.entered_key_info_widget.set_key_info(formatted_key_info)
-        self._check_numlock_state()
-        self.key_input_changed.emit(formatted_key_info)  # 시그널 발생
-    
+
     def clear_key(self):
         """키 입력 초기화"""
-        self.last_formatted_key_info = None
+        if self.keyboard_hook:
+            self.keyboard_hook.stop()
+            self.keyboard_hook = None
         self.entered_key_info_widget.clear_key()
         self.NumLockWarning__QLabel.clear()
-        self.key_input_changed.emit({})
+        self.formatted_key_info_changed.emit({})
+    
+    def get_entered_key_info_result(self):
+        """다이얼로그의 결과값을 반환합니다.
+        
+        Returns:
+            dict or None: 
+            _on_confirm을 통해 확인 버튼으로 닫힌 경우 _result_key_info에 저장된 키 정보를, 
+            취소된 경우 None을 반환합니다.
+        """
+        return self._result_key_info if self.result() == QDialog.Accepted else None
     
     def _on_confirm(self):
         """확인 버튼 클릭 시"""
-        confirmed_key_info = self.get_entered_key_info()
-        if confirmed_key_info: # 키 정보가 있는 경우
-            self.accept()  # 다이얼로그가 성공적으로 완료되면 창을 닫고 데이터를 사용해도 좋다는 이벤트 전달
+        # 현재 위젯에 표시된 키 정보 가져오기
+        current_key_info = self.entered_key_info_widget.get_current_formatted_key_info()
+        
+        self.modal_log_manager.log(
+            message=f"_on_confirm - 확인 버튼 클릭 시 현재 키 정보 저장(current_key_info): {current_key_info}",
+            level="DEBUG",
+            file_name="entered_key_info_dialog"
+        )
+        
+        if current_key_info:  # 키 정보가 있는 경우
             self.modal_log_manager.log(
-                message="키 입력 모달의 확인버튼이 클릭되었습니다.",
+                message="_on_confirm - 키 입력 모달의 확인버튼이 클릭되었습니다.",
                 level="INFO",
                 file_name="entered_key_info_dialog"
             )
+            # 결과값 저장
+            self._result_key_info = current_key_info
+
+            self.modal_log_manager.log(
+                message=f"_on_confirm - 키 입력 모달 닫히기 전 최종으로 저장된 키 정보(result_key_info): {self._result_key_info}",
+                level="DEBUG",
+                file_name="entered_key_info_dialog"
+            )
+
+            # 키보드 훅 정리
+            self._stop_keyboard_hook()
+            # 다이얼로그 닫기
+            super().accept()  # QDialog의 accept() 메서드 직접 호출
+    
+    def reject(self):
+        """취소 버튼 클릭 또는 창이 닫힐 때"""
+        self._result_key_info = None
+        super().reject()
     
     def closeEvent(self, event):
         """다이얼로그가 닫힐 때 키보드 훅 정리"""

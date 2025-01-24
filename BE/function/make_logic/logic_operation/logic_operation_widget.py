@@ -659,7 +659,7 @@ class LogicOperationWidget(QFrame):
             
             # 다이얼로그가 승인되었을 때만 처리
             if result == QDialog.Accepted:
-                key_info = dialog.get_entered_key_info()
+                key_info = dialog.get_entered_key_info_result()
                 if key_info:
                     # modifiers가 KeyboardModifier 객체인 경우 정수로 변환
                     if 'modifiers' in key_info and hasattr(key_info['modifiers'], 'value'):

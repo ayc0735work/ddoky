@@ -21,22 +21,25 @@ class LogicMakerToolWidget(QFrame):
     delay_input = Signal(str)  # 지연시간이 추가되었을 때
     record_mode = Signal(bool)  # 기록 모드가 토글되었을 때
     add_logic = Signal(str)  # 만든 로직 추가 시그널 (로직 이름)
-    item_added = Signal(dict)  # 아이템이 추가되었을 때
     wait_click_input = Signal(dict)  # 클릭 대기 입력이 추가되었을 때
 
-    def __init__(self, repository: LogicItemManageRepository, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
-        self.repository = repository
-        self.saved_logics = {}  # 저장된 로직들을 관리하는 딕셔너리
+        self.repository = None  # repository는 외부에서 설정
+        self._Logic_Maker_Tool_key_info_controller = None  # controller도 repository 설정 후 생성
         self.modal_log_manager = BaseLogManager.instance()
-        
-        # 키 입력 컨트롤러 초기화
-        self._Logic_Maker_Tool_key_info_controller = LogicMakerToolKeyInfoController(self)
-        # _Logic_Maker_Tool_key_info_controller의 item_added 시그널을 add_item 메서드에 연결
-        self._Logic_Maker_Tool_key_info_controller.item_added.connect(self.add_item)
-        
         self.init_ui()
+
+    @property
+    def repository(self):
+        return self._repository
         
+    @repository.setter
+    def repository(self, value):
+        self._repository = value
+        if value is not None:
+            self._Logic_Maker_Tool_key_info_controller = LogicMakerToolKeyInfoController(value)
+
     def init_ui(self):
         """UI 초기화"""
         self.setStyleSheet(FRAME_STYLE)
@@ -109,80 +112,13 @@ class LogicMakerToolWidget(QFrame):
         layout.addLayout(button_layout)
         self.setLayout(layout)
 
-    def get_next_order(self):
-        """다음 순서 번호를 반환합니다."""
-        items = self.get_items()
-        if not items:
-            return 1
-        return max(item.get('order', 0) for item in items) + 1
-
-    def get_items(self):
-        """아이템 목록을 반환합니다."""
-        return self.repository.get_items()
-
-    def add_item(self, item_info):
-        """아이템을 목록에 추가합니다."""
-        self.modal_log_manager.log(
-            message=f"아이템 추가 시작 - 입력받은 데이터: {item_info}",
-            level="DEBUG",
-            file_name="logic_maker_tool_widget"
-        )
-        
-        if isinstance(item_info, dict):
-            self.modal_log_manager.log(
-                message="딕셔너리 형식의 데이터 처리 시작",
-                level="DEBUG",
-                file_name="logic_maker_tool_widget"
-            )
-            # order 값이 없으면 설정
-            if 'order' not in item_info:
-                item_info['order'] = self.get_next_order()
-            
-            self.repository.add_item(item_info)  # repository를 통해 아이템 추가
-            
-            self.modal_log_manager.log(
-                message=f"아이템이 성공적으로 추가되었습니다",
-                level="DEBUG",
-                file_name="logic_maker_tool_widget"
-            )
-        else:
-            self.modal_log_manager.log(
-                message=f"잘못된 형식의 데이터: {type(item_info)}",
-                level="ERROR",
-                file_name="logic_maker_tool_widget"
-            )
-
     def _open_key_input_dialog(self):
-        """키 입력을 요청하는 다이얼로그를 표시하고 입력된 키 정보를 처리합니다.
-        
-        이 메서드는 다음과 같은 처리를 수행합니다:
-        1. 키 입력 다이얼로그 표시
-           - EnteredKeyInfoDialog 인스턴스 생성
-           - 모달 형태로 다이얼로그 표시
-           - 사용자의 키 입력 대기
-           
-        2. 키 입력 감지 및 캡처
-           - EnteredKeyInfoWidget이 keyboard_hook_handler를 통해 키 정보 캡처
-           - 캡처된 정보는 formatted_key_info 형태로 구조화
-           - NumLock 상태 등 특수 상황 처리
-           
-        3. 키 정보 처리 및 전달
-           - 사용자가 확인(OK) 버튼 클릭 시 처리 시작
-           - EnteredKeyInfoDialog.get_entered_key_info()로 키 정보 획득
-           - _Logic_Maker_Tool_key_info_controller.key_state_info_process()을 통해 처리
-           - 키 정보는 누르기/떼기 두 가지 상태로 변환되어 처리
-        """
-        # 키 입력 다이얼로그 생성
+        """키 입력을 요청하는 다이얼로그를 표시하고 입력된 키 정보를 처리합니다."""
         dialog = EnteredKeyInfoDialog(self)
-        
         if dialog.exec() == QDialog.Accepted:
-            get_entered_key_info = dialog.get_entered_key_info()
-            # 다이얼로그에서 입력된 키 정보가 존재하는지 확인
-            # get_entered_key_info는 키 코드, 수정자 키(modifier), 스캔 코드 등을 포함하는 딕셔너리
-            if get_entered_key_info:
-                # _Logic_Maker_Tool_key_info_controller를 통해 입력된 키 정보를 처리
-                # 키 누르기/떼기 이벤트로 변환하여 로직 아이템으로 추가됨
-                self._Logic_Maker_Tool_key_info_controller.key_state_info_process(get_entered_key_info)
+            entered_key_info = dialog.get_entered_key_info_result()
+            if entered_key_info:
+                self._Logic_Maker_Tool_key_info_controller.key_state_info_process(entered_key_info)
 
     def _add_mouse_input(self):
         """마우스 입력 추가"""
@@ -192,13 +128,6 @@ class LogicMakerToolWidget(QFrame):
 
     def _on_mouse_input_selected(self, mouse_info):
         """마우스 입력이 선택되었을 때"""
-        self.modal_log_manager.log(
-            message=f"마우스 입력 정보 수신: {mouse_info}",
-            level="DEBUG",
-            file_name="logic_maker_tool_widget"
-        )
-        
-        # 마우스 입력 정보 처리
         processed_info = {
             'type': 'mouse_input',
             'action': mouse_info.get('action', '클릭'),
@@ -208,22 +137,10 @@ class LogicMakerToolWidget(QFrame):
             'coordinates_y': mouse_info.get('coordinates_y', 0),
             'ratios_x': mouse_info.get('ratios_x', 0),
             'ratios_y': mouse_info.get('ratios_y', 0),
-            'order': self.get_next_order(),
             'display_text': mouse_info.get('display_text', f'마우스 입력: 마우스클릭 ({mouse_info.get("coordinates_x", 0)}, {mouse_info.get("coordinates_y", 0)})')
         }
-        
-        self.modal_log_manager.log(
-            message=f"처리된 마우스 입력 정보: {processed_info}",
-            level="DEBUG",
-            file_name="logic_maker_tool_widget"
-        )
-        # 아이템 추가
-        self.add_item(processed_info)
-        self.modal_log_manager.log(
-            message=f"마우스 입력이 추가되었습니다: {processed_info['display_text']}",
-            level="INFO",
-            file_name="logic_maker_tool_widget"
-        )
+        # Repository에 직접 저장
+        self.repository.add_item(processed_info)
 
     def _add_delay(self):
         """지연시간 추가"""
@@ -260,8 +177,6 @@ class LogicMakerToolWidget(QFrame):
             )
             # Repository를 통해 아이템 추가
             self.repository.add_item(delay_info)
-            # UI 업데이트를 위한 시그널 발생
-            self.item_added.emit(delay_info)
         except Exception as e:
             self.modal_log_manager.log(
                 message=f"지연시간 입력 처리 중 오류 발생: {str(e)}",
@@ -288,8 +203,6 @@ class LogicMakerToolWidget(QFrame):
             )
             # Repository를 통해 아이템 추가
             self.repository.add_item(wait_click_info)
-            # UI 업데이트를 위한 시그널 발생
-            self.item_added.emit(wait_click_info)
         except Exception as e:
             self.modal_log_manager.log(
                 message=f"클릭 대기 입력 처리 중 오류 발생: {str(e)}",
@@ -320,8 +233,6 @@ class LogicMakerToolWidget(QFrame):
                 }
                 # Repository를 통해 아이템 추가
                 self.repository.add_item(image_search_info)
-                # UI 업데이트를 위한 시그널 발생
-                self.item_added.emit(image_search_info)
                 self.modal_log_manager.log(
                     message=f"이미지 서치 체크 영역이 추가되었습니다: {area}",
                     level="INFO",
@@ -336,8 +247,6 @@ class LogicMakerToolWidget(QFrame):
             if text_info:
                 # Repository를 통해 아이템 추가
                 self.repository.add_item(text_info)
-                # UI 업데이트를 위한 시그널 발생
-                self.item_added.emit(text_info)
                 self.modal_log_manager.log(
                     message=f"텍스트 입력이 추가되었습니다: {text_info['text']}",
                     level="INFO",
