@@ -69,7 +69,7 @@
      * 각 상태 정보를 시그널로 전달
    ```python
    # 키 누르기 상태 정보 생성
-   press_info = {
+   press_key_info = {
        'type': 'key',
        'key': key_info.get('key_code'),
        'modifiers': key_info.get('modifiers', []),
@@ -80,7 +80,7 @@
    }
    
    # 키 떼기 상태 정보 생성
-   release_info = {
+   release_key_info = {
        'type': 'key',
        'key': key_info.get('key_code'),
        'modifiers': key_info.get('modifiers', []),
@@ -91,8 +91,8 @@
    }
    
    # 시그널 발생
-   self.item_added.emit(press_info)
-   self.item_added.emit(release_info)
+   self.item_added.emit(press_key_info)
+   self.item_added.emit(release_key_info)
    ```
 
 6. **Repository를 통한 아이템 저장**
