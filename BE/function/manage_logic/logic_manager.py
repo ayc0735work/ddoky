@@ -38,7 +38,7 @@ class LogicManager(QObject):
                 self.base_log_manager.log(
                     message=f"로직 '{logic_name}' 로드 완료",
                     level="INFO",
-                    file_name="로직관리",
+                    file_name="logic_manager",
                     method_name="load_logic"
                 )
                 return self.current_logic
@@ -47,7 +47,7 @@ class LogicManager(QObject):
             self.base_log_manager.log(
                 message=f"로직 로드 중 오류 발생: {e}",
                 level="ERROR", 
-                file_name="로직관리",
+                file_name="logic_manager",
                 method_name="load_logic",
                 print_to_terminal=True
             )
@@ -79,7 +79,7 @@ class LogicManager(QObject):
             self.base_log_manager.log(
                 message=f"로직 목록 로드 중 오류 발생: {e}",
                 level="ERROR",
-                file_name="로직관리",
+                file_name="logic_manager",
                 method_name="get_all_logics",
                 print_to_terminal=True
             )
@@ -96,7 +96,7 @@ class LogicManager(QObject):
             self.base_log_manager.log(
                 message=f"로직 '{logic_name}' 제거됨",
                 level="INFO",
-                file_name="로직관리",
+                file_name="logic_manager",
                 method_name="remove_logic"
             )
 
@@ -121,20 +121,19 @@ class LogicManager(QObject):
         """
         try:
             self.base_log_manager.log(
-                message="로직 저장 시작",
+                message="로직 저장 프로세스 시작",
                 level="INFO",
-                file_name="로직관리",
+                file_name="logic_manager",
                 method_name="save_logic",
-                include_time=True
             )
 
             # UUID가 없거나 None인 경우 새로 생성
             if not logic_id:
                 logic_id = str(uuid.uuid4())
                 self.base_log_manager.log(
-                    message=f"새 UUID 생성: {logic_id}",
+                    message=f"새 UUID 생성됨: {logic_id}",
                     level="DEBUG",
-                    file_name="로직관리",
+                    file_name="logic_manager",
                     method_name="save_logic"
                 )
 
@@ -149,9 +148,9 @@ class LogicManager(QObject):
                         existing_id != logic_id and 
                         not existing_logic.get('is_nested', False)):
                         self.base_log_manager.log(
-                            message=f"로직 '{logic_name}' 저장 실패: 이름 중복",
+                            message=f"로직 저장 실패: '{logic_name}' - 이름 중복",
                             level="WARNING",
-                            file_name="로직관리",
+                            file_name="logic_manager",
                             method_name="save_logic"
                         )
                         return False, "동일한 이름의 로직이 이미 존재합니다."
@@ -172,9 +171,8 @@ class LogicManager(QObject):
             self.base_log_manager.log(
                 message=f"로직 '{logic_data.get('name')}' 저장 완료",
                 level="INFO",
-                file_name="로직관리",
+                file_name="logic_manager",
                 method_name="save_logic",
-                include_time=True
             )
             return True, logic_id
 
@@ -182,7 +180,7 @@ class LogicManager(QObject):
             self.base_log_manager.log(
                 message=f"로직 저장 중 오류 발생: {str(e)}",
                 level="ERROR",
-                file_name="로직관리",
+                file_name="logic_manager",
                 method_name="save_logic",
                 print_to_terminal=True
             )
