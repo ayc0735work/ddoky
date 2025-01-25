@@ -132,7 +132,11 @@ class LogicDetailWidget(QFrame):
         self.TriggerKeyInput__QLineEdit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         self.TriggerKeyInput__QLineEdit.mousePressEvent = self._on_trigger_key_input_clicked
         TriggerKeySection__QHBoxLayout.addWidget(self.TriggerKeyInput__QLineEdit)
-        
+
+        # 트리거 키 입력 위젯
+        self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog = EnteredKeyInfoDialog(self)
+        self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.formatted_key_info_changed.connect(self._check_data_entered)  # 키 입력 변경 시그널 연결
+
         # 편집 버튼
         self.EditTriggerKeyButton__QPushButton = QPushButton("편집")
         self.EditTriggerKeyButton__QPushButton.setStyleSheet(BUTTON_STYLE)
@@ -150,36 +154,6 @@ class LogicDetailWidget(QFrame):
         TriggerKeySection__QHBoxLayout.addWidget(self.DeleteTriggerKeyButton__QPushButton)
         
         LogicConfigurationLayout__QVBoxLayout.addLayout(TriggerKeySection__QHBoxLayout)
-
-        # 트리거 키 정보 영역
-        TriggerKeySection__QVBoxLayout = QVBoxLayout()
-        TriggerKeySection__QVBoxLayout.setContentsMargins(0, 0, 0, 0)
-        TriggerKeySection__QVBoxLayout.setSpacing(5)
-        
-        # 트리거 키 입력 레이아웃
-        TriggerKeyInputRow__QHBoxLayout = QHBoxLayout()
-        TriggerKeyInputRow__QHBoxLayout.setContentsMargins(0, 0, 0, 0)
-        TriggerKeyInputRow__QHBoxLayout.setSpacing(5)
-        
-        # 트리거 키 입력 라벨
-        TriggerKeyLabel__QLabel = QLabel("트리거 키:")
-        TriggerKeyLabel__QLabel.setFixedWidth(70)
-        TriggerKeyInputRow__QHBoxLayout.addWidget(TriggerKeyLabel__QLabel)
-        
-        # 트리거 키 입력 위젯
-        self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog = EnteredKeyInfoDialog(self)
-        self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.formatted_key_info_changed.connect(self._check_data_entered)  # 키 입력 변경 시그널 연결
-        TriggerKeyInputRow__QHBoxLayout.addWidget(self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog)
-        
-        TriggerKeySection__QVBoxLayout.addLayout(TriggerKeyInputRow__QHBoxLayout)
-        
-        # 트리거 키 정보 라벨
-        self.TriggerKeyInfoLabel__QLabel = QLabel()
-        self.TriggerKeyInfoLabel__QLabel.setStyleSheet(CONTAINER_STYLE)
-        self.TriggerKeyInfoLabel__QLabel.mousePressEvent = self._copy_key_info_to_clipboard
-        TriggerKeySection__QVBoxLayout.addWidget(self.TriggerKeyInfoLabel__QLabel)
-        
-        LogicConfigurationLayout__QVBoxLayout.addLayout(TriggerKeySection__QVBoxLayout)
         
         # 기능 선택 레이아웃
         LogicOptionsSection__QHBoxLayout = QHBoxLayout()
@@ -397,7 +371,6 @@ class LogicDetailWidget(QFrame):
         if key_info:
             self.trigger_key_info = key_info.copy()
             self.TriggerKeyInput__QLineEdit.setText(key_info['simple_display_text'])
-            self.TriggerKeyInfoLabel__QLabel.setText(key_info['detail_display_text'])
             self.EditTriggerKeyButton__QPushButton.setEnabled(True)
             self.DeleteTriggerKeyButton__QPushButton.setEnabled(True)
             
@@ -886,7 +859,6 @@ class LogicDetailWidget(QFrame):
             self.TriggerKeyInput__QLineEdit.setPlaceholderText("중첩로직용")
             # 중첩로직용일 경우 트리거 키 초기화
             self.trigger_key_info = None
-            self.TriggerKeyInfoLabel__QLabel.clear()
             self.TriggerKeyInput__QLineEdit.clear()
             # 트리거 키 입력 위젯 초기화
             self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.clear_key()
@@ -979,17 +951,6 @@ class LogicDetailWidget(QFrame):
                 file_name="logic_detail_widget"
             )
 
-    def _copy_key_info_to_clipboard(self, event):
-        """트리거 키 정보를 클립보드에 복사"""
-        if self.TriggerKeyInfoLabel__QLabel.text():
-            clipboard = QGuiApplication.clipboard()
-            clipboard.setText(self.TriggerKeyInfoLabel__QLabel.text())
-            self.base_log_manager.log(
-                message="트리거 키 정보가 클립보드에 복사되었습니다",
-                level="INFO",
-                file_name="logic_detail_widget"
-            )
-
     def _copy_item(self):
         """선택된 아이템들을 복사"""
         selected_items = self.LogicItemList__QListWidget.selectedItems()
@@ -1012,7 +973,6 @@ class LogicDetailWidget(QFrame):
     def clear_key(self):
         """트리거 키 정보 초기화"""
         self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.clear_key()
-        self.TriggerKeyInfoLabel__QLabel.clear()
         self.TriggerKeyInput__QLineEdit.clear()
         self.TriggerKeyInput__QLineEdit.setPlaceholderText("트리거 키를 설정하세요")
         self.trigger_key_info = None
