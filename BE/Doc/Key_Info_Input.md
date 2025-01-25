@@ -79,7 +79,7 @@
 ```python
 # 키 누르기 상태
 {
-    'type': 'key',
+    'type': 'key_input',
     'key': str,
     'modifiers_key_flag': list,
     'logic_detail_item_dp_text': str,
@@ -90,7 +90,7 @@
 
 # 키 떼기 상태
 {
-    'type': 'key',
+    'type': 'key_input',
     'key': str,
     'modifiers_key_flag': list,
     'logic_detail_item_dp_text': str,
@@ -117,7 +117,7 @@
 - 입력된 아이템 정보에 order 추가:
 ```python
 {
-    'type': 'key',
+    'type': 'key_input',
     'key': str,
     'modifiers_key_flag': list,
     'logic_detail_item_dp_text': str,

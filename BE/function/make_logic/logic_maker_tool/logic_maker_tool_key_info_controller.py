@@ -90,8 +90,8 @@ class LogicMakerToolKeyInfoController(QObject):
             
         # 키 누르기 상태 정보 생성
         pressed_key_info = {
-            'type': 'key',
-            'key': entered_key_info.get('key_code'),
+            'type': 'key_input',
+            'key_code': entered_key_info.get('key_code'),
             'modifiers_key_flag': entered_key_info.get('modifiers_key_flag', []),
             'modifier_text': entered_key_info.get('modifier_text', []),
             'location': entered_key_info.get('location', ''),
@@ -103,8 +103,8 @@ class LogicMakerToolKeyInfoController(QObject):
         
         # 키 떼기 상태 정보 생성
         released_key_info = {
-            'type': 'key',
-            'key': entered_key_info.get('key_code'),
+            'type': 'key_input',
+            'key_code': entered_key_info.get('key_code'),
             'modifiers_key_flag': entered_key_info.get('modifiers_key_flag', []),
             'modifier_text': entered_key_info.get('modifier_text', []),
             'location': entered_key_info.get('location', ''),
