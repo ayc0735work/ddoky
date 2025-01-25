@@ -17,7 +17,7 @@ from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_h
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 from BE.function._common_components.modal.text_input_modal.text_input_dialog import TextInputDialog
 from BE.log.base_log_manager import BaseLogManager
-from BE.function.make_logic.repository.logic_item_manage_repository import LogicItemManageRepository
+from BE.function.make_logic.repository.logic_detaill_item_manage_repository import LogicItemManageRepository
 
 class LogicDetailWidget(QFrame):
     """로직 상세 내용을 표시하고 관리하는 위젯"""
@@ -420,7 +420,23 @@ class LogicDetailWidget(QFrame):
         self.TriggerKeyInput__QLineEdit.setPlaceholderText("트리거 키를 설정하세요")
 
     def _save_logic(self):
-        """현재 로직 저장"""
+        """현재 로직을 저장하는 메서드
+        
+        현재 로직 데이터를 가져와서 LogicManager를 통해 저장을 시도합니다.
+        
+        프로세스:
+        1. get_logic_data()를 통해 현재 UI에 입력된 로직 데이터를 가져옴
+        2. LogicManager의 save_logic() 메서드를 호출하여 저장 시도
+        3. 저장 성공 시 로그 메시지 출력 후 True 반환
+        4. 저장 실패 시 에러 메시지 표시 후 False 반환
+        
+        연결된 시그널:
+        - logic_saved: MainWindow._on_logic_saved() 메서드로 연결
+        - logic_updated: MainWindow._on_logic_updated() 메서드로 연결
+        
+        Returns:
+            bool: 저장 성공 여부
+        """
         try:
             logic_data = self.get_logic_data()
             
@@ -452,7 +468,31 @@ class LogicDetailWidget(QFrame):
             return False
 
     def load_logic(self, logic_info):
-        """로직 정보를 위젯에 로드 - UI 업데이트"""
+        """로직 정보를 UI 위젯에 로드하는 메서드
+        
+        주어진 로직 정보를 바탕으로 UI 위젯들의 상태를 업데이트합니다.
+        
+        프로세스:
+        1. Repository에 로직 로드 요청
+        2. 로직 이름과 반복 횟수 UI 업데이트
+        3. 중첩로직 여부에 따른 트리거 키 UI 처리
+           - 중첩로직일 경우: 트리거 키 비활성화
+           - 일반 로직일 경우: 트리거 키 정보 설정 및 UI 업데이트
+        
+        연결된 메서드:
+        - MainWindow._handle_edit_logic()에서 호출됨
+        - LogicListWidget의 logic_selected 시그널에 연결
+        
+        Args:
+            logic_info (dict): 로드할 로직 정보
+                - name (str): 로직 이름
+                - repeat_count (int): 반복 횟수
+                - is_nested (bool): 중첩로직 여부
+                - trigger_key (dict): 트리거 키 정보
+        
+        Returns:
+            bool: 로드 성공 여부
+        """
         # Repository에 로드 요청
         if self.repository.load_logic(logic_info):
             # UI 업데이트

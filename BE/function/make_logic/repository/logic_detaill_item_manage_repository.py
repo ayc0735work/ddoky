@@ -48,7 +48,7 @@ class LogicItemManageRepository(QObject):
             self.base_log_manager.log(
                 message=f"잘못된 형식의 데이터: {type(item_info)}",
                 level="ERROR",
-                file_name="logic_item_manage_repository"
+                file_name="logic_detaill_item_manage_repository"
             )
             return
             
@@ -61,7 +61,7 @@ class LogicItemManageRepository(QObject):
         self.base_log_manager.log(
             message=f"아이템이 추가되었습니다: {item_info}",
             level="INFO",
-            file_name="logic_item_manage_repository"
+            file_name="logic_detaill_item_manage_repository"
         )
         self.item_added.emit(item_info)
         
@@ -72,7 +72,7 @@ class LogicItemManageRepository(QObject):
             self.base_log_manager.log(
                 message=f"아이템이 삭제되었습니다: {item_info}",
                 level="INFO",
-                file_name="logic_item_manage_repository"
+                file_name="logic_detaill_item_manage_repository"
             )
             self.item_deleted.emit(item_info)
             self._reorder_items()
@@ -93,14 +93,14 @@ class LogicItemManageRepository(QObject):
                 self.base_log_manager.log(
                     message=f"아이템을 위로 이동했습니다: {item_info}",
                     level="INFO",
-                    file_name="logic_item_manage_repository"
+                    file_name="logic_detaill_item_manage_repository"
                 )
                 self.item_moved.emit()
         except ValueError:
             self.base_log_manager.log(
                 message=f"아이템을 찾을 수 없습니다: {item_info}",
                 level="ERROR",
-                file_name="logic_item_manage_repository"
+                file_name="logic_detaill_item_manage_repository"
             )
                 
     def move_item_down(self, item_info: dict):
@@ -119,14 +119,14 @@ class LogicItemManageRepository(QObject):
                 self.base_log_manager.log(
                     message=f"아이템을 아래로 이동했습니다: {item_info}",
                     level="INFO",
-                    file_name="logic_item_manage_repository"
+                    file_name="logic_detaill_item_manage_repository"
                 )
                 self.item_moved.emit()
         except ValueError:
             self.base_log_manager.log(
                 message=f"아이템을 찾을 수 없습니다: {item_info}",
                 level="ERROR",
-                file_name="logic_item_manage_repository"
+                file_name="logic_detaill_item_manage_repository"
             )
                 
     def get_items_count(self) -> int:
@@ -139,7 +139,7 @@ class LogicItemManageRepository(QObject):
         self.base_log_manager.log(
             message="모든 아이템이 삭제되었습니다",
             level="INFO",
-            file_name="logic_item_manage_repository"
+            file_name="logic_detaill_item_manage_repository"
         )
         self.items_cleared.emit()
         
@@ -218,14 +218,14 @@ class LogicItemManageRepository(QObject):
                 self.base_log_manager.log(
                     message=f"로직 '{logic_info['name']}'이(가) 저장되었습니다",
                     level="INFO",
-                    file_name="logic_item_manage_repository"
+                    file_name="logic_detaill_item_manage_repository"
                 )
                 return True, "저장 성공"
             else:
                 self.base_log_manager.log(
                     message=f"저장 실패: {result}",
                     level="ERROR",
-                    file_name="logic_item_manage_repository"
+                    file_name="logic_detaill_item_manage_repository"
                 )
                 return False, result
                 
@@ -233,7 +233,7 @@ class LogicItemManageRepository(QObject):
             self.base_log_manager.log(
                 message=f"로직 저장 중 오류 발생: {str(e)}",
                 level="ERROR",
-                file_name="logic_item_manage_repository"
+                file_name="logic_detaill_item_manage_repository"
             )
             return False, str(e)
             
@@ -252,7 +252,7 @@ class LogicItemManageRepository(QObject):
                 self.base_log_manager.log(
                     message="잘못된 로직 정보입니다",
                     level="ERROR",
-                    file_name="logic_item_manage_repository"
+                    file_name="logic_detaill_item_manage_repository"
                 )
                 return False
                 
@@ -272,7 +272,7 @@ class LogicItemManageRepository(QObject):
                 self.base_log_manager.log(
                     message=f"로직 '{logic_info.get('name')}'의 ID를 찾을 수 없습니다",
                     level="WARNING",
-                    file_name="logic_item_manage_repository"
+                    file_name="logic_detaill_item_manage_repository"
                 )
                 return False
             
@@ -297,7 +297,7 @@ class LogicItemManageRepository(QObject):
             self.base_log_manager.log(
                 message=f"로직 '{logic_info.get('name')}'이(가) 로드되었습니다",
                 level="INFO",
-                file_name="logic_item_manage_repository"
+                file_name="logic_detaill_item_manage_repository"
             )
             return True
             
@@ -305,7 +305,7 @@ class LogicItemManageRepository(QObject):
             self.base_log_manager.log(
                 message=f"로직 로드 중 오류 발생: {str(e)}",
                 level="ERROR",
-                file_name="logic_item_manage_repository"
+                file_name="logic_detaill_item_manage_repository"
             )
             return False
             
