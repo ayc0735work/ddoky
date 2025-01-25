@@ -358,7 +358,8 @@ class LogicDetailWidget(QFrame):
             self.base_log_manager.log(
                 message=f"중복된 트리거 키 발견: {len(duplicate_logics)}개의 로직에서 사용 중",
                 level="WARNING", 
-                file_name="logic_detail_widget"
+                file_name="logic_detail_widget",
+                method_name="_check_duplicate_trigger_key"
             )
             
             msg.exec_()
@@ -377,7 +378,8 @@ class LogicDetailWidget(QFrame):
             self.base_log_manager.log(
                 message=f"트리거 키 입력 완료(self.trigger_key_info): {self.trigger_key_info}",
                 level="DEBUG",
-                file_name="logic_detail_widget"
+                file_name="logic_detail_widget",
+                method_name="_update_trigger_key_info"
             )
 
     def _on_trigger_key_input_clicked(self, event):
@@ -395,7 +397,8 @@ class LogicDetailWidget(QFrame):
         self.base_log_manager.log(
             message="트리거 키 편집 버튼을 클릭했습니다.",
             level="INFO",
-            file_name="logic_detail_widget"
+            file_name="logic_detail_widget",
+            method_name="_edit_trigger_key"
         )
         dialog = self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog
         if dialog.exec():
@@ -405,7 +408,8 @@ class LogicDetailWidget(QFrame):
                 self.base_log_manager.log(
                     message=f"트리거 키 변경 완료(self.trigger_key_info): {self.trigger_key_info}",
                     level="DEBUG",
-                    file_name="logic_detail_widget"
+                    file_name="logic_detail_widget",
+                    method_name="_edit_trigger_key"
                 )
 
     def _delete_trigger_key(self):
@@ -413,7 +417,8 @@ class LogicDetailWidget(QFrame):
         self.base_log_manager.log(
             message="트리거 키 삭제 버튼을 클릭했습니다.",
             level="INFO",
-            file_name="logic_detail_widget"
+            file_name="logic_detail_widget",
+            method_name="_delete_trigger_key"
         )
         self.clear_key()
         self.TriggerKeyInput__QLineEdit.clear()
@@ -446,7 +451,8 @@ class LogicDetailWidget(QFrame):
                 self.base_log_manager.log(
                     message=f"로직 '{logic_data['name']}'이(가) 저장되었습니다",
                     level="INFO",
-                    file_name="logic_detail_widget"
+                    file_name="logic_detail_widget",
+                    method_name="_save_logic"
                 )
                 return True
             else:
@@ -463,7 +469,8 @@ class LogicDetailWidget(QFrame):
             self.base_log_manager.log(
                 message=f"로직 저장 중 오류 발생: {str(e)}",
                 level="ERROR",
-                file_name="logic_detail_widget"
+                file_name="logic_detail_widget",
+                method_name="_save_logic"
             )
             return False
 
@@ -580,7 +587,8 @@ class LogicDetailWidget(QFrame):
             self.base_log_manager.log(
                 message=f"중첩로직 '{logic_name}'이(가) UUID {logic_id}로 처리되었습니다",
                 level="INFO",
-                file_name="logic_detail_widget"
+                file_name="logic_detail_widget",
+                method_name="_create_nested_logic_item"
             )
             return item, True
             
@@ -588,7 +596,8 @@ class LogicDetailWidget(QFrame):
             self.base_log_manager.log(
                 message=f"중첩로직 처리 중 오류 발생: {str(e)}",
                 level="ERROR", 
-                file_name="logic_detail_widget"
+                file_name="logic_detail_widget",
+                method_name="_create_nested_logic_item"
             )
             return None, False
     
@@ -597,14 +606,16 @@ class LogicDetailWidget(QFrame):
         self.base_log_manager.log(
             message=f"로직 아이템 추가 시작 - 아이템 정보: {item_info}",
             level="DEBUG",
-            file_name="logic_detail_widget"
+            file_name="logic_detail_widget",
+            method_name="_add_logic_item"
         )
         
         if not isinstance(item_info, dict):
             self.base_log_manager.log(
                 message="오류: 잘못된 아이템 정보 형식",
                 level="ERROR",
-                file_name="logic_detail_widget"
+                file_name="logic_detail_widget",
+                method_name="_add_logic_item"
             )
             return
             
@@ -619,7 +630,8 @@ class LogicDetailWidget(QFrame):
             self.base_log_manager.log(
                 message=f"로직 타입 아이템 처리 - 이름: {logic_name}, ID: {logic_id}",
                 level="DEBUG",
-                file_name="logic_detail_widget"
+                file_name="logic_detail_widget",
+                method_name="_add_logic_item"
             )
             
             # 공통 메서드 사용
@@ -637,7 +649,8 @@ class LogicDetailWidget(QFrame):
             self.base_log_manager.log(
                 message=f"로직 아이템 추가 완료 - 순서: {current_count + 1}",
                 level="INFO",
-                file_name="logic_detail_widget"
+                file_name="logic_detail_widget",
+                method_name="_add_logic_item"
             )
         else:
             # 일반 아이템 처리
@@ -649,7 +662,8 @@ class LogicDetailWidget(QFrame):
             self.base_log_manager.log(
                 message=f"일반 아이템 추가 완료 - 타입: {item_info.get('type')}, 순서: {current_count + 1}",
                 level="INFO",
-                file_name="logic_detail_widget"
+                file_name="logic_detail_widget",
+                method_name="_add_logic_item"
             )
     
     def _paste_item(self):
@@ -658,7 +672,8 @@ class LogicDetailWidget(QFrame):
             self.base_log_manager.log(
                 message="복사된 아이템이 없습니다",
                 level="WARNING",
-                file_name="logic_detail_widget"
+                file_name="logic_detail_widget",
+                method_name="_paste_item"
             )
             return
             
@@ -711,7 +726,8 @@ class LogicDetailWidget(QFrame):
         self.base_log_manager.log(
             message=f"{items_count}개의 로직 구성 아이템이 붙여넣기되었습니다",
             level="INFO",
-            file_name="logic_detail_widget"
+            file_name="logic_detail_widget",
+            method_name="_paste_item"
         )
 
     def eventFilter(self, obj, event):
@@ -767,7 +783,8 @@ class LogicDetailWidget(QFrame):
         self.base_log_manager.log(
             message="새 로직 생성을 시작합니다",
             level="INFO",
-            file_name="logic_detail_widget"
+            file_name="logic_detail_widget",
+            method_name="_create_new_logic"
         )
 
     def _edit_item(self):
@@ -807,13 +824,15 @@ class LogicDetailWidget(QFrame):
                         self.base_log_manager.log(
                             message=f"지연시간이 {delay:.4f}초로 수정되었습니다",
                             level="INFO",
-                            file_name="logic_detail_widget"
+                            file_name="logic_detail_widget",
+                            method_name="_edit_item"
                         )
                 except ValueError:
                     self.base_log_manager.log(
                         message="지연시간 형식이 올바르지 않습니다",
                         level="ERROR",
-                        file_name="logic_detail_widget"
+                        file_name="logic_detail_widget",
+                        method_name="_edit_item"
                     )
             # 키 입력 아이템인 경우
             elif item_text.startswith("(logic_detail_widget.py) 키 입력:"):
@@ -855,7 +874,8 @@ class LogicDetailWidget(QFrame):
                             self.base_log_manager.log(
                                 message=f"키 입력 액션이 '{new_action}'으로 변경되었습니다",
                                 level="INFO",
-                                file_name="logic_detail_widget"
+                                file_name="logic_detail_widget",
+                                method_name="_edit_item"
                             )
             # 텍스트 입력 아이템인 경우
             elif user_data and user_data.get('type') == 'write_text':
@@ -873,7 +893,8 @@ class LogicDetailWidget(QFrame):
                     self.base_log_manager.log(
                         message="텍스트 입력 아이템이 수정되었습니다",
                         level="INFO",
-                        file_name="logic_detail_widget"
+                        file_name="logic_detail_widget",
+                        method_name="_edit_item"
                     )
 
     def _on_nested_checkbox_changed(self, state):
@@ -884,7 +905,8 @@ class LogicDetailWidget(QFrame):
         self.base_log_manager.log(
             message=f"중첩로직용 체크박스가 {'활성화' if is_nested else '비활성화'}되었습니다",
             level="INFO",
-            file_name="logic_detail_widget"
+            file_name="logic_detail_widget",
+            method_name="_on_nested_checkbox_changed"
         )
         
         # 트리거 키 입력 UI 비활성화/활성화
@@ -981,14 +1003,16 @@ class LogicDetailWidget(QFrame):
             self.base_log_manager.log(
                 message="로직 정보가 초기화되었습니다",
                 level="INFO",
-                file_name="logic_detail_widget"
+                file_name="logic_detail_widget",
+                method_name="clear_logic_info"
             )
             
         except Exception as e:
             self.base_log_manager.log(
                 message=f"로직 정보 초기화 중 오류 발생: {str(e)}",
                 level="ERROR", 
-                file_name="logic_detail_widget"
+                file_name="logic_detail_widget",
+                method_name="clear_logic_info"
             )
 
     def _copy_item(self):
@@ -1007,7 +1031,8 @@ class LogicDetailWidget(QFrame):
             self.base_log_manager.log(
                 message=f"{items_count}개의 로직 구성 아이템이 복사되었습니다",
                 level="INFO",
-                file_name="logic_detail_widget"
+                file_name="logic_detail_widget",
+                method_name="_copy_item"
             )
 
     def clear_key(self):
@@ -1019,7 +1044,8 @@ class LogicDetailWidget(QFrame):
         self.base_log_manager.log(
             message="트리거 키 정보가 초기화되었습니다",
             level="DEBUG",
-            file_name="logic_detail_widget"
+            file_name="logic_detail_widget",
+            method_name="clear_key"
         )
 
     def _delete_logic_detail_items(self):
