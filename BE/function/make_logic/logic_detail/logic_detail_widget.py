@@ -129,7 +129,6 @@ class LogicDetailWidget(QFrame):
         # 트리거 키 입력 필드
         self.TriggerKeyInput__QLineEdit = QLineEdit()
         self.TriggerKeyInput__QLineEdit.setReadOnly(True)
-        # self.TriggerKeyInput__QLineEdit.setPlaceholderText("트리거 키를 설정하세요")
         self.TriggerKeyInput__QLineEdit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         self.TriggerKeyInput__QLineEdit.mousePressEvent = self._on_trigger_key_input_clicked
         TriggerKeySection__QHBoxLayout.addWidget(self.TriggerKeyInput__QLineEdit)
@@ -484,8 +483,6 @@ class LogicDetailWidget(QFrame):
                         file_name="logic_detail_widget"
                     )
                     formatted_info = create_formatted_key_info(trigger_key)
-                    self.TriggerKeyInfoLabel__QLabel.setText(formatted_info['detail_display_text'])
-                    # 새로운 트리거 키 UI 업데이트
                     self.TriggerKeyInput__QLineEdit.setText(formatted_info['simple_display_text'])
                     self.EditTriggerKeyButton__QPushButton.setEnabled(True)
                     self.DeleteTriggerKeyButton__QPushButton.setEnabled(True)
