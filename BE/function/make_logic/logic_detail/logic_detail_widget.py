@@ -338,7 +338,20 @@ class LogicDetailWidget(QFrame):
         """트리거 키 입력 필드 클릭 이벤트 핸들러"""
         # 트리거 키가 없는 경우에만 모달 표시
         if not self.trigger_key_info:
-            self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.exec()
+            dialog = self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog
+            if dialog.exec():
+                result = dialog.get_entered_key_info_result()
+                if result:
+                    self.TriggerKeyInput__QLineEdit.setText(result['simple_display_text'])
+                    self.trigger_key_info = result.copy()  # 키 정보 저장
+                    self.modal_log_manager.log(
+                    message=f"트리거 키 입력 완료(self.trigger_key_info): {self.trigger_key_info}",
+                    level="DEBUG",
+                    file_name="logic_detail_widget"
+                    )
+
+                    self.EditTriggerKeyButton__QPushButton.setEnabled(True)  # 편집 버튼 활성화
+                    self.DeleteTriggerKeyButton__QPushButton.setEnabled(True)  # 삭제 버튼 활성화
 
     def _on_formatted_key_info_changed(self, formatted_key_info):
         """키 입력이 변경되었을 때"""
@@ -413,7 +426,6 @@ class LogicDetailWidget(QFrame):
         # 중복이 없는 경우 정상적으로 트리거 키 설정
         formatted_info = create_formatted_key_info(formatted_key_info)
         self.TriggerKeyInfoLabel__QLabel.setText(formatted_info['detail_display_text'])
-        self.TriggerKeyInput__QLineEdit.setText(formatted_info['simple_display_text'])
         self.trigger_key_info = formatted_key_info.copy()  # 깊은 복사로 변경
         self.EditTriggerKeyButton__QPushButton.setEnabled(True)  # 편집 버튼 활성화
         self.DeleteTriggerKeyButton__QPushButton.setEnabled(True)  # 삭제 버튼 활성화
