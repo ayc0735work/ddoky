@@ -17,7 +17,7 @@ from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_h
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 from BE.function._common_components.modal.text_input_modal.text_input_dialog import TextInputDialog
 from BE.log.base_log_manager import BaseLogManager
-from BE.function.make_logic.repository.logic_detaill_item_manage_repository import LogicItemManageRepository
+from BE.function.make_logic.repository.logic_detaill_item_manage_repository import LogicDetailItemsManageRepository
 
 class LogicDetailWidget(QFrame):
     """로직 상세 내용을 표시하고 관리하는 위젯"""
@@ -29,7 +29,7 @@ class LogicDetailWidget(QFrame):
     logic_saved = Signal(dict)
     logic_updated = Signal(str, dict)
     
-    def __init__(self, repository: LogicItemManageRepository, parent=None):
+    def __init__(self, repository: LogicDetailItemsManageRepository, parent=None):
         super().__init__(parent)
         self.repository = repository
         self.base_log_manager = BaseLogManager.instance()
@@ -264,7 +264,7 @@ class LogicDetailWidget(QFrame):
     def add_item(self, item_info):
         """아이템을 목록에 추가합니다."""
         if isinstance(item_info, dict):
-            self.repository.add_item(item_info)
+            self.repository.add_logic_detail_item(item_info)
             
     def _delete_selected_items(self):
         """선택된 아이템들을 삭제"""
@@ -273,7 +273,7 @@ class LogicDetailWidget(QFrame):
             for item in selected_items:
                 item_data = item.data(Qt.UserRole)
                 if item_data:
-                    self.repository.delete_item(item_data)
+                    self.repository.delete_logic_detail_items(item_data)
 
     def _move_selected_item(self, direction: str):
         """선택된 아이템을 위/아래로 이동"""
@@ -281,13 +281,13 @@ class LogicDetailWidget(QFrame):
         if current_item:
             item_data = current_item.data(Qt.UserRole)
             if direction == 'up':
-                self.repository.move_item_up(item_data)
+                self.repository.move_logic_detail_item_up(item_data)
             else:
-                self.repository.move_item_down(item_data)
+                self.repository.move_logic_detail_item_down(item_data)
 
-    def get_items(self):
+    def get_logic_detail_items(self):
         """현재 아이템 목록을 반환합니다."""
-        items = self.repository.get_items()
+        items = self.repository.get_logic_detail_items()
         
         # 키 입력 아이템의 modifiers를 정수로 변환
         for item in items:
@@ -299,16 +299,16 @@ class LogicDetailWidget(QFrame):
 
     def has_items(self):
         """목록에 아이템이 있는지 확인"""
-        return self.repository.get_items_count() > 0
+        return self.repository.get_logic_detail_items_count() > 0
 
-    def clear_items(self):
+    def clear_logic_detail_items(self):
         """모든 아이템을 삭제합니다."""
-        self.repository.clear_items()
+        self.repository.clear_logic_detail_items()
 
     def _update_list_widget(self):
         """Repository의 아이템 목록으로 ListWidget을 업데이트"""
         self.LogicItemList__QListWidget.clear()
-        items = self.repository.get_items()
+        items = self.repository.get_logic_detail_items()
         for item in items:
             list_item = QListWidgetItem(item.get('display_text', ''))
             list_item.setData(Qt.UserRole, item)
@@ -494,7 +494,7 @@ class LogicDetailWidget(QFrame):
             bool: 로드 성공 여부
         """
         # Repository에 로드 요청
-        if self.repository.load_logic(logic_info):
+        if self.repository.load_logic_detail_items(logic_info):
             # UI 업데이트
             self.LogicNameInput__QLineEdit.setText(logic_info.get('name', ''))
             self.RepeatCountInput__QSpinBox.setValue(logic_info.get('repeat_count', 1))
@@ -732,7 +732,7 @@ class LogicDetailWidget(QFrame):
                 
             # Delete: 삭제
             elif key == Qt.Key_Delete:
-                self._delete_item()
+                self._delete_logic_detail_items()
                 return True
                 
         return super().eventFilter(obj, event)
@@ -920,7 +920,7 @@ class LogicDetailWidget(QFrame):
             'order': max_order + 1,  # 가장 큰 order + 1
             'name': self.LogicNameInput__QLineEdit.text(),
             'repeat_count': self.RepeatCountInput__QSpinBox.value(),
-            'items': self.get_items(),
+            'items': self.get_logic_detail_items(),
             'is_nested': self.is_nested_checkbox.isChecked()
         }
         
@@ -1022,14 +1022,14 @@ class LogicDetailWidget(QFrame):
             file_name="logic_detail_widget"
         )
 
-    def _delete_item(self):
+    def _delete_logic_detail_items(self):
         """선택된 아이템을 삭제"""
         selected_items = self.LogicItemList__QListWidget.selectedItems()
         if selected_items:
             for item in selected_items:
                 item_data = item.data(Qt.UserRole)
                 if item_data:
-                    self.repository.delete_item(item_data)
+                    self.repository.delete_logic_detail_items(item_data)
 
     def clear_all(self):
         """모든 UI 필드 초기화"""
@@ -1037,4 +1037,4 @@ class LogicDetailWidget(QFrame):
         self.RepeatCountInput__QSpinBox.setValue(1)
         self.is_nested_checkbox.setChecked(False)
         self.clear_key()
-        self.repository.clear_items()  # Repository를 통해 아이템 목록 초기화
+        self.repository.clear_logic_detail_items()  # Repository를 통해 아이템 목록 초기화

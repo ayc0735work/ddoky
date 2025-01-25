@@ -2,16 +2,16 @@ from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QDialog
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 from BE.log.base_log_manager import BaseLogManager
-from BE.function.make_logic.repository.logic_detaill_item_manage_repository import LogicItemManageRepository
+from BE.function.make_logic.repository.logic_detaill_item_manage_repository import LogicDetailItemsManageRepository
 
 class LogicMakerToolKeyInfoController(QObject):
     """키 입력 처리를 담당하는 컨트롤러 클래스"""
     
-    def __init__(self, repository: LogicItemManageRepository, parent=None):
+    def __init__(self, repository: LogicDetailItemsManageRepository, parent=None):
         """초기화
         
         Args:
-            repository (LogicItemManageRepository): 아이템 관리 저장소
+            repository (LogicDetailItemsManageRepository): 아이템 관리 저장소
             parent (QObject): 부모 객체
         """
         super().__init__(parent)
@@ -108,7 +108,7 @@ class LogicMakerToolKeyInfoController(QObject):
         for key_info in [pressed_key_info, released_key_info]:
             if self.validate_key_info(key_info):
                 # Repository에 저장 (Repository에서 자동으로 order 부여)
-                self.repository.add_item(key_info)
+                self.repository.add_logic_detail_item(key_info)
                 self.base_log_manager.log(
                     message=f"key_state_info_process - 키 정보 저장 완료(key_info): {key_info}",
                     level="DEBUG",

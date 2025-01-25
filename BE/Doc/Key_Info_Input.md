@@ -159,7 +159,7 @@
    - `EnteredKeyInfoDialog.accept()` → `LogicMakerToolWidget._open_key_input_dialog()` (다이얼로그 결과)
 
 3. 아이템 추가
-   - `LogicItemManageRepository.add_item()` → `item_added` 시그널 → `LogicDetailWidget._update_list_widget()`
+   - `LogicDetailItemsManageRepository.add_item()` → `item_added` 시그널 → `LogicDetailWidget._update_list_widget()`
 
 ## 데이터 흐름
 ```mermaid
@@ -167,7 +167,7 @@ graph TD
     A[키보드 입력] --> B[KeyboardHook]
     B --> C[EnteredKeyInfoDialog]
     C --> D[LogicMakerToolKeyInfoController]
-    D --> E[LogicItemManageRepository]
+    D --> E[LogicDetailItemsManageRepository]
     E -- item_added 시그널 --> F[LogicDetailWidget]
     F --> G[UI 업데이트]
 ```

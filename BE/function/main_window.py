@@ -29,7 +29,7 @@ from BE.function.etc_function.countdown.Controller.countdown_controller__input_s
 from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_handler import KeyboardHook
 import logging
 from BE.log.base_log_manager import BaseLogManager
-from BE.function.make_logic.repository.logic_detaill_item_manage_repository import LogicItemManageRepository
+from BE.function.make_logic.repository.logic_detaill_item_manage_repository import LogicDetailItemsManageRepository
 
 class MainWindow(QMainWindow):
     """메인 윈도우 클래스
@@ -44,7 +44,7 @@ class MainWindow(QMainWindow):
         logic_manager (LogicManager): 로직 관리자
         logic_executor (LogicExecutor): 로직 실행기
         keyboard_hook (KeyboardHook): 키보드 입력 후킹 관리자
-        logic_item_repository (LogicItemManageRepository): 로직 아이템 저장소
+        logic_item_repository (LogicDetailItemsManageRepository): 로직 아이템 저장소
         
     Components:
         logic_operation_widget (LogicOperationWidget): 로직 동작 제어 위젯
@@ -95,7 +95,7 @@ class MainWindow(QMainWindow):
         self.base_log_manager = BaseLogManager.instance()
         
         # 로직 아이템 저장소 초기화
-        self.logic_item_repository = LogicItemManageRepository()
+        self.logic_item_repository = LogicDetailItemsManageRepository()
         
         # 로그 위젯 초기화
         self.log_widget = LogWidget()
@@ -388,7 +388,7 @@ class MainWindow(QMainWindow):
                 )
                 
                 # Repository를 통해 아이템 추가
-                self.logic_item_repository.add_item(mouse_info)
+                self.logic_item_repository.add_logic_detail_item(mouse_info)
                 
         except Exception as e:
             self.base_log_manager.log(
@@ -405,7 +405,7 @@ class MainWindow(QMainWindow):
             delay_info (dict): 지연 시간 정보
         """
         # Repository를 통해 아이템 추가
-        self.logic_item_repository.add_item(delay_info)
+        self.logic_item_repository.add_logic_detail_item(delay_info)
         
     def _on_record_mode(self, is_recording):
         """기록 모드가 토글되었을 때 호출"""
@@ -566,7 +566,7 @@ class MainWindow(QMainWindow):
             self.logic_maker_tool_widget.update_saved_logics(saved_logics)
             
             # Repository 초기화
-            self.logic_item_repository.clear_items()
+            self.logic_item_repository.clear_logic_detail_items()
             
             self.base_log_manager.log(
                 message=f"로직 '{logic_info.get('name', '')}'이(가) 저장되었습니다",
@@ -598,7 +598,7 @@ class MainWindow(QMainWindow):
             self.logic_maker_tool_widget.update_saved_logics(saved_logics)
             
             # Repository 초기화
-            self.logic_item_repository.clear_items()
+            self.logic_item_repository.clear_logic_detail_items()
             
             self.base_log_manager.log(
                 message=f"로직 '{logic_info.get('name', '')}'이(가) 수정되었습니다",
@@ -625,7 +625,7 @@ class MainWindow(QMainWindow):
             self.logic_maker_tool_widget.update_saved_logics(saved_logics)
             
             # Repository 초기화
-            self.logic_item_repository.clear_items()
+            self.logic_item_repository.clear_logic_detail_items()
             
             self.base_log_manager.log(
                 message=f"로직 '{logic_name}'이(가) 삭제되었습니다",
@@ -675,7 +675,7 @@ class MainWindow(QMainWindow):
                 'logic_name': display_name,
                 'display_text': display_name
             }
-            self.logic_item_repository.add_item(item_info)
+            self.logic_item_repository.add_logic_detail_item(item_info)
             
             self.base_log_manager.log(
                 message=f"로직 '{display_name}'이(가) 추가되었습니다",
@@ -698,7 +698,7 @@ class MainWindow(QMainWindow):
             )
             
             # Repository를 통해 아이템 추가
-            self.logic_item_repository.add_item(wait_click_info)
+            self.logic_item_repository.add_logic_detail_item(wait_click_info)
                 
         except Exception as e:
             self.base_log_manager.log(

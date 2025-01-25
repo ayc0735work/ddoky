@@ -3,14 +3,14 @@ from BE.log.base_log_manager import BaseLogManager
 from BE.settings.settings_data_manager import SettingsManager
 from BE.function.manage_logic.logic_manager import LogicManager
 
-class LogicItemManageRepository(QObject):
+class LogicDetailItemsManageRepository(QObject):
     """로직 아이템을 관리하는 저장소 클래스"""
     
     # 시그널 정의
-    item_added = Signal(dict)  # 아이템이 추가되었을 때
-    item_deleted = Signal(dict)  # 아이템이 삭제되었을 때
-    item_moved = Signal()  # 아이템이 이동되었을 때
-    items_cleared = Signal()  # 모든 아이템이 삭제되었을 때
+    logic_detail_item_added = Signal(dict)  # 아이템이 추가되었을 때
+    logic_detail_item_deleted = Signal(dict)  # 아이템이 삭제되었을 때
+    logic_detail_item_moved = Signal()  # 아이템이 이동되었을 때
+    logic_detail_items_cleared = Signal()  # 모든 아이템이 삭제되었을 때
     logic_saved = Signal(dict)  # 로직이 저장되었을 때
     logic_loaded = Signal(dict)  # 로직이 로드되었을 때
     logic_updated = Signal(str, dict)  # 로직이 업데이트되었을 때 (이전 이름, 새 데이터)
@@ -24,7 +24,7 @@ class LogicItemManageRepository(QObject):
         self.current_logic_id = None
         self.current_logic = None
         
-    def get_next_order(self) -> int:
+    def get_logic_detail_items_next_order(self) -> int:
         """다음 순서 번호를 반환합니다.
         
         Returns:
@@ -34,7 +34,7 @@ class LogicItemManageRepository(QObject):
             return 1
         return max(item.get('order', 0) for item in self.items) + 1
         
-    def get_items(self) -> list:
+    def get_logic_detail_items(self) -> list:
         """모든 아이템을 반환합니다.
         
         Returns:
@@ -42,42 +42,45 @@ class LogicItemManageRepository(QObject):
         """
         return self.items.copy()  # 복사본을 반환하여 외부 수정 방지
         
-    def add_item(self, item_info: dict):
+    def add_logic_detail_item(self, item_info: dict):
         """아이템을 추가합니다."""
         if not isinstance(item_info, dict):
             self.base_log_manager.log(
                 message=f"잘못된 형식의 데이터: {type(item_info)}",
                 level="ERROR",
-                file_name="logic_detaill_item_manage_repository"
+                file_name="logic_detaill_item_manage_repository",
+                method_name="add_logic_detail_item"
             )
             return
             
         # order 값이 없으면 다음 순서로 설정
         if 'order' not in item_info:
-            item_info['order'] = self.get_next_order()
+            item_info['order'] = self.get_logic_detail_items_next_order()
             
         # 아이템 추가 및 로그
         self.items.append(item_info)
         self.base_log_manager.log(
             message=f"아이템이 추가되었습니다: {item_info}",
             level="INFO",
-            file_name="logic_detaill_item_manage_repository"
+            file_name="logic_detaill_item_manage_repository",
+            method_name="add_logic_detail_item"
         )
-        self.item_added.emit(item_info)
+        self.logic_detail_item_added.emit(item_info)
         
-    def delete_item(self, item_info: dict):
+    def delete_logic_detail_items(self, item_info: dict):
         """아이템을 삭제합니다."""
         if item_info in self.items:
             self.items.remove(item_info)
             self.base_log_manager.log(
                 message=f"아이템이 삭제되었습니다: {item_info}",
                 level="INFO",
-                file_name="logic_detaill_item_manage_repository"
+                file_name="logic_detaill_item_manage_repository",
+                method_name="delete_logic_detail_items"
             )
-            self.item_deleted.emit(item_info)
-            self._reorder_items()
+            self.logic_detail_item_deleted.emit(item_info)
+            self._reorder_logic_detail_items()
             
-    def move_item_up(self, item_info: dict):
+    def move_logic_detail_item_up(self, item_info: dict):
         """아이템을 위로 이동합니다."""
         try:
             current_index = self.items.index(item_info)
@@ -93,17 +96,19 @@ class LogicItemManageRepository(QObject):
                 self.base_log_manager.log(
                     message=f"아이템을 위로 이동했습니다: {item_info}",
                     level="INFO",
-                    file_name="logic_detaill_item_manage_repository"
+                    file_name="logic_detaill_item_manage_repository",
+                    method_name="move_logic_detail_item_up"
                 )
-                self.item_moved.emit()
+                self.logic_detail_item_moved.emit()
         except ValueError:
             self.base_log_manager.log(
                 message=f"아이템을 찾을 수 없습니다: {item_info}",
                 level="ERROR",
-                file_name="logic_detaill_item_manage_repository"
+                file_name="logic_detaill_item_manage_repository",
+                method_name="move_logic_detail_item_up"
             )
                 
-    def move_item_down(self, item_info: dict):
+    def move_logic_detail_item_down(self, item_info: dict):
         """아이템을 아래로 이동합니다."""
         try:
             current_index = self.items.index(item_info)
@@ -119,36 +124,39 @@ class LogicItemManageRepository(QObject):
                 self.base_log_manager.log(
                     message=f"아이템을 아래로 이동했습니다: {item_info}",
                     level="INFO",
-                    file_name="logic_detaill_item_manage_repository"
+                    file_name="logic_detaill_item_manage_repository",
+                    method_name="move_logic_detail_item_down"
                 )
-                self.item_moved.emit()
+                self.logic_detail_item_moved.emit()
         except ValueError:
             self.base_log_manager.log(
                 message=f"아이템을 찾을 수 없습니다: {item_info}",
                 level="ERROR",
-                file_name="logic_detaill_item_manage_repository"
+                file_name="logic_detaill_item_manage_repository",
+                method_name="move_logic_detail_item_down"
             )
                 
-    def get_items_count(self) -> int:
+    def get_logic_detail_items_count(self) -> int:
         """아이템 개수를 반환합니다."""
         return len(self.items)
         
-    def clear_items(self):
+    def clear_logic_detail_items(self):
         """모든 아이템을 삭제합니다."""
         self.items.clear()
         self.base_log_manager.log(
             message="모든 아이템이 삭제되었습니다",
             level="INFO",
-            file_name="logic_detaill_item_manage_repository"
+            file_name="logic_detaill_item_manage_repository",
+            method_name="clear_logic_detail_items"
         )
-        self.items_cleared.emit()
+        self.logic_detail_items_cleared.emit()
         
-    def _reorder_items(self):
+    def _reorder_logic_detail_items(self):
         """아이템들의 순서를 재정렬합니다."""
         for i, item in enumerate(self.items, 1):
             item['order'] = i 
         
-    def save_logic(self, logic_info: dict) -> tuple[bool, str]:
+    def save_logic_detail_items(self, logic_info: dict) -> tuple[bool, str]:
         """로직을 저장합니다.
         
         Args:
@@ -202,14 +210,16 @@ class LogicItemManageRepository(QObject):
                 self.base_log_manager.log(
                     message=f"로직 '{logic_info['name']}'이(가) 저장되었습니다",
                     level="INFO",
-                    file_name="logic_detaill_item_manage_repository"
+                    file_name="logic_detaill_item_manage_repository",
+                    method_name="save_logic_detail_items"
                 )
                 return True, "저장 성공"
             else:
                 self.base_log_manager.log(
                     message=f"저장 실패: {result}",
                     level="ERROR",
-                    file_name="logic_detaill_item_manage_repository"
+                    file_name="logic_detaill_item_manage_repository",
+                    method_name="save_logic_detail_items"
                 )
                 return False, result
                 
@@ -217,11 +227,13 @@ class LogicItemManageRepository(QObject):
             self.base_log_manager.log(
                 message=f"로직 저장 중 오류 발생: {str(e)}",
                 level="ERROR",
-                file_name="logic_detaill_item_manage_repository"
+                file_name="logic_detaill_item_manage_repository",
+                method_name="save_logic_detail_items",
+                print_to_terminal=True
             )
             return False, str(e)
             
-    def load_logic(self, logic_info: dict) -> bool:
+    def load_logic_detail_items(self, logic_info: dict) -> bool:
         """로직을 로드합니다.
         
         Args:
@@ -236,12 +248,14 @@ class LogicItemManageRepository(QObject):
                 self.base_log_manager.log(
                     message="잘못된 로직 정보입니다",
                     level="ERROR",
-                    file_name="logic_detaill_item_manage_repository"
+                    file_name="logic_detaill_item_manage_repository",
+                    method_name="load_logic_detail_items",
+                    print_to_terminal=True
                 )
                 return False
                 
             # 2. 현재 로직 정보 초기화
-            self.clear_items()
+            self.clear_logic_detail_items()
             
             # 3. UUID 설정 및 검증
             self.current_logic_id = logic_info.get('id')
@@ -256,7 +270,8 @@ class LogicItemManageRepository(QObject):
                 self.base_log_manager.log(
                     message=f"로직 '{logic_info.get('name')}'의 ID를 찾을 수 없습니다",
                     level="WARNING",
-                    file_name="logic_detaill_item_manage_repository"
+                    file_name="logic_detaill_item_manage_repository",
+                    method_name="load_logic_detail_items"
                 )
                 return False
             
@@ -275,13 +290,14 @@ class LogicItemManageRepository(QObject):
                             item['display_text'] = f"지연시간 : {item.get('duration', 0.0)}초"
                         elif item.get('type') == 'logic':
                             item['display_text'] = item.get('logic_name', '')
-                        self.add_item(item)
+                        self.add_logic_detail_item(item)
                         
             self.logic_loaded.emit(logic_info)
             self.base_log_manager.log(
                 message=f"로직 '{logic_info.get('name')}'이(가) 로드되었습니다",
                 level="INFO",
-                file_name="logic_detaill_item_manage_repository"
+                file_name="logic_detaill_item_manage_repository",
+                method_name="load_logic_detail_items"
             )
             return True
             
@@ -289,12 +305,13 @@ class LogicItemManageRepository(QObject):
             self.base_log_manager.log(
                 message=f"로직 로드 중 오류 발생: {str(e)}",
                 level="ERROR",
-                file_name="logic_detaill_item_manage_repository"
+                file_name="logic_detaill_item_manage_repository",
+                method_name="load_logic_detail_items"
             )
             return False
             
-    def clear_current_logic(self):
+    def clear_current_logic_detail_item(self):
         """현재 로직 정보를 초기화합니다."""
         self.current_logic_id = None
         self.current_logic = None
-        self.clear_items() 
+        self.clear_logic_detail_items() 
