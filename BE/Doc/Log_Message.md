@@ -6,7 +6,7 @@
 로그 메시지 시스템은 중앙 집중식 로그 관리를 통해 애플리케이션의 모든 로그를 체계적으로 관리합니다.
 
 ### 1.2 주요 컴포넌트
-1. **BaseLogManager** (BE/log/manager/base_log_manager.py)
+1. **BaseLogManager** (BE/log/base_log_manager.py)
    - 로그 메시지의 중앙 관리자
    - 싱글톤 패턴으로 구현
    - 로그 레벨, 시간, 출처 정보 관리
