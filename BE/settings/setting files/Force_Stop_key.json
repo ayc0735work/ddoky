@@ -3,5 +3,5 @@
     "key_code": "ESC",
     "scan_code": 1,
     "virtual_key": 27,
-    "modifiers": 0
+    "modifiers_key_flag": 0
 }

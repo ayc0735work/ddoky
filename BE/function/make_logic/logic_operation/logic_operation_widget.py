@@ -367,7 +367,7 @@ class LogicOperationWidget(QFrame):
                 # 찾은 로직 정보로 업데이트
                 copied_item['logic_id'] = logic_id
                 copied_item['logic_name'] = logic_name
-                copied_item['display_text'] = logic_name
+                copied_item['logic_detail_item_dp_text'] = logic_name
                 if 'logic_data' in copied_item:
                     copied_item['logic_data']['logic_id'] = logic_id
                     copied_item['logic_data']['logic_name'] = logic_name
@@ -424,7 +424,7 @@ class LogicOperationWidget(QFrame):
                     # 찾은 로직 정보로 업데이트
                     copied_item['logic_id'] = logic_id
                     copied_item['logic_name'] = logic_name
-                    copied_item['display_text'] = logic_name
+                    copied_item['logic_detail_item_dp_text'] = logic_name
                     if 'logic_data' in copied_item:
                         copied_item['logic_data']['logic_id'] = logic_id
                         copied_item['logic_data']['logic_name'] = logic_name
@@ -499,7 +499,7 @@ class LogicOperationWidget(QFrame):
             # 찾은 로직 정보로 업데이트
             item_info['logic_id'] = logic_id
             item_info['logic_name'] = logic_name
-            item_info['display_text'] = logic_name
+            item_info['logic_detail_item_dp_text'] = logic_name
             if 'logic_data' in item_info:
                 item_info['logic_data']['logic_id'] = logic_id
                 item_info['logic_data']['logic_name'] = logic_name
@@ -515,10 +515,10 @@ class LogicOperationWidget(QFrame):
         # 마우스 입력 데이터인 경우 직렬화
         if item_info.get('type') == 'mouse_input':
             serialized_data = MouseDataHandler.serialize(item_info)
-            item = QListWidgetItem(item_info.get('display_text', ''))
+            item = QListWidgetItem(item_info.get('logic_detail_item_dp_text', ''))
             item.setData(Qt.UserRole, serialized_data)
         else:
-            item = QListWidgetItem(item_info.get('display_text', ''))
+            item = QListWidgetItem(item_info.get('logic_detail_item_dp_text', ''))
             item.setData(Qt.UserRole, item_info)
             
         self.LogicItemList__QListWidget.addItem(item)
@@ -671,9 +671,9 @@ class LogicOperationWidget(QFrame):
             if result == QDialog.Accepted:
                 key_info = dialog.get_entered_key_info_result()
                 if key_info:
-                    # modifiers가 KeyboardModifier 객체인 경우 정수로 변환
-                    if 'modifiers' in key_info and hasattr(key_info['modifiers'], 'value'):
-                        key_info['modifiers'] = int(key_info['modifiers'].value)
+                    # modifiers_key_flag가 KeyboardModifier 객체인 경우 정수로 변환
+                    if 'modifiers_key_flag' in key_info and hasattr(key_info['modifiers_key_flag'], 'value'):
+                        key_info['modifiers_key_flag'] = int(key_info['modifiers_key_flag'].value)
                     
                     self.force_stop_key = key_info
                     self.force_stop_key_input.setText(key_info['key_code'])
@@ -710,7 +710,7 @@ class LogicOperationWidget(QFrame):
                 "key_code": "ESC",
                 "scan_code": 1,
                 "virtual_key": 27,
-                "modifiers": 0
+                "modifiers_key_flag": 0
             }
             self.force_stop_key_input.setText('ESC')
             

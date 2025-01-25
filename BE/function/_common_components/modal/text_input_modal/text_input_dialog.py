@@ -66,5 +66,5 @@ class TextInputDialog(QDialog):
         return {
             'type': 'write_text',
             'text': text,
-            'display_text': f'텍스트 입력: {text}'
+            'logic_detail_item_dp_text': f'텍스트 입력: {text}'
     }

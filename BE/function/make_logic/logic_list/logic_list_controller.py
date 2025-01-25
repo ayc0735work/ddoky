@@ -404,13 +404,13 @@ class LogicListController(QObject):
         trigger_key = logic_info.get('trigger_key', {})
         if trigger_key and 'key_code' in trigger_key:
             key_text = trigger_key['key_code']
-            modifiers = trigger_key.get('modifiers', 0)
+            modifiers_key_flag = trigger_key.get('modifiers_key_flag', 0)
             
             modifier_text = []
-            if modifiers & 1: modifier_text.append("Alt")
-            if modifiers & 2: modifier_text.append("Ctrl")
-            if modifiers & 4: modifier_text.append("Shift")
-            if modifiers & 8: modifier_text.append("Win")
+            if modifiers_key_flag & 1: modifier_text.append("Alt")
+            if modifiers_key_flag & 2: modifier_text.append("Ctrl")
+            if modifiers_key_flag & 4: modifier_text.append("Shift")
+            if modifiers_key_flag & 8: modifier_text.append("Win")
             
             if modifier_text:
                 return f"[ {name} ] --- {' + '.join(modifier_text)} + {key_text}"

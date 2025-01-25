@@ -173,30 +173,7 @@ class LogicDetailDataManageRepository(QObject):
             if not logic_info.get('items'):
                 return False, "최소 하나의 아이템이 필요합니다."
 
-            # modifiers는 다음과 같은 형태의 PySide6의 KeyboardModifier 클래스의 인스턴스라서 JSON이 그대로 읽을 수 없음 (modifiers 예시 -  'modifiers': <KeyboardModifier object>  # 커스텀 객체라서 JSON 변환 불가)
-            # 따라서 트리거 키의 modifiers와 아이템 리스트 내의 키 입력 타입의 modifiers를 정수로 변환해야 함
-
-            # 2. 트리거 키의 modifiers 처리
-
-            # # 트리거 키와 아이템의 modifiers를 정수로 변환
-            # def convert_modifiers_to_int(data):
-            #     if 'modifiers' in data:
-            #         if hasattr(data['modifiers'], 'value'):
-            #             data['modifiers'] = int(data['modifiers'].value)
-            #         elif not isinstance(data['modifiers'], int):
-            #             data['modifiers'] = 0
-
-            # # 트리거 키 처리
-            # if not logic_info.get('is_nested', False) and 'trigger_key' in logic_info:
-            #     if logic_info['trigger_key']:
-            #         convert_modifiers_to_int(logic_info['trigger_key'])
-
-            # # 아이템 리스트 처리 
-            # for item in logic_info.get('items', []):
-            #     if item.get('type') == 'key':
-            #         convert_modifiers_to_int(item)
-
-            # 4. 이름 중복 검사 (수정 모드가 아닐 때만)
+            # 2. 이름 중복 검사 (수정 모드가 아닐 때만)
             if not self.current_logic_id:
                 logics = self.settings_manager.load_logics()
                 for logic in logics.values():
@@ -204,7 +181,7 @@ class LogicDetailDataManageRepository(QObject):
                         not logic.get('is_nested', False)):
                         return False, "동일한 이름의 로직이 이미 존재합니다."
             
-            # 5. 시간 정보와 순서 정보 추가
+            # 3. 시간 정보와 순서 정보 추가
             from datetime import datetime
             logic_info['updated_at'] = datetime.now().isoformat()
             
@@ -302,17 +279,17 @@ class LogicDetailDataManageRepository(QObject):
             self.current_logic = logic_info.copy()
             self.current_logic['id'] = self.current_logic_id
             
-            # 5. 아이템 로드 및 display_text 설정
+            # 5. 아이템 로드 및 logic_detail_item_dp_text 설정
             items = logic_info.get('items', [])
             if isinstance(items, list):
                 sorted_items = sorted(items, key=lambda x: x.get('order', float('inf')))
                 for item in sorted_items:
                     if isinstance(item, dict):
-                        # display_text 설정
+                        # logic_detail_item_dp_text 설정
                         if item.get('type') == 'delay':
-                            item['display_text'] = f"지연시간 : {item.get('duration', 0.0)}초"
+                            item['logic_detail_item_dp_text'] = f"지연시간 : {item.get('duration', 0.0)}초"
                         elif item.get('type') == 'logic':
-                            item['display_text'] = item.get('logic_name', '')
+                            item['logic_detail_item_dp_text'] = item.get('logic_name', '')
                         self.add_logic_detail_item(item)
                         
             self.logic_loaded.emit(logic_info)

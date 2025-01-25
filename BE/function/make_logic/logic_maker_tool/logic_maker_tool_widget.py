@@ -137,7 +137,7 @@ class LogicMakerToolWidget(QFrame):
             'coordinates_y': mouse_info.get('coordinates_y', 0),
             'ratios_x': mouse_info.get('ratios_x', 0),
             'ratios_y': mouse_info.get('ratios_y', 0),
-            'display_text': mouse_info.get('display_text', f'마우스 입력: 마우스클릭 ({mouse_info.get("coordinates_x", 0)}, {mouse_info.get("coordinates_y", 0)})')
+            'logic_detail_item_dp_text': mouse_info.get('logic_detail_item_dp_text', f'마우스 입력: 마우스클릭 ({mouse_info.get("coordinates_x", 0)}, {mouse_info.get("coordinates_y", 0)})')
         }
         # Repository에 직접 저장
         self.repository.add_item(processed_info)
@@ -162,7 +162,7 @@ class LogicMakerToolWidget(QFrame):
             delay_text = f"지연시간 : {delay:.4f}초"
             delay_info = {
                 'type': 'delay',
-                'display_text': delay_text,
+                'logic_detail_item_dp_text': delay_text,
                 'duration': delay
             }
             self._on_delay_input(delay_info)
@@ -188,7 +188,7 @@ class LogicMakerToolWidget(QFrame):
         """왼쪽 버튼 클릭시 다음으로 진행 추가"""
         wait_click_info = {
             'type': 'wait_click',
-            'display_text': '왼쪽 버튼 클릭시 다음으로 진행',
+            'logic_detail_item_dp_text': '왼쪽 버튼 클릭시 다음으로 진행',
             'button': 'left'
         }
         self._on_wait_click_input(wait_click_info)
@@ -197,7 +197,7 @@ class LogicMakerToolWidget(QFrame):
         """클릭 대기 입력 처리"""
         try:
             self.base_log_manager.log(
-                message=f"{wait_click_info.get('display_text', '')} 아이템이 추가되었습니다",
+                message=f"{wait_click_info.get('logic_detail_item_dp_text', '')} 아이템이 추가되었습니다",
                 level="INFO",
                 file_name="logic_maker_tool_widget"
             )
@@ -228,7 +228,7 @@ class LogicMakerToolWidget(QFrame):
             if area:
                 image_search_info = {
                     'type': 'image_search',
-                    'display_text': '이미지 서치 체크',
+                    'logic_detail_item_dp_text': '이미지 서치 체크',
                     'area': area
                 }
                 # Repository를 통해 아이템 추가

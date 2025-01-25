@@ -39,8 +39,8 @@ class LogicSelectorDialog(QDialog):
         
         # 저장된 로직들을 리스트에 추가
         for logic_name, logic_info in self.saved_logics.items():
-            display_text = logic_info.get('name', logic_name)  # 로직의 이름을 표시
-            item = QListWidgetItem(display_text)
+            logic_detail_item_dp_text = logic_info.get('name', logic_name)  # 로직의 이름을 표시
+            item = QListWidgetItem(logic_detail_item_dp_text)
             item.setData(Qt.UserRole, logic_name)  # 로직 이름을 데이터로 저장
             self.logic_list.addItem(item)
             

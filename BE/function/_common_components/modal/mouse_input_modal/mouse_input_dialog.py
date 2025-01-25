@@ -585,7 +585,7 @@ class MouseInputDialog(QDialog):
             'coordinates_y': y,
             'ratios_x': self.click_ratios['x'] if self.click_ratios else 0,
             'ratios_y': self.click_ratios['y'] if self.click_ratios else 0,
-            'display_text': f"마우스 입력: {name} ({x}, {y})"
+            'logic_detail_item_dp_text': f"마우스 입력: {name} ({x}, {y})"
         }
         
         self._append_log(f"생성된 마우스 입력 정보: {mouse_info}")

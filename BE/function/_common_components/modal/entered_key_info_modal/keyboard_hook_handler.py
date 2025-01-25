@@ -42,6 +42,25 @@ HOOKPROC = ctypes.CFUNCTYPE(LRESULT, ctypes.c_int, wintypes.WPARAM, ctypes.POINT
 
 user32 = ctypes.WinDLL('user32', use_last_error=True)
 
+class ModifierKeys:
+    """수정자 키의 비트 플래그 정의
+    
+    각 비트는 특정 수정자 키를 나타냅니다.
+    왼쪽 키는 하위 4비트(0x01-0x08), 오른쪽 키는 상위 4비트(0x10-0x80)를 사용합니다.
+    """
+    # 왼쪽 키
+    L_CONTROL = 0x01
+    L_SHIFT = 0x02
+    L_ALT = 0x04
+    
+    # 오른쪽 키
+    R_CONTROL = 0x10
+    R_SHIFT = 0x20
+    R_ALT = 0x40
+    
+    # AltGr은 오른쪽 Alt와 동일하게 처리
+    ALTGR = R_ALT
+
 def get_key_name(vk_code, kb_flags):
     """가상 키 코드를 사용자가 읽을 수 있는 키 이름으로 변환합니다.
     
@@ -139,123 +158,95 @@ def get_key_name(vk_code, kb_flags):
     else:
         return f'키 코드 {vk_code}'
 
-def get_qt_modifiers():
-    """현재 활성화된 수정자 키(Ctrl, Alt, Shift 등)의 상태를 Qt 플래그로 반환합니다.
+def get_modifier_key_flags():
+    """현재 활성화된 수정자 키의 상태를 비트 플래그로 반환합니다.
     
     Returns:
-        int: Qt.KeyboardModifier 플래그의 조합
-             예: Qt.ControlModifier | Qt.ShiftModifier
+        int: ModifierKeys 클래스에 정의된 비트 플래그의 조합
     """
-    modifiers = Qt.NoModifier
+    modifiers_key_flag = 0
     
     # Shift
     if user32.GetAsyncKeyState(win32con.VK_LSHIFT) & 0x8000:
-        modifiers |= Qt.KeypadModifier | Qt.ShiftModifier  # KeypadModifier를 왼쪽 구분자로 사용
+        modifiers_key_flag |= ModifierKeys.L_SHIFT
     if user32.GetAsyncKeyState(win32con.VK_RSHIFT) & 0x8000:
-        modifiers |= Qt.KeyboardModifier.MetaModifier | Qt.ShiftModifier  # MetaModifier를 오른쪽 구분자로 사용
+        modifiers_key_flag |= ModifierKeys.R_SHIFT
         
     # Control
     if user32.GetAsyncKeyState(win32con.VK_LCONTROL) & 0x8000:
-        modifiers |= Qt.KeypadModifier | Qt.ControlModifier
+        modifiers_key_flag |= ModifierKeys.L_CONTROL
     if user32.GetAsyncKeyState(win32con.VK_RCONTROL) & 0x8000 or user32.GetAsyncKeyState(25) & 0x8000:  # 일반 오른쪽 Ctrl 또는 한영 전환 키
-        modifiers |= Qt.KeyboardModifier.MetaModifier | Qt.ControlModifier
+        modifiers_key_flag |= ModifierKeys.R_CONTROL
         
     # Alt
     if user32.GetAsyncKeyState(win32con.VK_LMENU) & 0x8000:
-        modifiers |= Qt.KeypadModifier | Qt.AltModifier
-    if user32.GetAsyncKeyState(win32con.VK_RMENU) & 0x8000:
-        modifiers |= Qt.KeyboardModifier.MetaModifier | Qt.GroupSwitchModifier  # AltGr로 처리
+        modifiers_key_flag |= ModifierKeys.L_ALT
+    if user32.GetAsyncKeyState(win32con.VK_RMENU) & 0x8000 or user32.GetAsyncKeyState(21) & 0x8000:  # 일반 오른쪽 Alt 또는 한자 키
+        modifiers_key_flag |= ModifierKeys.ALTGR
         
-    # 한자 키
-    if user32.GetAsyncKeyState(21) & 0x8000:  # 한자 키
-        modifiers |= Qt.KeypadModifier | Qt.AltModifier
-        
-    return modifiers
+    return modifiers_key_flag
 
-def get_modifier_from_text(modifier_text):
-    """수정자 키 텍스트를 Qt 수정자 키 값으로 변환합니다.
+def get_modifier_text(modifiers_key_flag):
+    """수정자 키 상태를 텍스트로 변환합니다.
     
     Args:
-        modifier_text (str): 수정자 키 텍스트 (예: "왼쪽 Shift + 오른쪽 Ctrl")
+        modifiers_key_flag (int): ModifierKeys 클래스에 정의된 비트 플래그의 조합
     
-    Returns:
-        int: Qt.KeyboardModifier 플래그의 조합
-    """
-    if not modifier_text or modifier_text == "없음":
-        return Qt.NoModifier
-        
-    modifiers = Qt.NoModifier
-    mod_parts = modifier_text.split(" + ")
-    
-    for mod in mod_parts:
-        if mod == "왼쪽 Shift":
-            modifiers |= Qt.KeypadModifier | Qt.ShiftModifier
-        elif mod == "오른쪽 Shift":
-            modifiers |= Qt.KeyboardModifier.MetaModifier | Qt.ShiftModifier
-        elif mod == "왼쪽 Ctrl":
-            modifiers |= Qt.KeypadModifier | Qt.ControlModifier
-        elif mod == "오른쪽 Ctrl":
-            modifiers |= Qt.KeyboardModifier.MetaModifier | Qt.ControlModifier
-        elif mod == "왼쪽 Alt":
-            modifiers |= Qt.KeypadModifier | Qt.AltModifier
-        elif mod == "오른쪽 Alt":
-            modifiers |= Qt.KeyboardModifier.MetaModifier | Qt.AltModifier
-        elif mod == "AltGr":
-            modifiers |= Qt.KeyboardModifier.MetaModifier | Qt.GroupSwitchModifier
-        elif mod == "Shift":
-            modifiers |= Qt.ShiftModifier
-        elif mod == "Ctrl":
-            modifiers |= Qt.ControlModifier
-        elif mod == "Alt":
-            modifiers |= Qt.AltModifier
-            
-    return modifiers
-
-def get_modifier_text(modifiers):
-    """수정자 키 상태를 텍스트로 변환합니다.(수정자 키가 없으면 '없음'을 반환함)
-    Args:
-        modifiers (int): Qt.KeyboardModifier 플래그의 조합
     Returns:
         str: 수정자 키 설명 (예: '왼쪽 Ctrl + 오른쪽 Alt + 왼쪽 Shift')
     """
     mod_texts = []
     
-    # modifiers가 정수인 경우 Qt.KeyboardModifier로 변환
-    if isinstance(modifiers, int):
-        modifiers = Qt.KeyboardModifier(modifiers)
-    
     # Shift 키 처리
-    if modifiers & Qt.ShiftModifier:
-        if modifiers & Qt.KeypadModifier:
-            mod_texts.append("왼쪽 Shift")
-        elif modifiers & Qt.KeyboardModifier.MetaModifier:
-            mod_texts.append("오른쪽 Shift")
-        else:
-            mod_texts.append("Shift")
+    if modifiers_key_flag & ModifierKeys.L_SHIFT:
+        mod_texts.append("왼쪽 Shift")
+    if modifiers_key_flag & ModifierKeys.R_SHIFT:
+        mod_texts.append("오른쪽 Shift")
             
     # Control 키 처리
-    if modifiers & Qt.ControlModifier:
-        if modifiers & Qt.KeypadModifier:
-            mod_texts.append("왼쪽 Ctrl")
-        elif modifiers & Qt.KeyboardModifier.MetaModifier:
-            mod_texts.append("오른쪽 Ctrl")
-        else:
-            mod_texts.append("Ctrl")
+    if modifiers_key_flag & ModifierKeys.L_CONTROL:
+        mod_texts.append("왼쪽 Ctrl")
+    if modifiers_key_flag & ModifierKeys.R_CONTROL:
+        mod_texts.append("오른쪽 Ctrl")
             
     # Alt 키 처리
-    if modifiers & Qt.AltModifier:
-        if modifiers & Qt.KeypadModifier:
-            mod_texts.append("왼쪽 Alt")
-        elif modifiers & Qt.KeyboardModifier.MetaModifier:
-            mod_texts.append("오른쪽 Alt")
-        else:
-            mod_texts.append("Alt")
-            
-    # AltGr 키 처리
-    if modifiers & Qt.GroupSwitchModifier and modifiers & Qt.KeyboardModifier.MetaModifier:
-        mod_texts.append("AltGr")
+    if modifiers_key_flag & ModifierKeys.L_ALT:
+        mod_texts.append("왼쪽 Alt")
+    if modifiers_key_flag & ModifierKeys.ALTGR:
+        mod_texts.append("오른쪽 Alt")
         
     return " + ".join(mod_texts) if mod_texts else "없음"
+
+def get_modifier_from_text(modifier_text):
+    """수정자 키 텍스트를 비트 플래그로 변환합니다.
+    
+    Args:
+        modifier_text (str): 수정자 키 텍스트 (예: "왼쪽 Shift + 오른쪽 Ctrl")
+    
+    Returns:
+        int: ModifierKeys 클래스에 정의된 비트 플래그의 조합
+    """
+    if not modifier_text or modifier_text == "없음":
+        return 0
+        
+    modifiers_key_flag = 0
+    mod_parts = modifier_text.split(" + ")
+    
+    for mod in mod_parts:
+        if mod == "왼쪽 Shift":
+            modifiers_key_flag |= ModifierKeys.L_SHIFT
+        elif mod == "오른쪽 Shift":
+            modifiers_key_flag |= ModifierKeys.R_SHIFT
+        elif mod == "왼쪽 Ctrl":
+            modifiers_key_flag |= ModifierKeys.L_CONTROL
+        elif mod == "오른쪽 Ctrl":
+            modifiers_key_flag |= ModifierKeys.R_CONTROL
+        elif mod == "왼쪽 Alt":
+            modifiers_key_flag |= ModifierKeys.L_ALT
+        elif mod == "오른쪽 Alt" or mod == "AltGr":
+            modifiers_key_flag |= ModifierKeys.ALTGR
+            
+    return modifiers_key_flag
 
 def get_scan_code(key):
     """키 코드에 해당하는 스캔 코드를 반환합니다.
@@ -332,12 +323,12 @@ def get_key_location(scan_code):
     """
     # 예시적인 위치 판단 (실제 구현 시 더 자세한 매핑 필요)
     if scan_code in [42, 29, 56]:  # 왼쪽 Shift, Ctrl, Alt
-        return "왼쪽"
+        return "왼쪽키"
     elif scan_code in [54, 285, 312]:  # 오른쪽 Shift, Ctrl, Alt
-        return "오른쪽"
+        return "오른쪽키"
     elif 71 <= scan_code <= 83:  # 숫자패드 영역
-        return "숫자패드"
-    return "메인"
+        return "숫자패드키"
+    return "메인키"
 
 def create_formatted_key_info(raw_key_info):
     """키보드 입력의 raw 정보를 UI 표시와 이벤트 처리에 적합한 형식으로 변환합니다.
@@ -351,7 +342,7 @@ def create_formatted_key_info(raw_key_info):
                 'key_code': str,      # 키의 표시 이름 (예: 'A', '엔터', '방향키 왼쪽 ←') 
                 'scan_code': int,     # 하드웨어 키보드의 물리적 위치 값
                 'virtual_key': int,   # Windows API 가상 키 코드
-                'modifiers': int,     # Qt 기반 수정자 키 상태 플래그 (예: NoModifier=0, ShiftModifier=0x02000000, ControlModifier=0x04000000, AltModifier=0x08000000)
+                'modifiers_key_flag': int,     # Qt 기반 수정자 키 상태 플래그 (예: NoModifier=0, ShiftModifier=0x02000000, ControlModifier=0x04000000, AltModifier=0x08000000)
                 'is_system_key': bool # ALT 키 눌림 여부
             }
 
@@ -361,23 +352,23 @@ def create_formatted_key_info(raw_key_info):
                 'key_code': str,      # 키의 표시 이름 (예: 'A', '엔터', '방향키 왼쪽 ←')
                 'scan_code': int,     # 하드웨어 키보드의 물리적 위치 값 
                 'virtual_key': int,   # Windows API 가상 키 코드
-                'location': str,      # 키보드 위치 (예: '왼쪽', '오른쪽', '숫자패드', '메인')
-                'modifiers': int,     # Qt 기반 수정자 키 상태 플래그 (예: NoModifier=0, ShiftModifier=0x02000000, ControlModifier=0x04000000, AltModifier=0x08000000)
+                'location': str,      # 키보드 위치 (예: '왼쪽키', '오른쪽키', '숫자패드키', '메인키')
+                'modifiers_key_flag': int,     # Qt 기반 수정자 키 상태 플래그 (예: NoModifier=0, ShiftModifier=0x02000000, ControlModifier=0x04000000, AltModifier=0x08000000)
                 'modifier_text': str, # 수정자 키 텍스트 (예: '왼쪽 Ctrl', '오른쪽 Alt', '왼쪽 Shift')
                 'is_system_key': bool # ALT 키 눌림 여부
-                'simple_display_text': str   # UI에 표시할 간단한 텍스트 (예: '왼쪽 Ctrl + A (키 위치: 메인)')
+                'simple_display_text': str   # UI에 표시할 간단한 텍스트 (예: '왼쪽 Ctrl + A  ((메인키))')
             }
     """
     
     location = get_key_location(raw_key_info['scan_code'])
 
     # get_modifier_text() 함수에서 수정자키가 없을 때 '없음'을 반환함
-    modifier_text = get_modifier_text(raw_key_info['modifiers'])
+    modifier_text = get_modifier_text(raw_key_info['modifiers_key_flag'])
     
     # 간단한 표시 텍스트 생성
-    simple_display_text = f"{modifier_text} + {raw_key_info['key_code']} (키 위치: {location})" if modifier_text != '없음' else f"{raw_key_info['key_code']} (키 위치: {location})"
+    simple_display_text = f"{modifier_text} + {raw_key_info['key_code']}  (({location}))" if modifier_text != '없음' else f"{raw_key_info['key_code']}  (({location}))"
     if not raw_key_info['key_code']:
-        simple_display_text = f"알 수 없는 키 (키 위치: {location})"
+        simple_display_text = f"알 수 없는 키  (({location}))"
 
     # 애플리케이션 전체에서 사용할 표준화된 키 정보 생성
     formatted_key_info = {
@@ -385,7 +376,7 @@ def create_formatted_key_info(raw_key_info):
         'scan_code': raw_key_info['scan_code'],
         'virtual_key': raw_key_info['virtual_key'],
         'location': location,        
-        'modifiers': raw_key_info['modifiers'],
+        'modifiers_key_flag': raw_key_info['modifiers_key_flag'],
         'modifier_text': modifier_text,
         'is_system_key': raw_key_info.get('is_system_key', False),
         'simple_display_text': simple_display_text,
@@ -440,7 +431,7 @@ class KeyboardHook(QObject):
                 'key_code': get_key_name(kb.vkCode, kb.flags),
                 'scan_code': kb.scanCode,
                 'virtual_key': kb.vkCode,
-                'modifiers': get_qt_modifiers(),
+                'modifiers_key_flag': get_modifier_key_flags(),
                 'is_system_key': wParam in (WM_SYSKEYDOWN, WM_SYSKEYUP)
             }
             

@@ -380,9 +380,9 @@ class MainWindow(QMainWindow):
         """
         try:
             if isinstance(mouse_info, dict):
-                display_text = mouse_info.get('display_text', '')
+                logic_detail_item_dp_text = mouse_info.get('logic_detail_item_dp_text', '')
                 self.base_log_manager.log(
-                    message=f"마우스 입력이 추가되었습니다: {display_text}",
+                    message=f"마우스 입력이 추가되었습니다: {logic_detail_item_dp_text}",
                     level="INFO",
                     file_name="main_window"
                 )
@@ -673,7 +673,7 @@ class MainWindow(QMainWindow):
             item_info = {
                 'type': 'logic',
                 'logic_name': display_name,
-                'display_text': display_name
+                'logic_detail_item_dp_text': display_name
             }
             self.logic_item_repository.add_logic_detail_item(item_info)
             
@@ -690,9 +690,9 @@ class MainWindow(QMainWindow):
             wait_click_info (dict): 클릭 대기 정보
         """
         try:
-            display_text = wait_click_info.get('display_text', '')
+            logic_detail_item_dp_text = wait_click_info.get('logic_detail_item_dp_text', '')
             self.base_log_manager.log(
-                message=f"클릭 대기 아이템이 추가되었습니다: {display_text}",
+                message=f"클릭 대기 아이템이 추가되었습니다: {logic_detail_item_dp_text}",
                 level="INFO",
                 file_name="main_window"
             )

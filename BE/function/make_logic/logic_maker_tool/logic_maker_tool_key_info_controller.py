@@ -36,7 +36,7 @@ class LogicMakerToolKeyInfoController(QObject):
             )
             return False
             
-        required_fields = ['type', 'key', 'modifiers', 'scan_code', 'virtual_key']
+        required_fields = ['type', 'key', 'modifiers_key_flag', 'scan_code', 'virtual_key']
         for field in required_fields:
             if field not in key_info:
                 self.base_log_manager.log(
@@ -92,10 +92,10 @@ class LogicMakerToolKeyInfoController(QObject):
         pressed_key_info = {
             'type': 'key',
             'key': entered_key_info.get('key_code'),
-            'modifiers': entered_key_info.get('modifiers', []),
-            'modifiers_text': entered_key_info.get('modifiers_text', []),
+            'modifiers_key_flag': entered_key_info.get('modifiers_key_flag', []),
+            'modifier_text': entered_key_info.get('modifier_text', []),
             'location': entered_key_info.get('location', ''),
-            'display_text': f"{entered_key_info.get('simple_display_text')} --- 누르기",
+            'logic_detail_item_dp_text': f"{entered_key_info.get('simple_display_text')} --- 누르기",
             'action': '누르기',
             'scan_code': entered_key_info.get('scan_code'),
             'virtual_key': entered_key_info.get('virtual_key')
@@ -105,10 +105,10 @@ class LogicMakerToolKeyInfoController(QObject):
         released_key_info = {
             'type': 'key',
             'key': entered_key_info.get('key_code'),
-            'modifiers': entered_key_info.get('modifiers', []),
-            'modifiers_text': entered_key_info.get('modifiers_text', []),
+            'modifiers_key_flag': entered_key_info.get('modifiers_key_flag', []),
+            'modifier_text': entered_key_info.get('modifier_text', []),
             'location': entered_key_info.get('location', ''),
-            'display_text': f"{entered_key_info.get('simple_display_text')} --- 떼기",
+            'logic_detail_item_dp_text': f"{entered_key_info.get('simple_display_text')} --- 떼기",
             'action': '떼기',
             'scan_code': entered_key_info.get('scan_code'),
             'virtual_key': entered_key_info.get('virtual_key')

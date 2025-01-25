@@ -47,13 +47,13 @@ class EnteredKeyInfoWidget(QWidget):
             self.scan_code_label = QLabel("스캔 코드 (하드웨어 고유값): ")
             self.virtual_key_label = QLabel("확장 가상 키 (운영체제 레벨의 고유 값): ")
             self.location_label = QLabel("키보드 위치: ")
-            self.modifiers_label = QLabel("수정자 키: ")
+            self.modifiers_key_flag_label = QLabel("수정자 키: ")
             
             layout.addWidget(self.key_code_label)
             layout.addWidget(self.scan_code_label)
             layout.addWidget(self.virtual_key_label)
             layout.addWidget(self.location_label)
-            layout.addWidget(self.modifiers_label)
+            layout.addWidget(self.modifiers_key_flag_label)
         
         self.setLayout(layout)
     
@@ -78,7 +78,7 @@ class EnteredKeyInfoWidget(QWidget):
                 self.scan_code_label.setText(f"스캔 코드: {formatted_key_info['scan_code']}")
                 self.virtual_key_label.setText(f"가상 키: {formatted_key_info['virtual_key']}")
                 self.location_label.setText(f"위치: {formatted_key_info['location']}")
-                self.modifiers_label.setText(f"수정자 키: {formatted_key_info['modifier_text']}")
+                self.modifiers_key_flag_label.setText(f"수정자 키: {formatted_key_info['modifier_text']}")
         else:
             self.clear_key()
     
@@ -90,4 +90,4 @@ class EnteredKeyInfoWidget(QWidget):
             self.scan_code_label.setText("스캔 코드: ")
             self.virtual_key_label.setText("가상 키: ")
             self.location_label.setText("위치: ")
-            self.modifiers_label.setText("수정자 키: ")
+            self.modifiers_key_flag_label.setText("수정자 키: ")

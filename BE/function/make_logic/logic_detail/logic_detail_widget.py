@@ -289,11 +289,11 @@ class LogicDetailWidget(QFrame):
         """현재 아이템 목록을 반환합니다."""
         items = self.repository.get_logic_detail_items()
         
-        # 키 입력 아이템의 modifiers를 정수로 변환
+        # 키 입력 아이템의 modifiers_key_flag를 정수로 변환
         for item in items:
-            if item.get('type') == 'key' and 'modifiers' in item:
-                if not isinstance(item['modifiers'], int):
-                    item['modifiers'] = item['modifiers'].value
+            if item.get('type') == 'key' and 'modifiers_key_flag' in item:
+                if not isinstance(item['modifiers_key_flag'], int):
+                    item['modifiers_key_flag'] = item['modifiers_key_flag'].value
         
         return items
 
@@ -310,7 +310,7 @@ class LogicDetailWidget(QFrame):
         self.LogicItemList__QListWidget.clear()
         items = self.repository.get_logic_detail_items()
         for item in items:
-            list_item = QListWidgetItem(item.get('display_text', ''))
+            list_item = QListWidgetItem(item.get('logic_detail_item_dp_text', ''))
             list_item.setData(Qt.UserRole, item)
             self.LogicItemList__QListWidget.addItem(list_item)
 
@@ -319,10 +319,10 @@ class LogicDetailWidget(QFrame):
         if not key_info:
             return False
             
-        # modifiers가 이미 정수값인지 확인하고, 아니라면 int() 변환
-        modifiers = key_info['modifiers']
-        if not isinstance(modifiers, int):
-            modifiers = modifiers.value
+        # modifiers_key_flag가 이미 정수값인지 확인하고, 아니라면 int() 변환
+        modifiers_key_flag = key_info['modifiers_key_flag']
+        if not isinstance(modifiers_key_flag, int):
+            modifiers_key_flag = modifiers_key_flag.value
             
         # 트리거 키 중복 체크
         logics = self.settings_manager.load_logics(force=True)
@@ -334,7 +334,7 @@ class LogicDetailWidget(QFrame):
                 trigger_key = logic.get('trigger_key', {})
                 if (trigger_key and
                     trigger_key.get('virtual_key') == key_info.get('virtual_key') and 
-                    trigger_key.get('modifiers') == modifiers):
+                    trigger_key.get('modifiers_key_flag') == modifiers_key_flag):
                     duplicate_logics.append({
                         'name': logic.get('name'),
                         'id': logic_id
@@ -565,7 +565,7 @@ class LogicDetailWidget(QFrame):
                 'type': 'logic',
                 'logic_id': logic_id,
                 'logic_name': logic_name,
-                'display_text': logic_name,
+                'logic_detail_item_dp_text': logic_name,
                 'repeat_count': 1,
                 'logic_data': {
                     'logic_id': logic_id,
@@ -645,7 +645,7 @@ class LogicDetailWidget(QFrame):
         else:
             # 일반 아이템 처리
             current_count = self.LogicItemList__QListWidget.count()
-            item = QListWidgetItem(item_info.get('display_text', ''))
+            item = QListWidgetItem(item_info.get('logic_detail_item_dp_text', ''))
             item_info['order'] = current_count + 1
             item.setData(Qt.UserRole, item_info)
             self.LogicItemList__QListWidget.addItem(item)
@@ -723,16 +723,16 @@ class LogicDetailWidget(QFrame):
     def eventFilter(self, obj, event):
         """이벤트 필터"""
         if event.type() == QEvent.KeyPress:
-            modifiers = event.modifiers()
+            modifiers_key_flag = event.modifiers_key_flag()
             key = event.key()
             
             # Ctrl+C: 복사
-            if modifiers == Qt.ControlModifier and key == Qt.Key_C:
+            if modifiers_key_flag == Qt.ControlModifier and key == Qt.Key_C:
                 self._copy_item()
                 return True
                 
             # Ctrl+V: 붙여넣기
-            elif modifiers == Qt.ControlModifier and key == Qt.Key_V:
+            elif modifiers_key_flag == Qt.ControlModifier and key == Qt.Key_V:
                 self._paste_item()
                 return True
                 
@@ -873,13 +873,13 @@ class LogicDetailWidget(QFrame):
                 dialog.text_input.setText(user_data.get('text', ''))
                 if dialog.exec():
                     new_text = dialog.get_text()
-                    current_item.setText(new_text['display_text'])
+                    current_item.setText(new_text['logic_detail_item_dp_text'])
                     # 기존 데이터의 순서 정보 유지
                     current_data = current_item.data(Qt.UserRole)
                     # 새로운 텍스트 정보로 업데이트하되 order는 유지
                     current_data.update(new_text)
                     current_item.setData(Qt.UserRole, current_data)
-                    self.item_edited.emit(new_text['display_text'])
+                    self.item_edited.emit(new_text['logic_detail_item_dp_text'])
                     self.base_log_manager.log(
                         message="텍스트 입력 아이템이 수정되었습니다",
                         level="INFO",
@@ -938,11 +938,11 @@ class LogicDetailWidget(QFrame):
         
         # 중첩로직이 아닐 경우에만 트리거 키 추가
         if not data['is_nested']:
-            # trigger_key_info가 있고 modifiers가 정수가 아닌 경우 변환
-            if self.trigger_key_info and 'modifiers' in self.trigger_key_info:
+            # trigger_key_info가 있고 modifiers_key_flag가 정수가 아닌 경우 변환
+            if self.trigger_key_info and 'modifiers_key_flag' in self.trigger_key_info:
                 trigger_key = self.trigger_key_info.copy()
-                if not isinstance(trigger_key['modifiers'], int):
-                    trigger_key['modifiers'] = trigger_key['modifiers'].value
+                if not isinstance(trigger_key['modifiers_key_flag'], int):
+                    trigger_key['modifiers_key_flag'] = trigger_key['modifiers_key_flag'].value
                 data['trigger_key'] = trigger_key
             else:
                 data['trigger_key'] = self.trigger_key_info

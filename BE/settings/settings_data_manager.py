@@ -230,20 +230,20 @@ class SettingsManager:
         """키 입력 아이템의 필드를 정해진 순서로 정렬합니다."""
         return {
             'order': item.get('order', 0),
-            'display_text': item.get('display_text', ''),
+            'logic_detail_item_dp_text': item.get('logic_detail_item_dp_text', ''),
             'action': item.get('action', ''),
             'type': 'key_input',
             'key_code': item.get('key_code', ''),
             'scan_code': item.get('scan_code', 0),
             'virtual_key': item.get('virtual_key', 0),
-            'modifiers': item.get('modifiers', 0)
+            'modifiers_key_flag': item.get('modifiers_key_flag', 0)
         }
 
     def _create_ordered_delay_item(self, item):
         """딜레이 아이템의 필드를 정해진 순서로 정렬합니다."""
         return {
             'type': 'delay',
-            'display_text': item.get('display_text', ''),
+            'logic_detail_item_dp_text': item.get('logic_detail_item_dp_text', ''),
             'duration': item.get('duration', 0),
             'order': item.get('order', 0)
         }
@@ -253,7 +253,7 @@ class SettingsManager:
         return {
             'order': item.get('order', 0),
             'type': 'logic',
-            'display_text': f"{item.get('logic_name', '')}",
+            'logic_detail_item_dp_text': f"{item.get('logic_name', '')}",
             'logic_id': item.get('logic_id', ''),
             'logic_name': item.get('logic_name', ''),
             'repeat_count': item.get('repeat_count', 1)
@@ -262,11 +262,11 @@ class SettingsManager:
     def _create_ordered_trigger_key(self, trigger_key):
         """트리거 키의 필드를 정해진 순서로 정렬합니다."""
         return {
-            'display_text': trigger_key.get('display_text', ''),
+            'logic_detail_item_dp_text': trigger_key.get('logic_detail_item_dp_text', ''),
             'key_code': trigger_key.get('key_code', ''),
             'scan_code': trigger_key.get('scan_code', 0),
             'virtual_key': trigger_key.get('virtual_key', 0),
-            'modifiers': trigger_key.get('modifiers', 0),
+            'modifiers_key_flag': trigger_key.get('modifiers_key_flag', 0),
         }
 
     def _create_ordered_mouse_input_item(self, item):
@@ -274,7 +274,7 @@ class SettingsManager:
         return {
             'order': item.get('order', 0),
             'type': 'mouse_input',
-            'display_text': item.get('display_text', ''),
+            'logic_detail_item_dp_text': item.get('logic_detail_item_dp_text', ''),
             'name': item.get('name', ''),
             'action': item.get('action', '클릭'),
             'button': item.get('button', '왼쪽 버튼'),
@@ -392,7 +392,7 @@ class SettingsManager:
                                 # UUID가 일치하는 경우 이름정보 업데이트
                                 item = item.copy()
                                 item['logic_name'] = logic_info['name']
-                                item['display_text'] = logic_info['name']
+                                item['logic_detail_item_dp_text'] = logic_info['name']
                             updated_items.append(item)
                         existing_logic['items'] = updated_items
 
@@ -446,7 +446,7 @@ class SettingsManager:
                                 # 딜레이 아이템의 경우
                                 ordered_item = {
                                     'type': 'delay',
-                                    'display_text': item.get('display_text', f"지연시간 : {item.get('duration', 0)}초"),
+                                    'logic_detail_item_dp_text': item.get('logic_detail_item_dp_text', f"지연시간 : {item.get('duration', 0)}초"),
                                     'duration': item.get('duration', 0),
                                     'order': item.get('order', 0)
                                 }
@@ -566,14 +566,14 @@ class SettingsManager:
                     "key_code": "ESC",
                     "scan_code": 1,
                     "virtual_key": 27,
-                    "modifiers": 0
+                    "modifiers_key_flag": 0
                 }  # 기본값
         return {
             "type": "key_input",
             "key_code": "ESC",
             "scan_code": 1,
             "virtual_key": 27,
-            "modifiers": 0
+            "modifiers_key_flag": 0
         }  # 기본값
 
     def set_force_stop_key(self, formatted_key_info):
@@ -586,31 +586,31 @@ class SettingsManager:
                         "key_code": "ESC",
                         "scan_code": 1,
                         "virtual_key": 27,
-                        "modifiers": 0
+                        "modifiers_key_flag": 0
                     }
                 else:
                     current_key = self._load_force_stop_key()
                     current_key['key_code'] = formatted_key_info
                     force_stop_key = current_key
             else:  # 전체 키 정보가 전달된 경우
-                # modifiers가 KeyboardModifier 객체인 경우 정수로 변환
-                if 'modifiers' in formatted_key_info:
+                # modifiers_key_flag가 KeyboardModifier 객체인 경우 정수로 변환
+                if 'modifiers_key_flag' in formatted_key_info:
                     try:
-                        if hasattr(formatted_key_info['modifiers'], 'value'):
-                            formatted_key_info['modifiers'] = int(formatted_key_info['modifiers'].value)
-                        elif isinstance(formatted_key_info['modifiers'], int):
+                        if hasattr(formatted_key_info['modifiers_key_flag'], 'value'):
+                            formatted_key_info['modifiers_key_flag'] = int(formatted_key_info['modifiers_key_flag'].value)
+                        elif isinstance(formatted_key_info['modifiers_key_flag'], int):
                             pass  # 이미 정수인 경우 그대로 사용
                         else:
-                            formatted_key_info['modifiers'] = 0  # 기본값
+                            formatted_key_info['modifiers_key_flag'] = 0  # 기본값
                     except Exception:
-                        formatted_key_info['modifiers'] = 0  # 변환 실패시 기본값
+                        formatted_key_info['modifiers_key_flag'] = 0  # 변환 실패시 기본값
 
                 force_stop_key = {
                     "is_system_key": formatted_key_info.get('is_system_key', False),
                     "key_code": formatted_key_info.get('key_code', ''),
                     "scan_code": formatted_key_info.get('scan_code', 0),
                     "virtual_key": formatted_key_info.get('virtual_key', 0),
-                    "modifiers": formatted_key_info.get('modifiers', 0)
+                    "modifiers_key_flag": formatted_key_info.get('modifiers_key_flag', 0)
                 }
 
             self._save_force_stop_key(force_stop_key)
@@ -628,8 +628,8 @@ class SettingsManager:
         """강제 중지 키 설정 저장"""
         try:
             # KeyboardModifier 객체를 정수로 변환
-            if isinstance(force_stop_key.get('modifiers'), object):
-                force_stop_key['modifiers'] = int(force_stop_key['modifiers'])
+            if isinstance(force_stop_key.get('modifiers_key_flag'), object):
+                force_stop_key['modifiers_key_flag'] = int(force_stop_key['modifiers_key_flag'])
 
             with open(self.force_stop_key_file, 'w', encoding='utf-8') as f:
                 json.dump(force_stop_key, f, ensure_ascii=False, indent=4)

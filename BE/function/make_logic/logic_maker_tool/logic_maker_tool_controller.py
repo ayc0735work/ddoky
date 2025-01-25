@@ -32,7 +32,7 @@ class LogicMakerController(QObject):
         self.widget.add_item(mouse_info)
         
         self.base_log_manager.log(
-            message=f"마우스 입력이 추가되었습니다: {mouse_info['display_text']}",
+            message=f"마우스 입력이 추가되었습니다: {mouse_info['logic_detail_item_dp_text']}",
             level="INFO",
             file_name="logic_maker_tool_controller"
         )
@@ -69,7 +69,7 @@ class LogicMakerController(QObject):
             wait_click_info (dict): 클릭 대기 정보
         """
         self.base_log_manager.log(
-            message=f"클릭 대기 아이템이 추가되었습니다: {wait_click_info['display_text']}",
+            message=f"클릭 대기 아이템이 추가되었습니다: {wait_click_info['logic_detail_item_dp_text']}",
             level="INFO",
             file_name="logic_maker_tool_controller"
         )

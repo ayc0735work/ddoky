@@ -619,7 +619,7 @@ class LogicExecutor(QObject):
                     print_to_terminal=True
                 )
             self.base_log_manager.log(
-                message=f"키 입력 실행 완료: {step['display_text']}",
+                message=f"키 입력 실행 완료: {step['logic_detail_item_dp_text']}",
                 level="INFO",
                 file_name="logic_executor",
                 include_time=True

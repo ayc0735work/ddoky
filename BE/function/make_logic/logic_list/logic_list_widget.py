@@ -277,11 +277,11 @@ class LogicListWidget(QFrame):
             bool: 이벤트 처리 여부
         """
         if obj == self.logic_list and event.type() == QEvent.KeyPress:
-            modifiers = event.modifiers()
+            modifiers_key_flag = event.modifiers_key_flag()
             key = event.key()
             
             # Ctrl+C: 복사
-            if modifiers == Qt.ControlModifier and key == Qt.Key_C:
+            if modifiers_key_flag == Qt.ControlModifier and key == Qt.Key_C:
                 current_item = self.logic_list.currentItem()
                 if current_item:
                     logic_id = current_item.data(Qt.UserRole)
@@ -289,7 +289,7 @@ class LogicListWidget(QFrame):
                 return True
                 
             # Ctrl+V: 붙여넣기
-            elif modifiers == Qt.ControlModifier and key == Qt.Key_V:
+            elif modifiers_key_flag == Qt.ControlModifier and key == Qt.Key_V:
                 self.logic_paste_requested.emit()
                 return True
                 
