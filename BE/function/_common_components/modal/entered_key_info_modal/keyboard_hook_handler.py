@@ -272,8 +272,8 @@ def create_formatted_key_info(raw_key_info):
             {
                 'key_code': str,      # 키의 표시 이름 (예: 'A', 'Enter', '방향키 왼쪽 ←')
                 'scan_code': int,     # 하드웨어 키보드의 물리적 위치 값
-                'modifiers': int,     # Qt 기반 수정자 키 상태 플래그
                 'virtual_key': int,   # Windows API 가상 키 코드
+                'modifiers': int,     # Qt 기반 수정자 키 상태 플래그
                 'is_system_key': bool # ALT 키 눌림 여부
             }
     

@@ -205,3 +205,19 @@ class EnteredKeyInfoDialog(QDialog):
         """다이얼로그가 닫힐 때 키보드 훅 정리"""
         self._stop_keyboard_hook()
         super().closeEvent(event)
+
+    def set_key_info(self, formatted_key_info: dict):
+        """키 정보를 설정합니다.
+        
+        Args:
+            formatted_key_info (dict): 구조화된 키 정보
+        """
+        self.entered_key_info_widget.set_key_info(formatted_key_info)
+        
+    def get_current_key_info(self) -> dict:
+        """현재 설정된 키 정보를 반환합니다.
+        
+        Returns:
+            dict: 현재 설정된 키 정보
+        """
+        return self.entered_key_info_widget.get_current_key_info()
