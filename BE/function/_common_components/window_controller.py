@@ -6,6 +6,7 @@ from ctypes import windll
 import numpy as np
 import cv2
 import os
+from BE.log.base_log_manager import BaseLogManager
 
 class WindowController:
     """윈도우 제어 및 화면 캡처를 위한 클래스"""
@@ -14,6 +15,7 @@ class WindowController:
         """초기화"""
         self.target_hwnd = None
         self.debug_counter = 0
+        self.base_log_manager = BaseLogManager.instance()
         
         try:
             # BE 폴더 경로 찾기
@@ -31,20 +33,51 @@ class WindowController:
             if not os.path.exists(self.debug_dir):
                 os.makedirs(self.debug_dir, exist_ok=True)
             
-            print(f"WindowController: 디버그 이미지 저장 경로 = {self.debug_dir}")
-            print(f"WindowController: 디렉토리 존재 여부 = {os.path.exists(self.debug_dir)}")
-            print(f"WindowController: 디렉토리 쓰기 권한 = {os.access(self.debug_dir, os.W_OK)}")
+            self.base_log_manager.log(
+                message=f"디버그 이미지 저장 경로 = {self.debug_dir}",
+                level="INFO",
+                file_name="window_controller",
+                method_name="__init__"
+            )
+            self.base_log_manager.log(
+                message=f"디렉토리 존재 여부 = {os.path.exists(self.debug_dir)}",
+                level="DEBUG", 
+                file_name="window_controller",
+                method_name="__init__"
+            )
+            self.base_log_manager.log(
+                message=f"디렉토리 쓰기 권한 = {os.access(self.debug_dir, os.W_OK)}",
+                level="DEBUG",
+                file_name="window_controller", 
+                method_name="__init__"
+            )
         except Exception as e:
-            print(f"WindowController: 디렉토리 설정 중 오류 발생 - {str(e)}")
+            self.base_log_manager.log(
+                message=f"디렉토리 설정 중 오류 발생 - {str(e)}",
+                level="ERROR",
+                file_name="window_controller",
+                method_name="__init__",
+                print_to_terminal=True
+            )
             self.debug_dir = None
     
     def is_target_window_active(self) -> bool:
         """대상 윈도우가 활성화되어 있는지 확인"""
         if not self.target_hwnd:
-            print("WindowController: target_hwnd가 설정되지 않음")
+            self.base_log_manager.log(
+                message="target_hwnd가 설정되지 않음",
+                level="WARNING",
+                file_name="window_controller",
+                method_name="is_target_window_active"
+            )
             return False
         active_hwnd = win32gui.GetForegroundWindow()
-        print(f"WindowController: target_hwnd={self.target_hwnd}, active_hwnd={active_hwnd}")
+        self.base_log_manager.log(
+            message=f"target_hwnd={self.target_hwnd}, active_hwnd={active_hwnd}",
+            level="DEBUG",
+            file_name="window_controller",
+            method_name="is_target_window_active"
+        )
         return active_hwnd == self.target_hwnd
     
     def set_target_window(self, hwnd):
@@ -55,11 +88,21 @@ class WindowController:
         """화면 캡처"""
         try:
             if not self.target_hwnd:
-                print("WindowController: 대상 윈도우가 설정되지 않았습니다")
+                self.base_log_manager.log(
+                    message="대상 윈도우가 설정되지 않았습니다",
+                    level="WARNING",
+                    file_name="window_controller",
+                    method_name="capture_screen"
+                )
                 return None
             
             if not self.debug_dir or not os.path.exists(self.debug_dir):
-                print("WindowController: 디버그 디렉토리가 존재하지 않습니다")
+                self.base_log_manager.log(
+                    message="디버그 디렉토리가 존재하지 않습니다",
+                    level="WARNING",
+                    file_name="window_controller",
+                    method_name="capture_screen"
+                )
                 return None
             
             # 윈도우 정보 가져오기
@@ -80,12 +123,42 @@ class WindowController:
             capture_width = width
             capture_height = height
             
-            print(f"WindowController: 윈도우 위치 = {window_rect}")
-            print(f"WindowController: 클라이언트 영역 = {client_rect}")
-            print(f"WindowController: 프레임 크기 = x:{frame_x}, y:{frame_y}")
-            print(f"WindowController: 클라이언트 시작점 = x:{client_x}, y:{client_y}")
-            print(f"WindowController: 요청된 전체화면 좌표 = x:{x}, y:{y}, width:{width}, height:{height}")
-            print(f"WindowController: 변환된 클라이언트 좌표 = x:{capture_x}, y:{capture_y}, width:{capture_width}, height:{capture_height}")
+            self.base_log_manager.log(
+                message=f"윈도우 위치 = {window_rect}",
+                level="DEBUG",
+                file_name="window_controller",
+                method_name="capture_screen"
+            )
+            self.base_log_manager.log(
+                message=f"클라이언트 영역 = {client_rect}",
+                level="DEBUG",
+                file_name="window_controller",
+                method_name="capture_screen"
+            )
+            self.base_log_manager.log(
+                message=f"프레임 크기 = x:{frame_x}, y:{frame_y}",
+                level="DEBUG",
+                file_name="window_controller",
+                method_name="capture_screen"
+            )
+            self.base_log_manager.log(
+                message=f"클라이언트 시작점 = x:{client_x}, y:{client_y}",
+                level="DEBUG",
+                file_name="window_controller",
+                method_name="capture_screen"
+            )
+            self.base_log_manager.log(
+                message=f"요청된 전체화면 좌표 = x:{x}, y:{y}, width:{width}, height:{height}",
+                level="DEBUG",
+                file_name="window_controller",
+                method_name="capture_screen"
+            )
+            self.base_log_manager.log(
+                message=f"변환된 클라이언트 좌표 = x:{capture_x}, y:{capture_y}, width:{capture_width}, height:{capture_height}",
+                level="DEBUG",
+                file_name="window_controller",
+                method_name="capture_screen"
+            )
             
             # DC 및 비트맵 생성
             hwnd_dc = win32gui.GetWindowDC(self.target_hwnd)
@@ -97,7 +170,12 @@ class WindowController:
             
             # 화면 캡처
             result = windll.user32.PrintWindow(self.target_hwnd, save_dc.GetSafeHdc(), 3)
-            print(f"WindowController: PrintWindow 결과 = {result}")
+            self.base_log_manager.log(
+                message=f"PrintWindow 결과 = {result}",
+                level="DEBUG",
+                file_name="window_controller",
+                method_name="capture_screen"
+            )
             
             if result:
                 try:
@@ -137,12 +215,34 @@ class WindowController:
                                     pil_img.save(debug_path)
                                     success = os.path.exists(debug_path)
                                     if success:
-                                        print(f"WindowController: 디버그 이미지 저장됨 = {debug_path}")
-                                        print(f"WindowController: 파일 크기 = {os.path.getsize(debug_path)} bytes")
+                                        self.base_log_manager.log(
+                                            message=f"디버그 이미지 저장됨 = {debug_path}",
+                                            level="INFO",
+                                            file_name="window_controller",
+                                            method_name="capture_screen"
+                                        )
+                                        self.base_log_manager.log(
+                                            message=f"파일 크기 = {os.path.getsize(debug_path)} bytes",
+                                            level="DEBUG",
+                                            file_name="window_controller",
+                                            method_name="capture_screen"
+                                        )
                                     else:
-                                        print(f"WindowController: PIL 저장 실패")
+                                        self.base_log_manager.log(
+                                            message="PIL 저장 실패",
+                                            level="ERROR",
+                                            file_name="window_controller",
+                                            method_name="capture_screen",
+                                            print_to_terminal=True
+                                        )
                                 except Exception as e:
-                                    print(f"WindowController: PIL 저장 실패 - {str(e)}")
+                                    self.base_log_manager.log(
+                                        message=f"PIL 저장 실패 - {str(e)}",
+                                        level="ERROR",
+                                        file_name="window_controller",
+                                        method_name="capture_screen",
+                                        print_to_terminal=True
+                                    )
                                     success = False
                                 
                                 # 방법 2: OpenCV 시도 (PIL이 실패한 경우)
@@ -150,22 +250,66 @@ class WindowController:
                                     try:
                                         success = cv2.imwrite(str(debug_path), img)
                                         if success:
-                                            print(f"WindowController: OpenCV로 이미지 저장됨 = {debug_path}")
+                                            self.base_log_manager.log(
+                                                message=f"OpenCV로 이미지 저장됨 = {debug_path}",
+                                                level="INFO",
+                                                file_name="window_controller",
+                                                method_name="capture_screen"
+                                            )
                                         else:
-                                            print("WindowController: OpenCV 저장 실패")
+                                            self.base_log_manager.log(
+                                                message="OpenCV 저장 실패",
+                                                level="ERROR",
+                                                file_name="window_controller",
+                                                method_name="capture_screen",
+                                                print_to_terminal=True
+                                            )
                                     except Exception as e:
-                                        print(f"WindowController: OpenCV 저장 실패 - {str(e)}")
+                                        self.base_log_manager.log(
+                                            message=f"OpenCV 저장 실패 - {str(e)}",
+                                            level="ERROR",
+                                            file_name="window_controller",
+                                            method_name="capture_screen",
+                                            print_to_terminal=True
+                                        )
                             else:
-                                print(f"WindowController: 유효하지 않은 이미지 데이터 - shape: {img.shape if img is not None else 'None'}")
+                                self.base_log_manager.log(
+                                    message=f"유효하지 않은 이미지 데이터 - shape: {img.shape if img is not None else 'None'}",
+                                    level="ERROR",
+                                    file_name="window_controller",
+                                    method_name="capture_screen",
+                                    print_to_terminal=True
+                                )
                         except Exception as e:
-                            print(f"WindowController: 이미지 저장 실패 - {str(e)}")
+                            self.base_log_manager.log(
+                                message=f"이미지 저장 실패 - {str(e)}",
+                                level="ERROR",
+                                file_name="window_controller",
+                                method_name="capture_screen",
+                                print_to_terminal=True
+                            )
                             import traceback
                             traceback.print_exc()
                         
                         # 이미지 정보 출력
-                        print(f"WindowController: 이미지 shape = {img.shape}")
-                        print(f"WindowController: 이미지 dtype = {img.dtype}")
-                        print(f"WindowController: 이미지 min/max = {np.min(img)}/{np.max(img)}")
+                        self.base_log_manager.log(
+                            message=f"이미지 shape = {img.shape}",
+                            level="DEBUG",
+                            file_name="window_controller",
+                            method_name="capture_screen"
+                        )
+                        self.base_log_manager.log(
+                            message=f"이미지 dtype = {img.dtype}",
+                            level="DEBUG",
+                            file_name="window_controller",
+                            method_name="capture_screen"
+                        )
+                        self.base_log_manager.log(
+                            message=f"이미지 min/max = {np.min(img)}/{np.max(img)}",
+                            level="DEBUG",
+                            file_name="window_controller",
+                            method_name="capture_screen"
+                        )
                         
                         # 리소스 해제
                         win32gui.DeleteObject(save_bitmap.GetHandle())
@@ -175,20 +319,53 @@ class WindowController:
                         
                         return img
                     else:
-                        print("WindowController: 캡처 영역이 클라이언트 영역을 벗어났습니다")
-                        print(f"요청 영역: ({capture_x}, {capture_y}, {capture_width}, {capture_height})")
-                        print(f"클라이언트 영역: (0, 0, {client_rect[2]}, {client_rect[3]})")
+                        self.base_log_manager.log(
+                            message="캡처 영역이 클라이언트 영역을 벗어났습니다",
+                            level="WARNING",
+                            file_name="window_controller",
+                            method_name="capture_screen"
+                        )
+                        self.base_log_manager.log(
+                            message=f"요청 영역: ({capture_x}, {capture_y}, {capture_width}, {capture_height})",
+                            level="DEBUG",
+                            file_name="window_controller",
+                            method_name="capture_screen"
+                        )
+                        self.base_log_manager.log(
+                            message=f"클라이언트 영역: (0, 0, {client_rect[2]}, {client_rect[3]})",
+                            level="DEBUG",
+                            file_name="window_controller",
+                            method_name="capture_screen"
+                        )
                         return None
                 except Exception as e:
-                    print(f"WindowController: 이미지 처리 중 오류 발생 - {str(e)}")
+                    self.base_log_manager.log(
+                        message=f"이미지 처리 중 오류 발생 - {str(e)}",
+                        level="ERROR",
+                        file_name="window_controller",
+                        method_name="capture_screen",
+                        print_to_terminal=True
+                    )
                     import traceback
                     traceback.print_exc()
                     return None
             else:
-                print("WindowController: PrintWindow 실패")
+                self.base_log_manager.log(
+                    message="PrintWindow 실패",
+                    level="ERROR",
+                    file_name="window_controller",
+                    method_name="capture_screen",
+                    print_to_terminal=True
+                )
                 return None
         except Exception as e:
-            print(f"WindowController: 캡처 중 오류 발생 - {str(e)}")
+            self.base_log_manager.log(
+                message=f"캡처 중 오류 발생 - {str(e)}",
+                level="ERROR",
+                file_name="window_controller",
+                method_name="capture_screen",
+                print_to_terminal=True
+            )
             import traceback
             traceback.print_exc()
             return None 
@@ -204,14 +381,29 @@ class WindowController:
         client_x = x
         client_y = y
 
-        self.log_debug(f"클라이언트 영역 = {client_rect}")
-        self.log_debug(f"캡처 좌표 = x:{client_x}, y:{client_y}, width:{width}, height:{height}")
+        self.base_log_manager.log(
+            message=f"클라이언트 영역 = {client_rect}",
+            level="DEBUG",
+            file_name="window_controller",
+            method_name="capture_window_region"
+        )
+        self.base_log_manager.log(
+            message=f"캡처 좌표 = x:{client_x}, y:{client_y}, width:{width}, height:{height}",
+            level="DEBUG",
+            file_name="window_controller",
+            method_name="capture_window_region"
+        )
 
         # 캡처할 영역이 클라이언트 영역을 벗어나는지 확인
         if (client_x < 0 or client_y < 0 or 
             client_x + width > client_rect[2] or 
             client_y + height > client_rect[3]):
-            self.log_debug("캡처 영역이 클라이언트 영역을 벗어남")
+            self.base_log_manager.log(
+                message="캡처 영역이 클라이언트 영역을 벗어남",
+                level="WARNING",
+                file_name="window_controller",
+                method_name="capture_window_region"
+            )
             return None
 
         # 윈도우 캡처
@@ -223,7 +415,12 @@ class WindowController:
         cDC.SelectObject(dataBitMap)
         
         result = win32gui.PrintWindow(self.target_hwnd, cDC.GetSafeHdc(), 2)
-        self.log_debug(f"PrintWindow 결과 = {result}")
+        self.base_log_manager.log(
+            message=f"PrintWindow 결과 = {result}",
+            level="DEBUG",
+            file_name="window_controller",
+            method_name="capture_window_region"
+        )
 
         if result == 1:
             cDC.BitBlt((0, 0), (width, height), dcObj, (client_x, client_y), win32con.SRCCOPY)
@@ -242,13 +439,44 @@ class WindowController:
             try:
                 cv2.imwrite(debug_path, img)
                 file_size = os.path.getsize(debug_path)
-                self.log_debug(f"디버그 이미지 저장됨 = {debug_path}")
-                self.log_debug(f"파일 크기 = {file_size} bytes")
-                self.log_debug(f"이미지 shape = {img.shape}")
-                self.log_debug(f"이미지 dtype = {img.dtype}")
-                self.log_debug(f"이미지 min/max = {img.min()}/{img.max()}")
+                self.base_log_manager.log(
+                    message=f"디버그 이미지 저장됨 = {debug_path}",
+                    level="INFO",
+                    file_name="window_controller",
+                    method_name="capture_window_region"
+                )
+                self.base_log_manager.log(
+                    message=f"파일 크기 = {file_size} bytes",
+                    level="DEBUG",
+                    file_name="window_controller",
+                    method_name="capture_window_region"
+                )
+                self.base_log_manager.log(
+                    message=f"이미지 shape = {img.shape}",
+                    level="DEBUG",
+                    file_name="window_controller",
+                    method_name="capture_window_region"
+                )
+                self.base_log_manager.log(
+                    message=f"이미지 dtype = {img.dtype}",
+                    level="DEBUG",
+                    file_name="window_controller",
+                    method_name="capture_window_region"
+                )
+                self.base_log_manager.log(
+                    message=f"이미지 min/max = {img.min()}/{img.max()}",
+                    level="DEBUG",
+                    file_name="window_controller",
+                    method_name="capture_window_region"
+                )
             except Exception as e:
-                self.log_debug(f"디버그 이미지 저장 실패: {str(e)}")
+                self.base_log_manager.log(
+                    message=f"디버그 이미지 저장 실패: {str(e)}",
+                    level="ERROR",
+                    file_name="window_controller",
+                    method_name="capture_window_region",
+                    print_to_terminal=True
+                )
 
         # 리소스 해제
         win32gui.DeleteObject(dataBitMap.GetHandle())

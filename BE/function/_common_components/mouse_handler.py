@@ -2,9 +2,13 @@ import win32api
 import win32con
 import win32gui
 import time
+from BE.log.base_log_manager import BaseLogManager
 
 class MouseHandler:
     """마우스 입력을 처리하는 클래스"""
+    
+    def __init__(self):
+        self.base_log_manager = BaseLogManager.instance()
     
     @staticmethod
     def click(x, y, button="left", hwnd=None, x_ratio=None, y_ratio=None):
@@ -21,6 +25,7 @@ class MouseHandler:
         Returns:
             bool: 성공 여부
         """
+        base_log_manager = BaseLogManager.instance()
         try:
             # 버튼에 따른 이벤트 플래그 설정
             if button == "right":
@@ -64,17 +69,21 @@ class MouseHandler:
                         screen_x = client_x + int(x * scale_factor)
                         screen_y = client_y + int(y * scale_factor)
                     
-                    print(f"마우스 클릭 좌표 계산:")
-                    print(f"  클라이언트 영역: {client_width}x{client_height}")
-                    print(f"  클라이언트 시작점: ({client_x}, {client_y})")
-                    print(f"  DPI 스케일: {scale_factor}")
-                    if x_ratio is not None:
-                        print(f"  비율: ({x_ratio:.3f}, {y_ratio:.3f})")
-                    print(f"  상대 좌표: ({x}, {y})")
-                    print(f"  화면 좌표: ({screen_x}, {screen_y})")
+                    base_log_manager.log(
+                        message=f"마우스 클릭 좌표 계산 - 클라이언트 영역: {client_width}x{client_height}, 시작점: ({client_x}, {client_y}), DPI 스케일: {scale_factor}, 화면 좌표: ({screen_x}, {screen_y})",
+                        level="DEBUG",
+                        file_name="mouse_handler",
+                        method_name="click"
+                    )
                 
                 except Exception as e:
-                    print(f"클라이언트 영역 계산 중 오류: {str(e)}")
+                    base_log_manager.log(
+                        message=f"클라이언트 영역 계산 중 오류: {str(e)}",
+                        level="ERROR",
+                        file_name="mouse_handler",
+                        method_name="click",
+                        print_to_terminal=True
+                    )
                     return False
             else:
                 # 윈도우 핸들이 없는 경우 절대 좌표 사용
@@ -106,10 +115,22 @@ class MouseHandler:
             time.sleep(mouse_delay)
             win32api.SetCursorPos((current_x, current_y))
             
+            base_log_manager.log(
+                message=f"마우스 클릭 실행 완료 ({button} 버튼, 좌표: {screen_x}, {screen_y})",
+                level="INFO",
+                file_name="mouse_handler",
+                method_name="click"
+            )
             return True
             
         except Exception as e:
-            print(f"마우스 클릭 실행 중 오류 발생: {str(e)}")
+            base_log_manager.log(
+                message=f"마우스 클릭 실행 중 오류 발생: {str(e)}",
+                level="ERROR",
+                file_name="mouse_handler",
+                method_name="click",
+                print_to_terminal=True
+            )
             return False
     
     @staticmethod
@@ -123,11 +144,24 @@ class MouseHandler:
         Returns:
             bool: 성공 여부
         """
+        base_log_manager = BaseLogManager.instance()
         try:
             win32api.SetCursorPos((x, y))
+            base_log_manager.log(
+                message=f"마우스 이동 완료 (좌표: {x}, {y})",
+                level="INFO",
+                file_name="mouse_handler",
+                method_name="move"
+            )
             return True
         except Exception as e:
-            print(f"마우스 이동 중 오류 발생: {str(e)}")
+            base_log_manager.log(
+                message=f"마우스 이동 중 오류 발생: {str(e)}",
+                level="ERROR",
+                file_name="mouse_handler",
+                method_name="move",
+                print_to_terminal=True
+            )
             return False
     
     @staticmethod
@@ -144,6 +178,7 @@ class MouseHandler:
         Returns:
             bool: 성공 여부
         """
+        base_log_manager = BaseLogManager.instance()
         try:
             # 버튼에 따른 이벤트 플래그 설정
             if button == "right":
@@ -168,8 +203,20 @@ class MouseHandler:
             # 버튼 떼기
             win32api.mouse_event(up_flag, end_x, end_y, 0, 0)
             
+            base_log_manager.log(
+                message=f"마우스 드래그 완료 ({button} 버튼, 시작: {start_x}, {start_y}, 끝: {end_x}, {end_y})",
+                level="INFO",
+                file_name="mouse_handler",
+                method_name="drag"
+            )
             return True
             
         except Exception as e:
-            print(f"마우스 드래그 중 오류 발생: {str(e)}")
+            base_log_manager.log(
+                message=f"마우스 드래그 중 오류 발생: {str(e)}",
+                level="ERROR",
+                file_name="mouse_handler",
+                method_name="drag",
+                print_to_terminal=True
+            )
             return False

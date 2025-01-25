@@ -89,7 +89,13 @@ class CaptureOverlay(QDialog):
                 'height': client_rect[3]
             }
         except Exception as e:
-            print(f"클라이언트 영역 정보 가져오기 실패: {str(e)}")
+            self.base_log_manager.log(
+                message=f"클라이언트 영역 정보 가져오기 실패: {str(e)}",
+                level="ERROR",
+                file_name="image_search_area_dialog",
+                method_name="_get_client_rect",
+                print_to_terminal=True
+            )
             return None
         
     def showEvent(self, event):

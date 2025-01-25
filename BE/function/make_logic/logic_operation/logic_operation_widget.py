@@ -594,7 +594,12 @@ class LogicOperationWidget(QFrame):
             'default': 0.0245
         })
         
-        print(f"로드된 딜레이 설정: {delays}")  # 로그 추가
+        self.base_log_manager.log(
+            message=f"지연 시간 설정을 불러왔습니다: {delays}",
+            level="INFO",
+            file_name="logic_operation_widget",
+            method_name="load_delay_settings"
+        )
         
         # UI에 표시
         self.key_press_input.setText(f"{delays['press']:.4f}")
@@ -610,7 +615,12 @@ class LogicOperationWidget(QFrame):
                 '마우스 입력': delays['mouse_input'],
                 '기본': delays['default']
             }
-            print(f"LogicExecutor KEY_DELAYS 설정됨: {self.logic_executor.KEY_DELAYS}")  # 로그 추가
+            self.base_log_manager.log(
+                message=f"LogicExecutor의 지연 시간이 업데이트되었습니다: {self.logic_executor.KEY_DELAYS}",
+                level="DEBUG",
+                file_name="logic_operation_widget",
+                method_name="load_delay_settings"
+            )
     
     def _on_reset_delays(self):
         """지연 시간 초기화 버튼 클릭 시 호출"""

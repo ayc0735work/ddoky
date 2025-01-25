@@ -3,11 +3,15 @@ import os
 from pathlib import Path
 import uuid
 from datetime import datetime
+import logging
+from BE.log.base_log_manager import BaseLogManager
 
 class SettingsManager:
     """설정 파일 관리 클래스"""
 
     def __init__(self):
+        self.base_log_manager = BaseLogManager.instance()
+        
         # BE 폴더 경로를 기준으로 설정 파일 경로 지정
         current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.settings_file = Path(current_dir).resolve() / "settings" / "setting files" / "settings.json"
@@ -17,6 +21,12 @@ class SettingsManager:
         # 먼저 key_delays.json 파일이 없다면 생성
         if not self.key_delays_file.exists():
             self.save_key_delays(self._get_default_key_delays())
+            self.base_log_manager.log(
+                message="key_delays.json 파일이 생성되었습니다.",
+                level="INFO", 
+                file_name="settings_data_manager",
+                method_name="__init__"
+            )
         self.settings = self._load_settings()
         self.key_delays = self._load_key_delays()
         self.force_stop_key = self._load_force_stop_key()
@@ -92,9 +102,15 @@ class SettingsManager:
                 os.fsync(f.fileno())
 
             return True
-
         except Exception as e:
-            print(f"설정 저장 중 오류 발생: {str(e)}")
+            self.base_log_manager = BaseLogManager.instance()
+            self.base_log_manager.log(
+                message=f"설정 저장 중 오류 발생: {str(e)}",
+                level="ERROR",
+                file_name="settings_data_manager",
+                method_name="save_settings",
+                print_to_terminal=True
+            )
             return False
 
     def _get_default_settings(self):
@@ -124,16 +140,34 @@ class SettingsManager:
         """
         try:
             if not isinstance(settings, dict):
-                print("설정 데이터가 딕셔너리 형식이 아닙니다. 기본값으로 초기화합니다.")
+                self.base_log_manager.log(
+                    message="설정 데이터가 딕셔너리 형식이 아닙니다. 기본값으로 초기화합니다.",
+                    level="ERROR",
+                    file_name="settings_data_manager",
+                    method_name="_migrate_to_uuid",
+                    print_to_terminal=True
+                )
                 return self._get_default_settings()
 
             if 'logics' not in settings:
-                print("로직 데이터가 없습니다. 새로운 구조로 초기화합니다.")
+                self.base_log_manager.log(
+                    message="로직 데이터가 없습니다. 새로운 구조로 초기화합니다.",
+                    level="ERROR",
+                    file_name="settings_data_manager",
+                    method_name="_migrate_to_uuid",
+                    print_to_terminal=True
+                )
                 settings['logics'] = {}
                 return settings
 
             if not isinstance(settings['logics'], dict):
-                print("로직 데이터가 올바른 형식이 아닙니다. 초기화합니다.")
+                self.base_log_manager.log(
+                    message="로직 데이터가 올바른 형식이 아닙니다. 초기화합니다.",
+                    level="ERROR",
+                    file_name="settings_data_manager",
+                    method_name="_migrate_to_uuid",
+                    print_to_terminal=True
+                )
                 settings['logics'] = {}
                 return settings
 
@@ -145,21 +179,36 @@ class SettingsManager:
             validated_logics = {}
             for logic_id, logic in settings['logics'].items():
                 if not isinstance(logic, dict):
-                    print(f"경고: 잘못된 형식의 로직을 건너뜁니다.")
+                    self.base_log_manager.log(
+                        message="경고: 잘못된 형식의 로직을 건너뜁니다.",
+                        level="WARNING",
+                        file_name="settings_data_manager",
+                        method_name="_migrate_to_uuid"
+                    )
                     continue
-
                 # UUID 형식 검증
                 try:
                     uuid.UUID(logic_id)
                 except ValueError:
                     # 잘못된 UUID면 새로 생성
                     new_id = str(uuid.uuid4())
-                    print(f"잘못된 UUID 형식 감지: 새 UUID를 생성합니다.")
+                    self.base_log_manager.log(
+                        message="잘못된 UUID 형식 감지: 새 UUID를 생성합니다.",
+                        level="ERROR",
+                        file_name="settings_data_manager",
+                        method_name="_migrate_to_uuid",
+                        print_to_terminal=True
+                    )
                     logic_id = new_id
 
                 # 필수 필드 확인
                 if 'name' not in logic:
-                    print(f"경고: 이름이 없는 로직을 건너뜁니다.")
+                    self.base_log_manager.log(
+                        message="경고: 이름이 없는 로직을 건너뜁니다.",
+                        level="WARNING",
+                        file_name="settings_data_manager",
+                        method_name="_migrate_to_uuid"
+                    )
                     continue
 
                 validated_logics[logic_id] = logic
@@ -168,7 +217,13 @@ class SettingsManager:
             return settings
 
         except Exception as e:
-            print(f"마이그레이션 중 오류 발생: {str(e)}")
+            self.base_log_manager.log(
+                message=f"마이그레이션 중 오류 발생: {str(e)}",
+                level="ERROR",
+                file_name="settings_data_manager",
+                method_name="_migrate_to_uuid",
+                print_to_terminal=True
+            )
             return self._get_default_settings()
 
     def _create_ordered_key_input_item(self, item):
@@ -353,7 +408,13 @@ class SettingsManager:
             return logic_info
 
         except Exception as e:
-            print(f"로직 저장 중 오류 발생: {str(e)}")
+            self.base_log_manager.log(
+                message=f"로직 저장 중 오류 발생: {str(e)}",
+                level="ERROR",
+                file_name="settings_data_manager",
+                method_name="save_logic",
+                print_to_terminal=True
+            )
             raise
 
     def load_logics(self, force=False):
@@ -478,7 +539,13 @@ class SettingsManager:
                 json.dump(key_delays, f, indent=4)
             self.key_delays = key_delays
         except Exception as e:
-            print(f"키 딜레이 설정 저장 중 오류 발생: {e}")
+            self.base_log_manager.log(
+                message=f"키 딜레이 설정 저장 중 오류 발생: {e}",
+                level="ERROR",
+                file_name="settings_data_manager",
+                method_name="save_key_delays",
+                print_to_terminal=True
+            )
 
     def _load_force_stop_key(self):
         """강제 중지 키 설정 로드"""
@@ -487,7 +554,13 @@ class SettingsManager:
                 with open(self.force_stop_key_file, 'r', encoding='utf-8') as f:
                     return json.load(f)
             except Exception as e:
-                print(f"강제 중지 키 설정 로드 중 오류 발생: {e}")
+                self.base_log_manager.log(
+                    message=f"강제 중지 키 설정 로드 중 오류 발생: {e}",
+                    level="ERROR", 
+                    file_name="settings_data_manager",
+                    method_name="_load_force_stop_key",
+                    print_to_terminal=True
+                )
                 return {
                     "type": "key_input",
                     "key_code": "ESC",
@@ -543,7 +616,13 @@ class SettingsManager:
             self._save_force_stop_key(force_stop_key)
             self.force_stop_key = force_stop_key  # 메모리에도 업데이트
         except Exception as e:
-            print(f"강제 중지 키 설정 업데이트 중 오류 발생: {e}")
+            self.base_log_manager.log(
+                message=f"강제 중지 키 설정 업데이트 중 오류 발생: {e}",
+                level="ERROR",
+                file_name="settings_data_manager",
+                method_name="set_force_stop_key",
+                print_to_terminal=True
+            )
 
     def _save_force_stop_key(self, force_stop_key):
         """강제 중지 키 설정 저장"""
@@ -555,7 +634,13 @@ class SettingsManager:
             with open(self.force_stop_key_file, 'w', encoding='utf-8') as f:
                 json.dump(force_stop_key, f, ensure_ascii=False, indent=4)
         except Exception as e:
-            print(f"강제 중지 키 설정 저장 중 오류 발생: {e}")
+            self.base_log_manager.log(
+                message=f"강제 중지 키 설정 저장 중 오류 발생: {e}",
+                level="ERROR", 
+                file_name="settings_data_manager",
+                method_name="_save_force_stop_key",
+                print_to_terminal=True
+            )
 
     def get_force_stop_key(self):
         """강제 중지 키 설정 반환"""

@@ -12,7 +12,7 @@
    - 로그 레벨, 시간, 출처 정보 관리
    - 터미널 출력 기능 지원
 
-2. **LogWidget** (BE/log/widget/log_widget.py)
+2. **LogWidget** (BE/log/log_widget.py)
    - 로그 메시지 표시 UI
    - 로그 초기화, 스크롤 기능 제공
 
