@@ -129,8 +129,9 @@ class LogicDetailWidget(QFrame):
         # 트리거 키 입력 필드
         self.TriggerKeyInput__QLineEdit = QLineEdit()
         self.TriggerKeyInput__QLineEdit.setReadOnly(True)
-        self.TriggerKeyInput__QLineEdit.setPlaceholderText("트리거 키를 설정하세요")
-        self.TriggerKeyInput__QLineEdit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)  # 수평 확장 정책 설정
+        # self.TriggerKeyInput__QLineEdit.setPlaceholderText("트리거 키를 설정하세요")
+        self.TriggerKeyInput__QLineEdit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.TriggerKeyInput__QLineEdit.mousePressEvent = self._on_trigger_key_input_clicked
         TriggerKeySection__QHBoxLayout.addWidget(self.TriggerKeyInput__QLineEdit)
         
         # 편집 버튼
@@ -138,6 +139,7 @@ class LogicDetailWidget(QFrame):
         self.EditTriggerKeyButton__QPushButton.setStyleSheet(BUTTON_STYLE)
         self.EditTriggerKeyButton__QPushButton.setFixedWidth(40)
         self.EditTriggerKeyButton__QPushButton.clicked.connect(self._edit_trigger_key)
+        self.EditTriggerKeyButton__QPushButton.setEnabled(False)  # 초기에는 비활성화
         TriggerKeySection__QHBoxLayout.addWidget(self.EditTriggerKeyButton__QPushButton)
         
         # 삭제 버튼
@@ -145,6 +147,7 @@ class LogicDetailWidget(QFrame):
         self.DeleteTriggerKeyButton__QPushButton.setStyleSheet(BUTTON_STYLE)
         self.DeleteTriggerKeyButton__QPushButton.setFixedWidth(40)
         self.DeleteTriggerKeyButton__QPushButton.clicked.connect(self._delete_trigger_key)
+        self.DeleteTriggerKeyButton__QPushButton.setEnabled(False)  # 초기에는 비활성화
         TriggerKeySection__QHBoxLayout.addWidget(self.DeleteTriggerKeyButton__QPushButton)
         
         LogicConfigurationLayout__QVBoxLayout.addLayout(TriggerKeySection__QHBoxLayout)
@@ -331,6 +334,12 @@ class LogicDetailWidget(QFrame):
             list_item.setData(Qt.UserRole, item)
             self.LogicItemList__QListWidget.addItem(list_item)
 
+    def _on_trigger_key_input_clicked(self, event):
+        """트리거 키 입력 필드 클릭 이벤트 핸들러"""
+        # 트리거 키가 없는 경우에만 모달 표시
+        if not self.trigger_key_info:
+            self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.exec()
+
     def _on_formatted_key_info_changed(self, formatted_key_info):
         """키 입력이 변경되었을 때"""
         self.modal_log_manager.log(
@@ -342,8 +351,9 @@ class LogicDetailWidget(QFrame):
         if not formatted_key_info:  # 키 정보가 비어있으면 라벨 초기화
             self.TriggerKeyInfoLabel__QLabel.clear()
             self.TriggerKeyInput__QLineEdit.clear()
-            self.TriggerKeyInput__QLineEdit.setPlaceholderText("트리거 키를 설정하세요")
             self.trigger_key_info = None
+            self.EditTriggerKeyButton__QPushButton.setEnabled(False)  # 편집 버튼 비활성화
+            self.DeleteTriggerKeyButton__QPushButton.setEnabled(False)  # 삭제 버튼 비활성화
             self.modal_log_manager.log(
                 message="키 정보가 비어있어 초기화됨",
                 level="DEBUG",
@@ -405,6 +415,8 @@ class LogicDetailWidget(QFrame):
         self.TriggerKeyInfoLabel__QLabel.setText(formatted_info['detail_display_text'])
         self.TriggerKeyInput__QLineEdit.setText(formatted_info['simple_display_text'])
         self.trigger_key_info = formatted_key_info.copy()  # 깊은 복사로 변경
+        self.EditTriggerKeyButton__QPushButton.setEnabled(True)  # 편집 버튼 활성화
+        self.DeleteTriggerKeyButton__QPushButton.setEnabled(True)  # 삭제 버튼 활성화
         self.modal_log_manager.log(
             message=f"트리거 키 설정 완료: {self.trigger_key_info}",
             level="DEBUG",
@@ -822,13 +834,23 @@ class LogicDetailWidget(QFrame):
         
         # 트리거 키 입력 UI 비활성화/활성화
         self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.setEnabled(not is_nested)
+        self.TriggerKeyInput__QLineEdit.setEnabled(not is_nested)
+        self.EditTriggerKeyButton__QPushButton.setEnabled(not is_nested and bool(self.trigger_key_info))
+        self.DeleteTriggerKeyButton__QPushButton.setEnabled(not is_nested and bool(self.trigger_key_info))
         
+        # 중첩로직일 경우 클릭 이벤트 제거, 아닐 경우 클릭 이벤트 설정
         if is_nested:
-            # 중첩로직용일 경우 트리거 키 보 기화
+            self.TriggerKeyInput__QLineEdit.mousePressEvent = None
+            self.TriggerKeyInput__QLineEdit.setPlaceholderText("중첩로직용")
+            # 중첩로직용일 경우 트리거 키 초기화
             self.trigger_key_info = None
             self.TriggerKeyInfoLabel__QLabel.clear()
+            self.TriggerKeyInput__QLineEdit.clear()
             # 트리거 키 입력 위젯 초기화
             self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.clear_key()
+        else:
+            self.TriggerKeyInput__QLineEdit.mousePressEvent = self._on_trigger_key_input_clicked
+            self.TriggerKeyInput__QLineEdit.setPlaceholderText("트리거 키를 설정하세요")
 
     def get_logic_data(self):
         """기존 메서드 수정"""
