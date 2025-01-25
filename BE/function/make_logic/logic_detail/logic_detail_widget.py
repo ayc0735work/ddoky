@@ -354,7 +354,7 @@ class LogicDetailWidget(QFrame):
                     self.DeleteTriggerKeyButton__QPushButton.setEnabled(True)  # 삭제 버튼 활성화
 
     def _on_formatted_key_info_changed(self, formatted_key_info):
-        """키 입력이 변경되었을 때"""
+        """키 입력이 변경되었을 때 중복 체크와 상세 정보를 표시"""
         self.modal_log_manager.log(
             message=f"키 입력 변경 - 입력된 키 정보: {formatted_key_info}",
             level="DEBUG",
@@ -363,15 +363,6 @@ class LogicDetailWidget(QFrame):
         
         if not formatted_key_info:  # 키 정보가 비어있으면 라벨 초기화
             self.TriggerKeyInfoLabel__QLabel.clear()
-            self.TriggerKeyInput__QLineEdit.clear()
-            self.trigger_key_info = None
-            self.EditTriggerKeyButton__QPushButton.setEnabled(False)  # 편집 버튼 비활성화
-            self.DeleteTriggerKeyButton__QPushButton.setEnabled(False)  # 삭제 버튼 비활성화
-            self.modal_log_manager.log(
-                message="키 정보가 비어있어 초기화됨",
-                level="DEBUG",
-                file_name="logic_detail_widget"
-            )
             return
         
         # modifiers가 이미 정수값인지 확인하고, 아니라면 int() 변환을 건너뜁니다
@@ -423,17 +414,9 @@ class LogicDetailWidget(QFrame):
             msg.exec_()
             return
         
-        # 중복이 없는 경우 정상적으로 트리거 키 설정
+        # 중복이 없는 경우 상세 정보 표시
         formatted_info = create_formatted_key_info(formatted_key_info)
         self.TriggerKeyInfoLabel__QLabel.setText(formatted_info['detail_display_text'])
-        self.trigger_key_info = formatted_key_info.copy()  # 깊은 복사로 변경
-        self.EditTriggerKeyButton__QPushButton.setEnabled(True)  # 편집 버튼 활성화
-        self.DeleteTriggerKeyButton__QPushButton.setEnabled(True)  # 삭제 버튼 활성화
-        self.modal_log_manager.log(
-            message=f"트리거 키 설정 완료: {self.trigger_key_info}",
-            level="DEBUG",
-            file_name="logic_detail_widget"
-        )
 
     def _save_logic(self):
         """로직 저장 - UI 데이터 수집 및 결과 처리"""
@@ -1026,10 +1009,20 @@ class LogicDetailWidget(QFrame):
 
     def _edit_trigger_key(self):
         """트리거 키 편집 다이얼로그를 엽니다."""
+        self.modal_log_manager.log(
+            message="트리거 키 편집 버튼을 클릭했습니다.",
+            level="INFO",
+            file_name="logic_detail_widget"
+        )
         self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.exec()
 
     def _delete_trigger_key(self):
         """트리거 키 정보를 삭제합니다."""
+        self.modal_log_manager.log(
+            message="트리거 키 삭제 버튼을 클릭했습니다.",
+            level="INFO",
+            file_name="logic_detail_widget"
+        )
         self.clear_key()
         self.TriggerKeyInput__QLineEdit.clear()
         self.TriggerKeyInput__QLineEdit.setPlaceholderText("트리거 키를 설정하세요")
