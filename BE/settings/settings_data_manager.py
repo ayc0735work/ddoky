@@ -10,9 +10,9 @@ class SettingsManager:
     def __init__(self):
         # BE 폴더 경로를 기준으로 설정 파일 경로 지정
         current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        self.settings_file = Path(current_dir) / "settings" / "setting files" / "settings.json"
-        self.key_delays_file = Path(current_dir) / "settings" / "setting files" / "key_delays.json"
-        self.force_stop_key_file = Path(current_dir) / "settings" / "setting files" / "Force_Stop_key.json"
+        self.settings_file = Path(current_dir).resolve() / "settings" / "setting files" / "settings.json"
+        self.key_delays_file = Path(current_dir).resolve() / "settings" / "setting files" / "key_delays.json"
+        self.force_stop_key_file = Path(current_dir).resolve() / "settings" / "setting files" / "Force_Stop_key.json"
 
         # 먼저 key_delays.json 파일이 없다면 생성
         if not self.key_delays_file.exists():

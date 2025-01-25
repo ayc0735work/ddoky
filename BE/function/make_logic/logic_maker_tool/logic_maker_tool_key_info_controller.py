@@ -122,7 +122,7 @@ class LogicMakerToolKeyInfoController(QObject):
                 )
         
         self.modal_log_manager.log(
-            message=f"key_state_info_process - 키 정보 처리 완료(entered_key_info): {entered_key_info}",
+            message=f"key_state_info_process - 키 정보 추가 최종 완료(entered_key_info): {entered_key_info}",
             level="INFO",
             file_name="logic_maker_tool_key_info_controller"
         )

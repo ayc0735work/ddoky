@@ -205,6 +205,7 @@ class LogicDetailWidget(QFrame):
         self.MoveUpButton__QPushButton.setStyleSheet(BUTTON_STYLE)
         self.MoveUpButton__QPushButton.setEnabled(False)
         LogicControlButtonsSection__QHBoxLayout.addWidget(self.MoveUpButton__QPushButton)
+        self.MoveUpButton__QPushButton.clicked.connect(lambda: self._move_selected_item('up'))
         
         # 아래로 버튼
         self.MoveDownButton__QPushButton = QPushButton("아래로")
@@ -212,29 +213,31 @@ class LogicDetailWidget(QFrame):
         self.MoveDownButton__QPushButton.setStyleSheet(BUTTON_STYLE)
         self.MoveDownButton__QPushButton.setEnabled(False)
         LogicControlButtonsSection__QHBoxLayout.addWidget(self.MoveDownButton__QPushButton)
-        
+        self.MoveDownButton__QPushButton.clicked.connect(lambda: self._move_selected_item('down'))
+
         # 수정 버튼
         self.EditItemButton__QPushButton = QPushButton("항목 수정")
         self.EditItemButton__QPushButton.setFixedWidth(LOGIC_BUTTON_WIDTH)
         self.EditItemButton__QPushButton.setStyleSheet(BUTTON_STYLE)
         self.EditItemButton__QPushButton.setEnabled(False)
         LogicControlButtonsSection__QHBoxLayout.addWidget(self.EditItemButton__QPushButton)
-        
+        self.EditItemButton__QPushButton.clicked.connect(self._edit_item)
+
         # 삭제 버튼
         self.DeleteItemButton__QPushButton = QPushButton("항목 삭제")
         self.DeleteItemButton__QPushButton.setFixedWidth(LOGIC_BUTTON_WIDTH)
         self.DeleteItemButton__QPushButton.setStyleSheet(BUTTON_STYLE)
         self.DeleteItemButton__QPushButton.setEnabled(False)
         LogicControlButtonsSection__QHBoxLayout.addWidget(self.DeleteItemButton__QPushButton)
-        
+        self.DeleteItemButton__QPushButton.clicked.connect(self._delete_selected_items)
+
         LogicConfigurationLayout__QVBoxLayout.addLayout(LogicControlButtonsSection__QHBoxLayout)
         self.setLayout(LogicConfigurationLayout__QVBoxLayout)
-        
-        # 버튼 시그널 연결
-        self.MoveUpButton__QPushButton.clicked.connect(lambda: self._move_selected_item('up'))
-        self.MoveDownButton__QPushButton.clicked.connect(lambda: self._move_selected_item('down'))
-        self.EditItemButton__QPushButton.clicked.connect(self._edit_item)
-        self.DeleteItemButton__QPushButton.clicked.connect(self._delete_selected_items)
+     
+
+
+
+
         
         # 초기 데이터 로드 (테스트용)
         self._load_test_data()
@@ -378,242 +381,55 @@ class LogicDetailWidget(QFrame):
         )
 
     def _save_logic(self):
-        """로직 저장"""
-        try:
-            self.modal_log_manager.log(
-                message="로직 저장을 시작합니다",
-                level="INFO",
-                file_name="logic_detail_widget"
-            )
-            print(f"[DEBUG] LogicDetailWidget._save_logic 시작")
-            name = self.LogicNameInput__QLineEdit.text().strip()
-            if not name:
-                self.modal_log_manager.log(
-                    message="로직 이름이 입력되지 않았습니다",
-                    level="ERROR",
-                    file_name="logic_detail_widget"
-                )
-                return False
+        """로직 저장 - UI 데이터 수집 및 결과 처리"""
+        # UI 데이터 수집
+        logic_info = {
+            'name': self.LogicNameInput__QLineEdit.text().strip(),
+            'repeat_count': self.RepeatCountInput__QSpinBox.value(),
+            'items': self.get_items(),
+            'is_nested': self.is_nested_checkbox.isChecked(),
+            'trigger_key': self.trigger_key_info if not self.is_nested_checkbox.isChecked() else None
+        }
 
-            is_nested = self.is_nested_checkbox.isChecked()
-            self.modal_log_manager.log(
-                message=f"로직 정보 - 이름: {name}, 중첩여부: {is_nested}",
-                level="DEBUG",
-                file_name="logic_detail_widget"
-            )
-            print(f"[DEBUG] 로직 정보 - 이름: {name}, 중첩여부: {is_nested}")
-
-            # 중첩로직용이 아닐 경우에만 트리거 키 검사
-            if not is_nested and not self.trigger_key_info:
-                self.modal_log_manager.log(
-                    message="트리거 키가 설정되지 않았습니다",
-                    level="ERROR",
-                    file_name="logic_detail_widget"
-                )
-                QMessageBox.warning(self, "저장 실패", "트리거 키를 정해주세요.", QMessageBox.Ok)
-                return False
-
-            if not self.has_items():
-                self.modal_log_manager.log(
-                    message="로직에 아이템이 추가되지 않았습니다",
-                    level="ERROR",
-                    file_name="logic_detail_widget"
-                )
-                return False
-
-            # 이름 중복 검사 (수정 모드가 아닐 때만)
-            if not self.edit_mode:
-                self.modal_log_manager.log(
-                    message="새 로직 저장 - 이름 중복 검사 중...",
-                    level="DEBUG",
-                    file_name="logic_detail_widget"
-                )
-                print(f"[DEBUG] 새 로직 저장 - 이름 중복 검사")
-                logics = self.settings_manager.load_logics()
-                for logic in logics.values():
-                    if (logic.get('name') == name and 
-                        not logic.get('is_nested', False)):  # 중첩로직은 제외
-                        QMessageBox.warning(
-                            self,
-                            "저장 실패",
-                            "동일한 이름의 로직이 이미 존재합니다.",
-                            QMessageBox.Ok
-                        )
-                        self.modal_log_manager.log(
-                            message=f"이미 '{name}' 이름의 로직이 존재합니다",
-                            level="ERROR",
-                            file_name="logic_detail_widget"
-                        )
-                        return False
-
-            self.modal_log_manager.log(
-                message="로직 정보를 구성합니다",
-                level="DEBUG",
-                file_name="logic_detail_widget"
-            )
-            print(f"[DEBUG] 로직 정보 구성 시작")
-            # 현재 로직 정보 구성
-            logic_info = {
-                'name': name,
-                'order': max([l.get('order', 0) for l in self.settings_manager.load_logics().values() if l.get('order', 0) > 0], default=0) + 1 if not self.current_logic else self.current_logic.get('order'),
-                'created_at': datetime.now().isoformat() if not self.current_logic else self.current_logic.get('created_at'),
-                'updated_at': datetime.now().isoformat(),
-                'repeat_count': self.RepeatCountInput__QSpinBox.value(),
-                'items': self.get_items(),
-                'is_nested': is_nested,
-                'trigger_key': self.trigger_key_info if not is_nested else None
-            }
-            self.modal_log_manager.log(
-                message=f"구성된 로직 정보: {logic_info}",
-                level="DEBUG",
-                file_name="logic_detail_widget"
-            )
-            print(f"[DEBUG] 로직 정보: {logic_info}")
-
-            self.modal_log_manager.log(
-                message=f"트리거 키 정보: {self.trigger_key_info}, 중첩로직 여부: {is_nested}",
-                level="DEBUG",
-                file_name="logic_detail_widget"
-            )
-            
-            self.modal_log_manager.log(
-                message=f"LogicManager.save_logic 호출 - ID: {self.current_logic_id}",
-                level="DEBUG",
-                file_name="logic_detail_widget"
-            )
-            print(f"[DEBUG] LogicManager.save_logic 호출 전 - ID: {self.current_logic_id}")
-            # LogicManager를 통해 저장
-            success, result = self.logic_manager.save_logic(self.current_logic_id, logic_info)
-            self.modal_log_manager.log(
-                message=f"LogicManager.save_logic 결과: {success}, {result}",
-                level="DEBUG",
-                file_name="logic_detail_widget"
-            )
-            print(f"[DEBUG] LogicManager.save_logic 호출 후 - 결과: {success}, {result}")
-            
-            if success:
-                if self.edit_mode:  # 수정 모드
-                    self.logic_updated.emit(self.original_name, logic_info)
-                    self.modal_log_manager.log(
-                        message=f"로직 '{name}'이(가) 업데이트되었습니다",
-                        level="INFO",
-                        file_name="logic_detail_widget"
-                    )
-                else:  # 새 로직
-                    self.logic_saved.emit(logic_info)
-                    self.modal_log_manager.log(
-                        message=f"새 로직 '{name}'이(가) 저장되었습니다",
-                        level="INFO",
-                        file_name="logic_detail_widget"
-                    )
-                
-                self.clear_all()
-                return True
-            else:
-                QMessageBox.warning(self, "저장 실패", result, QMessageBox.Ok)
-                self.modal_log_manager.log(
-                    message=f"저장 실패: {result}",
-                    level="ERROR",
-                    file_name="logic_detail_widget"
-                )
-                return False
-
-        except Exception as e:
-            print(f"[DEBUG] LogicDetailWidget._save_logic 오류 발생: {str(e)}")
-            self.modal_log_manager.log(
-                message=f"로직 저장 중 오류 발생: {str(e)}",
-                level="ERROR",
-                file_name="logic_detail_widget"
-            )
+        # Repository에 저장 요청
+        success, message = self.repository.save_logic(logic_info)
+        
+        if success:
+            self.clear_all()  # UI 초기화
+            return True
+        else:
+            QMessageBox.warning(self, "저장 실패", message, QMessageBox.Ok)
             return False
 
     def load_logic(self, logic_info):
-        """로직 정보를 위젯에 로드"""
-        try:
-            if not logic_info or not isinstance(logic_info, dict):
-                self.modal_log_manager.log(
-                    message="잘못된 로직 정보입니다",
-                    level="ERROR",
-                    file_name="logic_detail_widget"
-                )
-                return
-
-            # UI 초기화
-            self.clear_all()
-            
-            # 수정 모드로 설정
-            self.edit_mode = True
-            self.original_name = logic_info.get('name')
-            
-            # UUID 설정 (logic_info에서 직접 가져오기)
-            self.current_logic_id = logic_info.get('id')  # logic_info에서 직접 ID 가져오기
-            if not self.current_logic_id:  # ID가 없는 경우 이름으로 찾기
-                logics = self.settings_manager.load_logics()
-                for logic_id, saved_logic in logics.items():
-                    if saved_logic.get('name') == logic_info.get('name'):
-                        self.current_logic_id = logic_id
-                        break
-            
-            if not self.current_logic_id:
-                self.modal_log_manager.log(
-                    message=f"로직 '{logic_info.get('name')}'의 ID를 찾을 수 없습니다",
-                    level="WARNING",
-                    file_name="logic_detail_widget"
-                )
-                return
-            
-            # 현재 로직 정보 저장
-            self.current_logic = logic_info.copy()
-            self.current_logic['id'] = self.current_logic_id  # ID 정보 추가
-            
+        """로직 정보를 위젯에 로드 - UI 업데이트"""
+        # Repository에 로드 요청
+        if self.repository.load_logic(logic_info):
             # UI 업데이트
             self.LogicNameInput__QLineEdit.setText(logic_info.get('name', ''))
+            self.RepeatCountInput__QSpinBox.setValue(logic_info.get('repeat_count', 1))
             
-            # 중첩로직 여부 설정
+            # Repository에서 받은 logic_info의 is_nested 값에 따라 트리거 키 활성 여부 처리
+            # 중첩로직일 경우 트리거 키 비활성화
             is_nested = logic_info.get('is_nested', False)
             self.is_nested_checkbox.setChecked(is_nested)
             
             # 중첩로직이 아닐 경우에만 트리거 키 설정
             if not is_nested:
                 trigger_key = logic_info.get('trigger_key', {})
-                if isinstance(trigger_key, dict) and trigger_key:
+                if isinstance(trigger_key, dict) and trigger_key: # trigger_key가 dict이고 비어있지 않을 경우
                     self.trigger_key_info = trigger_key.copy()
+                    self.modal_log_manager.log(
+                        message=f"load_logic - 트리거 키 정보 불러오기 완료(self.trigger_key_info): {self.trigger_key_info}",
+                        level="DEBUG",
+                        file_name="logic_detail_widget"
+                    )
                     formatted_info = create_formatted_key_info(trigger_key)
                     self.TriggerKeyInfoLabel__QLabel.setText(formatted_info['detail_display_text'])
                     self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.set_key_info(trigger_key)
             
-            # 반복 횟수 설정
-            repeat_count = logic_info.get('repeat_count', 1)
-            self.RepeatCountInput__QSpinBox.setValue(repeat_count)
-            
-            # 로직 아이템 목록 설정
-            items = logic_info.get('items', [])
-            if isinstance(items, list):
-                sorted_items = sorted(items, key=lambda x: x.get('order', float('inf')))
-                for item in sorted_items:
-                    if isinstance(item, dict):
-                        if item.get('type') == 'delay':
-                            display_text = f"지연시간 : {item.get('duration', 0.0)}초"
-                            item['display_text'] = display_text
-                        elif item.get('type') == 'logic':
-                            logic_name = item.get('logic_name', '')
-                            display_text = f"{logic_name}"
-                            item['display_text'] = display_text
-                        self._add_logic_item(item)
-            
-            self.modal_log_manager.log(
-                message=f"로직 '{logic_info.get('name')}'이(가) 로드되었습니다",
-                level="INFO",
-                file_name="logic_detail_widget"
-            )
-
-        except Exception as e:
-            self.modal_log_manager.log(
-                message=f"로직 로드 중 오류 발생: {str(e)}",
-                level="ERROR",
-                file_name="logic_detail_widget"
-            )
-            self.clear_all()
+            return True
+        return False
 
     def _create_nested_logic_item(self, logic_name, logic_id=None, original_data=None):
         """중첩로직 아이템 생성을 위한 공통 메서드
@@ -1132,3 +948,11 @@ class LogicDetailWidget(QFrame):
                 item_data = item.data(Qt.UserRole)
                 if item_data:
                     self.repository.delete_item(item_data)
+
+    def clear_all(self):
+        """모든 UI 필드 초기화"""
+        self.LogicNameInput__QLineEdit.clear()
+        self.RepeatCountInput__QSpinBox.setValue(1)
+        self.is_nested_checkbox.setChecked(False)
+        self.clear_key()
+        self.repository.clear_items()  # Repository를 통해 아이템 목록 초기화
