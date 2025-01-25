@@ -169,7 +169,6 @@ class LogicDetailWidget(QFrame):
         
         # 트리거 키 입력 위젯
         self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog = EnteredKeyInfoDialog(self)
-        self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.formatted_key_info_changed.connect(self._on_formatted_key_info_changed)
         self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.formatted_key_info_changed.connect(self._check_data_entered)  # 키 입력 변경 시그널 연결
         TriggerKeyInputRow__QHBoxLayout.addWidget(self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog)
         
@@ -334,60 +333,33 @@ class LogicDetailWidget(QFrame):
             list_item.setData(Qt.UserRole, item)
             self.LogicItemList__QListWidget.addItem(list_item)
 
-    def _on_trigger_key_input_clicked(self, event):
-        """트리거 키 입력 필드 클릭 이벤트 핸들러"""
-        # 트리거 키가 없는 경우에만 모달 표시
-        if not self.trigger_key_info:
-            dialog = self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog
-            if dialog.exec():
-                result = dialog.get_entered_key_info_result()
-                if result:
-                    self.trigger_key_info = result.copy()  # 키 정보 저장
-                    self.TriggerKeyInput__QLineEdit.setText(result['simple_display_text'])
-                    self.modal_log_manager.log(
-                        message=f"트리거 키 입력 완료(self.trigger_key_info): {self.trigger_key_info}",
-                        level="DEBUG",
-                        file_name="logic_detail_widget"
-                    )
-
-                    self.EditTriggerKeyButton__QPushButton.setEnabled(True)  # 편집 버튼 활성화
-                    self.DeleteTriggerKeyButton__QPushButton.setEnabled(True)  # 삭제 버튼 활성화
-
-    def _on_formatted_key_info_changed(self, formatted_key_info):
-        """키 입력이 변경되었을 때 중복 체크와 상세 정보를 표시"""
-        self.modal_log_manager.log(
-            message=f"키 입력 변경 - 입력된 키 정보: {formatted_key_info}",
-            level="DEBUG",
-            file_name="logic_detail_widget"
-        )
-        
-        if not formatted_key_info:  # 키 정보가 비어있으면 라벨 초기화
-            self.TriggerKeyInfoLabel__QLabel.clear()
-            return
-        
-        # modifiers가 이미 정수값인지 확인하고, 아니라면 int() 변환을 건너뜁니다
-        if not isinstance(formatted_key_info['modifiers'], int):
-            formatted_key_info['modifiers'] = formatted_key_info['modifiers'].value
-        
+    def _check_duplicate_trigger_key(self, key_info):
+        """트리거 키 중복 체크"""
+        if not key_info:
+            return False
+            
+        # modifiers가 이미 정수값인지 확인하고, 아니라면 int() 변환
+        modifiers = key_info['modifiers']
+        if not isinstance(modifiers, int):
+            modifiers = modifiers.value
+            
         # 트리거 키 중복 체크
-        logics = self.settings_manager.load_logics(force=True)  # force=True 추가
+        logics = self.settings_manager.load_logics(force=True)
         duplicate_logics = []
         
         for logic_id, logic in logics.items():
-            # 자기 자신은 제외하고 중첩로직이 아닌 것들만 체크
             if (logic_id != self.current_logic_id and 
-                not logic.get('is_nested', False)):  # 중첩로직은 제외
+                not logic.get('is_nested', False)):
                 trigger_key = logic.get('trigger_key', {})
-                if (trigger_key and  # trigger_key가 None이 아닌 경우에만 체크
-                    trigger_key.get('virtual_key') == formatted_key_info.get('virtual_key') and 
-                    trigger_key.get('modifiers') == formatted_key_info.get('modifiers')):
+                if (trigger_key and
+                    trigger_key.get('virtual_key') == key_info.get('virtual_key') and 
+                    trigger_key.get('modifiers') == modifiers):
                     duplicate_logics.append({
                         'name': logic.get('name'),
                         'id': logic_id
                     })
 
         if duplicate_logics:
-            # 중복된 트리거 키가 있는 경우
             duplicate_info = "\n\n".join([
                 f"로직 이름: {logic['name']}\n"
                 f"로직 UUID: {logic['id']}"
@@ -401,22 +373,71 @@ class LogicDetailWidget(QFrame):
                        "사용 중인 로직 정보\n\n"
                        f"{duplicate_info}")
             msg.setStandardButtons(QMessageBox.Ok)
-            # 로그 메시지 출력
+            
             self.modal_log_manager.log(
                 message=f"중복된 트리거 키 발견: {len(duplicate_logics)}개의 로직에서 사용 중",
                 level="WARNING", 
                 file_name="logic_detail_widget"
             )
             
-            # 키 입력 초기화
-            self.clear_key()
-            
             msg.exec_()
-            return
-        
-        # 중복이 없는 경우 상세 정보 표시
-        formatted_info = create_formatted_key_info(formatted_key_info)
-        self.TriggerKeyInfoLabel__QLabel.setText(formatted_info['detail_display_text'])
+            return True
+            
+        return False
+
+    def _update_trigger_key_info(self, key_info):
+        """트리거 키 정보 업데이트"""
+        if key_info:
+            self.trigger_key_info = key_info.copy()
+            self.TriggerKeyInput__QLineEdit.setText(key_info['simple_display_text'])
+            self.TriggerKeyInfoLabel__QLabel.setText(key_info['detail_display_text'])
+            self.EditTriggerKeyButton__QPushButton.setEnabled(True)
+            self.DeleteTriggerKeyButton__QPushButton.setEnabled(True)
+            
+            self.modal_log_manager.log(
+                message=f"트리거 키 입력 완료(self.trigger_key_info): {self.trigger_key_info}",
+                level="DEBUG",
+                file_name="logic_detail_widget"
+            )
+
+    def _on_trigger_key_input_clicked(self, event):
+        """트리거 키 입력 필드 클릭 이벤트 핸들러"""
+        # 트리거 키가 없는 경우에만 모달 표시
+        if not self.trigger_key_info:
+            dialog = self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog
+            if dialog.exec():
+                result = dialog.get_entered_key_info_result()
+                if result and not self._check_duplicate_trigger_key(result):
+                    self._update_trigger_key_info(result)
+
+    def _edit_trigger_key(self):
+        """트리거 키 편집 다이얼로그를 엽니다."""
+        self.modal_log_manager.log(
+            message="트리거 키 편집 버튼을 클릭했습니다.",
+            level="INFO",
+            file_name="logic_detail_widget"
+        )
+        dialog = self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog
+        if dialog.exec():
+            result = dialog.get_entered_key_info_result()
+            if result and not self._check_duplicate_trigger_key(result):
+                self._update_trigger_key_info(result)
+                self.modal_log_manager.log(
+                    message=f"트리거 키 변경 완료(self.trigger_key_info): {self.trigger_key_info}",
+                    level="DEBUG",
+                    file_name="logic_detail_widget"
+                )
+
+    def _delete_trigger_key(self):
+        """트리거 키 정보를 삭제합니다."""
+        self.modal_log_manager.log(
+            message="트리거 키 삭제 버튼을 클릭했습니다.",
+            level="INFO",
+            file_name="logic_detail_widget"
+        )
+        self.clear_key()
+        self.TriggerKeyInput__QLineEdit.clear()
+        self.TriggerKeyInput__QLineEdit.setPlaceholderText("트리거 키를 설정하세요")
 
     def _save_logic(self):
         """로직 저장 - UI 데이터 수집 및 결과 처리"""
@@ -1006,33 +1027,3 @@ class LogicDetailWidget(QFrame):
         self.is_nested_checkbox.setChecked(False)
         self.clear_key()
         self.repository.clear_items()  # Repository를 통해 아이템 목록 초기화
-
-    def _edit_trigger_key(self):
-        """트리거 키 편집 다이얼로그를 엽니다."""
-        self.modal_log_manager.log(
-            message="트리거 키 편집 버튼을 클릭했습니다.",
-            level="INFO",
-            file_name="logic_detail_widget"
-        )
-        dialog = self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog
-        if dialog.exec():
-            result = dialog.get_entered_key_info_result()
-            if result:
-                self.trigger_key_info = result.copy()  # 키 정보 저장
-                self.TriggerKeyInput__QLineEdit.setText(result['simple_display_text'])
-                self.modal_log_manager.log(
-                    message=f"트리거 키 변경 완료(self.trigger_key_info): {self.trigger_key_info}",
-                    level="DEBUG",
-                    file_name="logic_detail_widget"
-                )
-
-    def _delete_trigger_key(self):
-        """트리거 키 정보를 삭제합니다."""
-        self.modal_log_manager.log(
-            message="트리거 키 삭제 버튼을 클릭했습니다.",
-            level="INFO",
-            file_name="logic_detail_widget"
-        )
-        self.clear_key()
-        self.TriggerKeyInput__QLineEdit.clear()
-        self.TriggerKeyInput__QLineEdit.setPlaceholderText("트리거 키를 설정하세요")
