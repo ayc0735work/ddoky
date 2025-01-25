@@ -8,7 +8,7 @@ from BE.function.constants.styles import (TITLE_FONT_FAMILY, SECTION_FONT_SIZE,
                                CONTAINER_STYLE, ETC_FUNCTION_COUNTDOWN_FONT_SIZE)
 from BE.function.constants.dimensions import (KEY_COUNTDOWN_WIDTH, EMPTY_SECTION_WIDTH,
                                    SECTION_MARGIN)
-from BE.log.manager.base_log_manager import BaseLogManager
+from BE.log.base_log_manager import BaseLogManager
 
 class EtcFunctionWidget(QWidget):
     """기타 기능 위젯"""

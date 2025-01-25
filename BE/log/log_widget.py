@@ -6,7 +6,7 @@ from PySide6.QtGui import QFont
 from BE.function.constants.styles import (FRAME_STYLE, CONTAINER_STYLE, LOG_TEXT_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from BE.function.constants.dimensions import LOG_FRAME_WIDTH, LOG_CONTAINER_MIN_HEIGHT
-from BE.log.manager.base_log_manager import BaseLogManager
+from BE.log.base_log_manager import BaseLogManager
 
 class LogWidget(QFrame):
     """로그를 표시하는 위젯"""

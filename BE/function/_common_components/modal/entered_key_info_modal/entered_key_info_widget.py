@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QLabel
 from PySide6.QtCore import Qt, Signal
-from BE.log.manager.base_log_manager import BaseLogManager
+from BE.log.base_log_manager import BaseLogManager
 
 class EnteredKeyInfoWidget(QWidget):
     """키 입력을 표시하는 UI 위젯

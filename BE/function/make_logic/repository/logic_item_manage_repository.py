@@ -1,5 +1,5 @@
 from PySide6.QtCore import QObject, Signal
-from BE.log.manager.base_log_manager import BaseLogManager
+from BE.log.base_log_manager import BaseLogManager
 from BE.settings.settings_data_manager import SettingsManager
 from BE.function.manage_logic.logic_manager import LogicManager
 
@@ -165,21 +165,21 @@ class LogicItemManageRepository(QObject):
             if not logic_info.get('items'):
                 return False, "최소 하나의 아이템이 필요합니다."
                 
-            # 2. 중첩로직이 아닐 경우 트리거 키 검증
-            if not logic_info.get('is_nested'):
-                if not logic_info.get('trigger_key'):
-                    return False, "트리거 키가 필요합니다."
+            # # 2. 중첩로직이 아닐 경우 트리거 키 검증
+            # if not logic_info.get('is_nested'):
+            #     if not logic_info.get('trigger_key'):
+            #         return False, "트리거 키가 필요합니다."
                     
-                # 트리거 키 중복 검사
-                logics = self.settings_manager.load_logics()
-                for logic_id, logic in logics.items():
-                    if (logic_id != self.current_logic_id and  # 자기 자신은 제외
-                        not logic.get('is_nested', False)):  # 중첩로직은 제외
-                        existing_trigger = logic.get('trigger_key', {})
-                        if (existing_trigger and
-                            existing_trigger.get('virtual_key') == logic_info['trigger_key'].get('virtual_key') and
-                            existing_trigger.get('modifiers') == logic_info['trigger_key'].get('modifiers')):
-                            return False, f"이미 다른 로직 '{logic.get('name')}'에서 사용 중인 트리거 키입니다."
+            #     # 트리거 키 중복 검사
+            #     logics = self.settings_manager.load_logics()
+            #     for logic_id, logic in logics.items():
+            #         if (logic_id != self.current_logic_id and  # 자기 자신은 제외
+            #             not logic.get('is_nested', False)):  # 중첩로직은 제외
+            #             existing_trigger = logic.get('trigger_key', {})
+            #             if (existing_trigger and
+            #                 existing_trigger.get('virtual_key') == logic_info['trigger_key'].get('virtual_key') and
+            #                 existing_trigger.get('modifiers') == logic_info['trigger_key'].get('modifiers')):
+            #                 return False, f"이미 다른 로직 '{logic.get('name')}'에서 사용 중인 트리거 키입니다."
             
             # 3. 이름 중복 검사 (수정 모드가 아닐 때만)
             if not self.current_logic_id:

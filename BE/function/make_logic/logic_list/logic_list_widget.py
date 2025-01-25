@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
                              QSizePolicy, QMessageBox)
 from PySide6.QtCore import Qt, Signal, QEvent
 from PySide6.QtGui import QFont
-from BE.log.manager.base_log_manager import BaseLogManager
+from BE.log.base_log_manager import BaseLogManager
 import json
 import os
 import uuid

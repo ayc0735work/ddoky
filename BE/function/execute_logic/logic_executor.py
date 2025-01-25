@@ -9,7 +9,7 @@ from BE.function._common_components.mouse_handler import MouseHandler
 import threading
 from BE.settings.settings_data_manager import SettingsManager
 import keyboard
-from BE.log.manager.base_log_manager import BaseLogManager
+from BE.log.base_log_manager import BaseLogManager
 
 class LogicExecutor(QObject):
     """로직 실행기"""

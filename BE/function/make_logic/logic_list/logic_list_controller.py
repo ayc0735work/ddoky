@@ -1,6 +1,6 @@
 from PySide6.QtCore import QObject, Signal
 from BE.settings.settings_data_manager import SettingsManager
-from BE.log.manager.base_log_manager import BaseLogManager
+from BE.log.base_log_manager import BaseLogManager
 import uuid
 import copy
 

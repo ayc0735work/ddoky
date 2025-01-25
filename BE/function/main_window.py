@@ -28,7 +28,7 @@ from BE.function.etc_function.countdown.UI.etc_function_widget import EtcFunctio
 from BE.function.etc_function.countdown.Controller.countdown_controller__input_sequence import CountdownControllerInputSequence
 from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_handler import KeyboardHook
 import logging
-from BE.log.manager.base_log_manager import BaseLogManager
+from BE.log.base_log_manager import BaseLogManager
 from BE.function.make_logic.repository.logic_item_manage_repository import LogicItemManageRepository
 
 class MainWindow(QMainWindow):

@@ -22,7 +22,7 @@
 import threading
 from time import perf_counter
 from PySide6.QtCore import QObject, QThread, Qt, QTimer, Signal
-from BE.log.manager.base_log_manager import BaseLogManager
+from BE.log.base_log_manager import BaseLogManager
 
 class CountdownWorker(QThread):
     """카운트다운 워커 스레드 클래스

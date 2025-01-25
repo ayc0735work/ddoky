@@ -10,7 +10,7 @@ from BE.function._common_components.modal.mouse_input_modal.mouse_input_dialog i
 from BE.function._common_components.modal.image_search_area_modal.image_search_area_dialog import ImageSearchAreaDialog
 from BE.function._common_components.modal.text_input_modal.text_input_dialog import TextInputDialog
 from .logic_maker_tool_key_info_controller import LogicMakerToolKeyInfoController
-from BE.log.manager.base_log_manager import BaseLogManager
+from BE.log.base_log_manager import BaseLogManager
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 from BE.function.make_logic.repository.logic_item_manage_repository import LogicItemManageRepository
 

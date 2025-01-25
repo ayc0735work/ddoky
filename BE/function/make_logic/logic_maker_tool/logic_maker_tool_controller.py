@@ -1,5 +1,5 @@
 from PySide6.QtCore import QObject, Signal
-from BE.log.manager.base_log_manager import BaseLogManager
+from BE.log.base_log_manager import BaseLogManager
 
 class LogicMakerController(QObject):
     """로직 메이커 컨트롤러"""

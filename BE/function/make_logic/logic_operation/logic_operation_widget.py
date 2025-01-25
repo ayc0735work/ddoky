@@ -12,7 +12,7 @@ from BE.function._common_components.modal.window_process_selector.window_process
 from BE.settings.settings_singleton import Settings
 from BE.settings.settings_data_manager import SettingsManager
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
-from BE.log.manager.base_log_manager import BaseLogManager
+from BE.log.base_log_manager import BaseLogManager
 
 class LogicOperationWidget(QFrame):
     """로직 동작 허용 여부 온오프 위젯"""

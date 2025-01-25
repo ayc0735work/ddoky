@@ -4,7 +4,7 @@ from PySide6.QtGui import QKeyEvent, QGuiApplication
 
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_widget import EnteredKeyInfoWidget
 from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_handler import KeyboardHook
-from BE.log.manager.base_log_manager import BaseLogManager
+from BE.log.base_log_manager import BaseLogManager
 
 class EnteredKeyInfoDialog(QDialog):
     """키 입력 모달 창을 제공하고 키를 입력 받고 처리하는 다이얼로그

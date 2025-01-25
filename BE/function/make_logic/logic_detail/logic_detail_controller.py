@@ -1,5 +1,5 @@
 from PySide6.QtCore import Signal, QObject
-from BE.log.manager.base_log_manager import BaseLogManager
+from BE.log.base_log_manager import BaseLogManager
 
 class LogicDetailController(QObject):
     """로직 상세 위젯의 동작을 제어하는 컨트롤러"""
