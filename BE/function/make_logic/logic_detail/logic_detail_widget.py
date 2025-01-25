@@ -485,7 +485,10 @@ class LogicDetailWidget(QFrame):
                     )
                     formatted_info = create_formatted_key_info(trigger_key)
                     self.TriggerKeyInfoLabel__QLabel.setText(formatted_info['detail_display_text'])
-                    self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.set_key_info(trigger_key)
+                    # 새로운 트리거 키 UI 업데이트
+                    self.TriggerKeyInput__QLineEdit.setText(formatted_info['simple_display_text'])
+                    self.EditTriggerKeyButton__QPushButton.setEnabled(True)
+                    self.DeleteTriggerKeyButton__QPushButton.setEnabled(True)
             
             return True
         return False
