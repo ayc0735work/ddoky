@@ -848,6 +848,13 @@ class LogicDetailWidget(QFrame):
         """중첩로직용 체크박스 상태 변경 시 호출"""
         is_nested = state == Qt.CheckState.Checked.value
         
+        # 로그 추가
+        self.modal_log_manager.log(
+            message=f"중첩로직용 체크박스가 {'활성화' if is_nested else '비활성화'}되었습니다",
+            level="INFO",
+            file_name="logic_detail_widget"
+        )
+        
         # 트리거 키 입력 UI 비활성화/활성화
         self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.setEnabled(not is_nested)
         self.TriggerKeyInput__QLineEdit.setEnabled(not is_nested)
