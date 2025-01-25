@@ -36,7 +36,12 @@ class LogicItemManageRepository(QObject):
     def add_item(self, item_info: dict):
         """아이템을 추가합니다."""
         if not isinstance(item_info, dict):
-            raise ValueError("item_info must be a dictionary")
+            self.modal_log_manager.log(
+                message=f"잘못된 형식의 데이터: {type(item_info)}",
+                level="ERROR",
+                file_name="logic_item_manage_repository"
+            )
+            return
             
         # order 값이 없으면 다음 순서로 설정
         if 'order' not in item_info:
@@ -65,30 +70,56 @@ class LogicItemManageRepository(QObject):
             
     def move_item_up(self, item_info: dict):
         """아이템을 위로 이동합니다."""
-        index = self.items.index(item_info)
-        if index > 0:
-            self.items[index], self.items[index - 1] = self.items[index - 1], self.items[index]
-            self._reorder_items()
+        try:
+            current_index = self.items.index(item_info)
+            if current_index > 0:
+                # 아이템 위치 교환
+                self.items[current_index], self.items[current_index - 1] = \
+                    self.items[current_index - 1], self.items[current_index]
+                    
+                # order 값도 교환
+                self.items[current_index]['order'], self.items[current_index - 1]['order'] = \
+                    self.items[current_index - 1]['order'], self.items[current_index]['order']
+                
+                self.modal_log_manager.log(
+                    message=f"아이템을 위로 이동했습니다: {item_info}",
+                    level="INFO",
+                    file_name="logic_item_manage_repository"
+                )
+                self.item_moved.emit()
+        except ValueError:
             self.modal_log_manager.log(
-                message=f"아이템이 위로 이동되었습니다: {item_info}",
-                level="INFO",
+                message=f"아이템을 찾을 수 없습니다: {item_info}",
+                level="ERROR",
                 file_name="logic_item_manage_repository"
             )
-            self.item_moved.emit()
-            
+                
     def move_item_down(self, item_info: dict):
         """아이템을 아래로 이동합니다."""
-        index = self.items.index(item_info)
-        if index < len(self.items) - 1:
-            self.items[index], self.items[index + 1] = self.items[index + 1], self.items[index]
-            self._reorder_items()
+        try:
+            current_index = self.items.index(item_info)
+            if current_index < len(self.items) - 1:
+                # 아이템 위치 교환
+                self.items[current_index], self.items[current_index + 1] = \
+                    self.items[current_index + 1], self.items[current_index]
+                    
+                # order 값도 교환
+                self.items[current_index]['order'], self.items[current_index + 1]['order'] = \
+                    self.items[current_index + 1]['order'], self.items[current_index]['order']
+                
+                self.modal_log_manager.log(
+                    message=f"아이템을 아래로 이동했습니다: {item_info}",
+                    level="INFO",
+                    file_name="logic_item_manage_repository"
+                )
+                self.item_moved.emit()
+        except ValueError:
             self.modal_log_manager.log(
-                message=f"아이템이 아래로 이동되었습니다: {item_info}",
-                level="INFO",
+                message=f"아이템을 찾을 수 없습니다: {item_info}",
+                level="ERROR",
                 file_name="logic_item_manage_repository"
             )
-            self.item_moved.emit()
-            
+                
     def get_items_count(self) -> int:
         """아이템 개수를 반환합니다."""
         return len(self.items)

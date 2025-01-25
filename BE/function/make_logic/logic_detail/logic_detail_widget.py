@@ -231,10 +231,10 @@ class LogicDetailWidget(QFrame):
         self.setLayout(LogicConfigurationLayout__QVBoxLayout)
         
         # 버튼 시그널 연결
-        self.MoveUpButton__QPushButton.clicked.connect(self._move_item_up)
-        self.MoveDownButton__QPushButton.clicked.connect(self._move_item_down)
+        self.MoveUpButton__QPushButton.clicked.connect(lambda: self._move_selected_item('up'))
+        self.MoveDownButton__QPushButton.clicked.connect(lambda: self._move_selected_item('down'))
         self.EditItemButton__QPushButton.clicked.connect(self._edit_item)
-        self.DeleteItemButton__QPushButton.clicked.connect(self._delete_item)
+        self.DeleteItemButton__QPushButton.clicked.connect(self._delete_selected_items)
         
         # 초기 데이터 로드 (테스트용)
         self._load_test_data()
@@ -257,80 +257,48 @@ class LogicDetailWidget(QFrame):
 
     def add_item(self, item_info):
         """아이템을 목록에 추가합니다."""
-        self.modal_log_manager.log(
-            message=f"아이템 추가 시작 - 입력받은 데이터: {item_info}",
-            level="DEBUG",
-            file_name="logic_detail_widget"
-        )
-        
         if isinstance(item_info, dict):
             self.repository.add_item(item_info)
-            self.modal_log_manager.log(
-                message=f"아이템이 성공적으로 추가되었습니다",
-                level="DEBUG",
-                file_name="logic_detail_widget"
-            )
-        else:
-            self.modal_log_manager.log(
-                message=f"잘못된 형식의 데이터: {type(item_info)}",
-                level="ERROR",
-                file_name="logic_detail_widget"
-            )
-
-    def _delete_item(self):
-        """선택된 아이템을 삭제합니다."""
-        selected_items = self.LogicItemList__QListWidget.selectedItems()
-        if not selected_items:
-            return
             
-        for item in selected_items:
-            item_data = item.data(Qt.UserRole)
-            if item_data:
-                self.repository.delete_item(item_data)
-                self.modal_log_manager.log(
-                    message=f"아이템이 삭제되었습니다: {item_data.get('display_text', '')}",
-                    level="INFO",
-                    file_name="logic_detail_widget"
-                )
+    def _delete_selected_items(self):
+        """선택된 아이템들을 삭제"""
+        selected_items = self.LogicItemList__QListWidget.selectedItems()
+        if selected_items:
+            for item in selected_items:
+                item_data = item.data(Qt.UserRole)
+                if item_data:
+                    self.repository.delete_item(item_data)
 
-    def _move_item_up(self):
-        """선택된 아이템을 위로 이동합니다."""
-        current_row = self.LogicItemList__QListWidget.currentRow()
-        if current_row > 0:
-            item = self.LogicItemList__QListWidget.item(current_row)
-            item_data = item.data(Qt.UserRole)
-            self.repository.move_item_up(item_data)
-            self.modal_log_manager.log(
-                message=f"아이템을 위로 이동했습니다: {item_data.get('display_text', '')}",
-                level="INFO",
-                file_name="logic_detail_widget"
-            )
-
-    def _move_item_down(self):
-        """선택된 아이템을 아래로 이동합니다."""
-        current_row = self.LogicItemList__QListWidget.currentRow()
-        if current_row < self.LogicItemList__QListWidget.count() - 1:
-            item = self.LogicItemList__QListWidget.item(current_row)
-            item_data = item.data(Qt.UserRole)
-            self.repository.move_item_down(item_data)
-            self.modal_log_manager.log(
-                message=f"아이템을 아래로 이동했습니다: {item_data.get('display_text', '')}",
-                level="INFO",
-                file_name="logic_detail_widget"
-            )
+    def _move_selected_item(self, direction: str):
+        """선택된 아이템을 위/아래로 이동"""
+        current_item = self.LogicItemList__QListWidget.currentItem()
+        if current_item:
+            item_data = current_item.data(Qt.UserRole)
+            if direction == 'up':
+                self.repository.move_item_up(item_data)
+            else:
+                self.repository.move_item_down(item_data)
 
     def get_items(self):
         """현재 아이템 목록을 반환합니다."""
         return self.repository.get_items()
 
+    def has_items(self):
+        """목록에 아이템이 있는지 확인"""
+        return self.repository.get_items_count() > 0
+
     def clear_items(self):
         """모든 아이템을 삭제합니다."""
         self.repository.clear_items()
-        self.modal_log_manager.log(
-            message="모든 아이템이 삭제되었습니다",
-            level="INFO",
-            file_name="logic_detail_widget"
-        )
+
+    def _update_list_widget(self):
+        """Repository의 아이템 목록으로 ListWidget을 업데이트"""
+        self.LogicItemList__QListWidget.clear()
+        items = self.repository.get_items()
+        for item in items:
+            list_item = QListWidgetItem(item.get('display_text', ''))
+            list_item.setData(Qt.UserRole, item)
+            self.LogicItemList__QListWidget.addItem(list_item)
 
     def _on_formatted_key_info_changed(self, formatted_key_info):
         """키 입력이 변경되었을 때"""
@@ -1115,10 +1083,6 @@ class LogicDetailWidget(QFrame):
             )
             return False
 
-    def has_items(self):
-        """목록에 아이템이 있는지 확인"""
-        return self.repository.get_items_count() > 0
-
     def _copy_key_info_to_clipboard(self, event):
         """트리거 키 정보를 클립보드에 복사"""
         if self.TriggerKeyInfoLabel__QLabel.text():
@@ -1160,11 +1124,11 @@ class LogicDetailWidget(QFrame):
             file_name="logic_detail_widget"
         )
 
-    def _update_list_widget(self):
-        """Repository의 아이템 목록으로 ListWidget을 업데이트"""
-        self.LogicItemList__QListWidget.clear()
-        items = self.repository.get_items()
-        for item in items:
-            list_item = QListWidgetItem(item.get('display_text', ''))
-            list_item.setData(Qt.UserRole, item)
-            self.LogicItemList__QListWidget.addItem(list_item)
+    def _delete_item(self):
+        """선택된 아이템을 삭제"""
+        selected_items = self.LogicItemList__QListWidget.selectedItems()
+        if selected_items:
+            for item in selected_items:
+                item_data = item.data(Qt.UserRole)
+                if item_data:
+                    self.repository.delete_item(item_data)
