@@ -31,7 +31,8 @@ class LogicMakerToolKeyInfoController(QObject):
             self.base_log_manager.log(
                 message=f"validate_key_info - 유효성 검사 결과 잘못된 형식의 데이터: {type(key_info)}",
                 level="ERROR",
-                file_name="logic_maker_tool_key_info_controller"
+                file_name="logic_maker_tool_key_info_controller", 
+                method_name="validate_key_info"
             )
             return False
             
@@ -41,7 +42,8 @@ class LogicMakerToolKeyInfoController(QObject):
                 self.base_log_manager.log(
                     message=f"validate_key_info - 유효성 검사 결과 필수 필드 누락: {field}",
                     level="ERROR",
-                    file_name="logic_maker_tool_key_info_controller"
+                    file_name="logic_maker_tool_key_info_controller", 
+                    method_name="validate_key_info"
                 )
                 return False
                 
@@ -49,14 +51,16 @@ class LogicMakerToolKeyInfoController(QObject):
             self.base_log_manager.log(
                 message=f"validate_key_info - 유효성 검사 결과 잘못된 타입: {key_info['type']}",
                 level="ERROR",
-                file_name="logic_maker_tool_key_info_controller"
+                file_name="logic_maker_tool_key_info_controller", 
+                method_name="validate_key_info"
             )
             return False
             
         self.base_log_manager.log(
             message=f"validate_key_info - 유효성 검사 결과 키 정보 유효(key_info): {key_info}",
             level="DEBUG",
-            file_name="logic_maker_tool_key_info_controller"
+            file_name="logic_maker_tool_key_info_controller", 
+            method_name="validate_key_info"
         )
         return True
     
@@ -69,16 +73,18 @@ class LogicMakerToolKeyInfoController(QObject):
         4. Repository에 저장
         """
         self.base_log_manager.log(
-            message=f"key_state_info_process - 입력된 키에 상태값 부여 시작(entered_key_info): {entered_key_info}",
+            message=f"입력된 키에 상태값 부여 시작(entered_key_info): {entered_key_info}",
             level="DEBUG",
-            file_name="logic_maker_tool_key_info_controller"
+            file_name="logic_maker_tool_key_info_controller", 
+            method_name="key_state_info_process"
         )
         
         if not isinstance(entered_key_info, dict):
             self.base_log_manager.log(
-                message=f"key_state_info_process - 잘못된 형식의 데이터(entered_key_info): {type(entered_key_info)}",
+                message=f"잘못된 형식의 데이터(entered_key_info): {type(entered_key_info)}",
                 level="ERROR",
-                file_name="logic_maker_tool_key_info_controller"
+                file_name="logic_maker_tool_key_info_controller", 
+                method_name="key_state_info_process"
             )
             return
             
@@ -87,6 +93,8 @@ class LogicMakerToolKeyInfoController(QObject):
             'type': 'key',
             'key': entered_key_info.get('key_code'),
             'modifiers': entered_key_info.get('modifiers', []),
+            'modifiers_text': entered_key_info.get('modifiers_text', []),
+            'location': entered_key_info.get('location', ''),
             'display_text': f"{entered_key_info.get('simple_display_text')} --- 누르기",
             'action': '누르기',
             'scan_code': entered_key_info.get('scan_code'),
@@ -98,6 +106,8 @@ class LogicMakerToolKeyInfoController(QObject):
             'type': 'key',
             'key': entered_key_info.get('key_code'),
             'modifiers': entered_key_info.get('modifiers', []),
+            'modifiers_text': entered_key_info.get('modifiers_text', []),
+            'location': entered_key_info.get('location', ''),
             'display_text': f"{entered_key_info.get('simple_display_text')} --- 떼기",
             'action': '떼기',
             'scan_code': entered_key_info.get('scan_code'),
@@ -110,20 +120,23 @@ class LogicMakerToolKeyInfoController(QObject):
                 # Repository에 저장 (Repository에서 자동으로 order 부여)
                 self.repository.add_logic_detail_item(key_info)
                 self.base_log_manager.log(
-                    message=f"key_state_info_process - 키 정보 저장 완료(key_info): {key_info}",
+                    message=f"키 정보 저장 완료(key_info): {key_info}",
                     level="DEBUG",
-                    file_name="logic_maker_tool_key_info_controller"
+                    file_name="logic_maker_tool_key_info_controller", 
+                    method_name="key_state_info_process"
                 )
             else:
                 self.base_log_manager.log(
-                    message=f"key_state_info_process - 키 정보 검증 실패(key_info): {key_info}",
+                    message=f"키 정보 검증 실패(key_info): {key_info}",
                     level="ERROR",
-                    file_name="logic_maker_tool_key_info_controller"
+                    file_name="logic_maker_tool_key_info_controller", 
+                    method_name="key_state_info_process"
                 )
         
         self.base_log_manager.log(
-            message=f"key_state_info_process - 키 정보 추가 최종 완료(entered_key_info): {entered_key_info}",
+            message=f"키 정보 추가 최종 완료(entered_key_info): {entered_key_info}",
             level="INFO",
-            file_name="logic_maker_tool_key_info_controller"
+            file_name="logic_maker_tool_key_info_controller", 
+            method_name="key_state_info_process"
         )
 

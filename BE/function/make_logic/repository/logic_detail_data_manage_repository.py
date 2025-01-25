@@ -178,23 +178,23 @@ class LogicDetailDataManageRepository(QObject):
 
             # 2. 트리거 키의 modifiers 처리
 
-            # 트리거 키와 아이템의 modifiers를 정수로 변환
-            def convert_modifiers_to_int(data):
-                if 'modifiers' in data:
-                    if hasattr(data['modifiers'], 'value'):
-                        data['modifiers'] = int(data['modifiers'].value)
-                    elif not isinstance(data['modifiers'], int):
-                        data['modifiers'] = 0
+            # # 트리거 키와 아이템의 modifiers를 정수로 변환
+            # def convert_modifiers_to_int(data):
+            #     if 'modifiers' in data:
+            #         if hasattr(data['modifiers'], 'value'):
+            #             data['modifiers'] = int(data['modifiers'].value)
+            #         elif not isinstance(data['modifiers'], int):
+            #             data['modifiers'] = 0
 
-            # 트리거 키 처리
-            if not logic_info.get('is_nested', False) and 'trigger_key' in logic_info:
-                if logic_info['trigger_key']:
-                    convert_modifiers_to_int(logic_info['trigger_key'])
+            # # 트리거 키 처리
+            # if not logic_info.get('is_nested', False) and 'trigger_key' in logic_info:
+            #     if logic_info['trigger_key']:
+            #         convert_modifiers_to_int(logic_info['trigger_key'])
 
-            # 아이템 리스트 처리 
-            for item in logic_info.get('items', []):
-                if item.get('type') == 'key':
-                    convert_modifiers_to_int(item)
+            # # 아이템 리스트 처리 
+            # for item in logic_info.get('items', []):
+            #     if item.get('type') == 'key':
+            #         convert_modifiers_to_int(item)
 
             # 4. 이름 중복 검사 (수정 모드가 아닐 때만)
             if not self.current_logic_id:
