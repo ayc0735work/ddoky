@@ -125,7 +125,7 @@ class BaseLogManager(QObject):
         # 기본 메시지는 스타일 없이 반환
         return message
         
-    def log(self, message: str, level: str = "INFO", file_name: str = "", method_name: str = "", include_time: bool = False, print_to_terminal: bool = False):
+    def log(self, message: str, level: str = "INFO", file_name: str = "", method_name: str = "", include_time: bool = False, print_to_terminal: bool = False, print_only_terminal: bool = False):
         """로그 메시지를 기록합니다.
 
         Args:
@@ -135,6 +135,7 @@ class BaseLogManager(QObject):
             method_name (str, optional): 메서드 이름. Defaults to "".
             include_time (bool, optional): 경과 시간 포함 여부. Defaults to False.
             print_to_terminal (bool, optional): 터미널 출력 여부. Defaults to False.
+            print_only_terminal (bool, optional): 터미널에만 출력할지 여부. True일 경우 로그 영역에는 출력하지 않음. Defaults to False.
         """
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
@@ -157,21 +158,23 @@ class BaseLogManager(QObject):
         # 스타일 적용
         styled_message = self._apply_message_style(final_message)
         
-        # 터미널 출력이 요청된 경우
-        if print_to_terminal:
+        # 터미널 출력이 요청된 경우 또는 터미널 전용 출력인 경우
+        if print_to_terminal or print_only_terminal:
             print(styled_message)
-        
-        # 핸들러들에게 로그 전달
-        for handler in self._handlers:
-            handler(styled_message)
-        
-        # 버퍼에 추가
-        self.log_buffer.append(styled_message)
-        if len(self.log_buffer) > self.buffer_size:
-            self.log_buffer.pop(0)  # 가장 오래된 로그 제거
             
-        # 시그널 발생
-        self.log_message.emit(styled_message)
+        # 터미널 전용 출력이 아닌 경우에만 로그 영역에 출력
+        if not print_only_terminal:
+            # 핸들러들에게 로그 전달
+            for handler in self._handlers:
+                handler(styled_message)
+            
+            # 버퍼에 추가
+            self.log_buffer.append(styled_message)
+            if len(self.log_buffer) > self.buffer_size:
+                self.log_buffer.pop(0)  # 가장 오래된 로그 제거
+                
+            # 시그널 발생
+            self.log_message.emit(styled_message)
         
     def clear_buffer(self):
         """로그 버퍼를 비웁니다."""
