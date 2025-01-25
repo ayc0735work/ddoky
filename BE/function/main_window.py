@@ -29,7 +29,7 @@ from BE.function.etc_function.countdown.Controller.countdown_controller__input_s
 from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_handler import KeyboardHook
 import logging
 from BE.log.base_log_manager import BaseLogManager
-from BE.function.make_logic.repository.logic_detaill_item_manage_repository import LogicDetailItemsManageRepository
+from BE.function.make_logic.repository.logic_detaill_data_manage_repository import LogicDetailDataManageRepository
 
 class MainWindow(QMainWindow):
     """메인 윈도우 클래스
@@ -44,7 +44,7 @@ class MainWindow(QMainWindow):
         logic_manager (LogicManager): 로직 관리자
         logic_executor (LogicExecutor): 로직 실행기
         keyboard_hook (KeyboardHook): 키보드 입력 후킹 관리자
-        logic_item_repository (LogicDetailItemsManageRepository): 로직 아이템 저장소
+        logic_item_repository (LogicDetailDataManageRepository): 로직 아이템 저장소
         
     Components:
         logic_operation_widget (LogicOperationWidget): 로직 동작 제어 위젯
@@ -95,7 +95,7 @@ class MainWindow(QMainWindow):
         self.base_log_manager = BaseLogManager.instance()
         
         # 로직 아이템 저장소 초기화
-        self.logic_item_repository = LogicDetailItemsManageRepository()
+        self.logic_item_repository = LogicDetailDataManageRepository()
         
         # 로그 위젯 초기화
         self.log_widget = LogWidget()
