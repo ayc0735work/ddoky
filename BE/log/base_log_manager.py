@@ -34,7 +34,7 @@ class BaseLogManager(QObject):
         self._handlers = []
         self._timers = {}  # 각 모달별 타이머 저장
         self.log_buffer = []
-        self.buffer_size = 1000  # 버퍼 최대 크기
+        self.buffer_size = 10000  # 버퍼 최대 크기
         
     def add_handler(self, handler: Callable[[str], None]):
         """로그 핸들러를 추가합니다.
