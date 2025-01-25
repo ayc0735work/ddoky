@@ -135,9 +135,6 @@ class EnteredKeyInfoDialog(QDialog):
         else:
             self.NumLockWarning__QLabel.clear()
         
-        # 키 정보 변경 시그널 발생
-        self.formatted_key_info_changed.emit(formatted_key_info)
-        
         # 확인 버튼 활성화 상태 업데이트
         self.ConfirmButton__QPushButton.setEnabled(bool(formatted_key_info))
     
