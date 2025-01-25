@@ -105,7 +105,7 @@ class LogicDetailWidget(QFrame):
         
         # 로직 이름 라벨
         LogicNameLabel__QLabel = QLabel("로직 이름:")
-        LogicNameLabel__QLabel.setFixedWidth(70)
+        LogicNameLabel__QLabel.setFixedWidth(60)
         LogicNameSection__QHBoxLayout.addWidget(LogicNameLabel__QLabel)
         
         # 로직 이름 입력
@@ -115,6 +115,39 @@ class LogicDetailWidget(QFrame):
         LogicNameSection__QHBoxLayout.addWidget(self.LogicNameInput__QLineEdit, 1)  # stretch factor 1을 추가하여 남은 공간을 모 사용
         
         LogicConfigurationLayout__QVBoxLayout.addLayout(LogicNameSection__QHBoxLayout)
+
+        # 트리거 키 입력 레이아웃
+        TriggerKeySection__QHBoxLayout = QHBoxLayout()
+        TriggerKeySection__QHBoxLayout.setContentsMargins(0, 0, 0, 0)
+        TriggerKeySection__QHBoxLayout.setSpacing(5)
+        
+        # 트리거 키 라벨
+        TriggerKeyLabel__QLabel = QLabel("실행 트리거 키:")
+        TriggerKeyLabel__QLabel.setFixedWidth(84)
+        TriggerKeySection__QHBoxLayout.addWidget(TriggerKeyLabel__QLabel)
+        
+        # 트리거 키 입력 필드
+        self.TriggerKeyInput__QLineEdit = QLineEdit()
+        self.TriggerKeyInput__QLineEdit.setReadOnly(True)
+        self.TriggerKeyInput__QLineEdit.setPlaceholderText("트리거 키를 설정하세요")
+        self.TriggerKeyInput__QLineEdit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)  # 수평 확장 정책 설정
+        TriggerKeySection__QHBoxLayout.addWidget(self.TriggerKeyInput__QLineEdit)
+        
+        # 편집 버튼
+        self.EditTriggerKeyButton__QPushButton = QPushButton("편집")
+        self.EditTriggerKeyButton__QPushButton.setStyleSheet(BUTTON_STYLE)
+        self.EditTriggerKeyButton__QPushButton.setFixedWidth(40)
+        self.EditTriggerKeyButton__QPushButton.clicked.connect(self._edit_trigger_key)
+        TriggerKeySection__QHBoxLayout.addWidget(self.EditTriggerKeyButton__QPushButton)
+        
+        # 삭제 버튼
+        self.DeleteTriggerKeyButton__QPushButton = QPushButton("삭제")
+        self.DeleteTriggerKeyButton__QPushButton.setStyleSheet(BUTTON_STYLE)
+        self.DeleteTriggerKeyButton__QPushButton.setFixedWidth(40)
+        self.DeleteTriggerKeyButton__QPushButton.clicked.connect(self._delete_trigger_key)
+        TriggerKeySection__QHBoxLayout.addWidget(self.DeleteTriggerKeyButton__QPushButton)
+        
+        LogicConfigurationLayout__QVBoxLayout.addLayout(TriggerKeySection__QHBoxLayout)
 
         # 트리거 키 정보 영역
         TriggerKeySection__QVBoxLayout = QVBoxLayout()
@@ -233,12 +266,7 @@ class LogicDetailWidget(QFrame):
 
         LogicConfigurationLayout__QVBoxLayout.addLayout(LogicControlButtonsSection__QHBoxLayout)
         self.setLayout(LogicConfigurationLayout__QVBoxLayout)
-     
-
-
-
-
-        
+             
         # 초기 데이터 로드 (테스트용)
         self._load_test_data()
         
@@ -313,6 +341,8 @@ class LogicDetailWidget(QFrame):
         
         if not formatted_key_info:  # 키 정보가 비어있으면 라벨 초기화
             self.TriggerKeyInfoLabel__QLabel.clear()
+            self.TriggerKeyInput__QLineEdit.clear()
+            self.TriggerKeyInput__QLineEdit.setPlaceholderText("트리거 키를 설정하세요")
             self.trigger_key_info = None
             self.modal_log_manager.log(
                 message="키 정보가 비어있어 초기화됨",
@@ -341,7 +371,7 @@ class LogicDetailWidget(QFrame):
                         'name': logic.get('name'),
                         'id': logic_id
                     })
-        
+
         if duplicate_logics:
             # 중복된 트리거 키가 있는 경우
             duplicate_info = "\n\n".join([
@@ -373,6 +403,7 @@ class LogicDetailWidget(QFrame):
         # 중복이 없는 경우 정상적으로 트리거 키 설정
         formatted_info = create_formatted_key_info(formatted_key_info)
         self.TriggerKeyInfoLabel__QLabel.setText(formatted_info['detail_display_text'])
+        self.TriggerKeyInput__QLineEdit.setText(formatted_info['simple_display_text'])
         self.trigger_key_info = formatted_key_info.copy()  # 깊은 복사로 변경
         self.modal_log_manager.log(
             message=f"트리거 키 설정 완료: {self.trigger_key_info}",
@@ -933,6 +964,8 @@ class LogicDetailWidget(QFrame):
         """트리거 키 정보 초기화"""
         self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.clear_key()
         self.TriggerKeyInfoLabel__QLabel.clear()
+        self.TriggerKeyInput__QLineEdit.clear()
+        self.TriggerKeyInput__QLineEdit.setPlaceholderText("트리거 키를 설정하세요")
         self.trigger_key_info = None
         self.modal_log_manager.log(
             message="트리거 키 정보가 초기화되었습니다",
@@ -956,3 +989,13 @@ class LogicDetailWidget(QFrame):
         self.is_nested_checkbox.setChecked(False)
         self.clear_key()
         self.repository.clear_items()  # Repository를 통해 아이템 목록 초기화
+
+    def _edit_trigger_key(self):
+        """트리거 키 편집 다이얼로그를 엽니다."""
+        self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.exec()
+
+    def _delete_trigger_key(self):
+        """트리거 키 정보를 삭제합니다."""
+        self.clear_key()
+        self.TriggerKeyInput__QLineEdit.clear()
+        self.TriggerKeyInput__QLineEdit.setPlaceholderText("트리거 키를 설정하세요")
