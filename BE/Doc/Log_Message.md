@@ -36,20 +36,20 @@ class YourClass:
 
 #### 2.2.1 기본 로그 형식
 ```
-[날짜 시간] [레벨] [모달이름] [메서드이름] 메시지
+[날짜 시간] [레벨] [파일 이름] [메서드이름] 메시지
 ```
 예시:
 ```
-[2024-01-01 12:34:56] [INFO] [키입력모달] [process_key_input] 키 입력이 완료되었습니다
+[2024-01-01 12:34:56] [INFO] [base_log_manager] [process_key_input] 키 입력이 완료되었습니다
 ```
 
 #### 2.2.2 시간 추적이 필요한 로그 형식
 ```
-[날짜 시간] [경과시간] [레벨] [모달이름] [메서드이름] 메시지
+[날짜 시간] [경과시간] [레벨] [파일 이름] [메서드이름] 메시지
 ```
 예시:
 ```
-[2024-01-01 12:34:56] [1.2345초] [INFO] [로직실행] [execute_logic] 로직 실행을 시작합니다
+[2024-01-01 12:34:56] [1.2345초] [INFO] [base_log_manager] [execute_logic] 로직 실행을 시작합니다
 ```
 
 #### 2.2.3 로그 레벨 사용 지침
@@ -80,16 +80,16 @@ class YourClass:
 self.base_log_manager.log(
     message="설정이 변경되었습니다",
     level="INFO",
-    file_name="설정모달",
-    method_name="change_settings"
+    file_name="base_log_manager",
+    method_name="add_handler"
 )
 
 # 시간 추적이 필요한 로그
 self.base_log_manager.log(
     message="로직 실행을 시작합니다",
     level="INFO",
-    file_name="로직실행",
-    method_name="start_logic",
+    file_name="base_log_manager",
+    method_name="remove_handler",
     include_time=True
 )
 
@@ -97,8 +97,8 @@ self.base_log_manager.log(
 self.base_log_manager.log(
     message="중요한 오류가 발생했습니다",
     level="ERROR",
-    file_name="시스템",
-    method_name="error_handler",
+    file_name="base_log_manager",
+    method_name="start_timer",
     print_to_terminal=True
 )
 
@@ -106,23 +106,15 @@ self.base_log_manager.log(
 self.base_log_manager.log(
     message="디버그 정보: 변수 값 = 42",
     level="DEBUG",
-    file_name="로직실행",
-    method_name="process_data",
+    file_name="base_log_manager",
+    method_name="reset_timer",
     print_only_terminal=True
 )
 ```
 
 ### 2.4 파일 이름 규칙
-- 한글 사용
-- 띄어쓰기 없이 작성
-- 표준 파일 이름:
-  - 키입력모달
-  - 로직실행
-  - 로직상세
-  - 로직리스트
-  - 기타기능
-  - 설정모달
-  - 시스템
+- 현재 파일의 이름을 확장자 빼고 파일 이름만 작성
+   예시) BE\function\manage_logic\logic_manager.py 파일이라면 file_name은 logic_manager
 
 ### 2.5 주의사항
 1. 모든 로그는 명확하고 간결하게 작성
@@ -130,14 +122,14 @@ self.base_log_manager.log(
 3. 터미널 출력은 중요한 이벤트에만 `print_to_terminal=True` 사용
 4. 터미널 전용 출력(`print_only_terminal=True`)은 디버깅 목적으로만 사용
 5. 메서드 이름은 실제 호출된 메서드나 함수의 이름을 사용
-6. 파일 이름은 일관성 있게 사용
+6. 파일 이름은 확장자 빼고 파일 이름만 작성
 7. 개인정보나 민감한 데이터는 로그에 포함하지 않음
 8. HTML 스타일 태그는 UI 표시용으로만 사용
 
 ## 3. 로그 관리
 
 ### 3.1 버퍼 관리
-- 최대 1000개의 로그 메시지 저장
+- 최대 10000개의 로그 메시지 저장
 - 버퍼 초과 시 가장 오래된 로그 자동 제거
 
 ### 3.2 시간 관리
