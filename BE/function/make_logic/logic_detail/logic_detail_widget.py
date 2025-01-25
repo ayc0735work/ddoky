@@ -896,7 +896,16 @@ class LogicDetailWidget(QFrame):
 
     def get_logic_data(self):
         """기존 메서드 수정"""
+        # 가장 큰 order 값 찾기
+        logics = self.settings_manager.load_logics(force=True)
+        max_order = 0
+        for logic in logics.values():
+            order = logic.get('order', 0)
+            if order > max_order:
+                max_order = order
+
         data = {
+            'order': max_order + 1,  # 가장 큰 order + 1
             'name': self.LogicNameInput__QLineEdit.text(),
             'repeat_count': self.RepeatCountInput__QSpinBox.value(),
             'items': self.get_items(),
