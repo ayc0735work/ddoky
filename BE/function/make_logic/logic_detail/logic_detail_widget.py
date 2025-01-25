@@ -17,7 +17,7 @@ from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_h
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 from BE.function._common_components.modal.text_input_modal.text_input_dialog import TextInputDialog
 from BE.log.base_log_manager import BaseLogManager
-from BE.function.make_logic.repository.logic_detaill_data_manage_repository import LogicDetailDataManageRepository
+from BE.function.make_logic.repository.logic_detail_data_manage_repository import LogicDetailDataManageRepository
 
 class LogicDetailWidget(QFrame):
     """로직 상세 내용을 표시하고 관리하는 위젯"""

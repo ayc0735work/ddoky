@@ -108,7 +108,7 @@
 
 ## 5. Repository 처리
 ### 파일
-- `logic_detaill_data_manage_repository.py`
+- `logic_detail_data_manage_repository.py`
 
 ### 메서드
 - `add_item(item_info)`

@@ -29,7 +29,7 @@ from BE.function.etc_function.countdown.Controller.countdown_controller__input_s
 from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_handler import KeyboardHook
 import logging
 from BE.log.base_log_manager import BaseLogManager
-from BE.function.make_logic.repository.logic_detaill_data_manage_repository import LogicDetailDataManageRepository
+from BE.function.make_logic.repository.logic_detail_data_manage_repository import LogicDetailDataManageRepository
 
 class MainWindow(QMainWindow):
     """메인 윈도우 클래스
