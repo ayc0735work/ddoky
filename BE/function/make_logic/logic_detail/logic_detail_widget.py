@@ -425,52 +425,42 @@ class LogicDetailWidget(QFrame):
         self.TriggerKeyInput__QLineEdit.setPlaceholderText("트리거 키를 설정하세요")
 
     def _save_logic(self):
-        """현재 로직을 저장하는 메서드
-        
-        현재 로직 데이터를 가져와서 LogicManager를 통해 저장을 시도합니다.
-        
-        프로세스:
-        1. get_logic_data()를 통해 현재 UI에 입력된 로직 데이터를 가져옴
-        2. LogicManager의 save_logic() 메서드를 호출하여 저장 시도
-        3. 저장 성공 시 로그 메시지 출력 후 True 반환
-        4. 저장 실패 시 에러 메시지 표시 후 False 반환
-        
-        연결된 시그널:
-        - logic_saved: MainWindow._on_logic_saved() 메서드로 연결
-        - logic_updated: MainWindow._on_logic_updated() 메서드로 연결
-        
-        Returns:
-            bool: 저장 성공 여부
+        """저장 버튼 클릭 핸들러
+        - UI 데이터 수집
+        - Repository에 저장 요청
+        - 결과에 따른 UI 업데이트
         """
         try:
-            logic_data = self.get_logic_data()
+            # UI에서 데이터 수집
+            logic_data = {
+                'name': self.LogicNameInput__QLineEdit.text(),
+                'repeat_count': self.RepeatCountInput__QSpinBox.value(),
+                'is_nested': self.is_nested_checkbox.isChecked(),
+                'trigger_key': self.trigger_key_info,
+                'items': self.repository.get_logic_detail_items()
+            }
             
-            success, result = self.logic_manager.save_logic(self.current_logic_id, logic_data)
+            # Repository에 저장 요청
+            success, message = self.repository.save_logic_detail_items(logic_data)
             
+            # UI 업데이트
             if success:
-                self.base_log_manager.log(
-                    message=f"로직 '{logic_data['name']}'이(가) 저장되었습니다",
-                    level="INFO",
-                    file_name="logic_detail_widget",
-                    method_name="_save_logic"
-                )
                 return True
             else:
-                # 실패 시 에러 메시지 표시
                 QMessageBox.warning(
                     self,
                     "저장 실패",
-                    result,  # "동일한 이름의 로직이 이미 존재합니다." 메시지가 표시됨
+                    message,
                     QMessageBox.Ok
                 )
                 return False
                 
         except Exception as e:
-            self.base_log_manager.log(
-                message=f"로직 저장 중 오류 발생: {str(e)}",
-                level="ERROR",
-                file_name="logic_detail_widget",
-                method_name="_save_logic"
+            QMessageBox.critical(
+                self,
+                "오류",
+                f"저장 중 오류가 발생했습니다: {str(e)}",
+                QMessageBox.Ok
             )
             return False
 
