@@ -46,9 +46,9 @@ class LogicDetailWidget(QFrame):
         self.logic_manager = LogicManager(self.settings_manager)  # LogicManager 인스턴스 추가
         
         # Repository 시그널 연결
-        self.repository.item_added.connect(self._update_list_widget)
-        self.repository.item_deleted.connect(self._update_list_widget)
-        self.repository.item_moved.connect(self._update_list_widget)
+        self.repository.logic_detail_item_added.connect(self._update_list_widget)
+        self.repository.logic_detail_item_deleted.connect(self._update_list_widget)
+        self.repository.logic_detail_item_moved.connect(self._update_list_widget)
         
         # 중첩로직용 체크박스 초기 상태 설정
         self.is_nested_checkbox.setChecked(True)

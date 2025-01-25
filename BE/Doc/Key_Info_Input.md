@@ -133,7 +133,7 @@
 2. order 값 할당
 3. 아이템 목록에 추가
 4. 로그 기록
-5. item_added 시그널 발생
+5. logic_detail_item_added 시그널 발생
 
 ## 6. UI 업데이트
 ### 파일
@@ -159,7 +159,7 @@
    - `EnteredKeyInfoDialog.accept()` → `LogicMakerToolWidget._open_key_input_dialog()` (다이얼로그 결과)
 
 3. 아이템 추가
-   - `LogicDetailItemsManageRepository.add_item()` → `item_added` 시그널 → `LogicDetailWidget._update_list_widget()`
+   - `LogicDetailItemsManageRepository.add_item()` → `logic_detail_item_added` 시그널 → `LogicDetailWidget._update_list_widget()`
 
 ## 데이터 흐름
 ```mermaid
@@ -168,6 +168,6 @@ graph TD
     B --> C[EnteredKeyInfoDialog]
     C --> D[LogicMakerToolKeyInfoController]
     D --> E[LogicDetailItemsManageRepository]
-    E -- item_added 시그널 --> F[LogicDetailWidget]
+    E -- logic_detail_item_added 시그널 --> F[LogicDetailWidget]
     F --> G[UI 업데이트]
 ```
