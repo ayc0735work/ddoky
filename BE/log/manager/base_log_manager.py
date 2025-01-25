@@ -125,13 +125,14 @@ class BaseLogManager(QObject):
         # 기본 메시지는 스타일 없이 반환
         return message
         
-    def log(self, message: str, level: str = "INFO", file_name: str = "", include_time: bool = False, print_to_terminal: bool = False):
+    def log(self, message: str, level: str = "INFO", file_name: str = "", method_name: str = "", include_time: bool = False, print_to_terminal: bool = False):
         """로그 메시지를 기록합니다.
 
         Args:
             message (str): 로그 메시지
             level (str, optional): 로그 레벨. Defaults to "INFO".
             file_name (str, optional): 파일 이름. Defaults to "".
+            method_name (str, optional): 메서드 이름. Defaults to "".
             include_time (bool, optional): 경과 시간 포함 여부. Defaults to False.
             print_to_terminal (bool, optional): 터미널 출력 여부. Defaults to False.
         """
@@ -145,8 +146,10 @@ class BaseLogManager(QObject):
             elapsed = time.time() - self._timers[file_name]
             log_parts.append(f"[{elapsed:.4f}초]")
         
-        # 레벨과 파일 이름 추가
+        # 레벨, 파일 이름, 메서드 이름 추가
         log_parts.extend([f"[{level}]", f"[{file_name}]"])
+        if method_name:
+            log_parts.append(f"[{method_name}]")
         
         # 최종 로그 메시지 구성 (메시지 끝에 개행 추가)
         final_message = " ".join(log_parts + [message]) + "\n"
