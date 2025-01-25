@@ -6,7 +6,7 @@
 로그 메시지 시스템은 중앙 집중식 로그 관리를 통해 애플리케이션의 모든 로그를 체계적으로 관리합니다.
 
 ### 1.2 주요 컴포넌트
-1. **BaseLogManager** (BE/log/manager/modal_log_manager.py)
+1. **BaseLogManager** (BE/log/manager/base_log_manager.py)
    - 로그 메시지의 중앙 관리자
    - 싱글톤 패턴으로 구현
    - 로그 레벨, 시간, 출처 정보 관리
@@ -22,14 +22,14 @@
 
 #### 2.1.1 필요한 import
 ```python
-from BE.log.manager.modal_log_manager import BaseLogManager
+from BE.log.manager.base_log_manager import BaseLogManager
 ```
 
 #### 2.1.2 클래스에서 초기화
 ```python
 class YourClass:
     def __init__(self):
-        self.modal_log_manager = BaseLogManager.instance()
+        self.base_log_manager = BaseLogManager.instance()
 ```
 
 ### 2.2 로그 메시지 작성 가이드
@@ -77,7 +77,7 @@ class YourClass:
 ### 2.3 사용 예시
 ```python
 # 일반 로그 (메서드 이름 포함)
-self.modal_log_manager.log(
+self.base_log_manager.log(
     message="설정이 변경되었습니다",
     level="INFO",
     file_name="설정모달",
@@ -85,7 +85,7 @@ self.modal_log_manager.log(
 )
 
 # 시간 추적이 필요한 로그
-self.modal_log_manager.log(
+self.base_log_manager.log(
     message="로직 실행을 시작합니다",
     level="INFO",
     file_name="로직실행",
@@ -94,7 +94,7 @@ self.modal_log_manager.log(
 )
 
 # 터미널 출력이 필요한 로그
-self.modal_log_manager.log(
+self.base_log_manager.log(
     message="중요한 오류가 발생했습니다",
     level="ERROR",
     file_name="시스템",
@@ -103,7 +103,7 @@ self.modal_log_manager.log(
 )
 
 # 터미널에만 출력하는 로그
-self.modal_log_manager.log(
+self.base_log_manager.log(
     message="디버그 정보: 변수 값 = 42",
     level="DEBUG",
     file_name="로직실행",

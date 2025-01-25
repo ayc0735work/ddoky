@@ -23,7 +23,7 @@ class EnteredKeyInfoWidget(QWidget):
         """
         super().__init__(parent)
         self.show_details = show_details
-        self.modal_log_manager = BaseLogManager.instance()
+        self.base_log_manager = BaseLogManager.instance()
         self._setup_ui()
     
     def _setup_ui(self):

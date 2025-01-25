@@ -44,7 +44,7 @@ class EnteredKeyInfoDialog(QDialog):
         )
         
         self.keyboard_hook = None
-        self.modal_log_manager = BaseLogManager.instance()
+        self.base_log_manager = BaseLogManager.instance()
         self._result_key_info = None  # 다이얼로그 결과값 저장
         self._current_formatted_key_info = None  # 현재 입력된 키 정보
         
@@ -115,7 +115,7 @@ class EnteredKeyInfoDialog(QDialog):
         """키가 눌렸을 때 formatted_key_info를 받아와서 처리 하는 로직
         UI 업데이트를 하고, Numlock 상태 체크를 하고, 키 정보 변경 시그널을 보내고, 확인 버튼 활성화 상태 업데이트를 한다
         """
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message=f"_on_key_pressed - 입력받은 데이터(formatted_key_info): {formatted_key_info}",
             level="DEBUG",
             file_name="entered_key_info_dialog"
@@ -167,14 +167,14 @@ class EnteredKeyInfoDialog(QDialog):
     
     def _on_confirm(self):
         """확인 버튼 클릭 시"""
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message=f"_on_confirm - 확인 버튼 클릭 시 현재 키 정보 저장(current_key_info): {self._current_formatted_key_info}",
             level="DEBUG",
             file_name="entered_key_info_dialog"
         )
         
         if self._current_formatted_key_info:  # 키 정보가 있는 경우
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="_on_confirm - 키 입력 모달의 확인버튼이 클릭되었습니다.",
                 level="INFO",
                 file_name="entered_key_info_dialog"
@@ -182,7 +182,7 @@ class EnteredKeyInfoDialog(QDialog):
             # 결과값 저장
             self._result_key_info = self._current_formatted_key_info
 
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"_on_confirm - 키 입력 모달 닫히기 전 최종으로 저장된 키 정보(result_key_info): {self._result_key_info}",
                 level="DEBUG",
                 file_name="entered_key_info_dialog"

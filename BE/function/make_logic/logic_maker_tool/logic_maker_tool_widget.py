@@ -27,7 +27,7 @@ class LogicMakerToolWidget(QFrame):
         super().__init__(parent)
         self.repository = None  # repository는 외부에서 설정
         self._Logic_Maker_Tool_key_info_controller = None  # controller도 repository 설정 후 생성
-        self.modal_log_manager = BaseLogManager.instance()
+        self.base_log_manager = BaseLogManager.instance()
         self.init_ui()
 
     @property
@@ -170,7 +170,7 @@ class LogicMakerToolWidget(QFrame):
     def _on_delay_input(self, delay_info):
         """지연시간 입력 처리"""
         try:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"지연시간 {delay_info.get('duration', 0.0):.4f}초가 추가되었습니다",
                 level="INFO",
                 file_name="logic_maker_tool_widget"
@@ -178,7 +178,7 @@ class LogicMakerToolWidget(QFrame):
             # Repository를 통해 아이템 추가
             self.repository.add_item(delay_info)
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"지연시간 입력 처리 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_maker_tool_widget"
@@ -196,7 +196,7 @@ class LogicMakerToolWidget(QFrame):
     def _on_wait_click_input(self, wait_click_info):
         """클릭 대기 입력 처리"""
         try:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"{wait_click_info.get('display_text', '')} 아이템이 추가되었습니다",
                 level="INFO",
                 file_name="logic_maker_tool_widget"
@@ -204,7 +204,7 @@ class LogicMakerToolWidget(QFrame):
             # Repository를 통해 아이템 추가
             self.repository.add_item(wait_click_info)
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"클릭 대기 입력 처리 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_maker_tool_widget"
@@ -233,7 +233,7 @@ class LogicMakerToolWidget(QFrame):
                 }
                 # Repository를 통해 아이템 추가
                 self.repository.add_item(image_search_info)
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message=f"이미지 서치 체크 영역이 추가되었습니다: {area}",
                     level="INFO",
                     file_name="logic_maker_tool_widget"
@@ -247,7 +247,7 @@ class LogicMakerToolWidget(QFrame):
             if text_info:
                 # Repository를 통해 아이템 추가
                 self.repository.add_item(text_info)
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message=f"텍스트 입력이 추가되었습니다: {text_info['text']}",
                     level="INFO",
                     file_name="logic_maker_tool_widget"

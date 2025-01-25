@@ -54,7 +54,7 @@ class CountdownWorker(QThread):
             _lock: 스레드 동기화를 위한 Lock
         """
         super().__init__(parent)
-        self.modal_log_manager = BaseLogManager.instance()
+        self.base_log_manager = BaseLogManager.instance()
         self._target_end_time = None
         self._is_running = False
         self._lock = threading.Lock()
@@ -71,7 +71,7 @@ class CountdownWorker(QThread):
         with self._lock:
             self._target_end_time = target_time
             remaining_time = target_time - perf_counter()
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"카운트다운 시작: {remaining_time:.2f}초",
                 level="DEBUG",
                 file_name="countdown_controller_main"
@@ -83,7 +83,7 @@ class CountdownWorker(QThread):
         실행 중인 카운트다운을 안전하게 중지합니다.
         스레드 안전: Lock을 사용하여 _is_running 플래그 접근 보호
         """
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message="정지 요청",
             level="DEBUG",
             file_name="countdown_controller_main"
@@ -110,7 +110,7 @@ class CountdownWorker(QThread):
         """
         with self._lock:
             if self._target_end_time is None:
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message="목표 시간이 설정되지 않음",
                     level="ERROR",
                     file_name="countdown_controller_main"
@@ -119,7 +119,7 @@ class CountdownWorker(QThread):
                 
             self._is_running = True
             target_time = self._target_end_time
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"카운트다운 시작. 목표 시간: {target_time}",
                 level="DEBUG",
                 file_name="countdown_controller_main"
@@ -128,14 +128,14 @@ class CountdownWorker(QThread):
         while True:
             with self._lock:
                 if not self._is_running:
-                    self.modal_log_manager.log(
+                    self.base_log_manager.log(
                         message="정지 신호 감지",
                         level="DEBUG",
                         file_name="countdown_controller_main"
                     )
                     break
                 if self._target_end_time != target_time:
-                    self.modal_log_manager.log(
+                    self.base_log_manager.log(
                         message="목표 시간 변경 감지",
                         level="DEBUG",
                         file_name="countdown_controller_main"
@@ -148,7 +148,7 @@ class CountdownWorker(QThread):
             self.time_updated.emit(remaining)
             
             if remaining <= 0:
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message="카운트다운 완료",
                     level="DEBUG",
                     file_name="countdown_controller_main"
@@ -157,7 +157,7 @@ class CountdownWorker(QThread):
             
             self.msleep(1)  # 1ms 대기 (CPU 부하 감소)
         
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message="스레드 종료",
             level="DEBUG",
             file_name="countdown_controller_main"
@@ -207,7 +207,7 @@ class CountdownController(QObject):
            - max_delay: 최대 지연 시간
         """
         super().__init__()
-        self.modal_log_manager = BaseLogManager.instance()
+        self.base_log_manager = BaseLogManager.instance()
         self._countdown_value = 10.00
         self._is_running = False
         self._start_time = None
@@ -231,7 +231,7 @@ class CountdownController(QObject):
             'max_delay': 0
         }
         
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message="초기화 완료",
             level="DEBUG",
             file_name="countdown_controller_main"
@@ -257,7 +257,7 @@ class CountdownController(QObject):
         self._worker = CountdownWorker()
         self._worker.time_updated.connect(self._update_time)
         self._worker.finished.connect(self._on_worker_finished)
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message="새로운 워커 생성",
             level="DEBUG",
             file_name="countdown_controller_main"
@@ -284,7 +284,7 @@ class CountdownController(QObject):
         스레드 안전:
             모든 상태 변경은 Lock 내에서 수행
         """
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message="카운트다운 리셋 시작",
             level="DEBUG",
             file_name="countdown_controller_main"
@@ -313,7 +313,7 @@ class CountdownController(QObject):
                 self._timer.start()
             
             self.countdown_updated.emit(self._countdown_value)
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="카운트다운 리셋 완료, 새로운 카운트다운 시작",
                 level="DEBUG",
                 file_name="countdown_controller_main"
@@ -333,7 +333,7 @@ class CountdownController(QObject):
         실행 중일 때만 카운트다운을 중지합니다.
         """
         if self.is_running():
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="카운트다운 중지",
                 level="DEBUG",
                 file_name="countdown_controller_main"
@@ -364,7 +364,7 @@ class CountdownController(QObject):
         
         카운트다운이 완료되거나 중지된 경우에만 처리합니다.
         """
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message="워커 스레드 완료",
             level="DEBUG",
             file_name="countdown_controller_main"
@@ -374,7 +374,7 @@ class CountdownController(QObject):
                 self._is_running = False
                 self._timer.stop()
                 self.countdown_finished.emit()
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message="카운트다운 정상 완료",
                     level="DEBUG",
                     file_name="countdown_controller_main"
@@ -397,7 +397,7 @@ class CountdownController(QObject):
                 if update_delay > 0.1:  # 100ms 이상 지연 시
                     self._performance_stats['delays'] += 1
                     self._performance_stats['max_delay'] = max(self._performance_stats['max_delay'], update_delay)
-                    self.modal_log_manager.log(
+                    self.base_log_manager.log(
                         message=f"타이머 지연 감지: {update_delay:.3f}초",
                         level="WARNING",
                         file_name="countdown_controller_main"

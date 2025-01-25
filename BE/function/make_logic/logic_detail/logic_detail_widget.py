@@ -32,7 +32,7 @@ class LogicDetailWidget(QFrame):
     def __init__(self, repository: LogicItemManageRepository, parent=None):
         super().__init__(parent)
         self.repository = repository
-        self.modal_log_manager = BaseLogManager.instance()
+        self.base_log_manager = BaseLogManager.instance()
         self.init_ui()
         self.edit_mode = False  # 수정 모드 여부
         self.last_formatted_key_info = None
@@ -373,7 +373,7 @@ class LogicDetailWidget(QFrame):
                        f"{duplicate_info}")
             msg.setStandardButtons(QMessageBox.Ok)
             
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"중복된 트리거 키 발견: {len(duplicate_logics)}개의 로직에서 사용 중",
                 level="WARNING", 
                 file_name="logic_detail_widget"
@@ -393,7 +393,7 @@ class LogicDetailWidget(QFrame):
             self.EditTriggerKeyButton__QPushButton.setEnabled(True)
             self.DeleteTriggerKeyButton__QPushButton.setEnabled(True)
             
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"트리거 키 입력 완료(self.trigger_key_info): {self.trigger_key_info}",
                 level="DEBUG",
                 file_name="logic_detail_widget"
@@ -411,7 +411,7 @@ class LogicDetailWidget(QFrame):
 
     def _edit_trigger_key(self):
         """트리거 키 편집 다이얼로그를 엽니다."""
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message="트리거 키 편집 버튼을 클릭했습니다.",
             level="INFO",
             file_name="logic_detail_widget"
@@ -421,7 +421,7 @@ class LogicDetailWidget(QFrame):
             result = dialog.get_entered_key_info_result()
             if result and not self._check_duplicate_trigger_key(result):
                 self._update_trigger_key_info(result)
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message=f"트리거 키 변경 완료(self.trigger_key_info): {self.trigger_key_info}",
                     level="DEBUG",
                     file_name="logic_detail_widget"
@@ -429,7 +429,7 @@ class LogicDetailWidget(QFrame):
 
     def _delete_trigger_key(self):
         """트리거 키 정보를 삭제합니다."""
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message="트리거 키 삭제 버튼을 클릭했습니다.",
             level="INFO",
             file_name="logic_detail_widget"
@@ -477,7 +477,7 @@ class LogicDetailWidget(QFrame):
                 trigger_key = logic_info.get('trigger_key', {})
                 if isinstance(trigger_key, dict) and trigger_key: # trigger_key가 dict이고 비어있지 않을 경우
                     self.trigger_key_info = trigger_key.copy()
-                    self.modal_log_manager.log(
+                    self.base_log_manager.log(
                         message=f"load_logic - 트리거 키 정보 불러오기 완료(self.trigger_key_info): {self.trigger_key_info}",
                         level="DEBUG",
                         file_name="logic_detail_widget"
@@ -545,7 +545,7 @@ class LogicDetailWidget(QFrame):
                 }
             }
             item.setData(Qt.UserRole, item_data)
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"중첩로직 '{logic_name}'이(가) UUID {logic_id}로 처리되었습니다",
                 level="INFO",
                 file_name="logic_detail_widget"
@@ -553,7 +553,7 @@ class LogicDetailWidget(QFrame):
             return item, True
             
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"중첩로직 처리 중 오류 발생: {str(e)}",
                 level="ERROR", 
                 file_name="logic_detail_widget"
@@ -562,14 +562,14 @@ class LogicDetailWidget(QFrame):
     
     def _add_logic_item(self, item_info):
         """로직 아이템을 리스트에 추가"""
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message=f"로직 아이템 추가 시작 - 아이템 정보: {item_info}",
             level="DEBUG",
             file_name="logic_detail_widget"
         )
         
         if not isinstance(item_info, dict):
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="오류: 잘못된 아이템 정보 형식",
                 level="ERROR",
                 file_name="logic_detail_widget"
@@ -584,7 +584,7 @@ class LogicDetailWidget(QFrame):
         if item_info.get('type') == 'logic':
             logic_name = item_info.get('logic_name')
             logic_id = item_info.get('logic_id')
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"로직 타입 아이템 처리 - 이름: {logic_name}, ID: {logic_id}",
                 level="DEBUG",
                 file_name="logic_detail_widget"
@@ -602,7 +602,7 @@ class LogicDetailWidget(QFrame):
             item.setData(Qt.UserRole, item_data)
             
             self.LogicItemList__QListWidget.addItem(item)
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"로직 아이템 추가 완료 - 순서: {current_count + 1}",
                 level="INFO",
                 file_name="logic_detail_widget"
@@ -614,7 +614,7 @@ class LogicDetailWidget(QFrame):
             item_info['order'] = current_count + 1
             item.setData(Qt.UserRole, item_info)
             self.LogicItemList__QListWidget.addItem(item)
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"일반 아이템 추가 완료 - 타입: {item_info.get('type')}, 순서: {current_count + 1}",
                 level="INFO",
                 file_name="logic_detail_widget"
@@ -623,7 +623,7 @@ class LogicDetailWidget(QFrame):
     def _paste_item(self):
         """복사된 아이템들을 현재 선택된 아이템 아래에 붙여넣기"""
         if not self.copied_items:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="복사된 아이템이 없습니다",
                 level="WARNING",
                 file_name="logic_detail_widget"
@@ -676,7 +676,7 @@ class LogicDetailWidget(QFrame):
             self.LogicItemList__QListWidget.setCurrentItem(last_inserted_item)
             
         items_count = len(self.copied_items)
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message=f"{items_count}개의 로직 구성 아이템이 붙여넣기되었습니다",
             level="INFO",
             file_name="logic_detail_widget"
@@ -732,7 +732,7 @@ class LogicDetailWidget(QFrame):
         """새 로직 버튼 클릭 시 호출되는 메서드"""
         self.clear_all()
         self.is_nested_checkbox.setChecked(True)  # 중첩로직용 체크박스를 선택된 상태로 설정
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message="새 로직 생성을 시작합니다",
             level="INFO",
             file_name="logic_detail_widget"
@@ -772,13 +772,13 @@ class LogicDetailWidget(QFrame):
                         current_data['content'] = delay_text  # content 필드 업데이트
                         current_item.setData(Qt.UserRole, current_data)
                         self.item_edited.emit(delay_text)
-                        self.modal_log_manager.log(
+                        self.base_log_manager.log(
                             message=f"지연시간이 {delay:.4f}초로 수정되었습니다",
                             level="INFO",
                             file_name="logic_detail_widget"
                         )
                 except ValueError:
-                    self.modal_log_manager.log(
+                    self.base_log_manager.log(
                         message="지연시간 형식이 올바르지 않습니다",
                         level="ERROR",
                         file_name="logic_detail_widget"
@@ -820,7 +820,7 @@ class LogicDetailWidget(QFrame):
                             current_data['content'] = new_text  # content 필드 업데이트
                             current_item.setData(Qt.UserRole, current_data)
                             self.item_edited.emit(new_text)
-                            self.modal_log_manager.log(
+                            self.base_log_manager.log(
                                 message=f"키 입력 액션이 '{new_action}'으로 변경되었습니다",
                                 level="INFO",
                                 file_name="logic_detail_widget"
@@ -838,7 +838,7 @@ class LogicDetailWidget(QFrame):
                     current_data.update(new_text)
                     current_item.setData(Qt.UserRole, current_data)
                     self.item_edited.emit(new_text['display_text'])
-                    self.modal_log_manager.log(
+                    self.base_log_manager.log(
                         message="텍스트 입력 아이템이 수정되었습니다",
                         level="INFO",
                         file_name="logic_detail_widget"
@@ -849,7 +849,7 @@ class LogicDetailWidget(QFrame):
         is_nested = state == Qt.CheckState.Checked.value
         
         # 로그 추가
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message=f"중첩로직용 체크박스가 {'활성화' if is_nested else '비활성화'}되었습니다",
             level="INFO",
             file_name="logic_detail_widget"
@@ -931,14 +931,14 @@ class LogicDetailWidget(QFrame):
             # 현재 편집 중인 로직 ID 초기화
             self.current_logic_id = None
             
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="로직 정보가 초기화되었습니다",
                 level="INFO",
                 file_name="logic_detail_widget"
             )
             
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"로직 정보 초기화 중 오류 발생: {str(e)}",
                 level="ERROR", 
                 file_name="logic_detail_widget"
@@ -951,7 +951,7 @@ class LogicDetailWidget(QFrame):
             success, result = self.logic_manager.save_logic(self.current_logic_id, logic_data)
             
             if success:
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message=f"로직 '{logic_data['name']}'이(가) 저장되었습니다",
                     level="INFO",
                     file_name="logic_detail_widget"
@@ -968,7 +968,7 @@ class LogicDetailWidget(QFrame):
                 return False
                 
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"로직 저장 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_detail_widget"
@@ -980,7 +980,7 @@ class LogicDetailWidget(QFrame):
         if self.TriggerKeyInfoLabel__QLabel.text():
             clipboard = QGuiApplication.clipboard()
             clipboard.setText(self.TriggerKeyInfoLabel__QLabel.text())
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="트리거 키 정보가 클립보드에 복사되었습니다",
                 level="INFO",
                 file_name="logic_detail_widget"
@@ -999,7 +999,7 @@ class LogicDetailWidget(QFrame):
                 }
                 self.copied_items.append(item_data)
             items_count = len(self.copied_items)
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"{items_count}개의 로직 구성 아이템이 복사되었습니다",
                 level="INFO",
                 file_name="logic_detail_widget"
@@ -1012,7 +1012,7 @@ class LogicDetailWidget(QFrame):
         self.TriggerKeyInput__QLineEdit.clear()
         self.TriggerKeyInput__QLineEdit.setPlaceholderText("트리거 키를 설정하세요")
         self.trigger_key_info = None
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message="트리거 키 정보가 초기화되었습니다",
             level="DEBUG",
             file_name="logic_detail_widget"

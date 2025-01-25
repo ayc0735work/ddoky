@@ -29,7 +29,7 @@ class LogicOperationWidget(QFrame):
         self.logic_executor = None  # LogicExecutor 인스턴스를 저장할 속성 추가
         self.settings_manager = SettingsManager()  # SettingsManager 인스턴스 추가
         self.force_stop_key = self.settings_manager.get_force_stop_key()  # 강제 중지 키 로드
-        self.modal_log_manager = BaseLogManager.instance()  # BaseLogManager 인스턴스 추가
+        self.base_log_manager = BaseLogManager.instance()  # BaseLogManager 인스턴스 추가
         self._init_ui()
         self._connect_signals()
         self.load_delay_settings()  # 초기화 시 설정 로드
@@ -258,7 +258,7 @@ class LogicOperationWidget(QFrame):
             self.operation_checkbox.blockSignals(True)  # 시그널 임시 차단
             self.operation_checkbox.setChecked(False)
             self.operation_checkbox.blockSignals(False)  # 시그널 차단 해제
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="선택된 프로세스가 없습니다. 프로세스를 먼저 선택해주세요",
                 level="ERROR",
                 file_name="logic_operation_widget"
@@ -275,7 +275,7 @@ class LogicOperationWidget(QFrame):
             self.selected_process_label.setText(text)
             self.selected_process = process
             self.process_selected.emit(process)  # 프로세스 정보 전체를 전달
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"프로세스가 선택되었습니다: {self._get_process_info_text(process)}",
                 level="INFO",
                 file_name="logic_operation_widget"
@@ -287,7 +287,7 @@ class LogicOperationWidget(QFrame):
         self.selected_process = None
         self.selected_process_label.setText("선택된 프로세스: 없음")
         self.operation_checkbox.setChecked(False)
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message="프로세스 선택이 초기화되었습니다",
             level="INFO",
             file_name="logic_operation_widget"
@@ -296,19 +296,19 @@ class LogicOperationWidget(QFrame):
     def _on_force_stop(self):
         """강제 중지 버튼 클릭 시 호출"""
         try:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="강제 중지 시작",
                 level="DEBUG",
                 file_name="logic_operation_widget"
             )
             self.force_stop.emit()
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="강제 중지 완료",
                 level="INFO",
                 file_name="logic_operation_widget"
             )
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"강제 중지 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_operation_widget"
@@ -531,7 +531,7 @@ class LogicOperationWidget(QFrame):
         self.default_delay_input.setEnabled(True)
         self.save_delays_btn.setEnabled(True)
         self.edit_delays_btn.setEnabled(False)
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message="지연 시간 수정 모드가 활성화되었습니다",
             level="INFO",
             file_name="logic_operation_widget"
@@ -571,14 +571,14 @@ class LogicOperationWidget(QFrame):
             self.save_delays_btn.setEnabled(False)
             self.edit_delays_btn.setEnabled(True)
             
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="지연 시간 설정이 저장되었습니다",
                 level="INFO",
                 file_name="logic_operation_widget"
             )
             
         except ValueError:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="올바른 숫자 형식을 입력해주세요",
                 level="ERROR",
                 file_name="logic_operation_widget"
@@ -639,7 +639,7 @@ class LogicOperationWidget(QFrame):
                 '기본': DEFAULT_DELAY
             }
         
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message="지연 시간이 기본값으로 초기화되었습니다",
             level="INFO",
             file_name="logic_operation_widget"
@@ -675,14 +675,14 @@ class LogicOperationWidget(QFrame):
                     # 설정 파일에 저장
                     self.settings_manager.set_force_stop_key(key_info)
                     
-                    self.modal_log_manager.log(
+                    self.base_log_manager.log(
                         message=f"로직 강제 중지 키가 '{key_info['key_code']}'(으)로 변경되었습니다",
                         level="INFO",
                         file_name="logic_operation_widget"
                     )
             
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"강제 중지 키 설정 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_operation_widget"
@@ -711,13 +711,13 @@ class LogicOperationWidget(QFrame):
             # 설정 파일에 저장
             self.settings_manager.set_force_stop_key(self.force_stop_key)
                 
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="로직 강제 중지 키가 'ESC'로 초기화되었습니다",
                 level="INFO",
                 file_name="logic_operation_widget"
             )
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"강제 중지 키 초기화 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_operation_widget"

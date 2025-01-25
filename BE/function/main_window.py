@@ -92,7 +92,7 @@ class MainWindow(QMainWindow):
         self.keyboard_hook.start()
         
         # 모달 로그 매니저 초기화
-        self.modal_log_manager = BaseLogManager.instance()
+        self.base_log_manager = BaseLogManager.instance()
         
         # 로직 아이템 저장소 초기화
         self.logic_item_repository = LogicItemManageRepository()
@@ -309,7 +309,7 @@ class MainWindow(QMainWindow):
            - 오류 발생
         """
         # 전역 에러 핸들러 연결
-        self.error_handler.error_occurred.connect(lambda msg: self.modal_log_manager.log(
+        self.error_handler.error_occurred.connect(lambda msg: self.base_log_manager.log(
             message=msg,
             level="ERROR",
             file_name="main_window",
@@ -343,21 +343,21 @@ class MainWindow(QMainWindow):
         self.logic_operation_widget.process_reset.connect(self._on_process_reset)
         
         # 로직 실행기 시그널 연결
-        self.logic_executor.execution_started.connect(lambda: self.modal_log_manager.log(
+        self.logic_executor.execution_started.connect(lambda: self.base_log_manager.log(
             message="로직 실행이 시작되었습니다",
             level="INFO",
             file_name="main_window",
             include_time=True
         ))
         
-        self.logic_executor.execution_finished.connect(lambda: self.modal_log_manager.log(
+        self.logic_executor.execution_finished.connect(lambda: self.base_log_manager.log(
             message="로직 실행이 완료되었습니다",
             level="INFO",
             file_name="main_window",
             include_time=True
         ))
         
-        self.logic_executor.execution_error.connect(lambda msg: self.modal_log_manager.log(
+        self.logic_executor.execution_error.connect(lambda msg: self.base_log_manager.log(
             message=f"로직 실행 중 오류 발생: {msg}",
             level="ERROR",
             file_name="main_window",
@@ -381,7 +381,7 @@ class MainWindow(QMainWindow):
         try:
             if isinstance(mouse_info, dict):
                 display_text = mouse_info.get('display_text', '')
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message=f"마우스 입력이 추가되었습니다: {display_text}",
                     level="INFO",
                     file_name="main_window"
@@ -391,7 +391,7 @@ class MainWindow(QMainWindow):
                 self.logic_item_repository.add_item(mouse_info)
                 
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"마우스 입력 처리 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="main_window",
@@ -439,7 +439,7 @@ class MainWindow(QMainWindow):
             )
             
             if reply == QMessageBox.No:
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message="로직 불러오기가 취소되었습니다",
                     level="INFO",
                     file_name="main_window"
@@ -451,7 +451,7 @@ class MainWindow(QMainWindow):
             logic_name = logic_info
             logic_info = self.logic_list_controller.get_logic_by_name(logic_name)
             if not logic_info:
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message=f"로직 '{logic_name}'을(를) 찾을 수 없습니다",
                     level="ERROR",
                     file_name="main_window"
@@ -460,7 +460,7 @@ class MainWindow(QMainWindow):
         
         # 로직 데이터 로드
         self.logic_detail_widget.load_logic(logic_info)
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message=f"로직 '{logic_info.get('name', '')}'를(를) 수정합니다",
             level="INFO",
             file_name="main_window"
@@ -513,7 +513,7 @@ class MainWindow(QMainWindow):
             event.accept()
             
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"윈도우 종료 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="main_window",
@@ -536,14 +536,14 @@ class MainWindow(QMainWindow):
         """
         if enabled:
             self.logic_executor.start_monitoring()
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="로직 동작 허용 여부가 허용 상태로 변경되었습니다",
                 level="INFO",
                 file_name="main_window"
             )
         else:
             self.logic_executor.stop_monitoring()
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="로직 동작 허용 여부가 불허용 상태로 변경되었습니다",
                 level="INFO",
                 file_name="main_window"
@@ -568,13 +568,13 @@ class MainWindow(QMainWindow):
             # Repository 초기화
             self.logic_item_repository.clear_items()
             
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"로직 '{logic_info.get('name', '')}'이(가) 저장되었습니다",
                 level="INFO",
                 file_name="main_window"
             )
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"로직 저장 처리 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="main_window",
@@ -600,13 +600,13 @@ class MainWindow(QMainWindow):
             # Repository 초기화
             self.logic_item_repository.clear_items()
             
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"로직 '{logic_info.get('name', '')}'이(가) 수정되었습니다",
                 level="INFO",
                 file_name="main_window"
             )
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"로직 수정 처리 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="main_window",
@@ -627,13 +627,13 @@ class MainWindow(QMainWindow):
             # Repository 초기화
             self.logic_item_repository.clear_items()
             
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"로직 '{logic_name}'이(가) 삭제되었습니다",
                 level="INFO",
                 file_name="main_window"
             )
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"로직 삭제 처리 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="main_window",
@@ -643,7 +643,7 @@ class MainWindow(QMainWindow):
     def _on_process_selected(self, process_info):
         """프로세스가 선택되었을 때 호출"""
         self.process_manager.set_selected_process(process_info)
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message=f"프로세스를 선택했습니다: {process_info}",
             level="INFO",
             file_name="main_window"
@@ -652,7 +652,7 @@ class MainWindow(QMainWindow):
     def _on_process_reset(self):
         """프로세스가 초기화되었을 때 호출"""
         self.process_manager.set_selected_process(None)
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message="프로세스 선택이 초기화되었습니다",
             level="INFO",
             file_name="main_window"
@@ -677,7 +677,7 @@ class MainWindow(QMainWindow):
             }
             self.logic_item_repository.add_item(item_info)
             
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"로직 '{display_name}'이(가) 추가되었습니다",
                 level="INFO",
                 file_name="main_window"
@@ -691,7 +691,7 @@ class MainWindow(QMainWindow):
         """
         try:
             display_text = wait_click_info.get('display_text', '')
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"클릭 대기 아이템이 추가되었습니다: {display_text}",
                 level="INFO",
                 file_name="main_window"
@@ -701,7 +701,7 @@ class MainWindow(QMainWindow):
             self.logic_item_repository.add_item(wait_click_info)
                 
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"클릭 대기 입력 처리 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="main_window",
@@ -714,13 +714,13 @@ class MainWindow(QMainWindow):
         logic_info = self.logic_list_controller.get_logic_by_name(logic_name)
         if logic_info:
             self.logic_detail_widget.set_logic_data(logic_info)
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"로직 '{logic_name}'이(가) 선택되었습니다",
                 level="INFO",
                 file_name="main_window"
             )
         else:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"로직 '{logic_name}'을(를) 찾을 수 없습니다",
                 level="ERROR",
                 file_name="main_window"

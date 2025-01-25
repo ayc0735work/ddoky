@@ -18,7 +18,7 @@ class LogicItemManageRepository(QObject):
     def __init__(self):
         super().__init__()
         self.items = []  # 아이템 목록
-        self.modal_log_manager = BaseLogManager.instance()
+        self.base_log_manager = BaseLogManager.instance()
         self.settings_manager = SettingsManager()
         self.logic_manager = LogicManager(self.settings_manager)
         self.current_logic_id = None
@@ -45,7 +45,7 @@ class LogicItemManageRepository(QObject):
     def add_item(self, item_info: dict):
         """아이템을 추가합니다."""
         if not isinstance(item_info, dict):
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"잘못된 형식의 데이터: {type(item_info)}",
                 level="ERROR",
                 file_name="logic_item_manage_repository"
@@ -58,7 +58,7 @@ class LogicItemManageRepository(QObject):
             
         # 아이템 추가 및 로그
         self.items.append(item_info)
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message=f"아이템이 추가되었습니다: {item_info}",
             level="INFO",
             file_name="logic_item_manage_repository"
@@ -69,7 +69,7 @@ class LogicItemManageRepository(QObject):
         """아이템을 삭제합니다."""
         if item_info in self.items:
             self.items.remove(item_info)
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"아이템이 삭제되었습니다: {item_info}",
                 level="INFO",
                 file_name="logic_item_manage_repository"
@@ -90,14 +90,14 @@ class LogicItemManageRepository(QObject):
                 self.items[current_index]['order'], self.items[current_index - 1]['order'] = \
                     self.items[current_index - 1]['order'], self.items[current_index]['order']
                 
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message=f"아이템을 위로 이동했습니다: {item_info}",
                     level="INFO",
                     file_name="logic_item_manage_repository"
                 )
                 self.item_moved.emit()
         except ValueError:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"아이템을 찾을 수 없습니다: {item_info}",
                 level="ERROR",
                 file_name="logic_item_manage_repository"
@@ -116,14 +116,14 @@ class LogicItemManageRepository(QObject):
                 self.items[current_index]['order'], self.items[current_index + 1]['order'] = \
                     self.items[current_index + 1]['order'], self.items[current_index]['order']
                 
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message=f"아이템을 아래로 이동했습니다: {item_info}",
                     level="INFO",
                     file_name="logic_item_manage_repository"
                 )
                 self.item_moved.emit()
         except ValueError:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"아이템을 찾을 수 없습니다: {item_info}",
                 level="ERROR",
                 file_name="logic_item_manage_repository"
@@ -136,7 +136,7 @@ class LogicItemManageRepository(QObject):
     def clear_items(self):
         """모든 아이템을 삭제합니다."""
         self.items.clear()
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message="모든 아이템이 삭제되었습니다",
             level="INFO",
             file_name="logic_item_manage_repository"
@@ -215,14 +215,14 @@ class LogicItemManageRepository(QObject):
                 else:  # 새 로직
                     self.logic_saved.emit(logic_info)
                     
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message=f"로직 '{logic_info['name']}'이(가) 저장되었습니다",
                     level="INFO",
                     file_name="logic_item_manage_repository"
                 )
                 return True, "저장 성공"
             else:
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message=f"저장 실패: {result}",
                     level="ERROR",
                     file_name="logic_item_manage_repository"
@@ -230,7 +230,7 @@ class LogicItemManageRepository(QObject):
                 return False, result
                 
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"로직 저장 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_item_manage_repository"
@@ -249,7 +249,7 @@ class LogicItemManageRepository(QObject):
         try:
             # 1. 기본 데이터 검증
             if not logic_info or not isinstance(logic_info, dict):
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message="잘못된 로직 정보입니다",
                     level="ERROR",
                     file_name="logic_item_manage_repository"
@@ -269,7 +269,7 @@ class LogicItemManageRepository(QObject):
                         break
                         
             if not self.current_logic_id:
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message=f"로직 '{logic_info.get('name')}'의 ID를 찾을 수 없습니다",
                     level="WARNING",
                     file_name="logic_item_manage_repository"
@@ -294,7 +294,7 @@ class LogicItemManageRepository(QObject):
                         self.add_item(item)
                         
             self.logic_loaded.emit(logic_info)
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"로직 '{logic_info.get('name')}'이(가) 로드되었습니다",
                 level="INFO",
                 file_name="logic_item_manage_repository"
@@ -302,7 +302,7 @@ class LogicItemManageRepository(QObject):
             return True
             
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"로직 로드 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_item_manage_repository"

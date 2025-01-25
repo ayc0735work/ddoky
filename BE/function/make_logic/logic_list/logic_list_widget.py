@@ -41,7 +41,7 @@ class LogicListWidget(QFrame):
     
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.modal_log_manager = BaseLogManager.instance()
+        self.base_log_manager = BaseLogManager.instance()
         self.init_ui()
         
         # 이벤트 필터 설치

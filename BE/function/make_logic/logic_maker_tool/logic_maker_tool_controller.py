@@ -12,7 +12,7 @@ class LogicMakerController(QObject):
         """
         super().__init__()
         self.widget = widget
-        self.modal_log_manager = BaseLogManager.instance()
+        self.base_log_manager = BaseLogManager.instance()
         self._connect_signals()
         
     def _connect_signals(self):
@@ -31,7 +31,7 @@ class LogicMakerController(QObject):
         # 아이템 추가
         self.widget.add_item(mouse_info)
         
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message=f"마우스 입력이 추가되었습니다: {mouse_info['display_text']}",
             level="INFO",
             file_name="logic_maker_tool_controller"
@@ -43,7 +43,7 @@ class LogicMakerController(QObject):
         Args:
             delay_text (str): 지연시간 텍스트
         """
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message=f"지연시간이 추가되었습니다: {delay_text}",
             level="INFO",
             file_name="logic_maker_tool_controller"
@@ -56,7 +56,7 @@ class LogicMakerController(QObject):
             is_recording (bool): 기록 모드 활성화 여부
         """
         status = "시작" if is_recording else "중지"
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message=f"기록 모드가 {status}되었습니다",
             level="INFO",
             file_name="logic_maker_tool_controller"
@@ -68,7 +68,7 @@ class LogicMakerController(QObject):
         Args:
             wait_click_info (dict): 클릭 대기 정보
         """
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message=f"클릭 대기 아이템이 추가되었습니다: {wait_click_info['display_text']}",
             level="INFO",
             file_name="logic_maker_tool_controller"

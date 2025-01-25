@@ -40,7 +40,7 @@ class LogicExecutor(QObject):
         super().__init__()
         self.process_manager = process_manager
         self.logic_manager = logic_manager
-        self.modal_log_manager = BaseLogManager.instance()  # BaseLogManager 초기화
+        self.base_log_manager = BaseLogManager.instance()  # BaseLogManager 초기화
         
         # 로직 활성화 상태 추가
         self.is_logic_enabled = True
@@ -102,15 +102,15 @@ class LogicExecutor(QObject):
 
     def _update_state(self, **kwargs):
         """상태 업데이트 및 알림"""
-        self.modal_log_manager.start_timer("상태업데이트모달")
-        self.modal_log_manager.log(
+        self.base_log_manager.start_timer("상태업데이트모달")
+        self.base_log_manager.log(
             message=f"상태 업데이트 시작: {kwargs}",
             level="INFO",
             file_name="logic_executor",
             include_time=True
         )
         with self._state_lock:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="상태 락 획득",
                 level="INFO", 
                 file_name="logic_executor",
@@ -118,13 +118,13 @@ class LogicExecutor(QObject):
             )
             self.execution_state.update(kwargs)
             self.execution_state_changed.emit(self.execution_state.copy())
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="상태 변경 알림 완료",
                 level="INFO",
                 file_name="logic_executor",
                 include_time=True
             )
-        self.modal_log_manager.stop_timer("상태업데이트모달")
+        self.base_log_manager.stop_timer("상태업데이트모달")
     
     def start_monitoring(self):
         """트리거 키 모니터링 시작"""
@@ -136,14 +136,14 @@ class LogicExecutor(QObject):
                 self.keyboard_hook = KeyboardHook()
                 self.keyboard_hook.key_released.connect(self._on_key_released)
                 self.keyboard_hook.start()
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message="키보드 모니터링 시작",
                     level="INFO",
                     file_name="logic_executor",
                     include_time=True
                 )
             except Exception as e:
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message=f"키보드 모니터링 시작 실패: {str(e)}",
                     level="ERROR",
                     file_name="logic_executor"
@@ -158,14 +158,14 @@ class LogicExecutor(QObject):
                     self.keyboard_hook.stop()
                     self.keyboard_hook.key_released.disconnect()
                     self.keyboard_hook = None
-                    self.modal_log_manager.log(
+                    self.base_log_manager.log(
                         message="키보드 모니터링 중지",
                         level="INFO",
                         file_name="logic_executor",
                         include_time=True
                     )
                 except Exception as e:
-                    self.modal_log_manager.log(
+                    self.base_log_manager.log(
                         message=f"키보드 모니터링 중지 실패: {str(e)}",
                         level="ERROR",
                         file_name="logic_executor"
@@ -173,8 +173,8 @@ class LogicExecutor(QObject):
     
     def _safe_cleanup(self):
         """안전한 정리 작업"""
-        self.modal_log_manager.start_timer("정리모달")
-        self.modal_log_manager.log(
+        self.base_log_manager.start_timer("정리모달")
+        self.base_log_manager.log(
             message="안전한 정리 작업 시작",
             level="INFO",
             file_name="logic_executor",
@@ -182,14 +182,14 @@ class LogicExecutor(QObject):
         )
         try:
             # 먼저 실행 상태를 False로 설정
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="실행 상태 False로 설정 시작",
                 level="INFO",
                 file_name="logic_executor",
                 include_time=True
             )
             self._update_state(is_executing=False)
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="실행 상태 False로 설정 완료",
                 level="INFO",
                 file_name="logic_executor",
@@ -197,14 +197,14 @@ class LogicExecutor(QObject):
             )
 
             # 중지 상태를 False로 설정
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="중지 상태 False로 설정 시작",
                 level="INFO",
                 file_name="logic_executor",
                 include_time=True
             )
             self._update_state(is_stopping=False)
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="중지 상태 False로 설정 완료",
                 level="INFO",
                 file_name="logic_executor",
@@ -212,41 +212,41 @@ class LogicExecutor(QObject):
             )
 
             # 현재 단계와 반복 횟수 초기화
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="단계와 반복 횟수 초기화 시작",
                 level="INFO",
                 file_name="logic_executor",
                 include_time=True
             )
             self._update_state(current_step=0, current_repeat=1)
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="단계와 반복 횟수 초기화 완료",
                 level="INFO",
                 file_name="logic_executor",
                 include_time=True
             )
 
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="안전한 정리 작업 완료",
                 level="INFO",
                 file_name="logic_executor",
                 include_time=True
             )
             self.cleanup_finished.emit()
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="정리 완료 시그널 발생",
                 level="INFO",
                 file_name="logic_executor",
                 include_time=True
             )
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"정리 작업 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_executor"
             )
             self.execution_error.emit(f"정리 작업 중 오류 발생: {str(e)}")
-        self.modal_log_manager.stop_timer("logic_executor")
+        self.base_log_manager.stop_timer("logic_executor")
     
     def set_force_stop_key(self, virtual_key):
         """강제 중지 키 설정
@@ -255,7 +255,7 @@ class LogicExecutor(QObject):
             virtual_key (int): 설정할 가상 키 코드
         """
         self.force_stop_key = virtual_key
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message=f"강제 중지 키가 변경되었습니다 (가상 키 코드: {virtual_key})",
             level="INFO",
             file_name="logic_executor"
@@ -267,7 +267,7 @@ class LogicExecutor(QObject):
         Args:
             formatted_key_info (dict): 입력된 키 정보
         """
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message=f"""
             키 이벤트 상세 정보
             - 입력된 키: {formatted_key_info}
@@ -279,7 +279,7 @@ class LogicExecutor(QObject):
             print_to_terminal=True
         )
 
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message=f"키 입력이 감지되었습니다: {formatted_key_info.get('key_name', '알 수 없음')}",
             level="INFO",
             file_name="logic_executor"
@@ -296,7 +296,7 @@ class LogicExecutor(QObject):
                 if self._should_stop:
                     return
                     
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message="강제 중지 키 감지 - 로직 강제 중지 실행",
                     level="INFO",
                     file_name="logic_executor",
@@ -305,7 +305,7 @@ class LogicExecutor(QObject):
                 self._should_stop = True
                 self.force_stop()
             else:
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message="강제 중지 키가 감지되었으나, 활성 프로세스가 선택된 프로세스와 다르므로 무시됩니다.",
                     level="WARNING",
                     file_name="logic_executor"
@@ -314,7 +314,7 @@ class LogicExecutor(QObject):
             
         # 시뮬레이션된 입력 처리
         if self.is_simulated_input:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="시뮬레이션된 입력이 감지되어 무시됩니다",
                 level="DEBUG",
                 file_name="logic_executor",
@@ -323,7 +323,7 @@ class LogicExecutor(QObject):
             return
         
         if not self._should_execute_logic():
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="로직 실행 조건이 맞지 않습니다.",
                 level="INFO",
                 file_name="logic_executor"
@@ -338,7 +338,7 @@ class LogicExecutor(QObject):
             if self._is_trigger_key_matched(logic, formatted_key_info):
                 found_matching_logic = True
                 if self.execution_state['is_executing']:
-                    self.modal_log_manager.log(
+                    self.base_log_manager.log(
                         message="다른 로직이 실행 중입니다.",
                         level="WARNING",
                         file_name="logic_executor"
@@ -355,7 +355,7 @@ class LogicExecutor(QObject):
                     )
                     # 로직 실행 시작 시간 초기화
                     self._start_time = time.time()
-                    self.modal_log_manager.log(
+                    self.base_log_manager.log(
                         message=(
                             f""
                             f"[로직 실행 시작]"
@@ -374,7 +374,7 @@ class LogicExecutor(QObject):
                     return
                     
                 except Exception as e:
-                    self.modal_log_manager.log(
+                    self.base_log_manager.log(
                         message=f"로직 시작 중 오류 발생: {str(e)}",
                         level="ERROR",
                         file_name="logic_executor"
@@ -382,7 +382,7 @@ class LogicExecutor(QObject):
                     self._safe_cleanup()
                     
         if not found_matching_logic:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"일치하는 트리거 키를 찾을 수 없습니다.입력된 키 정보: {formatted_key_info}",
                 level="WARNING",
                 file_name="logic_executor"
@@ -412,7 +412,7 @@ class LogicExecutor(QObject):
                     parent_name = parent_logic.get('name', '')
                     parentep = parent_state.get('current_step', 0)
                     
-                    self.modal_log_manager.log(
+                    self.base_log_manager.log(
                         message=(
                             f"[중첩로직 반복 완료]"
                             f"- 반복횟수: {current_repeat}/{repeat_count} 반복 완료"
@@ -426,7 +426,7 @@ class LogicExecutor(QObject):
                     )
                 else:
                     # 일반 로직의 경우
-                    self.modal_log_manager.log(
+                    self.base_log_manager.log(
                         message=(
                             f"[로직 실행]"
                             f"- 반복횟수: {current_repeat}/{repeat_count} 반복 완료"
@@ -466,7 +466,7 @@ class LogicExecutor(QObject):
             self._execute_item(step)
             
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"다음 스텝 실행 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_executor",
@@ -500,7 +500,7 @@ class LogicExecutor(QObject):
             # 다음 스텝 실행을 위해 비동기 호출
             QTimer.singleShot(0, self._execute_next_step)
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"스텝 실행 중 오류가 발생했습니다: {str(e)}",
                 level="ERROR",
                 file_name="logic_executor",
@@ -513,7 +513,7 @@ class LogicExecutor(QObject):
         try:
             self.is_step_input = True  # 스텝 입력 플래그 설정
             self.is_simulated_input = True  # 시뮬레이션 입력 플래그 설정
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"""
                 키 입력 실행 시작
                 - 스텝 정보: {step}
@@ -532,7 +532,7 @@ class LogicExecutor(QObject):
             if step['key_code'] == 'ESC':
                 if step['action'] == '떼기':
                     self.last_simulated_esc_time = time.time()
-                    self.modal_log_manager.log(
+                    self.base_log_manager.log(
                         message=f"ESC 키 시뮬레이션 떼기 시간 기록: {self.last_simulated_esc_time}",
                         level="DEBUG",
                         file_name="logic_executor",
@@ -554,7 +554,7 @@ class LogicExecutor(QObject):
                 
             # 키 입력 실행
             if step['action'] == '누르기':
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message=f"""
                     키 누르기 실행
                     - 가상 키: {virtual_key}
@@ -567,7 +567,7 @@ class LogicExecutor(QObject):
                 )
                 win32api.keybd_event(virtual_key, scan_code, flags, 0)
             else:  # 떼기
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message=f"""
                     키 떼기 실행
                     - 가상 키: {virtual_key}
@@ -580,7 +580,7 @@ class LogicExecutor(QObject):
                 )
                 win32api.keybd_event(virtual_key, scan_code, flags | win32con.KEYEVENTF_KEYUP, 0)
             
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="win32api.keybd_event 호출 완료",
                 level="DEBUG",
                 file_name="logic_executor",
@@ -589,14 +589,14 @@ class LogicExecutor(QObject):
             
             # 키 입력 후 지연
             delay = self.KEY_DELAYS.get(step['action'], self.KEY_DELAYS['기본'])
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"키 입력 후 대기 시작 (대기 시간: {delay}초)",
                 level="DEBUG", 
                 file_name="logic_executor",
                 print_to_terminal=True
             )
             time.sleep(delay)
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="키 입력 후 대기 완료",
                 level="DEBUG",
                 file_name="logic_executor", 
@@ -605,20 +605,20 @@ class LogicExecutor(QObject):
             
             # ESC 키를 떼는 경우 추가 딜레이
             if step['action'] == '떼기' and step['key_code'] == 'ESC':
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message="ESC 키 떼기 후 추가 대기 시작 (대기 시간: 0.005초)",
                     level="DEBUG",
                     file_name="logic_executor",
                     print_to_terminal=True
                 )
                 time.sleep(0.005)
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message="ESC 키 떼기 후 추가 대기 완료",
                     level="DEBUG", 
                     file_name="logic_executor",
                     print_to_terminal=True
                 )
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"키 입력 실행 완료: {step['display_text']}",
                 level="INFO",
                 file_name="logic_executor",
@@ -626,7 +626,7 @@ class LogicExecutor(QObject):
             )
             
         finally:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"""
                 키 입력 실행 종료
                 - 종료 시간: {time.time()}
@@ -645,14 +645,14 @@ class LogicExecutor(QObject):
         try:
             duration = float(step['duration'])
             time.sleep(duration)
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"지연시간 {duration}초 대기 완료",
                 level="INFO", 
                 file_name="logic_executor",
                 include_time=True
             )
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"지연시간 실행 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_executor",
@@ -696,7 +696,7 @@ class LogicExecutor(QObject):
                 current_step=0,
                 current_repeat=1
             )
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"""
                 [중첩로직 실행 시작]
                 - 중첩로직 이름: {nested_logic.get('name')}
@@ -709,7 +709,7 @@ class LogicExecutor(QObject):
             )
             
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"중첩로직 실행 중 오류 발생: {str(e)}",
                 level="ERROR", 
                 file_name="logic_executor",
@@ -724,7 +724,7 @@ class LogicExecutor(QObject):
             # 현재 선택된 프로세스의 핸들 가져오기
             process = self.process_manager.get_selected_process()
             if not process or not process.get('hwnd'):
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message="선택된 프로세스가 없음",
                     level="DEBUG",
                     file_name="logic_executor",
@@ -760,7 +760,7 @@ class LogicExecutor(QObject):
             screen_y = client_point[1] + client_y
             
             # 마우스 입력 상세 정보 로깅
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"""
                 [마우스 입력 상세 정보]
                 - DPI 배율: {scale_factor:.2f}
@@ -778,7 +778,7 @@ class LogicExecutor(QObject):
             # 클릭 실행
             success = MouseHandler.click(screen_x, screen_y)
             if not success:
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message="마우스 클릭 실행 실패",
                     level="ERROR",
                     file_name="logic_executor",
@@ -787,7 +787,7 @@ class LogicExecutor(QObject):
                 )
                 raise Exception("마우스 클릭 실행 실패")
             
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"마우스 입력 '{step.get('name')}' 실행 완료",
                 level="INFO",
                 file_name="logic_executor", 
@@ -795,7 +795,7 @@ class LogicExecutor(QObject):
             )
             
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"마우스 입력 실행 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_executor",
@@ -825,7 +825,7 @@ class LogicExecutor(QObject):
         
         # 로그 출력으로 현재 상태 알림
         elapsed_time = time.time() - start_time
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message="마우스 왼쪽 버튼 클릭 또는 스페이스바 입력 -- 입력 대기 중...",
             level="INFO",
             file_name="logic_executor",
@@ -855,7 +855,7 @@ class LogicExecutor(QObject):
             # 강제 중지 요청이 있는 경우 타이머 정리
             if self._should_stop:
                 elapsed_time = time.time() - start_time
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message="마우스 왼쪽 버튼 클릭 또는 스페이스바 입력 -- 강제 중지되었습니다",
                     level="INFO",
                     file_name="logic_executor",
@@ -878,7 +878,7 @@ class LogicExecutor(QObject):
                 button_pressed = True
                 elapsed_time = time.time() - start_time
                 input_type = "왼쪽 버튼" if is_mouse_pressed else "스페이스바"
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message=f"마우스 왼쪽 버튼 클릭 또는 스페이스바 입력 -- {input_type}가 눌렸습니다",
                     level="INFO",
                     file_name="logic_executor",
@@ -887,7 +887,7 @@ class LogicExecutor(QObject):
             elif not (is_mouse_pressed or is_space_pressed) and button_pressed:
                 # 버튼이나 키가 떼진 순간 감지 및 다음 단계 진행
                 elapsed_time = time.time() - start_time
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message="마우스 왼쪽 버튼 클릭 또는 스페이스바 입력 -- 입력이 감지되어 다음 단계로 진행합니다",
                     level="INFO", 
                     file_name="logic_executor",
@@ -911,7 +911,7 @@ class LogicExecutor(QObject):
 
     def _clear_timers_async(self):
         """타이머를 비동기적으로 정리"""
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message=f"로직 강제 중지 -- 비동기로 실행된 타이머 정리를 시작합니다 (총 {len(self._active_timers)}개)",
             level="INFO",
             file_name="logic_executor",
@@ -927,7 +927,7 @@ class LogicExecutor(QObject):
         def clear_timer_group():
             if not timer_groups:
                 self._active_timers.clear()
-                self.modal_log_manager.log(
+                self.base_log_manager.log(
                     message="로직 강제 중지 -- 비동기로 실행된 모든 타이머 정리가 완료되었습니다",
                     level="INFO",
                     file_name="logic_executor",
@@ -964,21 +964,21 @@ class LogicExecutor(QObject):
                     # 키 떼기 이벤트 발생
                     win32api.keybd_event(vk, 0, win32con.KEYEVENTF_KEYUP, 0)
                 except Exception as e:
-                    self.modal_log_manager.log(
+                    self.base_log_manager.log(
                         message=f"로직 강제 중지 -- 키 해제 실패 (가상 키: {vk}): {str(e)}",
                         level="ERROR",
                         file_name="logic_executor",
                         print_to_terminal=True
                     )
         
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message=f"로직 강제 중지 -- 키 상태 정리를 시작합니다 (총 {len(pressed_keys)}개의 키)",
             level="INFO",
             file_name="logic_executor",
             include_time=True
         )
         
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message="로직 강제 중지 -- 모든 키 떼기가 완료되었습니다",
             level="INFO", 
             file_name="logic_executor",
@@ -987,7 +987,7 @@ class LogicExecutor(QObject):
 
     def force_stop(self):
         """로직 강제 중지"""
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message="로직 강제 중지 -- 로직 강제 중지를 시작합니다",
             level="INFO",
             file_name="logic_executor",
@@ -1023,7 +1023,7 @@ class LogicExecutor(QObject):
                 # 0.009초 딜레이
                 time.sleep(0.009)
                 
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="로직 강제 중지 -- ESC 키 세 번 눌렀다 떼기가 완료되었습니다",
                 level="INFO",
                 file_name="logic_executor",
@@ -1033,14 +1033,14 @@ class LogicExecutor(QObject):
             # 중지 상태 해제
             self._should_stop = False
             
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="로직 강제 중지 -- 중지 상태가 해제되었습니다",
                 level="INFO",
                 file_name="logic_executor",
                 include_time=True
             )
 
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="로직 강제 중지 -- 로직 강제 중지가 완료되었습니다",
                 level="INFO",
                 file_name="logic_executor", 
@@ -1049,7 +1049,7 @@ class LogicExecutor(QObject):
             )
             
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"로직 강제 중지 -- 강제 중지 중 오류가 발생했습니다: {str(e)}",
                 level="ERROR",
                 file_name="logic_executor",
@@ -1064,7 +1064,7 @@ class LogicExecutor(QObject):
         """
         # 이미 실행 중이면 실행하지 않음
         if self.execution_state['is_executing']:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="로직이 이미 실행 중입니다",
                 level="INFO",
                 file_name="logic_executor"
@@ -1076,7 +1076,7 @@ class LogicExecutor(QObject):
         active_process = self.process_manager.get_active_process()
         
         if not selected_process:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="선택된 프로세스가 없습니다",
                 level="WARNING",
                 file_name="logic_executor"
@@ -1084,7 +1084,7 @@ class LogicExecutor(QObject):
             return False
             
         if not active_process:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="활성 프로세스를 가져올 수 없습니다",
                 level="WARNING", 
                 file_name="logic_executor"
@@ -1112,7 +1112,7 @@ class LogicExecutor(QObject):
         
         # 매칭된 경우에만 로그 출력
         if is_matched:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"""
                 트리거 키 매칭 확인
                 - 트리거 키: {trigger_key}
@@ -1195,7 +1195,7 @@ class LogicExecutor(QObject):
             formatted_message = message
 
         # BaseLogManager를 통해 로그 출력
-        self.modal_log_manager.log(
+        self.base_log_manager.log(
             message=formatted_message,
             level="INFO",
             file_name="logic_executor",
@@ -1293,7 +1293,7 @@ class LogicExecutor(QObject):
                     # ... 나머지 실행 로직 ...
                     
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"로직 실행 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_executor",
@@ -1311,7 +1311,7 @@ class LogicExecutor(QObject):
             # 텍스트 입력을 시스템 클립보드에 복사
             QApplication.clipboard().setText(text)
             
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"텍스트 입력이 시작되었습니다: {text}",
                 level="INFO",
                 file_name="logic_executor",
@@ -1319,7 +1319,7 @@ class LogicExecutor(QObject):
             )
             
             # 클립보드의 내용을 붙여넣기
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="Ctrl+V 키 입력을 시작합니다",
                 level="DEBUG",
                 file_name="logic_executor",
@@ -1331,7 +1331,7 @@ class LogicExecutor(QObject):
             win32api.keybd_event(0x56, 0, win32con.KEYEVENTF_KEYUP, 0)  # V 키 떼기
             win32api.keybd_event(win32con.VK_CONTROL, 0, win32con.KEYEVENTF_KEYUP, 0)  # Ctrl 키 떼기
             
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message="텍스트가 성공적으로 붙여넣기 되었습니다",
                 level="INFO",
                 file_name="logic_executor",
@@ -1339,7 +1339,7 @@ class LogicExecutor(QObject):
             )
             
         except Exception as e:
-            self.modal_log_manager.log(
+            self.base_log_manager.log(
                 message=f"텍스트 입력 실행 중 오류 발생: {str(e)}",
                 level="ERROR", 
                 file_name="logic_executor",
