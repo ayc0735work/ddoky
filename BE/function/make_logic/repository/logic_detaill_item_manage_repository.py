@@ -164,24 +164,8 @@ class LogicItemManageRepository(QObject):
                 
             if not logic_info.get('items'):
                 return False, "최소 하나의 아이템이 필요합니다."
-                
-            # # 2. 중첩로직이 아닐 경우 트리거 키 검증
-            # if not logic_info.get('is_nested'):
-            #     if not logic_info.get('trigger_key'):
-            #         return False, "트리거 키가 필요합니다."
-                    
-            #     # 트리거 키 중복 검사
-            #     logics = self.settings_manager.load_logics()
-            #     for logic_id, logic in logics.items():
-            #         if (logic_id != self.current_logic_id and  # 자기 자신은 제외
-            #             not logic.get('is_nested', False)):  # 중첩로직은 제외
-            #             existing_trigger = logic.get('trigger_key', {})
-            #             if (existing_trigger and
-            #                 existing_trigger.get('virtual_key') == logic_info['trigger_key'].get('virtual_key') and
-            #                 existing_trigger.get('modifiers') == logic_info['trigger_key'].get('modifiers')):
-            #                 return False, f"이미 다른 로직 '{logic.get('name')}'에서 사용 중인 트리거 키입니다."
-            
-            # 3. 이름 중복 검사 (수정 모드가 아닐 때만)
+
+            # 2. 이름 중복 검사 (수정 모드가 아닐 때만)
             if not self.current_logic_id:
                 logics = self.settings_manager.load_logics()
                 for logic in logics.values():
@@ -189,7 +173,7 @@ class LogicItemManageRepository(QObject):
                         not logic.get('is_nested', False)):
                         return False, "동일한 이름의 로직이 이미 존재합니다."
             
-            # 4. 시간 정보와 순서 정보 추가
+            # 3. 시간 정보와 순서 정보 추가
             from datetime import datetime
             logic_info['updated_at'] = datetime.now().isoformat()
             
@@ -203,7 +187,7 @@ class LogicItemManageRepository(QObject):
                 logic_info['created_at'] = self.current_logic.get('created_at')
                 logic_info['order'] = self.current_logic.get('order')
             
-            # 5. LogicManager를 통해 저장
+            # 4. LogicManager를 통해 저장
             success, result = self.logic_manager.save_logic(
                 self.current_logic_id, 
                 logic_info
