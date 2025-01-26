@@ -71,7 +71,7 @@ class LogicDetailWidget(QFrame):
         TitleRow__QHBoxLayout = QHBoxLayout()
         
         # 타이틀
-        LogicTitleLabel__QLabel = QLabel("로직 정보")
+        LogicTitleLabel__QLabel = QLabel("로직 상세 정보")
         LogicTitleLabel__QLabel.setFont(QFont(TITLE_FONT_FAMILY, SECTION_FONT_SIZE, QFont.Weight.Bold))
         TitleRow__QHBoxLayout.addWidget(LogicTitleLabel__QLabel)
         
@@ -237,7 +237,7 @@ class LogicDetailWidget(QFrame):
         self.DeleteItemButton__QPushButton.setStyleSheet(BUTTON_STYLE)
         self.DeleteItemButton__QPushButton.setEnabled(False)
         LogicControlButtonsSection__QHBoxLayout.addWidget(self.DeleteItemButton__QPushButton)
-        self.DeleteItemButton__QPushButton.clicked.connect(self._delete_selected_items)
+        self.DeleteItemButton__QPushButton.clicked.connect(self._delete_selected_logic_detail_items)
 
         LogicConfigurationLayout__QVBoxLayout.addLayout(LogicControlButtonsSection__QHBoxLayout)
         self.setLayout(LogicConfigurationLayout__QVBoxLayout)
@@ -266,14 +266,46 @@ class LogicDetailWidget(QFrame):
         if isinstance(item_info, dict):
             self.repository.add_logic_detail_item(item_info)
             
-    def _delete_selected_items(self):
-        """선택된 아이템들을 삭제"""
+    def _delete_selected_logic_detail_items(self):
+        """선택된 아이템을 삭제"""
         selected_items = self.LogicItemList__QListWidget.selectedItems()
-        if selected_items:
+        if not selected_items:
+            return
+        
+        try:
+            # 선택된 아이템들의 row와 데이터를 먼저 수집
+            items_to_delete = []
             for item in selected_items:
                 item_data = item.data(Qt.UserRole)
+                row = self.LogicItemList__QListWidget.row(item)
+                items_to_delete.append((row, item_data))
+            
+            # row를 기준으로 내림차순 정렬 (뒤에서부터 삭제)
+            items_to_delete.sort(key=lambda x: x[0], reverse=True)
+            
+            # 수집된 데이터를 기반으로 삭제 수행
+            for row, item_data in items_to_delete:
+                # Repository에서 아이템 삭제
                 if item_data:
                     self.repository.delete_logic_detail_items(item_data)
+                # UI에서 아이템 삭제
+                self.LogicItemList__QListWidget.takeItem(row)
+            
+            self.base_log_manager.log(
+                message=f"{len(items_to_delete)}개의 아이템이 삭제되었습니다",
+                level="INFO",
+                file_name="logic_detail_widget",
+                method_name="_delete_selected_logic_detail_items"
+            )
+            
+        except Exception as e:
+            self.base_log_manager.log(
+                message=f"아이템 삭제 중 오류 발생: {str(e)}",
+                level="ERROR",
+                file_name="logic_detail_widget",
+                method_name="_delete_selected_logic_detail_items",
+                print_to_terminal=True
+            )
 
     def _move_selected_item(self, direction: str):
         """선택된 아이템을 위/아래로 이동"""
@@ -716,7 +748,7 @@ class LogicDetailWidget(QFrame):
     def eventFilter(self, obj, event):
         """이벤트 필터"""
         if event.type() == QEvent.KeyPress:
-            modifiers_key_flag = event.modifiers_key_flag()
+            modifiers_key_flag = event.modifiers()
             key = event.key()
             
             # Ctrl+C: 복사
@@ -731,7 +763,7 @@ class LogicDetailWidget(QFrame):
                 
             # Delete: 삭제
             elif key == Qt.Key_Delete:
-                self._delete_logic_detail_items()
+                self._delete_selected_logic_detail_items()
                 return True
                 
         return super().eventFilter(obj, event)
@@ -1030,15 +1062,6 @@ class LogicDetailWidget(QFrame):
             file_name="logic_detail_widget",
             method_name="clear_key"
         )
-
-    def _delete_logic_detail_items(self):
-        """선택된 아이템을 삭제"""
-        selected_items = self.LogicItemList__QListWidget.selectedItems()
-        if selected_items:
-            for item in selected_items:
-                item_data = item.data(Qt.UserRole)
-                if item_data:
-                    self.repository.delete_logic_detail_items(item_data)
 
     def clear_all(self):
         """모든 UI 필드 초기화"""

@@ -14,8 +14,8 @@ from BE.function.make_logic.logic_detail.logic_detail_widget import LogicDetailW
 from BE.function.make_logic.logic_detail.logic_detail_controller import LogicDetailController
 from BE.function.make_logic.logic_maker_tool.logic_maker_tool_widget import LogicMakerToolWidget
 from BE.function.make_logic.logic_maker_tool.logic_maker_tool_controller import LogicMakerController
-from BE.function.make_logic.logic_operation.logic_operation_controller import LogicOperationController
-from BE.function.make_logic.logic_operation.logic_operation_widget import LogicOperationWidget
+from BE.function.logic_operation.logic_operation_controller import LogicOperationController
+from BE.function.logic_operation.logic_operation_widget import LogicOperationWidget
 from BE.log.log_widget import LogWidget
 from BE.settings.logics_data_settingfiles_manager import LogicsDataSettingFilesManager
 from BE.settings.window_positions_data_settingfiles_manager import WindowPositionsDataSettingFilesManager

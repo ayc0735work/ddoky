@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QDialog
 from PySide6.QtCore import QObject, QTimer
-from BE.function.make_logic.logic_operation.logic_operation_widget import LogicOperationWidget
+from BE.function.logic_operation.logic_operation_widget import LogicOperationWidget
 from BE.function._common_components.window_process_handler import ProcessManager
 from BE.log.base_log_manager import BaseLogManager
 from BE.settings.force_stop_key_data_settingfile import ForceStopKeyDataSettingFilesManager

@@ -76,7 +76,7 @@ class LogicListWidget(QFrame):
         layout.setSpacing(10)
         
         # 타이틀
-        title = QLabel("만든 로직 리스트")
+        title = QLabel("로직 리스트")
         title.setFont(QFont(TITLE_FONT_FAMILY, SECTION_FONT_SIZE, QFont.Weight.Bold))
         layout.addWidget(title)
         
