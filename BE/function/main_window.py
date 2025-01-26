@@ -483,6 +483,40 @@ class MainWindow(QMainWindow):
         self.resize(size["width"], size["height"])
         self.move(position["x"], position["y"])
         
+    def moveEvent(self, event):
+        """윈도우 이동 이벤트
+        
+        윈도우가 이동될 때마다 새로운 위치를 저장합니다.
+        """
+        try:
+            pos = self.pos()
+            self.settings_manager.set_window_position(pos.x(), pos.y())
+            super().moveEvent(event)
+        except Exception as e:
+            self.base_log_manager.log(
+                message=f"윈도우 위치 저장 중 오류 발생: {str(e)}",
+                level="ERROR",
+                file_name="main_window",
+                print_to_terminal=True
+            )
+    
+    def resizeEvent(self, event):
+        """윈도우 크기 변경 이벤트
+        
+        윈도우 크기가 변경될 때마다 새로운 크기를 저장합니다.
+        """
+        try:
+            size = self.size()
+            self.settings_manager.set_window_size(size.width(), size.height())
+            super().resizeEvent(event)
+        except Exception as e:
+            self.base_log_manager.log(
+                message=f"윈도우 크기 저장 중 오류 발생: {str(e)}",
+                level="ERROR",
+                file_name="main_window",
+                print_to_terminal=True
+            )
+
     def closeEvent(self, event):
         """윈도우 종료 이벤트 처리
         
@@ -499,8 +533,10 @@ class MainWindow(QMainWindow):
         """
         try:
             # 윈도우 위치와 크기 저장
-            settings = QSettings()
-            settings.setValue("geometry", self.geometry())
+            pos = self.pos()
+            size = self.size()
+            self.settings_manager.set_window_position(pos.x(), pos.y())
+            self.settings_manager.set_window_size(size.width(), size.height())
             
             # 키보드 훅 정리
             if hasattr(self, 'keyboard_hook'):

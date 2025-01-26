@@ -5,6 +5,7 @@ import uuid
 from datetime import datetime
 import logging
 from BE.log.base_log_manager import BaseLogManager
+from BE.settings.window_positions_data_settingfiles_manager import WindowPositionsDataSettingFilesManager
 
 class SettingsManager:
     """설정 파일 관리 클래스"""
@@ -17,6 +18,9 @@ class SettingsManager:
         self.settings_file = Path(current_dir).resolve() / "settings" / "setting files" / "settings.json"
         self.key_delays_file = Path(current_dir).resolve() / "settings" / "setting files" / "key_delays.json"
         self.force_stop_key_file = Path(current_dir).resolve() / "settings" / "setting files" / "Force_Stop_key.json"
+
+        # 윈도우 위치 관리자 초기화
+        self.window_positions_manager = WindowPositionsDataSettingFilesManager()
 
         # 먼저 key_delays.json 파일이 없다면 생성
         if not self.key_delays_file.exists():
@@ -116,16 +120,6 @@ class SettingsManager:
     def _get_default_settings(self):
         """기본 설정값 반환"""
         return {
-            "window": {
-                "position": {
-                    "x": 100,
-                    "y": 100
-                },
-                "size": {
-                    "width": 800,
-                    "height": 600
-                }
-            },
             "logics": {}  # UUID를 키로 사용하는 로직 저장소
         }
 
@@ -286,31 +280,15 @@ class SettingsManager:
 
     def get_window_settings(self):
         """윈도우 설정 반환"""
-        return self.settings.get("window", self._get_default_settings()["window"])
+        return self.window_positions_manager.get_window_positions()
 
     def set_window_position(self, x, y):
         """윈도우 위치 설정"""
-        # 현재 설정 파일의 최신 내용을 로드
-        current_settings = self._load_settings()
-
-        # window 설정 업데이트
-        current_settings.setdefault("window", {})["position"] = {"x": x, "y": y}
-        self.settings = current_settings
-
-        # 업데이트된 설정 저장
-        self._save_settings(self.settings)
+        return self.window_positions_manager.set_window_position(x, y)
 
     def set_window_size(self, width, height):
         """윈도우 크기 설정"""
-        # 현재 설정 파일의 최신 내용을 로드
-        current_settings = self._load_settings()
-
-        # window 설정 업데이트
-        current_settings.setdefault("window", {})["size"] = {"width": width, "height": height}
-        self.settings = current_settings
-
-        # 업데이트된 설정 저장
-        self._save_settings(self.settings)
+        return self.window_positions_manager.set_window_size(width, height)
 
     def reload_settings(self, force=False):
         """설정을 다시 로드합니다.
