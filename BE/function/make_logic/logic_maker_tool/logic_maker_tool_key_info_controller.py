@@ -2,16 +2,16 @@ from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QDialog
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 from BE.log.base_log_manager import BaseLogManager
-from BE.function.make_logic.repository.logic_detail_data_manage_repository import LogicDetailDataManageRepository
+from BE.function.make_logic.repository.logic_detail_data_manage_repository_and_service import LogicDetailDataManageRepositoryAndService
 
 class LogicMakerToolKeyInfoController(QObject):
     """키 입력 처리를 담당하는 컨트롤러 클래스"""
     
-    def __init__(self, repository: LogicDetailDataManageRepository, parent=None):
+    def __init__(self, repository: LogicDetailDataManageRepositoryAndService, parent=None):
         """초기화
         
         Args:
-            repository (LogicDetailDataManageRepository): 아이템 관리 저장소
+            repository (LogicDetailDataManageRepositoryAndService): 아이템 관리 저장소
             parent (QObject): 부모 객체
         """
         super().__init__(parent)
