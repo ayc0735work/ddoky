@@ -19,7 +19,7 @@ from BE.function.make_logic.logic_operation.logic_operation_widget import LogicO
 from BE.log.log_widget import LogWidget
 from BE.settings.settings_data_manager import SettingsManager
 from BE.function._common_components.error_handler import ErrorHandler
-from BE.function.make_logic.repository_and_service.all_logic_data_repository_and_service import AllLogicDataRepositoryAndService
+from BE.function.make_logic.repository_and_service.all_logics_data_repository_and_service import AllLogicsDataRepositoryAndService
 from BE.function.execute_logic.logic_executor import LogicExecutor
 from BE.function._common_components.window_process_handler import ProcessManager
 from BE.function.constants.dimensions import (MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, BASIC_SECTION_HEIGHT,
@@ -41,7 +41,7 @@ class MainWindow(QMainWindow):
         settings_manager (SettingsManager): 설정 관리자
         error_handler (ErrorHandler): 전역 예외 처리기
         process_manager (ProcessManager): 프로세스 관리자
-        all_logic_data_repository_and_service (AllLogicDataRepositoryAndService): 로직 관리자
+        all_logics_data_repository_and_service (AllLogicsDataRepositoryAndService): 로직 관리자
         logic_executor (LogicExecutor): 로직 실행기
         keyboard_hook (KeyboardHook): 키보드 입력 후킹 관리자
         logic_item_repository (LogicDetailDataRepositoryAndService): 로직 아이템 저장소
@@ -84,8 +84,8 @@ class MainWindow(QMainWindow):
         self.process_manager = ProcessManager()
         
         # 로직 관리자와 실행기 초기화
-        self.all_logic_data_repository_and_service = AllLogicDataRepositoryAndService(self.settings_manager)
-        self.logic_executor = LogicExecutor(self.process_manager, self.all_logic_data_repository_and_service)
+        self.all_logics_data_repository_and_service = AllLogicsDataRepositoryAndService(self.settings_manager)
+        self.logic_executor = LogicExecutor(self.process_manager, self.all_logics_data_repository_and_service)
         
         # 키보드 훅 초기화
         self.keyboard_hook = KeyboardHook()

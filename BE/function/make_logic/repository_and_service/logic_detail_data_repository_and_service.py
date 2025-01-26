@@ -1,7 +1,7 @@
 from PySide6.QtCore import QObject, Signal
 from BE.log.base_log_manager import BaseLogManager
 from BE.settings.settings_data_manager import SettingsManager
-from BE.function.make_logic.repository_and_service.all_logic_data_repository_and_service import AllLogicDataRepositoryAndService
+from BE.function.make_logic.repository_and_service.all_logics_data_repository_and_service import AllLogicsDataRepositoryAndService
 
 class LogicDetailDataRepositoryAndService(QObject):
     """로직 아이템을 관리하는 저장소 클래스"""
@@ -20,7 +20,7 @@ class LogicDetailDataRepositoryAndService(QObject):
         self.items = []  # 아이템 목록
         self.base_log_manager = BaseLogManager.instance()
         self.settings_manager = SettingsManager()
-        self.all_logic_data_repository_and_service = AllLogicDataRepositoryAndService(self.settings_manager)
+        self.all_logics_data_repository_and_service = AllLogicsDataRepositoryAndService(self.settings_manager)
         self.current_logic_id = None
         self.current_logic = None
         
@@ -218,8 +218,8 @@ class LogicDetailDataRepositoryAndService(QObject):
                 logic_info['created_at'] = self.current_logic.get('created_at')
                 logic_info['order'] = self.current_logic.get('order')
             
-            # 5. AllLogicDataRepositoryAndService를 통해 저장
-            success, result = self.all_logic_data_repository_and_service.save_logic(
+            # 5. AllLogicsDataRepositoryAndService를 통해 저장
+            success, result = self.all_logics_data_repository_and_service.save_logic(
                 self.current_logic_id, 
                 logic_info
             )

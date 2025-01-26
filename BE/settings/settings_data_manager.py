@@ -423,8 +423,10 @@ class SettingsManager:
         Args:
             force (bool): 강제로 설정을 다시 로드할지 여부
         """
+        # 강제 로드가 요청된 경우 설정을 다시 로드
         if force:
             self.reload_settings(force=True)
+        # 로직 데이터를 반환하되, 없으면 빈 딕셔너리 반환
         return self.settings.get('logics', {})
 
     def save_logics(self, logics):
