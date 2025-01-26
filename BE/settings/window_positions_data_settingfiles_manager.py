@@ -4,9 +4,22 @@ from pathlib import Path
 from BE.log.base_log_manager import BaseLogManager
 
 class WindowPositionsDataSettingFilesManager:
-    """윈도우 창 위치 설정 파일 관리 클래스"""
+    """윈도우 창 위치 설정 파일 관리 클래스 (싱글톤)"""
+    
+    _instance = None
+    
+    @classmethod
+    def instance(cls):
+        """싱글톤 인스턴스 반환"""
+        if cls._instance is None:
+            cls._instance = cls()
+        return cls._instance
 
     def __init__(self):
+        """초기화 - 싱글톤 패턴 적용"""
+        if WindowPositionsDataSettingFilesManager._instance is not None:
+            raise Exception("이 클래스는 싱글톤입니다. instance() 메서드를 사용하세요.")
+            
         self.base_log_manager = BaseLogManager.instance()
         
         # BE 폴더 경로를 기준으로 설정 파일 경로 지정
@@ -15,6 +28,8 @@ class WindowPositionsDataSettingFilesManager:
         
         # 초기 설정 로드
         self.window_positions = self._load_window_positions()
+        
+        WindowPositionsDataSettingFilesManager._instance = self
 
     def _get_default_window_positions(self):
         """기본 윈도우 위치 설정 반환"""

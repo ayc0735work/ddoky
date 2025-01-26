@@ -79,7 +79,7 @@ class MainWindow(QMainWindow):
         """
         super().__init__()
         self.settings_manager = SettingsManager()
-        self.window_positions_manager = WindowPositionsDataSettingFilesManager()
+        self.window_positions_manager = WindowPositionsDataSettingFilesManager.instance()
         self.key_input_delays_manager = KeyInputDelaysDataSettingFilesManager.instance()
         
         # 전역 예외 처리기 설정

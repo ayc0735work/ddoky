@@ -9,9 +9,6 @@ import copy
 from BE.function.constants.styles import (FRAME_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from BE.function._common_components.modal.window_process_selector.window_process_selector_modal import ProcessSelectorDialog
-from BE.settings.settings_singleton import Settings
-from BE.settings.settings_data_manager import SettingsManager
-from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 from BE.log.base_log_manager import BaseLogManager
 from BE.settings.key_input_delays_data_settingfiles_manager import KeyInputDelaysDataSettingFilesManager
 from BE.settings.force_stop_key_data_settingfile import ForceStopKeyDataSettingFilesManager

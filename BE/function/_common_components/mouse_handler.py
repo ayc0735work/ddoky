@@ -3,6 +3,7 @@ import win32con
 import win32gui
 import time
 from BE.log.base_log_manager import BaseLogManager
+from BE.settings.key_input_delays_data_settingfiles_manager import KeyInputDelaysDataSettingFilesManager
 
 class MouseHandler:
     """마우스 입력을 처리하는 클래스"""
@@ -91,17 +92,16 @@ class MouseHandler:
                 screen_y = y
             
             # Settings에서 마우스 입력 지연시간 가져오기
-            from BE.settings.settings_singleton import Settings
-            settings = Settings()
-            delays = settings.get('key_input_delays_data', {})
+            key_input_delays_data_setting_files_manager = KeyInputDelaysDataSettingFilesManager.instance()
+            mouse_delays = key_input_delays_data_setting_files_manager.get_key_input_delays_data()
             
             # 기본값 설정
             DEFAULT_DELAY = 0.0245
             mouse_delay = DEFAULT_DELAY
             
             # 설정에서 값을 가져오되, 없으면 기본값 사용
-            if isinstance(delays, dict):
-                mouse_delay = delays.get('mouse_input', DEFAULT_DELAY)
+            if isinstance(mouse_delays, dict):
+                mouse_delay = mouse_delays.get('mouse_input', DEFAULT_DELAY)
             
             # 잠시 대기 후 마우스 이동 및 클릭 
             time.sleep(mouse_delay)
