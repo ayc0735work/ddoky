@@ -13,6 +13,7 @@ from BE.settings.settings_singleton import Settings
 from BE.settings.settings_data_manager import SettingsManager
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 from BE.log.base_log_manager import BaseLogManager
+from BE.settings.key_input_delays_data_settingfiles_manager import KeyInputDelaysDataSettingFilesManager
 
 class LogicOperationWidget(QFrame):
     """로직 동작 허용 여부 온오프 위젯"""
@@ -28,6 +29,7 @@ class LogicOperationWidget(QFrame):
         self.selected_process = None
         self.logic_executor = None  # LogicExecutor 인스턴스를 저장할 속성 추가
         self.settings_manager = SettingsManager()  # SettingsManager 인스턴스 추가
+        self.key_input_delays_manager = KeyInputDelaysDataSettingFilesManager()  # 추가
         self.force_stop_key = self.settings_manager.get_force_stop_key()  # 강제 중지 키 로드
         self.base_log_manager = BaseLogManager.instance()  # BaseLogManager 인스턴스 추가
         self._init_ui()
@@ -555,8 +557,8 @@ class LogicOperationWidget(QFrame):
                     '기본': default_delay
                 }
             
-            # 설정 파일에 저장
-            self.settings_manager.set('key_input_delays_data', {
+            # key_input_delays_data.json 파일에 저장
+            self.key_input_delays_manager.save_key_input_delays_data({
                 'press': key_press,
                 'release': key_release,
                 'mouse_input': mouse_input_delay,
@@ -587,12 +589,7 @@ class LogicOperationWidget(QFrame):
     def load_delay_settings(self):
         """저장된 지연 시간 설정 로드"""
         # key_input_delays_data.json 파일에서 값을 불러옴
-        delays = self.settings_manager.get('key_input_delays_data', {
-            'press': 0.0245,
-            'release': 0.0245,
-            'mouse_input': 0.0245,
-            'default': 0.0245
-        })
+        delays = self.key_input_delays_manager.get_key_input_delays_data()
         
         self.base_log_manager.log(
             message=f"지연 시간 설정을 불러왔습니다: {delays}",
@@ -633,7 +630,7 @@ class LogicOperationWidget(QFrame):
         self.default_delay_input.setText(f"{DEFAULT_DELAY:.4f}")
         
         # 설정 파일에 저장
-        self.settings_manager.set('key_input_delays_data', {
+        self.key_input_delays_manager.save_key_input_delays_data({
             'press': DEFAULT_DELAY,
             'release': DEFAULT_DELAY,
             'mouse_input': DEFAULT_DELAY,

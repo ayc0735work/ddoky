@@ -1,14 +1,4 @@
 {
-    "window": {
-        "position": {
-            "x": 4211,
-            "y": 20
-        },
-        "size": {
-            "width": 900,
-            "height": 2000
-        }
-    },
     "logics": {
         "c4a8abec-8857-43b8-9086-427ec16be1b9": {
             "order": 1,

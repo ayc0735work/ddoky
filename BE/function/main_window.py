@@ -19,6 +19,7 @@ from BE.function.make_logic.logic_operation.logic_operation_widget import LogicO
 from BE.log.log_widget import LogWidget
 from BE.settings.settings_data_manager import SettingsManager
 from BE.settings.window_positions_data_settingfiles_manager import WindowPositionsDataSettingFilesManager
+from BE.settings.key_input_delays_data_settingfiles_manager import KeyInputDelaysDataSettingFilesManager
 from BE.function._common_components.error_handler import ErrorHandler
 from BE.function.make_logic.repository_and_service.all_logics_data_repository_and_service import AllLogicsDataRepositoryAndService
 from BE.function.execute_logic.logic_executor import LogicExecutor
@@ -78,6 +79,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.settings_manager = SettingsManager()
         self.window_positions_manager = WindowPositionsDataSettingFilesManager()
+        self.key_input_delays_manager = KeyInputDelaysDataSettingFilesManager()
         
         # 전역 예외 처리기 설정
         self.error_handler = ErrorHandler()
