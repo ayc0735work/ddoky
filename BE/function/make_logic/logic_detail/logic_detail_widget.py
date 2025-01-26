@@ -7,7 +7,7 @@ from datetime import datetime
 import uuid
 import win32con
 import win32api
-from BE.settings.settings_data_manager import SettingsManager
+from BE.settings.logics_data_settingfiles_manager import LogicsDataSettingFilesManager
 from BE.function.make_logic.repository_and_service.all_logics_data_repository_and_service import AllLogicsDataRepositoryAndService
 from BE.function.constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE, CONTAINER_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
@@ -42,7 +42,7 @@ class LogicDetailWidget(QFrame):
         self.current_logic_id = None  # 현재 로직의 UUID 저장용 추가
         self.copied_items = []  # 복사된 아이템들 저장 (리스트로 변경)
         self.current_logic = None  # 현재 로직 정보
-        self.settings_manager = SettingsManager()  # SettingsManager 인스턴스 생성
+        self.settings_manager = LogicsDataSettingFilesManager()  # LogicsDataSettingFilesManager 인스턴스 생성
         self.all_logics_data_repository_and_service = AllLogicsDataRepositoryAndService(self.settings_manager)  # AllLogicsDataRepositoryAndService 인스턴스 추가
         
         # Repository 시그널 연결

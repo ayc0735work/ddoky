@@ -1,9 +1,9 @@
 from PySide6.QtCore import QObject, Signal
 from BE.log.base_log_manager import BaseLogManager
 from BE.settings.logics_data_settingfiles_manager import LogicsDataSettingFilesManager
-from BE.function.make_logic.repository_and_service.all_logics_data_repository_and_service import AllLogicsDataRepositoryAndService
+from BE.function.make_logic.repository_and_service.all_logics_data_repository_and_service import LogicManager
 
-class LogicDetailDataRepositoryAndService(QObject):
+class LogicDetailDataManageRepositoryAndService(QObject):
     """로직 아이템을 관리하는 저장소 클래스"""
     
     # 시그널 정의
@@ -20,7 +20,7 @@ class LogicDetailDataRepositoryAndService(QObject):
         self.items = []  # 아이템 목록
         self.base_log_manager = BaseLogManager.instance()
         self.settings_manager = LogicsDataSettingFilesManager()
-        self.all_logics_data_repository_and_service = AllLogicsDataRepositoryAndService(self.settings_manager)
+        self.logic_manager = LogicManager(self.settings_manager)
         self.current_logic_id = None
         self.current_logic = None
         
@@ -48,7 +48,7 @@ class LogicDetailDataRepositoryAndService(QObject):
             self.base_log_manager.log(
                 message=f"잘못된 형식의 데이터: {type(item_info)}",
                 level="ERROR",
-                file_name="logic_detail_data_repository_and_service",
+                file_name="logic_detail_data_manage_repository_and_service",
                 method_name="add_logic_detail_item"
             )
             return
@@ -62,7 +62,7 @@ class LogicDetailDataRepositoryAndService(QObject):
         self.base_log_manager.log(
             message=f"아이템이 추가되었습니다: {item_info}",
             level="INFO",
-            file_name="logic_detail_data_repository_and_service",
+            file_name="logic_detail_data_manage_repository_and_service",
             method_name="add_logic_detail_item"
         )
         self.logic_detail_item_added.emit(item_info)
@@ -74,7 +74,7 @@ class LogicDetailDataRepositoryAndService(QObject):
             self.base_log_manager.log(
                 message=f"아이템이 삭제되었습니다: {item_info}",
                 level="INFO",
-                file_name="logic_detail_data_repository_and_service",
+                file_name="logic_detail_data_manage_repository_and_service",
                 method_name="delete_logic_detail_items"
             )
             self.logic_detail_item_deleted.emit(item_info)
@@ -96,7 +96,7 @@ class LogicDetailDataRepositoryAndService(QObject):
                 self.base_log_manager.log(
                     message=f"아이템을 위로 이동했습니다: {item_info}",
                     level="INFO",
-                    file_name="logic_detail_data_repository_and_service",
+                    file_name="logic_detail_data_manage_repository_and_service",
                     method_name="move_logic_detail_item_up"
                 )
                 self.logic_detail_item_moved.emit()
@@ -104,7 +104,7 @@ class LogicDetailDataRepositoryAndService(QObject):
             self.base_log_manager.log(
                 message=f"아이템을 찾을 수 없습니다: {item_info}",
                 level="ERROR",
-                file_name="logic_detail_data_repository_and_service",
+                file_name="logic_detail_data_manage_repository_and_service",
                 method_name="move_logic_detail_item_up"
             )
                 
@@ -124,7 +124,7 @@ class LogicDetailDataRepositoryAndService(QObject):
                 self.base_log_manager.log(
                     message=f"아이템을 아래로 이동했습니다: {item_info}",
                     level="INFO",
-                    file_name="logic_detail_data_repository_and_service",
+                    file_name="logic_detail_data_manage_repository_and_service",
                     method_name="move_logic_detail_item_down"
                 )
                 self.logic_detail_item_moved.emit()
@@ -132,7 +132,7 @@ class LogicDetailDataRepositoryAndService(QObject):
             self.base_log_manager.log(
                 message=f"아이템을 찾을 수 없습니다: {item_info}",
                 level="ERROR",
-                file_name="logic_detail_data_repository_and_service",
+                file_name="logic_detail_data_manage_repository_and_service",
                 method_name="move_logic_detail_item_down"
             )
                 
@@ -146,7 +146,7 @@ class LogicDetailDataRepositoryAndService(QObject):
         self.base_log_manager.log(
             message="모든 아이템이 삭제되었습니다",
             level="INFO",
-            file_name="logic_detail_data_repository_and_service",
+            file_name="logic_detail_data_manage_repository_and_service",
             method_name="clear_logic_detail_items"
         )
         self.logic_detail_items_cleared.emit()
@@ -156,55 +156,32 @@ class LogicDetailDataRepositoryAndService(QObject):
         for i, item in enumerate(self.items, 1):
             item['order'] = i 
         
-    def _collect_logic_detail_data_from_widget(self, widget) -> dict:
-        """위젯에서 데이터를 수집합니다.
-        
-        Args:
-            widget: LogicDetailWidget 인스턴스
-            
-        Returns:
-            dict: 수집된 로직 데이터
-        """
-        return {
-            'name': widget.LogicNameInput__QLineEdit.text(),
-            'repeat_count': widget.RepeatCountInput__QSpinBox.value(),
-            'is_nested': widget.is_nested_checkbox.isChecked(),
-            'trigger_key': widget.trigger_key_info,
-            'items': self.get_logic_detail_items()
-        }
-
-    def save_logic_detail_data(self, widget) -> tuple[bool, str]:
+    def save_logic_detail_items(self, logic_info: dict) -> tuple[bool, str]:
         """로직을 저장합니다.
         
         Args:
-            widget: LogicDetailWidget 인스턴스
+            logic_info (dict): 저장할 로직 정보
             
         Returns:
             tuple[bool, str]: (성공 여부, 결과 메시지)
         """
         try:
-            # 1. 위젯에서 데이터 수집
-            logic_info = self._collect_logic_detail_data_from_widget(widget)
-
-            # 2. 기본 데이터 검증
+            # 1. 기본 데이터 검증
             if not logic_info.get('name'):
                 return False, "로직 이름이 필요합니다."
                 
             if not logic_info.get('items'):
                 return False, "최소 하나의 아이템이 필요합니다."
 
-            # 중첩로직 체크박스가 선택되어 있는데 트리거 키가 없는 경우 검증
-            if not logic_info.get('is_nested') and not logic_info.get('trigger_key'):
-                return False, "중첩로직은 트리거 키가 필요합니다."
-
-            # 3. 이름 중복 검사 (수정 모드가 아닐 때만)
-            if not self.current_logic_id: # 새 로직을 생성하는 경우에만 이름 중복 검사 수행
+            # 2. 이름 중복 검사 (수정 모드가 아닐 때만)
+            if not self.current_logic_id:
                 logics = self.settings_manager.load_logics()
                 for logic in logics.values():
-                    if logic.get('name') == logic_info['name']:
+                    if (logic.get('name') == logic_info['name'] and 
+                        not logic.get('is_nested', False)):
                         return False, "동일한 이름의 로직이 이미 존재합니다."
             
-            # 4. 시간 정보와 순서 정보 추가
+            # 3. 시간 정보와 순서 정보 추가
             from datetime import datetime
             logic_info['updated_at'] = datetime.now().isoformat()
             
@@ -218,8 +195,8 @@ class LogicDetailDataRepositoryAndService(QObject):
                 logic_info['created_at'] = self.current_logic.get('created_at')
                 logic_info['order'] = self.current_logic.get('order')
             
-            # 5. AllLogicsDataRepositoryAndService를 통해 저장
-            success, result = self.all_logics_data_repository_and_service.save_logic(
+            # 4. LogicManager를 통해 저장
+            success, result = self.logic_manager.save_logic(
                 self.current_logic_id, 
                 logic_info
             )
@@ -233,16 +210,16 @@ class LogicDetailDataRepositoryAndService(QObject):
                 self.base_log_manager.log(
                     message=f"로직 '{logic_info['name']}'이(가) 저장되었습니다",
                     level="INFO",
-                    file_name="logic_detail_data_repository_and_service",
-                    method_name="save_logic_detail_data"
+                    file_name="logic_detail_data_manage_repository_and_service",
+                    method_name="save_logic_detail_items"
                 )
                 return True, "저장 성공"
             else:
                 self.base_log_manager.log(
                     message=f"저장 실패: {result}",
                     level="ERROR",
-                    file_name="logic_detail_data_repository_and_service",
-                    method_name="save_logic_detail_data"
+                    file_name="logic_detail_data_manage_repository_and_service",
+                    method_name="save_logic_detail_items"
                 )
                 return False, result
                 
@@ -250,11 +227,12 @@ class LogicDetailDataRepositoryAndService(QObject):
             self.base_log_manager.log(
                 message=f"로직 저장 중 오류 발생: {str(e)}",
                 level="ERROR",
-                file_name="logic_detail_data_repository_and_service",
-                method_name="save_logic_detail_data",
+                file_name="logic_detail_data_manage_repository_and_service",
+                method_name="save_logic_detail_items",
                 print_to_terminal=True
             )
             return False, str(e)
+            
     def load_logic_detail_items(self, logic_info: dict) -> bool:
         """로직을 로드합니다.
         
@@ -270,7 +248,7 @@ class LogicDetailDataRepositoryAndService(QObject):
                 self.base_log_manager.log(
                     message="잘못된 로직 정보입니다",
                     level="ERROR",
-                    file_name="logic_detail_data_repository_and_service",
+                    file_name="logic_detail_data_manage_repository_and_service",
                     method_name="load_logic_detail_items",
                     print_to_terminal=True
                 )
@@ -292,7 +270,7 @@ class LogicDetailDataRepositoryAndService(QObject):
                 self.base_log_manager.log(
                     message=f"로직 '{logic_info.get('name')}'의 ID를 찾을 수 없습니다",
                     level="WARNING",
-                    file_name="logic_detail_data_repository_and_service",
+                    file_name="logic_detail_data_manage_repository_and_service",
                     method_name="load_logic_detail_items"
                 )
                 return False
@@ -318,7 +296,7 @@ class LogicDetailDataRepositoryAndService(QObject):
             self.base_log_manager.log(
                 message=f"로직 '{logic_info.get('name')}'이(가) 로드되었습니다",
                 level="INFO",
-                file_name="logic_detail_data_repository_and_service",
+                file_name="logic_detail_data_manage_repository_and_service",
                 method_name="load_logic_detail_items"
             )
             return True
@@ -327,7 +305,7 @@ class LogicDetailDataRepositoryAndService(QObject):
             self.base_log_manager.log(
                 message=f"로직 로드 중 오류 발생: {str(e)}",
                 level="ERROR",
-                file_name="logic_detail_data_repository_and_service",
+                file_name="logic_detail_data_manage_repository_and_service",
                 method_name="load_logic_detail_items"
             )
             return False

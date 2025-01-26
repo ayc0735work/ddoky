@@ -1,6 +1,6 @@
 import os
 import json
-from BE.settings.settings_data_manager import SettingsManager
+from BE.settings.logics_data_settingfiles_manager import LogicsDataSettingFilesManager
 
 class Settings:
     """싱글톤 설정 클래스"""
@@ -10,7 +10,7 @@ class Settings:
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(Settings, cls).__new__(cls)
-            cls._instance.settings_manager = SettingsManager()
+            cls._instance.settings_manager = LogicsDataSettingFilesManager()
         return cls._instance
     
     def get(self, key, default=None):

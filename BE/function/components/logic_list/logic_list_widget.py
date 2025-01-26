@@ -3,16 +3,15 @@ from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
                              QSizePolicy, QMessageBox)
 from PySide6.QtCore import Qt, Signal, QEvent
 from PySide6.QtGui import QFont
-from BE.log.base_log_manager import BaseLogManager
 import json
 import os
 import uuid
 from datetime import datetime
 import copy
 
-from BE.function.constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE,
+from ...constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
-from BE.function.constants.dimensions import LOGIC_LIST_WIDTH, BASIC_SECTION_HEIGHT, LOGIC_BUTTON_WIDTH
+from ...constants.dimensions import LOGIC_LIST_WIDTH, BASIC_SECTION_HEIGHT, LOGIC_BUTTON_WIDTH
 from BE.settings.logics_data_settingfiles_manager import LogicsDataSettingFilesManager
 
 class LogicListWidget(QFrame):
@@ -26,6 +25,7 @@ class LogicListWidget(QFrame):
         logic_delete_requested (str): 로직 삭제 요청 (logic_id)
         logic_copy_requested (str): 로직 복사 요청 (logic_id)
         logic_paste_requested: 로직 붙여넣기 요청
+        log_message (str): 로그 메시지
         logic_selected (str): 로직 선택 시 (로직 이름)
         edit_logic (dict): 로직 불러오기 (로직 정보)
     """
@@ -36,12 +36,12 @@ class LogicListWidget(QFrame):
     logic_delete_requested = Signal(str)  # logic_id
     logic_copy_requested = Signal(str)  # logic_id
     logic_paste_requested = Signal()
+    log_message = Signal(str)  # 로그 메시지
     logic_selected = Signal(str)  # 로직이 선택되었을 때 (로직 이름)
     edit_logic = Signal(dict)  # 로직 불러오기 시그널 (로직 정보)
     
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.base_log_manager = BaseLogManager.instance()
         self.init_ui()
         
         # 이벤트 필터 설치
@@ -277,11 +277,11 @@ class LogicListWidget(QFrame):
             bool: 이벤트 처리 여부
         """
         if obj == self.logic_list and event.type() == QEvent.KeyPress:
-            modifiers_key_flag = event.modifiers_key_flag()
+            modifiers = event.modifiers()
             key = event.key()
             
             # Ctrl+C: 복사
-            if modifiers_key_flag == Qt.ControlModifier and key == Qt.Key_C:
+            if modifiers == Qt.ControlModifier and key == Qt.Key_C:
                 current_item = self.logic_list.currentItem()
                 if current_item:
                     logic_id = current_item.data(Qt.UserRole)
@@ -289,7 +289,7 @@ class LogicListWidget(QFrame):
                 return True
                 
             # Ctrl+V: 붙여넣기
-            elif modifiers_key_flag == Qt.ControlModifier and key == Qt.Key_V:
+            elif modifiers == Qt.ControlModifier and key == Qt.Key_V:
                 self.logic_paste_requested.emit()
                 return True
                 

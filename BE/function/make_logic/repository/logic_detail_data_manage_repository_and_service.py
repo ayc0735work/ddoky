@@ -1,7 +1,7 @@
 from PySide6.QtCore import QObject, Signal
 from BE.log.base_log_manager import BaseLogManager
 from BE.settings.logics_data_settingfiles_manager import LogicsDataSettingFilesManager
-from BE.function.make_logic.repository_and_service.all_logics_data_repository_and_service import AllLogicsDataRepositoryAndService
+from BE.function.make_logic.repository_and_service.all_logics_data_repository_and_service import LogicManager
 
 class LogicDetailDataRepositoryAndService(QObject):
     """로직 아이템을 관리하는 저장소 클래스"""
@@ -20,7 +20,7 @@ class LogicDetailDataRepositoryAndService(QObject):
         self.items = []  # 아이템 목록
         self.base_log_manager = BaseLogManager.instance()
         self.settings_manager = LogicsDataSettingFilesManager()
-        self.all_logics_data_repository_and_service = AllLogicsDataRepositoryAndService(self.settings_manager)
+        self.all_logic_data_repository_and_service = LogicManager(self.settings_manager)
         self.current_logic_id = None
         self.current_logic = None
         
@@ -194,7 +194,7 @@ class LogicDetailDataRepositoryAndService(QObject):
                 return False, "최소 하나의 아이템이 필요합니다."
 
             # 중첩로직 체크박스가 선택되어 있는데 트리거 키가 없는 경우 검증
-            if not logic_info.get('is_nested') and not logic_info.get('trigger_key'):
+            if logic_info.get('is_nested') and not logic_info.get('trigger_key'):
                 return False, "중첩로직은 트리거 키가 필요합니다."
 
             # 3. 이름 중복 검사 (수정 모드가 아닐 때만)
@@ -218,8 +218,8 @@ class LogicDetailDataRepositoryAndService(QObject):
                 logic_info['created_at'] = self.current_logic.get('created_at')
                 logic_info['order'] = self.current_logic.get('order')
             
-            # 5. AllLogicsDataRepositoryAndService를 통해 저장
-            success, result = self.all_logics_data_repository_and_service.save_logic(
+            # 5. LogicManager를 통해 저장
+            success, result = self.all_logic_data_repository_and_service.save_logic(
                 self.current_logic_id, 
                 logic_info
             )

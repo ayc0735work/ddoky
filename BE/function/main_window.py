@@ -17,7 +17,7 @@ from BE.function.make_logic.logic_maker_tool.logic_maker_tool_controller import 
 from BE.function.make_logic.logic_operation.logic_operation_controller import LogicOperationController
 from BE.function.make_logic.logic_operation.logic_operation_widget import LogicOperationWidget
 from BE.log.log_widget import LogWidget
-from BE.settings.settings_data_manager import SettingsManager
+from BE.settings.logics_data_settingfiles_manager import LogicsDataSettingFilesManager
 from BE.settings.window_positions_data_settingfiles_manager import WindowPositionsDataSettingFilesManager
 from BE.settings.key_input_delays_data_settingfiles_manager import KeyInputDelaysDataSettingFilesManager
 from BE.function._common_components.error_handler import ErrorHandler
@@ -40,7 +40,7 @@ class MainWindow(QMainWindow):
     모든 UI 컴포넌트들을 관리하고 이들 간의 상호작용을 조정합니다.
     
     Attributes:
-        settings_manager (SettingsManager): 설정 관리자
+        settings_manager (LogicsDataSettingFilesManager): 설정 관리자
         error_handler (ErrorHandler): 전역 예외 처리기
         process_manager (ProcessManager): 프로세스 관리자
         all_logics_data_repository_and_service (AllLogicsDataRepositoryAndService): 로직 관리자
@@ -78,7 +78,7 @@ class MainWindow(QMainWindow):
         3. 윈도우 설정 로드
         """
         super().__init__()
-        self.settings_manager = SettingsManager()
+        self.settings_manager = LogicsDataSettingFilesManager()
         self.window_positions_manager = WindowPositionsDataSettingFilesManager.instance()
         self.key_input_delays_manager = KeyInputDelaysDataSettingFilesManager.instance()
         
