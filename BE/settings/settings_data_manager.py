@@ -16,23 +16,20 @@ class SettingsManager:
         # BE 폴더 경로를 기준으로 설정 파일 경로 지정
         current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.settings_file = Path(current_dir).resolve() / "settings" / "setting files" / "settings.json"
-        self.key_delays_file = Path(current_dir).resolve() / "settings" / "setting files" / "key_delays.json"
+        self.key_input_delays_data_file = Path(current_dir).resolve() / "settings" / "setting files" / "key_input_delays_data.json"
         self.force_stop_key_file = Path(current_dir).resolve() / "settings" / "setting files" / "Force_Stop_key.json"
 
-        # 윈도우 위치 관리자 초기화
-        self.window_positions_manager = WindowPositionsDataSettingFilesManager()
-
-        # 먼저 key_delays.json 파일이 없다면 생성
-        if not self.key_delays_file.exists():
-            self.save_key_delays(self._get_default_key_delays())
+        # 먼저 key_input_delays_data.json 파일이 없다면 생성
+        if not self.key_input_delays_data_file.exists():
+            self.save_key_input_delays_data(self._get_default_key_input_delays_data())
             self.base_log_manager.log(
-                message="key_delays.json 파일이 생성되었습니다.",
+                message="key_input_delays_data.json 파일이 생성되었습니다.",
                 level="INFO", 
                 file_name="settings_data_manager",
                 method_name="__init__"
             )
         self.settings = self._load_settings()
-        self.key_delays = self._load_key_delays()
+        self.key_input_delays_data = self._load_key_input_delays_data()
         self.force_stop_key = self._load_force_stop_key()
 
     def _load_settings(self):
@@ -278,18 +275,6 @@ class SettingsManager:
             'ratios_y': item.get('ratios_y', 0)
         }
 
-    def get_window_settings(self):
-        """윈도우 설정 반환"""
-        return self.window_positions_manager.get_window_positions()
-
-    def set_window_position(self, x, y):
-        """윈도우 위치 설정"""
-        return self.window_positions_manager.set_window_position(x, y)
-
-    def set_window_size(self, width, height):
-        """윈도우 크기 설정"""
-        return self.window_positions_manager.set_window_size(width, height)
-
     def reload_settings(self, force=False):
         """설정을 다시 로드합니다.
 
@@ -483,23 +468,23 @@ class SettingsManager:
             self.log_message.emit(f"[오류 상세] {traceback.format_exc()}")
             raise
 
-    def _load_key_delays(self):
+    def _load_key_input_delays_data(self):
         """키 딜레이 설정 파일 로드"""
-        # settings.json에 key_delays가 있다면 key_delays.json으로 이동
-        if 'key_delays' in self.settings:
-            old_delays = self.settings.pop('key_delays')
+        # settings.json에 key_input_delays_data가 있다면 key_input_delays_data.json으로 이동
+        if 'key_input_delays_data' in self.settings:
+            old_delays = self.settings.pop('key_input_delays_data')
             self._save_settings(self.settings)
-            self.save_key_delays(old_delays)
+            self.save_key_input_delays_data(old_delays)
 
         try:
-            with open(self.key_delays_file, 'r', encoding='utf-8') as f:
+            with open(self.key_input_delays_data_file, 'r', encoding='utf-8') as f:
                 return json.load(f)
         except (json.JSONDecodeError, FileNotFoundError):
-            default_delays = self._get_default_key_delays()
-            self.save_key_delays(default_delays)
+            default_delays = self._get_default_key_input_delays_data()
+            self.save_key_input_delays_data(default_delays)
             return default_delays
 
-    def _get_default_key_delays(self):
+    def _get_default_key_input_delays_data(self):
         """기본 키 딜레이 설정 반환"""
         return {
             "press": 0.0192,
@@ -508,22 +493,22 @@ class SettingsManager:
             "default": 0.02
         }
 
-    def get_key_delays(self):
+    def get_key_input_delays_data(self):
         """키 딜레이 설정 반환"""
-        return self.key_delays
+        return self.key_input_delays_data
 
-    def save_key_delays(self, key_delays):
+    def save_key_input_delays_data(self, key_input_delays_data):
         """키 딜레이 설정 저장"""
         try:
-            with open(self.key_delays_file, 'w', encoding='utf-8') as f:
-                json.dump(key_delays, f, indent=4)
-            self.key_delays = key_delays
+            with open(self.key_input_delays_data_file, 'w', encoding='utf-8') as f:
+                json.dump(key_input_delays_data, f, indent=4)
+            self.key_input_delays_data = key_input_delays_data
         except Exception as e:
             self.base_log_manager.log(
                 message=f"키 딜레이 설정 저장 중 오류 발생: {e}",
                 level="ERROR",
                 file_name="settings_data_manager",
-                method_name="save_key_delays",
+                method_name="save_key_input_delays_data",
                 print_to_terminal=True
             )
 
@@ -628,16 +613,16 @@ class SettingsManager:
 
     def get(self, key, default=None):
         """설정값을 가져옵니다."""
-        if key == 'key_delays':
-            return self.get_key_delays()
+        if key == 'key_input_delays_data':
+            return self.get_key_input_delays_data()
         elif key == 'force_stop_key':
             return self.get_force_stop_key()
         return self.settings.get(key, default)
 
     def set(self, key, value):
         """설정값을 저장합니다."""
-        if key == 'key_delays':
-            return self.save_key_delays(value)
+        if key == 'key_input_delays_data':
+            return self.save_key_input_delays_data(value)
         elif key == 'force_stop_key':
             return self.set_force_stop_key(value)
         self.settings[key] = value

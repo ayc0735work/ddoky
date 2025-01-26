@@ -93,7 +93,7 @@ class MouseHandler:
             # Settings에서 마우스 입력 지연시간 가져오기
             from BE.settings.settings_singleton import Settings
             settings = Settings()
-            delays = settings.get('key_delays', {})
+            delays = settings.get('key_input_delays_data', {})
             
             # 기본값 설정
             DEFAULT_DELAY = 0.0245

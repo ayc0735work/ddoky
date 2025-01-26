@@ -14,7 +14,7 @@ from BE.log.base_log_manager import BaseLogManager
 class LogicExecutor(QObject):
     """로직 실행기"""
     
-    # 기본 딜레이 값 (key_delays.json의 기본값)
+    # 기본 딜레이 값 (key_input_delays_data.json의 기본값)
     DEFAULT_DELAYS = {
         'press': 0.026,
         'release': 0.0017,
@@ -62,11 +62,11 @@ class LogicExecutor(QObject):
         # settings_manager 인스턴스 생성
         self.settings_manager = SettingsManager()
         
-        # key_delays.json 파일에서 딜레이 값 로드
-        delays = self.settings_manager.get('key_delays', self.DEFAULT_DELAYS)
+        # key_input_delays_data.json 파일에서 딜레이 값 로드
+        delays = self.settings_manager.get('key_input_delays_data', self.DEFAULT_DELAYS)
         
-        # KEY_DELAYS 설정
-        self.KEY_DELAYS = {
+        # key_input_delays_data 설정
+        self.key_input_delays_data = {
             '누르기': delays['press'],
             '떼기': delays['release'],
             '마우스 입력': delays['mouse_input'],
@@ -588,7 +588,7 @@ class LogicExecutor(QObject):
             )
             
             # 키 입력 후 지연
-            delay = self.KEY_DELAYS.get(step['action'], self.KEY_DELAYS['기본'])
+            delay = self.key_input_delays_data.get(step['action'], self.key_input_delays_data['기본'])
             self.base_log_manager.log(
                 message=f"키 입력 후 대기 시작 (대기 시간: {delay}초)",
                 level="DEBUG", 

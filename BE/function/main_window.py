@@ -18,6 +18,7 @@ from BE.function.make_logic.logic_operation.logic_operation_controller import Lo
 from BE.function.make_logic.logic_operation.logic_operation_widget import LogicOperationWidget
 from BE.log.log_widget import LogWidget
 from BE.settings.settings_data_manager import SettingsManager
+from BE.settings.window_positions_data_settingfiles_manager import WindowPositionsDataSettingFilesManager
 from BE.function._common_components.error_handler import ErrorHandler
 from BE.function.make_logic.repository_and_service.all_logics_data_repository_and_service import AllLogicsDataRepositoryAndService
 from BE.function.execute_logic.logic_executor import LogicExecutor
@@ -76,6 +77,7 @@ class MainWindow(QMainWindow):
         """
         super().__init__()
         self.settings_manager = SettingsManager()
+        self.window_positions_manager = WindowPositionsDataSettingFilesManager()
         
         # 전역 예외 처리기 설정
         self.error_handler = ErrorHandler()
@@ -476,7 +478,7 @@ class MainWindow(QMainWindow):
         2. 유효성 검사
         3. 윈도우에 적용
         """
-        settings = self.settings_manager.get_window_settings()
+        settings = self.window_positions_manager.get_window_positions()
         position = settings["position"]
         size = settings["size"]
         
@@ -490,7 +492,7 @@ class MainWindow(QMainWindow):
         """
         try:
             pos = self.pos()
-            self.settings_manager.set_window_position(pos.x(), pos.y())
+            self.window_positions_manager.set_window_position(pos.x(), pos.y())
             super().moveEvent(event)
         except Exception as e:
             self.base_log_manager.log(
@@ -507,7 +509,7 @@ class MainWindow(QMainWindow):
         """
         try:
             size = self.size()
-            self.settings_manager.set_window_size(size.width(), size.height())
+            self.window_positions_manager.set_window_size(size.width(), size.height())
             super().resizeEvent(event)
         except Exception as e:
             self.base_log_manager.log(
@@ -535,8 +537,8 @@ class MainWindow(QMainWindow):
             # 윈도우 위치와 크기 저장
             pos = self.pos()
             size = self.size()
-            self.settings_manager.set_window_position(pos.x(), pos.y())
-            self.settings_manager.set_window_size(size.width(), size.height())
+            self.window_positions_manager.set_window_position(pos.x(), pos.y())
+            self.window_positions_manager.set_window_size(size.width(), size.height())
             
             # 키보드 훅 정리
             if hasattr(self, 'keyboard_hook'):

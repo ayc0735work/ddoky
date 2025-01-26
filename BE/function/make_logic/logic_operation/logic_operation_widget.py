@@ -548,7 +548,7 @@ class LogicOperationWidget(QFrame):
             
             # 로직 실행기의 딜레이 값 업데이트
             if self.logic_executor:
-                self.logic_executor.KEY_DELAYS = {
+                self.logic_executor.key_input_delays_data = {
                     '누르기': key_press,
                     '떼기': key_release,
                     '마우스 입력': mouse_input_delay,
@@ -556,7 +556,7 @@ class LogicOperationWidget(QFrame):
                 }
             
             # 설정 파일에 저장
-            self.settings_manager.set('key_delays', {
+            self.settings_manager.set('key_input_delays_data', {
                 'press': key_press,
                 'release': key_release,
                 'mouse_input': mouse_input_delay,
@@ -586,8 +586,8 @@ class LogicOperationWidget(QFrame):
     
     def load_delay_settings(self):
         """저장된 지연 시간 설정 로드"""
-        # key_delays.json 파일에서 값을 불러옴
-        delays = self.settings_manager.get('key_delays', {
+        # key_input_delays_data.json 파일에서 값을 불러옴
+        delays = self.settings_manager.get('key_input_delays_data', {
             'press': 0.0245,
             'release': 0.0245,
             'mouse_input': 0.0245,
@@ -607,16 +607,16 @@ class LogicOperationWidget(QFrame):
         self.mouse_input_delay.setText(f"{delays['mouse_input']:.4f}")
         self.default_delay_input.setText(f"{delays['default']:.4f}")
         
-        # LogicExecutor의 KEY_DELAYS에도 설정
+        # LogicExecutor의 key_input_delays_data에도 설정
         if self.logic_executor:
-            self.logic_executor.KEY_DELAYS = {
+            self.logic_executor.key_input_delays_data = {
                 '누르기': delays['press'],
                 '떼기': delays['release'],
                 '마우스 입력': delays['mouse_input'],
                 '기본': delays['default']
             }
             self.base_log_manager.log(
-                message=f"LogicExecutor의 지연 시간이 업데이트되었습니다: {self.logic_executor.KEY_DELAYS}",
+                message=f"LogicExecutor의 지연 시간이 업데이트되었습니다: {self.logic_executor.key_input_delays_data}",
                 level="DEBUG",
                 file_name="logic_operation_widget",
                 method_name="load_delay_settings"
@@ -633,7 +633,7 @@ class LogicOperationWidget(QFrame):
         self.default_delay_input.setText(f"{DEFAULT_DELAY:.4f}")
         
         # 설정 파일에 저장
-        self.settings_manager.set('key_delays', {
+        self.settings_manager.set('key_input_delays_data', {
             'press': DEFAULT_DELAY,
             'release': DEFAULT_DELAY,
             'mouse_input': DEFAULT_DELAY,
@@ -642,7 +642,7 @@ class LogicOperationWidget(QFrame):
         
         # 로직 실행기의 딜레이 값 업데이트
         if self.logic_executor:
-            self.logic_executor.KEY_DELAYS = {
+            self.logic_executor.key_input_delays_data = {
                 '누르기': DEFAULT_DELAY,
                 '떼기': DEFAULT_DELAY,
                 '마우스 입력': DEFAULT_DELAY,
