@@ -27,14 +27,14 @@ class LogicOperationWidget(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.selected_process = None
-        self.logic_executor = None  # LogicExecutor 인스턴스를 저장할 속성 추가
-        self.settings_manager = SettingsManager()  # SettingsManager 인스턴스 추가
-        self.key_input_delays_manager = KeyInputDelaysDataSettingFilesManager()  # 추가
-        self.force_stop_key = self.settings_manager.get_force_stop_key()  # 강제 중지 키 로드
-        self.base_log_manager = BaseLogManager.instance()  # BaseLogManager 인스턴스 추가
+        self.logic_executor = None
+        self.settings_manager = SettingsManager()
+        self.key_input_delays_manager = KeyInputDelaysDataSettingFilesManager.instance()  # 싱글톤 인스턴스 사용
+        self.force_stop_key = self.settings_manager.get_force_stop_key()
+        self.base_log_manager = BaseLogManager.instance()
         self._init_ui()
         self._connect_signals()
-        self.load_delay_settings()  # 초기화 시 설정 로드
+        self.load_delay_settings()
         
     def _init_ui(self):
         """UI 초기화"""
@@ -204,7 +204,7 @@ class LogicOperationWidget(QFrame):
         
         delay_settings_layout.addLayout(inputs_layout)
         
-        # 버튼들
+        # 키 입력 지연시간 관련 버튼들
         buttons_layout = QHBoxLayout()
         buttons_layout.setSpacing(5)
         
@@ -543,41 +543,36 @@ class LogicOperationWidget(QFrame):
         """지연 시간 저장 버튼 클릭 시 호출"""
         try:
             # 입력값 가져오기
-            key_press = float(self.key_press_input.text())
-            key_release = float(self.key_release_input.text())
+            key_press_delay = float(self.key_press_input.text())
+            key_release_delay = float(self.key_release_input.text())
             mouse_input_delay = float(self.mouse_input_delay.text())
             default_delay = float(self.default_delay_input.text())
             
-            # 로직 실행기의 딜레이 값 업데이트
-            if self.logic_executor:
-                self.logic_executor.key_input_delays_data = {
-                    '누르기': key_press,
-                    '떼기': key_release,
-                    '마우스 입력': mouse_input_delay,
-                    '기본': default_delay
-                }
-            
-            # key_input_delays_data.json 파일에 저장
-            self.key_input_delays_manager.save_key_input_delays_data({
-                'press': key_press,
-                'release': key_release,
+            # key_input_delays_data_settingfiles_manager를 통해 저장
+            delays_data = {
+                'press': key_press_delay,
+                'release': key_release_delay,
                 'mouse_input': mouse_input_delay,
                 'default': default_delay
-            })
+            }
             
-            # UI 상태 업데이트
-            self.key_press_input.setEnabled(False)
-            self.key_release_input.setEnabled(False)
-            self.mouse_input_delay.setEnabled(False)
-            self.default_delay_input.setEnabled(False)
-            self.save_delays_btn.setEnabled(False)
-            self.edit_delays_btn.setEnabled(True)
-            
-            self.base_log_manager.log(
-                message="지연 시간 설정이 저장되었습니다",
-                level="INFO",
-                file_name="logic_operation_widget"
-            )
+            if self.key_input_delays_manager.save_key_input_delays_data(delays_data):
+                # LogicExecutor 업데이트
+                self.key_input_delays_manager.update_logic_executor_delays(self.logic_executor)
+                
+                # UI 상태 업데이트
+                self.key_press_input.setEnabled(False)
+                self.key_release_input.setEnabled(False)
+                self.mouse_input_delay.setEnabled(False)
+                self.default_delay_input.setEnabled(False)
+                self.save_delays_btn.setEnabled(False)
+                self.edit_delays_btn.setEnabled(True)
+                
+                self.base_log_manager.log(
+                    message="지연 시간 설정이 저장되었습니다",
+                    level="INFO",
+                    file_name="logic_operation_widget"
+                )
             
         except ValueError:
             self.base_log_manager.log(
