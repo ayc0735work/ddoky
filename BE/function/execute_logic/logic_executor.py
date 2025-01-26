@@ -27,7 +27,6 @@ class LogicExecutor(QObject):
     execution_started = Signal()  # 로직 실행 시작
     execution_finished = Signal()  # 로직 실행 완료
     execution_error = Signal(str)  # 실행 중 오류 발생
-    log_message = Signal(str)  # 로그 메시지 시그널
     execution_state_changed = Signal(dict)  # 상태 변경 알림
     cleanup_finished = Signal()  # 정리 완료 시그널
     

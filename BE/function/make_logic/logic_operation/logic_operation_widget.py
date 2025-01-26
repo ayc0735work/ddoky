@@ -20,7 +20,6 @@ class LogicOperationWidget(QFrame):
     process_reset = Signal()  # 프로세스가 초기화되었을 때
     operation_toggled = Signal(bool)  # 로직 동작 허용 여부 체크박스가 토글되었을 때
     force_stop = Signal()  # 강제 중지 시그널 추가
-    log_message = Signal(str)  # 로그 메시지 시그널
     
     def __init__(self, parent=None):
         super().__init__(parent)

@@ -380,15 +380,30 @@ class LogicsDataSettingFilesManager:
     def save_logics(self, logics):
         """모든 로직을 저장합니다."""
         try:
-            self.log_message.emit("[로직 저장] 로직 저장 시작")
+            self.base_log_manager.log(
+                message="로직 저장 시작",
+                level="DEBUG",
+                file_name="logics_data_settingfiles_manager",
+                method_name="save_logics"
+            )
             ordered_logics = {}
             for logic_id, logic_data in logics.items():
-                self.log_message.emit(f"[로직 처리] 로직 ID: {logic_id} 처리 시작")
+                self.base_log_manager.log(
+                    message=f"로직 ID: {logic_id} 처리 시작",
+                    level="DEBUG",
+                    file_name="logics_data_settingfiles_manager",
+                    method_name="save_logics"
+                )
 
                 # 아이템 순서 정렬
                 ordered_items = []
                 for item in logic_data.get('items', []):
-                    self.log_message.emit(f"[아이템 처리] 아이템 데이터: {item}")
+                    self.base_log_manager.log(
+                        message=f"아이템 데이터: {item}",
+                        level="DEBUG",
+                        file_name="logics_data_settingfiles_manager",
+                        method_name="save_logics"
+                    )
 
                     try:
                         if 'type' in item:
@@ -400,16 +415,31 @@ class LogicsDataSettingFilesManager:
                                     'duration': item.get('duration', 0),
                                     'order': item.get('order', 0)
                                 }
-                                self.log_message.emit(f"[딜레이 아이템] 처리된 데이터: {ordered_item}")
+                                self.base_log_manager.log(
+                                    message=f"딜레이 아이템 처리: {ordered_item}",
+                                    level="DEBUG",
+                                    file_name="logics_data_settingfiles_manager",
+                                    method_name="save_logics"
+                                )
 
                             elif item['type'] == 'key_input':
                                 # 키 입력 아이템의 경우
                                 ordered_item = self._create_ordered_key_input_item(item)
-                                self.log_message.emit(f"[키 입력 아이템] 처리된 데이터: {ordered_item}")
+                                self.base_log_manager.log(
+                                    message=f"키 입력 아이템 처리: {ordered_item}",
+                                    level="DEBUG",
+                                    file_name="logics_data_settingfiles_manager",
+                                    method_name="save_logics"
+                                )
 
                             elif item['type'] == 'logic':
                                 ordered_item = self._create_ordered_logic_item(item)
-                                self.log_message.emit(f"[로직 타입 아이템] 처리된 데이터: {ordered_item}")
+                                self.base_log_manager.log(
+                                    message=f"로직 타입 아이템 처리: {ordered_item}",
+                                    level="DEBUG",
+                                    file_name="logics_data_settingfiles_manager",
+                                    method_name="save_logics"
+                                )
 
                         else:
                             # 이전 형식의 아이템의 경우
@@ -417,14 +447,31 @@ class LogicsDataSettingFilesManager:
                                 'content': item.get('content', ''),
                                 'order': item.get('order', 0)
                             }
-                            self.log_message.emit(f"[이전 형식 아이템] 처리된 데이터: {ordered_item}")
+                            self.base_log_manager.log(
+                                message=f"이전 형식 아이템 처리: {ordered_item}",
+                                level="DEBUG",
+                                file_name="logics_data_settingfiles_manager",
+                                method_name="save_logics"
+                            )
 
                         ordered_items.append(ordered_item)
 
                     except Exception as e:
-                        self.log_message.emit(f"[오류] 아이템 처리 중 오류 발생: {str(e)}")
+                        self.base_log_manager.log(
+                            message=f"아이템 처리 중 오류 발생: {str(e)}",
+                            level="ERROR",
+                            file_name="logics_data_settingfiles_manager",
+                            method_name="save_logics",
+                            print_to_terminal=True
+                        )
                         import traceback
-                        self.log_message.emit(f"[오류 상세] {traceback.format_exc()}")
+                        self.base_log_manager.log(
+                            message=f"오류 상세: {traceback.format_exc()}",
+                            level="ERROR",
+                            file_name="logics_data_settingfiles_manager",
+                            method_name="save_logics",
+                            print_to_terminal=True
+                        )
                         continue
 
                 ordered_logic = {
@@ -436,21 +483,48 @@ class LogicsDataSettingFilesManager:
                     'repeat_count': logic_data.get('repeat_count', 1),
                     'items': ordered_items
                 }
-                self.log_message.emit(f"[로직 정보] 처리된 로직 데이터: {ordered_logic}")
+                self.base_log_manager.log(
+                    message=f"로직 처리: {ordered_logic}",
+                    level="DEBUG",
+                    file_name="logics_data_settingfiles_manager",
+                    method_name="save_logics"
+                )
 
                 ordered_logics[logic_id] = ordered_logic
 
             # 설정에 저장
-            self.log_message.emit("[설정 저장] 수집된 로직 정보를 설정에 저장합니다.")
+            self.base_log_manager.log(
+                message="수집된 로직 정보를 설정에 저장합니다.",
+                level="DEBUG",
+                file_name="logics_data_settingfiles_manager",
+                method_name="save_logics"
+            )
             settings = self.load_settings() or {}
             settings['logics'] = ordered_logics
             self.save_settings(settings)
-            self.log_message.emit("[설정 저장 완료] 로직 정보가 성공적으로 저장되었습니다.")
+            self.base_log_manager.log(
+                message="로직 정보가 성공적으로 저장되었습니다.",
+                level="DEBUG",
+                file_name="logics_data_settingfiles_manager",
+                method_name="save_logics"
+            )
 
         except Exception as e:
-            self.log_message.emit(f"[오류] 로직 저장 중 오류 발생: {str(e)}")
+            self.base_log_manager.log(
+                message=f"로직 저장 중 오류 발생: {str(e)}",
+                level="ERROR",
+                file_name="logics_data_settingfiles_manager",
+                method_name="save_logics",
+                print_to_terminal=True
+            )
             import traceback
-            self.log_message.emit(f"[오류 상세] {traceback.format_exc()}")
+            self.base_log_manager.log(
+                message=f"오류 상세: {traceback.format_exc()}",
+                level="ERROR",
+                file_name="logics_data_settingfiles_manager",
+                method_name="save_logics",
+                print_to_terminal=True
+            )
             raise
 
     def get(self, key, default=None):

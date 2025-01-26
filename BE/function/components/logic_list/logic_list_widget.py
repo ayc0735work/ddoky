@@ -8,6 +8,7 @@ import os
 import uuid
 from datetime import datetime
 import copy
+from BE.log.base_log_manager import BaseLogManager
 
 from ...constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
@@ -25,7 +26,6 @@ class LogicListWidget(QFrame):
         logic_delete_requested (str): 로직 삭제 요청 (logic_id)
         logic_copy_requested (str): 로직 복사 요청 (logic_id)
         logic_paste_requested: 로직 붙여넣기 요청
-        log_message (str): 로그 메시지
         logic_selected (str): 로직 선택 시 (로직 이름)
         edit_logic (dict): 로직 불러오기 (로직 정보)
     """
@@ -36,12 +36,12 @@ class LogicListWidget(QFrame):
     logic_delete_requested = Signal(str)  # logic_id
     logic_copy_requested = Signal(str)  # logic_id
     logic_paste_requested = Signal()
-    log_message = Signal(str)  # 로그 메시지
     logic_selected = Signal(str)  # 로직이 선택되었을 때 (로직 이름)
     edit_logic = Signal(dict)  # 로직 불러오기 시그널 (로직 정보)
     
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.base_log_manager = BaseLogManager.instance()
         self.init_ui()
         
         # 이벤트 필터 설치
