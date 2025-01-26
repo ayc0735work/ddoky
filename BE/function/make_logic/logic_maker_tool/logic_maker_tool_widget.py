@@ -12,7 +12,7 @@ from BE.function._common_components.modal.text_input_modal.text_input_dialog imp
 from .logic_maker_tool_key_info_controller import LogicMakerToolKeyInfoController
 from BE.log.base_log_manager import BaseLogManager
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
-from BE.function.make_logic.repository.logic_detail_data_manage_repository_and_service import LogicDetailDataManageRepositoryAndService
+from BE.function.make_logic.repository.logic_detail_data_repository_and_service import LogicDetailDataRepositoryAndService
 
 class LogicMakerToolWidget(QFrame):
     """로직 메이커 위젯"""

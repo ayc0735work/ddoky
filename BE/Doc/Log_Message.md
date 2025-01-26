@@ -114,7 +114,7 @@ self.base_log_manager.log(
 
 ### 2.4 파일 이름 규칙
 - 현재 파일의 이름을 확장자 빼고 파일 이름만 작성
-   예시) BE\function\manage_logic\logic_manager.py 파일이라면 file_name은 logic_manager
+   예시) BE\function\manage_logic\all_logic_data_repository_and_service.py 파일이라면 file_name은 all_logic_data_repository_and_service
 
 ### 2.5 주의사항
 1. 모든 로그는 명확하고 간결하게 작성

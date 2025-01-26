@@ -30,16 +30,16 @@ class LogicExecutor(QObject):
     execution_state_changed = Signal(dict)  # 상태 변경 알림
     cleanup_finished = Signal()  # 정리 완료 시그널
     
-    def __init__(self, process_manager, logic_manager):
+    def __init__(self, process_manager, all_logic_data_repository_and_service):
         """초기화
         
         Args:
             process_manager: 프로세스 관리자 인스턴스
-            logic_manager: 로직 관리자 인스턴스
+            all_logic_data_repository_and_service: 로직 관리자 인스턴스
         """
         super().__init__()
         self.process_manager = process_manager
-        self.logic_manager = logic_manager
+        self.all_logic_data_repository_and_service = all_logic_data_repository_and_service
         self.base_log_manager = BaseLogManager.instance()  # BaseLogManager 초기화
         
         # 로직 활성화 상태 추가
@@ -332,7 +332,7 @@ class LogicExecutor(QObject):
             
         # 최신 로직 정보로 로직 찾기 및 실행
         found_matching_logic = False
-        logics = self.logic_manager.get_all_logics(force=True)
+        logics = self.all_logic_data_repository_and_service.get_all_logics(force=True)
         
         for logic_id, logic in logics.items():
             if self._is_trigger_key_matched(logic, formatted_key_info):
@@ -678,7 +678,7 @@ class LogicExecutor(QObject):
             ))
             
             # 최신 로직 정보로 중첩로직 로드 및 실행
-            logics = self.logic_manager.get_all_logics(force=True)
+            logics = self.all_logic_data_repository_and_service.get_all_logics(force=True)
             nested_logic = logics.get(logic_id)
             if not nested_logic:
                 raise Exception(
@@ -1263,7 +1263,7 @@ class LogicExecutor(QObject):
         """로직을 실행"""
         try:
             # 실행 시점에 최신 로직 데이터 로드
-            logics = self.logic_manager.get_all_logics(force=True)
+            logics = self.all_logic_data_repository_and_service.get_all_logics(force=True)
             if logic_id not in logics:
                 raise ValueError(f"로직을 찾을 수 없습니다: {logic_id}")
                 

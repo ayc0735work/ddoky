@@ -8,7 +8,7 @@ import uuid
 import win32con
 import win32api
 from BE.settings.settings_data_manager import SettingsManager
-from BE.function.manage_logic.logic_manager import LogicManager
+from BE.function.make_logic.repository.all_logic_data_repository_and_service import AllLogicDataRepositoryAndService
 from BE.function.constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE, CONTAINER_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from BE.function.constants.dimensions import (LOGIC_DETAIL_WIDTH, BASIC_SECTION_HEIGHT,
@@ -17,7 +17,7 @@ from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_h
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 from BE.function._common_components.modal.text_input_modal.text_input_dialog import TextInputDialog
 from BE.log.base_log_manager import BaseLogManager
-from BE.function.make_logic.repository.logic_detail_data_manage_repository_and_service import LogicDetailDataManageRepositoryAndService
+from BE.function.make_logic.repository.logic_detail_data_repository_and_service import LogicDetailDataRepositoryAndService
 
 class LogicDetailWidget(QFrame):
     """로직 상세 내용을 표시하고 관리하는 위젯"""
@@ -29,7 +29,7 @@ class LogicDetailWidget(QFrame):
     logic_saved = Signal(dict)
     logic_updated = Signal(str, dict)
     
-    def __init__(self, repository: LogicDetailDataManageRepositoryAndService, parent=None):
+    def __init__(self, repository: LogicDetailDataRepositoryAndService, parent=None):
         super().__init__(parent)
         self.repository = repository
         self.base_log_manager = BaseLogManager.instance()
@@ -43,7 +43,7 @@ class LogicDetailWidget(QFrame):
         self.copied_items = []  # 복사된 아이템들 저장 (리스트로 변경)
         self.current_logic = None  # 현재 로직 정보
         self.settings_manager = SettingsManager()  # SettingsManager 인스턴스 생성
-        self.logic_manager = LogicManager(self.settings_manager)  # LogicManager 인스턴스 추가
+        self.all_logic_data_repository_and_service = AllLogicDataRepositoryAndService(self.settings_manager)  # AllLogicDataRepositoryAndService 인스턴스 추가
         
         # Repository 시그널 연결
         self.repository.logic_detail_item_added.connect(self._update_list_widget)
@@ -426,22 +426,15 @@ class LogicDetailWidget(QFrame):
 
     def _save_logic(self):
         """저장 버튼 클릭 핸들러
-        - UI 데이터 수집
         - Repository에 저장 요청
         - 결과에 따른 UI 업데이트
         """
         try:
-            # UI에서 데이터 수집
-            logic_data = {
-                'name': self.LogicNameInput__QLineEdit.text(),
-                'repeat_count': self.RepeatCountInput__QSpinBox.value(),
-                'is_nested': self.is_nested_checkbox.isChecked(),
-                'trigger_key': self.trigger_key_info,
-                'items': self.repository.get_logic_detail_items()
-            }
-            
             # Repository에 저장 요청
-            success, message = self.repository.save_logic_detail_items(logic_data)
+            # save_logic_detail_data() 메서드는 두 개의 값을 반환합니다:
+            # 1. success: 저장 성공 여부 (bool)
+            # 2. message: 결과 메시지 (str)
+            success, message = self.repository.save_logic_detail_data(self)
             
             # UI 업데이트
             if success:

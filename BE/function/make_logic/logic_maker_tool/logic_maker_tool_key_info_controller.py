@@ -2,16 +2,16 @@ from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QDialog
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 from BE.log.base_log_manager import BaseLogManager
-from BE.function.make_logic.repository.logic_detail_data_manage_repository_and_service import LogicDetailDataManageRepositoryAndService
+from BE.function.make_logic.repository.logic_detail_data_repository_and_service import LogicDetailDataRepositoryAndService
 
 class LogicMakerToolKeyInfoController(QObject):
     """키 입력 처리를 담당하는 컨트롤러 클래스"""
     
-    def __init__(self, repository: LogicDetailDataManageRepositoryAndService, parent=None):
+    def __init__(self, repository: LogicDetailDataRepositoryAndService, parent=None):
         """초기화
         
         Args:
-            repository (LogicDetailDataManageRepositoryAndService): 아이템 관리 저장소
+            repository (LogicDetailDataRepositoryAndService): 아이템 관리 저장소
             parent (QObject): 부모 객체
         """
         super().__init__(parent)
@@ -36,7 +36,7 @@ class LogicMakerToolKeyInfoController(QObject):
             )
             return False
             
-        required_fields = ['type', 'key', 'modifiers_key_flag', 'scan_code', 'virtual_key']
+        required_fields = ['type', 'key_code', 'modifiers_key_flag', 'scan_code', 'virtual_key']
         for field in required_fields:
             if field not in key_info:
                 self.base_log_manager.log(
@@ -47,7 +47,7 @@ class LogicMakerToolKeyInfoController(QObject):
                 )
                 return False
                 
-        if key_info['type'] != 'key':
+        if key_info['type'] != 'key_input':
             self.base_log_manager.log(
                 message=f"validate_key_info - 유효성 검사 결과 잘못된 타입: {key_info['type']}",
                 level="ERROR",

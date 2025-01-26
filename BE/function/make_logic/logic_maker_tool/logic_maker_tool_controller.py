@@ -84,4 +84,4 @@ class LogicMakerController(QObject):
                     continue
         
         # 나머지 저장 로직 수행
-        return self.logic_manager.save_logic(logic_data)
+        return self.all_logic_data_repository_and_service.save_logic(logic_data)

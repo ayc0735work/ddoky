@@ -108,7 +108,7 @@
 
 ## 5. Repository 처리
 ### 파일
-- `logic_detail_data_manage_repository_and_service.py`
+- `logic_detail_data_repository_and_service.py`
 
 ### 메서드
 - `add_item(item_info)`
@@ -159,7 +159,7 @@
    - `EnteredKeyInfoDialog.accept()` → `LogicMakerToolWidget._open_key_input_dialog()` (다이얼로그 결과)
 
 3. 아이템 추가
-   - `LogicDetailDataManageRepositoryAndService.add_item()` → `logic_detail_item_added` 시그널 → `LogicDetailWidget._update_list_widget()`
+   - `LogicDetailDataRepositoryAndService.add_item()` → `logic_detail_item_added` 시그널 → `LogicDetailWidget._update_list_widget()`
 
 ## 데이터 흐름
 ```mermaid
@@ -167,7 +167,7 @@ graph TD
     A[키보드 입력] --> B[KeyboardHook]
     B --> C[EnteredKeyInfoDialog]
     C --> D[LogicMakerToolKeyInfoController]
-    D --> E[LogicDetailDataManageRepositoryAndService]
+    D --> E[LogicDetailDataRepositoryAndService]
     E -- logic_detail_item_added 시그널 --> F[LogicDetailWidget]
     F --> G[UI 업데이트]
 ```

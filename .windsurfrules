@@ -4,7 +4,7 @@ ddoky 프로젝트
 -- UI 초기화 및 시작 단계
 MainWindow의 init 메서드에서 시작
 LogicDetailWidget 초기화 시:
-SettingsManager와 LogicManager 인스턴스 생성
+SettingsManager와 AllLogicDataRepositoryAndService 인스턴스 생성
 UI 컴포넌트 초기화 (로직 이름 입력, 트리거 키 설정, 반복 횟수 등)
 이벤트 필터 설치 및 시그널/슬롯 연결
 중첩 로직 체크박스 초기 상태 설정
