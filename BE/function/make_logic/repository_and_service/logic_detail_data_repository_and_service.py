@@ -255,6 +255,7 @@ class LogicDetailDataRepositoryAndService(QObject):
                 print_to_terminal=True
             )
             return False, str(e)
+
     def load_logic_detail_items(self, logic_info: dict) -> bool:
         """로직을 로드합니다.
         
