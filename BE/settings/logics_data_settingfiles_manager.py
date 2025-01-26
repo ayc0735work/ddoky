@@ -526,12 +526,4 @@ class LogicsDataSettingFilesManager:
                 print_to_terminal=True
             )
             raise
-
-    def get(self, key, default=None):
-        """설정값을 가져옵니다."""
-        return self.settings.get(key, default)
-
-    def set(self, key, value):
-        """설정값을 저장합니다."""
-        self.settings[key] = value
-        self._save_settings(self.settings)
+        
