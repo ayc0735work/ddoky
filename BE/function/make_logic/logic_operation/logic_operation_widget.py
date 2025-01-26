@@ -14,6 +14,7 @@ from BE.settings.settings_data_manager import SettingsManager
 from BE.function._common_components.modal.entered_key_info_modal.entered_key_info_dialog import EnteredKeyInfoDialog
 from BE.log.base_log_manager import BaseLogManager
 from BE.settings.key_input_delays_data_settingfiles_manager import KeyInputDelaysDataSettingFilesManager
+from BE.settings.force_stop_key_data_settingfile import ForceStopKeyDataSettingFilesManager
 
 class LogicOperationWidget(QFrame):
     """로직 동작 허용 여부 온오프 위젯"""
@@ -28,9 +29,9 @@ class LogicOperationWidget(QFrame):
         super().__init__(parent)
         self.selected_process = None
         self.logic_executor = None
-        self.settings_manager = SettingsManager()
-        self.key_input_delays_manager = KeyInputDelaysDataSettingFilesManager.instance()  # 싱글톤 인스턴스 사용
-        self.force_stop_key = self.settings_manager.get_force_stop_key()
+        self.force_stop_key_manager = ForceStopKeyDataSettingFilesManager.instance()
+        self.key_input_delays_manager = KeyInputDelaysDataSettingFilesManager.instance()
+        self.force_stop_key = self.force_stop_key_manager.get_force_stop_key()
         self.base_log_manager = BaseLogManager.instance()
         self._init_ui()
         self._connect_signals()
@@ -263,7 +264,8 @@ class LogicOperationWidget(QFrame):
             self.base_log_manager.log(
                 message="선택된 프로세스가 없습니다. 프로세스를 먼저 선택해주세요",
                 level="ERROR",
-                file_name="logic_operation_widget"
+                file_name="logic_operation_widget",
+                method_name="_on_operation_toggled"
             )
             return
         self.operation_toggled.emit(checked)
@@ -280,7 +282,8 @@ class LogicOperationWidget(QFrame):
             self.base_log_manager.log(
                 message=f"프로세스가 선택되었습니다: {self._get_process_info_text(process)}",
                 level="INFO",
-                file_name="logic_operation_widget"
+                file_name="logic_operation_widget",
+                method_name="_on_select_process"
             )
         
     def _on_reset_process(self):
@@ -292,7 +295,8 @@ class LogicOperationWidget(QFrame):
         self.base_log_manager.log(
             message="프로세스 선택이 초기화되었습니다",
             level="INFO",
-            file_name="logic_operation_widget"
+            file_name="logic_operation_widget",
+            method_name="_on_reset_process"
         )
         
     def _on_force_stop(self):
@@ -301,19 +305,22 @@ class LogicOperationWidget(QFrame):
             self.base_log_manager.log(
                 message="강제 중지 시작",
                 level="DEBUG",
-                file_name="logic_operation_widget"
+                file_name="logic_operation_widget",
+                method_name="_on_force_stop"
             )
             self.force_stop.emit()
             self.base_log_manager.log(
                 message="강제 중지 완료",
                 level="INFO",
-                file_name="logic_operation_widget"
+                file_name="logic_operation_widget",
+                method_name="_on_force_stop"
             )
         except Exception as e:
             self.base_log_manager.log(
                 message=f"강제 중지 중 오류 발생: {str(e)}",
                 level="ERROR",
-                file_name="logic_operation_widget"
+                file_name="logic_operation_widget",
+                method_name="_on_force_stop"
             )
         
     def update_selected_process(self, process_name):
@@ -346,7 +353,7 @@ class LogicOperationWidget(QFrame):
                 logic_name = copied_item.get('logic_name')
                 
                 # 최신 로직 정보 가져오기
-                logics = self.settings_manager.load_logics(force=True)
+                logics = self.force_stop_key_manager.load_force_stop_keys(force=True)
                 
                 # 이름으로 찾기
                 found = False
@@ -403,7 +410,7 @@ class LogicOperationWidget(QFrame):
                     logic_name = copied_item.get('logic_name')
                     
                     # 최신 로직 정보 가져오기
-                    logics = self.settings_manager.load_logics(force=True)
+                    logics = self.force_stop_key_manager.load_force_stop_keys(force=True)
                     
                     # 이름으로 찾기
                     found = False
@@ -467,6 +474,13 @@ class LogicOperationWidget(QFrame):
                 "오류",
                 f"아이템 붙여넣기 중 오류가 발생했습니다: {str(e)}"
             )
+            self.base_log_manager.log(
+                message=f"아이템 붙여넣기 중 오류 발생: {str(e)}",
+                level="ERROR",
+                file_name="logic_operation_widget",
+                method_name="_paste_items",
+                print_to_terminal=True
+            )
 
     def _add_logic_item(self, item_info):
         """로직 아이템을 리스트에 추가"""
@@ -478,7 +492,7 @@ class LogicOperationWidget(QFrame):
             logic_name = item_info.get('logic_name')
             
             # 최신 로직 정보 가져오기
-            logics = self.settings_manager.load_logics(force=True)
+            logics = self.force_stop_key_manager.load_force_stop_keys(force=True)
             
             # 이름으로 찾기
             found = False
@@ -536,7 +550,8 @@ class LogicOperationWidget(QFrame):
         self.base_log_manager.log(
             message="지연 시간 수정 모드가 활성화되었습니다",
             level="INFO",
-            file_name="logic_operation_widget"
+            file_name="logic_operation_widget",
+            method_name="_on_edit_delays"
         )
     
     def _on_save_delays(self):
@@ -571,14 +586,16 @@ class LogicOperationWidget(QFrame):
                 self.base_log_manager.log(
                     message="지연 시간 설정이 저장되었습니다",
                     level="INFO",
-                    file_name="logic_operation_widget"
+                    file_name="logic_operation_widget",
+                    method_name="_on_save_delays"
                 )
             
         except ValueError:
             self.base_log_manager.log(
                 message="올바른 숫자 형식을 입력해주세요",
                 level="ERROR",
-                file_name="logic_operation_widget"
+                file_name="logic_operation_widget",
+                method_name="_on_save_delays"
             )
     
     def load_delay_settings(self):
@@ -649,81 +666,18 @@ class LogicOperationWidget(QFrame):
 
     def _on_edit_force_stop_key(self):
         """강제 중지 키 수정 버튼 클릭 시 호출"""
-        try:
-            # 버튼 비활성화
-            self.edit_force_stop_key_btn.setEnabled(False)
-            
-            # EnteredKeyInfoDialog를 사용하여 키 입력 받기
-            dialog = EnteredKeyInfoDialog(self)
-            
-            # 다이얼로그를 모달로 실행하고 결과 확인
-            result = dialog.exec()
-            
-            # 다이얼로그가 승인되었을 때만 처리
-            if result == QDialog.Accepted:
-                key_info = dialog.get_entered_key_info_result()
-                if key_info:
-                    # modifiers_key_flag가 KeyboardModifier 객체인 경우 정수로 변환
-                    if 'modifiers_key_flag' in key_info and hasattr(key_info['modifiers_key_flag'], 'value'):
-                        key_info['modifiers_key_flag'] = int(key_info['modifiers_key_flag'].value)
-                    
-                    self.force_stop_key = key_info
-                    self.force_stop_key_input.setText(key_info['key_code'])
-                    
-                    # LogicExecutor에 새로운 강제 중지 키 정보 전달
-                    if self.logic_executor:
-                        self.logic_executor.set_force_stop_key(key_info['virtual_key'])
-                    
-                    # 설정 파일에 저장
-                    self.settings_manager.set_force_stop_key(key_info)
-                    
-                    self.base_log_manager.log(
-                        message=f"로직 강제 중지 키가 '{key_info['key_code']}'(으)로 변경되었습니다",
-                        level="INFO",
-                        file_name="logic_operation_widget"
-                    )
-            
-        except Exception as e:
-            self.base_log_manager.log(
-                message=f"강제 중지 키 설정 중 오류 발생: {str(e)}",
-                level="ERROR",
-                file_name="logic_operation_widget"
-            )
-        finally:
-            # 버튼 다시 활성화
-            self.edit_force_stop_key_btn.setEnabled(True)
-            
+        # 버튼 비활성화
+        self.edit_force_stop_key_btn.setEnabled(False)
+        
     def _on_reset_force_stop_key(self):
         """강제 중지 키 초기화 버튼 클릭 시 호출"""
-        try:
-            # ESC 키로 초기화
-            self.force_stop_key = {
-                "type": "key_input",
-                "key_code": "ESC",
-                "scan_code": 1,
-                "virtual_key": 27,
-                "modifiers_key_flag": 0
-            }
-            self.force_stop_key_input.setText('ESC')
-            
-            # LogicExecutor에 초기화된 강제 중지 키 정보 전달
-            if self.logic_executor:
-                self.logic_executor.set_force_stop_key(27)
-                
-            # 설정 파일에 저장
-            self.settings_manager.set_force_stop_key(self.force_stop_key)
-                
-            self.base_log_manager.log(
-                message="로직 강제 중지 키가 'ESC'로 초기화되었습니다",
-                level="INFO",
-                file_name="logic_operation_widget"
-            )
-        except Exception as e:
-            self.base_log_manager.log(
-                message=f"강제 중지 키 초기화 중 오류 발생: {str(e)}",
-                level="ERROR",
-                file_name="logic_operation_widget"
-            )
+        pass  # 컨트롤러에서 처리
+        
+    def update_force_stop_key_display(self, key_info):
+        """강제 중지 키 표시 업데이트"""
+        self.force_stop_key = key_info
+        self.force_stop_key_input.setText(key_info.get('simple_display_text', key_info.get('key_code', '')))
+        self.edit_force_stop_key_btn.setEnabled(True)
 
     def _add_item_at_index(self, item_data, index):
         """특정 인덱스에 아이템 추가"""

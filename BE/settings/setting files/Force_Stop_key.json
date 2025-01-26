@@ -1,7 +1,10 @@
 {
     "is_system_key": false,
     "key_code": "ESC",
+    "location": "메인키",
+    "modifier_text": "없음",
+    "modifiers_key_flag": 0,
     "scan_code": 1,
-    "virtual_key": 27,
-    "modifiers_key_flag": 0
+    "simple_display_text": "ESC  ((메인키))",
+    "virtual_key": 27
 }

@@ -5,7 +5,6 @@ import uuid
 from datetime import datetime
 import logging
 from BE.log.base_log_manager import BaseLogManager
-from BE.settings.window_positions_data_settingfiles_manager import WindowPositionsDataSettingFilesManager
 
 class SettingsManager:
     """설정 파일 관리 클래스"""
@@ -16,10 +15,8 @@ class SettingsManager:
         # BE 폴더 경로를 기준으로 설정 파일 경로 지정
         current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.settings_file = Path(current_dir).resolve() / "settings" / "setting files" / "settings.json"
-        self.force_stop_key_file = Path(current_dir).resolve() / "settings" / "setting files" / "Force_Stop_key.json"
 
         self.settings = self._load_settings()
-        self.force_stop_key = self._load_force_stop_key()
 
     def _load_settings(self):
         """설정 파일 로드"""
@@ -93,7 +90,6 @@ class SettingsManager:
 
             return True
         except Exception as e:
-            self.base_log_manager = BaseLogManager.instance()
             self.base_log_manager.log(
                 message=f"설정 저장 중 오류 발생: {str(e)}",
                 level="ERROR",
@@ -457,114 +453,11 @@ class SettingsManager:
             self.log_message.emit(f"[오류 상세] {traceback.format_exc()}")
             raise
 
-    def _load_force_stop_key(self):
-        """강제 중지 키 설정 로드"""
-        if self.force_stop_key_file.exists():
-            try:
-                with open(self.force_stop_key_file, 'r', encoding='utf-8') as f:
-                    return json.load(f)
-            except Exception as e:
-                self.base_log_manager.log(
-                    message=f"강제 중지 키 설정 로드 중 오류 발생: {e}",
-                    level="ERROR", 
-                    file_name="settings_data_manager",
-                    method_name="_load_force_stop_key",
-                    print_to_terminal=True
-                )
-                return {
-                    "type": "key_input",
-                    "key_code": "ESC",
-                    "scan_code": 1,
-                    "virtual_key": 27,
-                    "modifiers_key_flag": 0
-                }  # 기본값
-        return {
-            "type": "key_input",
-            "key_code": "ESC",
-            "scan_code": 1,
-            "virtual_key": 27,
-            "modifiers_key_flag": 0
-        }  # 기본값
-
-    def set_force_stop_key(self, formatted_key_info):
-        """강제 중지 키 설정 업데이트"""
-        try:
-            if isinstance(formatted_key_info, str):  # key_code만 전달된 경우 (이전 버전 호환성)
-                if formatted_key_info == 'ESC':
-                    force_stop_key = {
-                        "is_system_key": False,
-                        "key_code": "ESC",
-                        "scan_code": 1,
-                        "virtual_key": 27,
-                        "modifiers_key_flag": 0
-                    }
-                else:
-                    current_key = self._load_force_stop_key()
-                    current_key['key_code'] = formatted_key_info
-                    force_stop_key = current_key
-            else:  # 전체 키 정보가 전달된 경우
-                # modifiers_key_flag가 KeyboardModifier 객체인 경우 정수로 변환
-                if 'modifiers_key_flag' in formatted_key_info:
-                    try:
-                        if hasattr(formatted_key_info['modifiers_key_flag'], 'value'):
-                            formatted_key_info['modifiers_key_flag'] = int(formatted_key_info['modifiers_key_flag'].value)
-                        elif isinstance(formatted_key_info['modifiers_key_flag'], int):
-                            pass  # 이미 정수인 경우 그대로 사용
-                        else:
-                            formatted_key_info['modifiers_key_flag'] = 0  # 기본값
-                    except Exception:
-                        formatted_key_info['modifiers_key_flag'] = 0  # 변환 실패시 기본값
-
-                force_stop_key = {
-                    "is_system_key": formatted_key_info.get('is_system_key', False),
-                    "key_code": formatted_key_info.get('key_code', ''),
-                    "scan_code": formatted_key_info.get('scan_code', 0),
-                    "virtual_key": formatted_key_info.get('virtual_key', 0),
-                    "modifiers_key_flag": formatted_key_info.get('modifiers_key_flag', 0)
-                }
-
-            self._save_force_stop_key(force_stop_key)
-            self.force_stop_key = force_stop_key  # 메모리에도 업데이트
-        except Exception as e:
-            self.base_log_manager.log(
-                message=f"강제 중지 키 설정 업데이트 중 오류 발생: {e}",
-                level="ERROR",
-                file_name="settings_data_manager",
-                method_name="set_force_stop_key",
-                print_to_terminal=True
-            )
-
-    def _save_force_stop_key(self, force_stop_key):
-        """강제 중지 키 설정 저장"""
-        try:
-            # KeyboardModifier 객체를 정수로 변환
-            if isinstance(force_stop_key.get('modifiers_key_flag'), object):
-                force_stop_key['modifiers_key_flag'] = int(force_stop_key['modifiers_key_flag'])
-
-            with open(self.force_stop_key_file, 'w', encoding='utf-8') as f:
-                json.dump(force_stop_key, f, ensure_ascii=False, indent=4)
-        except Exception as e:
-            self.base_log_manager.log(
-                message=f"강제 중지 키 설정 저장 중 오류 발생: {e}",
-                level="ERROR", 
-                file_name="settings_data_manager",
-                method_name="_save_force_stop_key",
-                print_to_terminal=True
-            )
-
-    def get_force_stop_key(self):
-        """강제 중지 키 설정 반환"""
-        return self._load_force_stop_key()
-
     def get(self, key, default=None):
         """설정값을 가져옵니다."""
-        if key == 'force_stop_key':
-            return self.get_force_stop_key()
         return self.settings.get(key, default)
 
     def set(self, key, value):
         """설정값을 저장합니다."""
-        if key == 'force_stop_key':
-            return self.set_force_stop_key(value)
         self.settings[key] = value
         self._save_settings(self.settings)

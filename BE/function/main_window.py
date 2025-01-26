@@ -57,6 +57,7 @@ class MainWindow(QMainWindow):
         log_widget (LogWidget): 로그 표시 위젯
     """
     
+    ##### 처음 프로그램 실행시 초기화 하고 데이터를 불러오는 그런 과정은 각 파일에서 비즈니스 로직과 함께 처리하는 것이 맞다
     def __init__(self):
         """메인 윈도우 초기화
         
