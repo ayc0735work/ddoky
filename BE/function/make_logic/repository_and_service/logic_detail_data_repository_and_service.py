@@ -19,8 +19,8 @@ class LogicDetailDataRepositoryAndService(QObject):
         super().__init__()
         self.items = []  # 아이템 목록
         self.base_log_manager = BaseLogManager.instance()
-        self.settings_manager = LogicsDataSettingFilesManager()
-        self.all_logics_data_repository_and_service = AllLogicsDataRepositoryAndService(self.settings_manager)
+        self.logics_data_settingfiles_manager = LogicsDataSettingFilesManager()
+        self.all_logics_data_repository_and_service = AllLogicsDataRepositoryAndService(self.logics_data_settingfiles_manager)
         self.current_logic_id = None
         self.current_logic = None
         
@@ -199,7 +199,7 @@ class LogicDetailDataRepositoryAndService(QObject):
 
             # 3. 이름 중복 검사 (수정 모드가 아닐 때만)
             if not self.current_logic_id: # 새 로직을 생성하는 경우에만 이름 중복 검사 수행
-                logics = self.settings_manager.load_logics()
+                logics = self.logics_data_settingfiles_manager.load_logics()
                 for logic in logics.values():
                     if logic.get('name') == logic_info['name']:
                         return False, "동일한 이름의 로직이 이미 존재합니다."
@@ -211,7 +211,7 @@ class LogicDetailDataRepositoryAndService(QObject):
             if not self.current_logic_id:  # 새 로직인 경우
                 logic_info['created_at'] = datetime.now().isoformat()
                 # 새 로직의 order는 기존 로직들의 최대 order + 1
-                logics = self.settings_manager.load_logics()
+                logics = self.logics_data_settingfiles_manager.load_logics()
                 max_order = max([l.get('order', 0) for l in logics.values() if l.get('order', 0) > 0], default=0)
                 logic_info['order'] = max_order + 1
             else:  # 수정인 경우
@@ -282,7 +282,7 @@ class LogicDetailDataRepositoryAndService(QObject):
             # 3. UUID 설정 및 검증
             self.current_logic_id = logic_info.get('id')
             if not self.current_logic_id:  # ID가 없는 경우 이름으로 찾기
-                logics = self.settings_manager.load_logics()
+                logics = self.logics_data_settingfiles_manager.load_logics()
                 for logic_id, saved_logic in logics.items():
                     if saved_logic.get('name') == logic_info.get('name'):
                         self.current_logic_id = logic_id

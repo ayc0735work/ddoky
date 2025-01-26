@@ -1,1 +1,0 @@
-from BE.settings.settings_singleton import Settings
