@@ -19,7 +19,7 @@ from BE.function.make_logic.logic_operation.logic_operation_widget import LogicO
 from BE.log.log_widget import LogWidget
 from BE.settings.settings_data_manager import SettingsManager
 from BE.function._common_components.error_handler import ErrorHandler
-from BE.function.make_logic.repository.all_logic_data_repository_and_service import AllLogicDataRepositoryAndService
+from BE.function.make_logic.repository_and_service.all_logic_data_repository_and_service import AllLogicDataRepositoryAndService
 from BE.function.execute_logic.logic_executor import LogicExecutor
 from BE.function._common_components.window_process_handler import ProcessManager
 from BE.function.constants.dimensions import (MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, BASIC_SECTION_HEIGHT,
@@ -29,7 +29,7 @@ from BE.function.etc_function.countdown.Controller.countdown_controller__input_s
 from BE.function._common_components.modal.entered_key_info_modal.keyboard_hook_handler import KeyboardHook
 import logging
 from BE.log.base_log_manager import BaseLogManager
-from BE.function.make_logic.repository.logic_detail_data_repository_and_service import LogicDetailDataRepositoryAndService
+from BE.function.make_logic.repository_and_service.logic_detail_data_repository_and_service import LogicDetailDataRepositoryAndService
 
 class MainWindow(QMainWindow):
     """메인 윈도우 클래스

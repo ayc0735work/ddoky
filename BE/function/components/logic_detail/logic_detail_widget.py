@@ -8,7 +8,7 @@ import uuid
 import win32con
 import win32api
 from BE.settings.settings_data_manager import SettingsManager
-from BE.function.make_logic.repository.all_logic_data_repository_and_service import AllLogicDataRepositoryAndService
+from BE.function.make_logic.repository_and_service.all_logic_data_repository_and_service import AllLogicDataRepositoryAndService
 from ...constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE, CONTAINER_STYLE,
                              TITLE_FONT_FAMILY, SECTION_FONT_SIZE)
 from ...constants.dimensions import (LOGIC_DETAIL_WIDTH, BASIC_SECTION_HEIGHT,

@@ -1,7 +1,7 @@
 from PySide6.QtCore import QObject, Signal
 from BE.log.base_log_manager import BaseLogManager
 from BE.settings.settings_data_manager import SettingsManager
-from BE.function.make_logic.repository.all_logic_data_repository_and_service import AllLogicDataRepositoryAndService
+from BE.function.make_logic.repository_and_service.all_logic_data_repository_and_service import AllLogicDataRepositoryAndService
 
 class LogicDetailDataRepositoryAndService(QObject):
     """로직 아이템을 관리하는 저장소 클래스"""
