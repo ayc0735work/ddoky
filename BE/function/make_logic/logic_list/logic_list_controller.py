@@ -380,7 +380,7 @@ class LogicListController(QObject):
             new_logic = copy.deepcopy(self.clipboard)
             new_logic['name'] = f"{new_logic['name']} (복사본)"
             new_logic['trigger_key'] = None
-            new_logic['is_nested'] = True
+            new_logic['isNestedLogicCheckboxSelected'] = True
             
             # 새로운 UUID로 저장
             self.process_logic_save(new_logic)
@@ -398,7 +398,7 @@ class LogicListController(QObject):
             return ""
         name = logic_info.get('name', '')
         
-        if logic_info.get('is_nested', False):
+        if logic_info.get('isNestedLogicCheckboxSelected', False):
             return f"[ {name} ] --- 중첩로직용"
         
         trigger_key = logic_info.get('trigger_key', {})

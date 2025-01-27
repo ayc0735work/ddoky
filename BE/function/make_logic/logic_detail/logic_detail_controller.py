@@ -71,7 +71,7 @@ class LogicDetailController(QObject):
         logic_data = {
             'name': self.widget.LogicNameInput__QLineEdit.text(),
             'repeat_count': self.widget.RepeatCountInput__QSpinBox.value(),
-            'is_nested': self.widget.is_nested_checkbox.isChecked(),
+            'isNestedLogicCheckboxSelected': self.widget.isNestedLogicCheckboxSelected_checkbox.isChecked(),
             'trigger_key': self.widget.trigger_key_info,
             'items': self.widget.logic_detail_data_repository_and_service.get_logic_detail_items()
         }
@@ -95,11 +95,11 @@ class LogicDetailController(QObject):
             self.widget.LogicItemList__QListWidget.addItem(list_item)
         
         # 중첩로직 여부 설정
-        is_nested = logic_data.get('is_nested', False)
-        self.widget.is_nested_checkbox.setChecked(is_nested)
+        isNestedLogicCheckboxSelected = logic_data.get('isNestedLogicCheckboxSelected', False)
+        self.widget.isNestedLogicCheckboxSelected_checkbox.setChecked(isNestedLogicCheckboxSelected)
         
         # 중첩로직이 아닐 경우에만 트리거 키 설정
-        if not is_nested:
+        if not isNestedLogicCheckboxSelected:
             self.widget.trigger_key_info = logic_data.get('trigger_key')
             if self.widget.trigger_key_info:
                 self.widget.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.set_key_info(self.widget.trigger_key_info)
@@ -110,7 +110,7 @@ class LogicDetailController(QObject):
         empty_logic = {
             'name': '',
             'repeat_count': 1,
-            'is_nested': True,
+            'isNestedLogicCheckboxSelected': True,
             'trigger_key': None,
             'items': []
         }

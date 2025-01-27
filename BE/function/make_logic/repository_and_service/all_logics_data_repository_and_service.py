@@ -105,7 +105,7 @@ class AllLogicsDataRepositoryAndService(QObject):
         """로직 데이터 유효성 검사"""
         if not logic_data.get('name'):
             raise ValueError("로직 이름은 필수입니다.")
-        if not logic_data.get('is_nested', False):
+        if not logic_data.get('isNestedLogicCheckboxSelected', False):
             if not logic_data.get('trigger_key'):
                 raise ValueError("트리거 키는 필수입니다.")
         if not logic_data.get('items'):
@@ -142,12 +142,12 @@ class AllLogicsDataRepositoryAndService(QObject):
             logics = settings.get('logics', {})
 
             # 이름 중복 검사 (중첩로직은 제외)
-            if not logic_data.get('is_nested', False):
+            if not logic_data.get('isNestedLogicCheckboxSelected', False):
                 logic_name = logic_data.get('name')
                 for existing_id, existing_logic in logics.items():
                     if (existing_logic['name'] == logic_name and 
                         existing_id != logic_id and 
-                        not existing_logic.get('is_nested', False)):
+                        not existing_logic.get('isNestedLogicCheckboxSelected', False)):
                         self.base_log_manager.log(
                             message=f"로직 저장 실패: '{logic_name}' - 이름 중복",
                             level="WARNING",

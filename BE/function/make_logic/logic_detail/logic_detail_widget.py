@@ -51,7 +51,7 @@ class LogicDetailWidget(QFrame):
         self.logic_detail_data_repository_and_service.logic_detail_item_moved.connect(self._update_list_widget)
         
         # 중첩로직용 체크박스 초기 상태 설정
-        self.is_nested_checkbox.setChecked(True)
+        self.isNestedLogicCheckboxSelected_checkbox.setChecked(True)
         
         # 키보드 이벤트 필터 설치
         self.installEventFilter(self)
@@ -68,11 +68,11 @@ class LogicDetailWidget(QFrame):
         self.RepeatCountInput__QSpinBox.setValue(logic_data.get('repeat_count', 1))
         
         # 중첩로직 여부 설정
-        is_nested = logic_data.get('is_nested', False)
-        self.is_nested_checkbox.setChecked(is_nested)
+        isNestedLogicCheckboxSelected = logic_data.get('isNestedLogicCheckboxSelected', False)
+        self.isNestedLogicCheckboxSelected_checkbox.setChecked(isNestedLogicCheckboxSelected)
         
         # 중첩로직이 아닐 경우에만 트리거 키 설정
-        if not is_nested:
+        if not isNestedLogicCheckboxSelected:
             trigger_key = logic_data.get('trigger_key', {})
             if isinstance(trigger_key, dict) and trigger_key:
                 self.trigger_key_info = trigger_key.copy()
@@ -230,9 +230,9 @@ class LogicDetailWidget(QFrame):
         RepeatCountRow__QHBoxLayout.addWidget(RepeatCountLabel__QLabel)
         
         # 중첩로직용 체크박스 추가
-        self.is_nested_checkbox = QCheckBox("중첩로직용")
-        self.is_nested_checkbox.stateChanged.connect(self._on_nested_checkbox_changed)
-        RepeatCountRow__QHBoxLayout.addWidget(self.is_nested_checkbox)
+        self.isNestedLogicCheckboxSelected_checkbox = QCheckBox("중첩로직용")
+        self.isNestedLogicCheckboxSelected_checkbox.stateChanged.connect(self._on_nested_checkbox_changed)
+        RepeatCountRow__QHBoxLayout.addWidget(self.isNestedLogicCheckboxSelected_checkbox)
         
         RepeatCountRow__QHBoxLayout.addStretch()
         
@@ -396,7 +396,7 @@ class LogicDetailWidget(QFrame):
         
         for logic_id, logic in logics.items():
             if (logic_id != self.current_logic_id and 
-                not logic.get('is_nested', False)):
+                not logic.get('isNestedLogicCheckboxSelected', False)):
                 trigger_key = logic.get('trigger_key', {})
                 if (trigger_key and
                     trigger_key.get('virtual_key') == key_info.get('virtual_key')):
@@ -790,7 +790,7 @@ class LogicDetailWidget(QFrame):
     def _create_new_logic(self):
         """새 로직 버튼 클릭 시 호출되는 메서드"""
         self.controller.clear_logic_info()  # 컨트롤러를 통해 초기화
-        self.is_nested_checkbox.setChecked(True)  # 중첩로직용 체크박스를 선택된 상태로 설정
+        self.isNestedLogicCheckboxSelected_checkbox.setChecked(True)  # 중첩로직용 체크박스를 선택된 상태로 설정
         self.base_log_manager.log(
             message="새 로직 생성을 시작합니다",
             level="INFO",
@@ -910,24 +910,24 @@ class LogicDetailWidget(QFrame):
 
     def _on_nested_checkbox_changed(self, state):
         """중첩로직용 체크박스 상태 변경 시 호출"""
-        is_nested = state == Qt.CheckState.Checked.value
+        isNestedLogicCheckboxSelected = state == Qt.CheckState.Checked.value
         
         # 로그 추가
         self.base_log_manager.log(
-            message=f"중첩로직용 체크박스가 {'활성화' if is_nested else '비활성화'}되었습니다",
+            message=f"중첩로직용 체크박스가 {'활성화' if isNestedLogicCheckboxSelected else '비활성화'}되었습니다",
             level="INFO",
             file_name="logic_detail_widget",
             method_name="_on_nested_checkbox_changed"
         )
         
         # 트리거 키 입력 UI 비활성화/활성화
-        self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.setEnabled(not is_nested)
-        self.TriggerKeyInput__QLineEdit.setEnabled(not is_nested)
-        self.EditTriggerKeyButton__QPushButton.setEnabled(not is_nested and bool(self.trigger_key_info))
-        self.DeleteTriggerKeyButton__QPushButton.setEnabled(not is_nested and bool(self.trigger_key_info))
+        self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.setEnabled(not isNestedLogicCheckboxSelected)
+        self.TriggerKeyInput__QLineEdit.setEnabled(not isNestedLogicCheckboxSelected)
+        self.EditTriggerKeyButton__QPushButton.setEnabled(not isNestedLogicCheckboxSelected and bool(self.trigger_key_info))
+        self.DeleteTriggerKeyButton__QPushButton.setEnabled(not isNestedLogicCheckboxSelected and bool(self.trigger_key_info))
         
         # 중첩로직일 경우 클릭 이벤트 제거, 아닐 경우 클릭 이벤트 설정
-        if is_nested:
+        if isNestedLogicCheckboxSelected:
             self.TriggerKeyInput__QLineEdit.mousePressEvent = None
             self.TriggerKeyInput__QLineEdit.setPlaceholderText("중첩로직용")
             # 중첩로직용일 경우 트리거 키 초기화

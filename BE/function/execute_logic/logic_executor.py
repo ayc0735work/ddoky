@@ -1098,7 +1098,7 @@ class LogicExecutor(QObject):
     def _is_trigger_key_matched(self, logic, formatted_key_info):
         """트리거 키 매칭 확인"""
         # 중첩 로직인 경우 매칭하지 않음
-        if logic.get('is_nested', False):
+        if logic.get('isNestedLogicCheckboxSelected', False):
             return False
         
         trigger_key = logic.get('trigger_key', {})

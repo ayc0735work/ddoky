@@ -75,7 +75,7 @@ class LogicsDataSettingFilesManager:
                         'updated_at': logic_data.get('updated_at', ''),
                         'trigger_key': logic_data.get('trigger_key', {}),
                         'repeat_count': logic_data.get('repeat_count', 1),
-                        'is_nested': logic_data.get('is_nested', False),
+                        'isNestedLogicCheckboxSelected': logic_data.get('isNestedLogicCheckboxSelected', False),
                         'items': ordered_items
                     }
                     ordered_logics[logic_id] = ordered_logic
@@ -300,7 +300,7 @@ class LogicsDataSettingFilesManager:
                     raise ValueError(f"필수 필드 '{field}'가 누락되었습니다.")
 
             # 중첩로직용 여부 저장
-            is_nested = logic_data.get('is_nested', False)
+            isNestedLogicCheckboxSelected = logic_data.get('isNestedLogicCheckboxSelected', False)
 
             # order 값 처리 - 항상 1 이상의 값 보장
             if 'order' in logic_data:
@@ -319,7 +319,7 @@ class LogicsDataSettingFilesManager:
                 'trigger_key': logic_data.get('trigger_key', {}),
                 'repeat_count': logic_data['repeat_count'],
                 'items': logic_data['items'],
-                'is_nested': is_nested
+                'isNestedLogicCheckboxSelected': isNestedLogicCheckboxSelected
             }
 
             # 기존 로직의 이름과 ID를 가져옴

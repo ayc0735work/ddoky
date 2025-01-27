@@ -168,7 +168,7 @@ class LogicDetailDataRepositoryAndService(QObject):
         return {
             'name': widget.LogicNameInput__QLineEdit.text(),
             'repeat_count': widget.RepeatCountInput__QSpinBox.value(),
-            'is_nested': widget.is_nested_checkbox.isChecked(),
+            'isNestedLogicCheckboxSelected': widget.isNestedLogicCheckboxSelected_checkbox.isChecked(),
             'trigger_key': widget.trigger_key_info,
             'items': self.get_logic_detail_items()
         }
@@ -194,7 +194,7 @@ class LogicDetailDataRepositoryAndService(QObject):
                 return False, "최소 하나의 아이템이 필요합니다."
 
             # 중첩로직이 아닌데 트리거 키가 없는 경우 검증
-            if not logic_info.get('is_nested') and not logic_info.get('trigger_key'):
+            if not logic_info.get('isNestedLogicCheckboxSelected') and not logic_info.get('trigger_key'):
                 return False, "중첩로직이 아닌 경우 트리거 키가 필요합니다."
 
             # 3. 이름 중복 검사 (수정 모드가 아닐 때만)
@@ -342,7 +342,7 @@ class LogicDetailDataRepositoryAndService(QObject):
             'name': '',  # 로직 이름
             'repeat_count': 1,  # 반복 횟수
             'trigger_key': None,  # 트리거 키
-            'is_nested': True,  # 중첩로직 여부
+            'isNestedLogicCheckboxSelected': True,  # 중첩로직 여부
             'items': []  # 로직 상세 아이템
         }
         
