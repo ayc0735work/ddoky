@@ -40,14 +40,13 @@ class DatabaseConnection:
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS logic_data (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    logic_order INTEGER NOT NULL  -- 로직 순서
-                    name TEXT NOT NULL,
+                    logic_order INTEGER NOT NULL,
+                    logic_name TEXT NOT NULL,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     isNestedLogicCheckboxSelected BOOLEAN DEFAULT FALSE,
                     trigger_key TEXT,
-                    repeat_count INTEGER DEFAULT 1,
-
+                    repeat_count INTEGER DEFAULT 1
                 )
             """)
             
