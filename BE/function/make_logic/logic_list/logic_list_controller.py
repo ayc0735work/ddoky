@@ -1,4 +1,4 @@
-from PySide6.QtCore import QObject, Signal
+from PySide6.QtCore import QObject, Signal, Qt
 from BE.log.base_log_manager import BaseLogManager
 from .Logic_Database_Manager import Logic_Database_Manager
 from BE.function.make_logic.logic_list.logic_list_widget import LogicListWidget
@@ -30,7 +30,10 @@ class LogicListController(QObject):
         """
         super().__init__()
         self.logic_list_widget = widget
-        self.clipboard = None  # 복사된 로직 저장용
+        self.clipboard = {
+            'items': [],  # 복사된 로직들의 리스트
+            'source_orders': []  # 각 로직의 원본 순서
+        }
         self.logic_database_manager = Logic_Database_Manager()
         self.base_log_manager = BaseLogManager.instance()
         self.logic_list_widget.request_logic_detail.connect(self._load_logic_detail)
@@ -278,35 +281,35 @@ class LogicListController(QObject):
         # 스크롤 위치 복원
         self.logic_list_widget.set_scroll_position(current_scroll)
             
-    def process_logic_copy(self, logic_id):
+    def process_logic_copy(self, logic_ids):
         """로직 복사 처리
         
-        선택된 로직을 클립보드에 복사합니다.
+        선택된 로직들을 클립보드에 복사합니다.
         
         Args:
-            logic_id (str): 복사할 로직의 ID
-            
-        프로세스:
-        1. DB에서 로직 정보 조회
-        2. 로직 정보 깊은 복사
-        3. 클립보드에 저장
+            logic_ids (list): 복사할 로직들의 ID 리스트
         """
         try:
-            # 1. DB에서 로직 정보 조회
-            logic_detail = self.logic_database_manager.get_logic_detail_data(logic_id)
-            if not logic_detail:
-                raise Exception("DB에서 로직 정보를 찾을 수 없습니다")
+            # 클립보드 초기화
+            self.clipboard = {
+                'items': [],
+                'source_orders': []
+            }
             
-            # 2. 로직 정보 깊은 복사 및 클립보드에 저장
-            self.clipboard = copy.deepcopy(logic_detail)
-            self.clipboard['id'] = logic_id
+            for logic_id in logic_ids:
+                # DB에서 로직 정보 조회
+                logic_detail = self.logic_database_manager.get_logic_detail_data(logic_id)
+                if logic_detail:
+                    self.clipboard['items'].append(copy.deepcopy(logic_detail))
+                    self.clipboard['source_orders'].append(logic_detail['logic_order'])
             
-            self.base_log_manager.log(
-                message=f"로직 '{logic_detail.get('logic_name', '')}'이(가) 복사되었습니다",
-                level="INFO",
-                file_name="logic_list_controller", 
-                method_name="process_logic_copy"
-            )
+            if self.clipboard['items']:
+                self.base_log_manager.log(
+                    message=f"{len(logic_ids)}개의 로직이 복사되었습니다",
+                    level="INFO",
+                    file_name="logic_list_controller", 
+                    method_name="process_logic_copy"
+                )
                 
         except Exception as e:
             self.base_log_manager.log(
@@ -320,26 +323,65 @@ class LogicListController(QObject):
     def process_logic_paste(self):
         """로직 붙여넣기 처리
         
-        클립보드에 저장된 로직을 새로운 로직으로 붙여넣기합니다.
+        클립보드에 저장된 로직들을 새로운 로직으로 붙여넣기합니다.
         
         프로세스:
-        1. 클립보드 데이터 깊은 복사
-        2. 새 이름 설정 (복사본)
-        3. 트리거 키 초기화
-        4. 새 로직으로 저장
+        1. 현재 선택된 로직의 순서 확인
+        2. 트랜잭션으로 순서 업데이트
+        3. 복사된 로직들을 순서대로 저장
         """
-        if not self.clipboard:
+        if not self.clipboard['items']:
             return
             
         try:
-            new_logic = copy.deepcopy(self.clipboard)
-            new_logic['logic_name'] = f"{new_logic['logic_name']} (복사본)"
-            new_logic['trigger_key'] = None
-            new_logic['isNestedLogicCheckboxSelected'] = True
+            # 1. 현재 선택된 로직의 순서 가져오기
+            current_item = self.logic_list_widget.logic_list.currentItem()
+            if not current_item:
+                return
+                
+            current_logic_id = current_item.data(Qt.UserRole)
+            current_logic = self.logic_database_manager.get_logic_detail_data(current_logic_id)
+            target_order = current_logic['logic_order']
             
-            # 새로운 UUID로 저장
-            self.process_logic_data_save(new_logic)
+            # 2. 트랜잭션 시작
+            connection = self.logic_database_manager.db.get_connection()
+            cursor = connection.cursor()
             
+            try:
+                connection.execute("BEGIN TRANSACTION")
+                
+                # 3. 뒤의 로직들 순서 조정 (복사된 로직 개수만큼)
+                shift_amount = len(self.clipboard['items'])
+                cursor.execute("""
+                    UPDATE logic_data
+                    SET logic_order = logic_order + ?
+                    WHERE logic_order > ?
+                """, (shift_amount, target_order))
+                
+                # 4. 새 로직들 순서대로 저장
+                for idx, logic_data in enumerate(self.clipboard['items'], 1):
+                    new_logic = copy.deepcopy(logic_data)
+                    new_logic['logic_name'] = f"{new_logic['logic_name']} (복사본)"
+                    new_logic['trigger_key'] = None
+                    new_logic['isNestedLogicCheckboxSelected'] = True
+                    new_logic['logic_order'] = target_order + idx
+                    
+                    self.process_logic_data_save(new_logic)
+                
+                # 트랜잭션 커밋
+                connection.commit()
+                
+                self.base_log_manager.log(
+                    message=f"{shift_amount}개의 로직이 순서 {target_order + 1}부터 붙여넣기되었습니다",
+                    level="INFO",
+                    file_name="logic_list_controller", 
+                    method_name="process_logic_paste"
+                )
+                
+            except Exception as e:
+                connection.rollback()
+                raise e
+                
         except Exception as e:
             self.base_log_manager.log(
                 message=f"로직 붙여넣기 중 오류 발생: {str(e)}",

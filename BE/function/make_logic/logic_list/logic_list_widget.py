@@ -25,7 +25,7 @@ class LogicListWidget(QFrame):
         logic_down_move_requested (str): 아래로 이동 요청 (logic_id)
         logic_edit_requested (str, dict): 로직 수정 요청 (logic_id, new_data)
         logic_delete_requested (str): 로직 삭제 요청 (logic_id)
-        logic_copy_requested (str): 로직 복사 요청 (logic_id)
+        logic_copy_requested (list): 복사할 로직 ID 리스트
         logic_paste_requested: 로직 붙여넣기 요청
         logic_selected (str): 로직 선택 시 (로직 이름)
         edit_logic (dict): 로직 불러오기 (로직 정보)
@@ -38,7 +38,7 @@ class LogicListWidget(QFrame):
     logic_down_move_requested = Signal(str)  # 아래로 이동 시그널 (logic_id)
     logic_edit_requested = Signal(str, dict)  # logic_id, new_data
     logic_delete_requested = Signal(str)  # logic_id
-    logic_copy_requested = Signal(str)  # logic_id
+    logic_copy_requested = Signal(list)  # 복사할 로직 ID 리스트
     logic_paste_requested = Signal()
     logic_selected = Signal(str)  # 로직이 선택되었을 때 (로직 이름)
     reload_logics_requested = Signal()  # 로직 다시 불러오기 요청
@@ -273,26 +273,27 @@ class LogicListWidget(QFrame):
         Returns:
             bool: 이벤트 처리 여부
         """
-        if obj == self.logic_list and event.type() == QEvent.KeyPress:
-            modifiers_key_flag = event.modifiers_key_flag()
+        if event.type() == QEvent.KeyPress:
+            modifiers = event.modifiers()
             key = event.key()
             
             # Ctrl+C: 복사
-            if modifiers_key_flag == Qt.ControlModifier and key == Qt.Key_C:
-                current_item = self.logic_list.currentItem()
-                if current_item:
-                    logic_id = current_item.data(Qt.UserRole)
-                    self.logic_copy_requested.emit(logic_id)
+            if modifiers == Qt.ControlModifier and key == Qt.Key_C:
+                # 선택된 모든 아이템의 logic_id 가져오기
+                selected_items = self.logic_list.selectedItems()
+                if selected_items:
+                    logic_ids = [item.data(Qt.UserRole) for item in selected_items]
+                    self.logic_copy_requested.emit(logic_ids)
                 return True
                 
             # Ctrl+V: 붙여넣기
-            elif modifiers_key_flag == Qt.ControlModifier and key == Qt.Key_V:
+            elif modifiers == Qt.ControlModifier and key == Qt.Key_V:
                 self.logic_paste_requested.emit()
                 return True
                 
             # Delete: 삭제
             elif key == Qt.Key_Delete:
-                self._on_delete_clicked()
+                self._on_delete_clicked()  # 기존 삭제 메서드 재사용
                 return True
                 
         return super().eventFilter(obj, event)
