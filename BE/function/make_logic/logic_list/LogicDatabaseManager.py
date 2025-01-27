@@ -4,7 +4,7 @@ from BE.log.base_log_manager import BaseLogManager
 class LogicDatabaseManager:
     def __init__(self):
         self.base_log_manager = BaseLogManager.instance()
-        self.db = DatabaseConnection()
+        self.db = DatabaseConnection.get_instance()
 
     def get_all_logics_list(self):
         """DB에서 모든 로직의 기본 정보를 조회합니다.
@@ -19,7 +19,8 @@ class LogicDatabaseManager:
                 FROM logic_data ld
                 ORDER BY ld.logic_order
             """
-            cursor = self.db.cursor()
+            connection = self.db.get_connection()
+            cursor = connection.cursor()
             cursor.execute(query)
             rows = cursor.fetchall()
             
@@ -31,13 +32,22 @@ class LogicDatabaseManager:
                     'logic_name': row[2]
                 }
                 logics.append(logic)
-                
-            self.base_log_manager.log(
-                message=f"{len(logics)}개의 로직을 불러왔습니다.",
-                level="INFO",
-                file_name="LogicDatabaseManager",
-                method_name="get_all_logics_list"
-            )
+            
+            if logics:  # 데이터를 성공적으로 가져왔을 때만 로그 출력
+                self.base_log_manager.log(
+                    message=f"{len(logics)}개의 로직을 불러왔습니다.",
+                    level="INFO",
+                    file_name="LogicDatabaseManager",
+                    method_name="get_all_logics_list"
+                )
+            else:
+                self.base_log_manager.log(
+                    message="로직을 불러오지 못했습니다.",
+                    level="ERROR",
+                    file_name="LogicDatabaseManager",
+                    method_name="get_all_logics_list",
+                    print_to_terminal=True
+                )
             return logics
             
         except Exception as e:
@@ -45,6 +55,7 @@ class LogicDatabaseManager:
                 message=f"로직 데이터 조회 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="LogicDatabaseManager",
-                method_name="get_all_logics_list"
+                method_name="get_all_logics_list",
+                print_to_terminal=True
             )
             return [] 

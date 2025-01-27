@@ -374,7 +374,7 @@ class LogicListController(QObject):
                 message=f"로직 복사 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_list_controller", 
-                method_name="process_logic_copy",, 
+                method_name="process_logic_copy",
                 print_to_terminal=True
             )
             
