@@ -173,18 +173,18 @@ class LogicDetailDataRepositoryAndService(QObject):
             'items': self.get_logic_detail_items()
         }
 
-    def save_logic_detail_data(self, widget) -> tuple[bool, str]:
+    def save_logic_detail_data(self, controller) -> tuple[bool, str]:
         """로직을 저장합니다.
         
         Args:
-            widget: LogicDetailWidget 인스턴스
+            controller: LogicDetailController 인스턴스
             
         Returns:
             tuple[bool, str]: (성공 여부, 결과 메시지)
         """
         try:
-            # 1. 위젯에서 데이터 수집
-            logic_info = self._collect_logic_detail_data_from_widget(widget)
+            # 1. 컨트롤러에서 데이터 수집
+            logic_info = controller.get_logic_data()
 
             # 2. 기본 데이터 검증
             if not logic_info.get('name'):
@@ -193,9 +193,9 @@ class LogicDetailDataRepositoryAndService(QObject):
             if not logic_info.get('items'):
                 return False, "최소 하나의 아이템이 필요합니다."
 
-            # 중첩로직 체크박스가 선택되어 있는데 트리거 키가 없는 경우 검증
+            # 중첩로직이 아닌데 트리거 키가 없는 경우 검증
             if not logic_info.get('is_nested') and not logic_info.get('trigger_key'):
-                return False, "중첩로직은 트리거 키가 필요합니다."
+                return False, "중첩로직이 아닌 경우 트리거 키가 필요합니다."
 
             # 3. 이름 중복 검사 (수정 모드가 아닐 때만)
             if not self.current_logic_id: # 새 로직을 생성하는 경우에만 이름 중복 검사 수행
@@ -217,7 +217,7 @@ class LogicDetailDataRepositoryAndService(QObject):
             else:  # 수정인 경우
                 logic_info['created_at'] = self.current_logic.get('created_at')
                 logic_info['order'] = self.current_logic.get('order')
-            
+
             # 5. AllLogicsDataRepositoryAndService를 통해 저장
             success, result = self.all_logics_data_repository_and_service.save_logic(
                 self.current_logic_id, 

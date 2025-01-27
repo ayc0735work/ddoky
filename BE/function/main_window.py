@@ -252,6 +252,7 @@ class MainWindow(QMainWindow):
         # 로직 상세 정보 위젯과 컨트롤러
         self.logic_detail_widget = LogicDetailWidget(self.logic_item_repository)
         self.logic_detail_controller = LogicDetailController(self.logic_detail_widget)
+        self.logic_detail_widget.set_controller(self.logic_detail_controller)  # 컨트롤러 설정
         self.basic_features_layout.addWidget(self.logic_detail_widget)
         
         # 로직 메이커 도구 위젯 초기화

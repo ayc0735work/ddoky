@@ -60,8 +60,7 @@ class LogicDetailWidget(QFrame):
         """컨트롤러 설정 및 시그널 연결"""
         self.controller = controller
         # 컨트롤러의 시그널을 위젯의 UI 업데이트 메서드에 연결
-        self.controller.logic_data_loaded.connect(self._update_ui_from_logic_data)
-        self.controller.logic_items_updated.connect(self._update_ui_from_items)
+        self.controller.logic_data_changed.connect(self._update_ui_from_logic_data)
 
     def _update_ui_from_logic_data(self, logic_data):
         """컨트롤러로부터 받은 로직 데이터로 UI 업데이트"""
@@ -92,11 +91,8 @@ class LogicDetailWidget(QFrame):
 
     def clear_all(self):
         """모든 UI 필드 초기화"""
-        self.LogicNameInput__QLineEdit.clear()
-        self.RepeatCountInput__QSpinBox.setValue(1)
-        self.is_nested_checkbox.setChecked(False)
-        self.clear_key()
-        self.logic_detail_data_repository_and_service.clear_logic_detail_items()
+        self.controller.clear_logic_info()  # 컨트롤러를 통해 초기화
+        self.logic_detail_data_repository_and_service.clear_logic_detail_items()  # Repository를 통해 아이템 목록 초기화
 
     def clear_key(self):
         """트리거 키 정보 초기화"""
@@ -372,18 +368,6 @@ class LogicDetailWidget(QFrame):
             else:
                 self.logic_detail_data_repository_and_service.move_logic_detail_item_down(item_data)
 
-    def get_logic_detail_items(self):
-        """현재 아이템 목록을 반환합니다."""
-        items = self.logic_detail_data_repository_and_service.get_logic_detail_items()
-        
-        # 키 입력 아이템의 modifiers_key_flag를 정수로 변환
-        for item in items:
-            if item.get('type') == 'key' and 'modifiers_key_flag' in item:
-                if not isinstance(item['modifiers_key_flag'], int):
-                    item['modifiers_key_flag'] = item['modifiers_key_flag'].value
-        
-        return items
-
     def has_items(self):
         """목록에 아이템이 있는지 확인"""
         return self.logic_detail_data_repository_and_service.get_logic_detail_items_count() > 0
@@ -515,7 +499,7 @@ class LogicDetailWidget(QFrame):
             # save_logic_detail_data() 메서드는 두 개의 값을 반환합니다:
             # 1. success: 저장 성공 여부 (bool)
             # 2. message: 결과 메시지 (str)
-            success, message = self.logic_detail_data_repository_and_service.save_logic_detail_data(self)
+            success, message = self.logic_detail_data_repository_and_service.save_logic_detail_data(self.controller)
             
             # UI 업데이트
             if success:
@@ -539,57 +523,11 @@ class LogicDetailWidget(QFrame):
             return False
 
     def load_logic(self, logic_info):
-        """로직 정보를 UI 위젯에 로드하는 메서드
-        
-        주어진 로직 정보를 바탕으로 UI 위젯들의 상태를 업데이트합니다.
-        
-        프로세스:
-        1. logic_detail_data_repository_and_servicey에 로직 로드 요청
-        2. 로직 이름과 반복 횟수 UI 업데이트
-        3. 중첩로직 여부에 따른 트리거 키 UI 처리
-           - 중첩로직일 경우: 트리거 키 비활성화
-           - 일반 로직일 경우: 트리거 키 정보 설정 및 UI 업데이트
-        
-        연결된 메서드:
-        - MainWindow._handle_edit_logic()에서 호출됨
-        - LogicListWidget의 logic_selected 시그널에 연결
-        
-        Args:
-            logic_info (dict): 로드할 로직 정보
-                - name (str): 로직 이름
-                - repeat_count (int): 반복 횟수
-                - is_nested (bool): 중첩로직 여부
-                - trigger_key (dict): 트리거 키 정보
-        
-        Returns:
-            bool: 로드 성공 여부
-        """
+        """로직 정보를 UI 위젯에 로드하는 메서드"""
         # logic_detail_data_repository_and_service에 로드 요청
         if self.logic_detail_data_repository_and_service.load_logic_detail_items(logic_info):
-            # UI 업데이트
-            self.LogicNameInput__QLineEdit.setText(logic_info.get('name', ''))
-            self.RepeatCountInput__QSpinBox.setValue(logic_info.get('repeat_count', 1))
-            
-            # logic_detail_data_repository_and_service에서 받은 logic_info의 is_nested 값에 따라 트리거 키 활성 여부 처리
-            # 중첩로직일 경우 트리거 키 비활성화
-            is_nested = logic_info.get('is_nested', False)
-            self.is_nested_checkbox.setChecked(is_nested)
-            
-            # 중첩로직이 아닐 경우에만 트리거 키 설정
-            if not is_nested:
-                trigger_key = logic_info.get('trigger_key', {})
-                if isinstance(trigger_key, dict) and trigger_key: # trigger_key가 dict이고 비어있지 않을 경우
-                    self.trigger_key_info = trigger_key.copy()
-                    self.base_log_manager.log(
-                        message=f"load_logic - 트리거 키 정보 불러오기 완료(self.trigger_key_info): {self.trigger_key_info}",
-                        level="DEBUG",
-                        file_name="logic_detail_widget"
-                    )
-                    formatted_info = create_formatted_key_info(trigger_key)
-                    self.TriggerKeyInput__QLineEdit.setText(formatted_info['simple_display_text'])
-                    self.EditTriggerKeyButton__QPushButton.setEnabled(True)
-                    self.DeleteTriggerKeyButton__QPushButton.setEnabled(True)
-            
+            # 컨트롤러를 통해 로직 데이터 설정
+            self.controller.set_logic_data(logic_info)
             return True
 
     def _create_nested_logic_item(self, logic_name, logic_id=None, original_data=None):
@@ -841,7 +779,7 @@ class LogicDetailWidget(QFrame):
         
     def _create_new_logic(self):
         """새 로직 버튼 클릭 시 호출되는 메서드"""
-        self.clear_all()
+        self.controller.clear_logic_info()  # 컨트롤러를 통해 초기화
         self.is_nested_checkbox.setChecked(True)  # 중첩로직용 체크박스를 선택된 상태로 설정
         self.base_log_manager.log(
             message="새 로직 생성을 시작합니다",
@@ -991,93 +929,6 @@ class LogicDetailWidget(QFrame):
             self.TriggerKeyInput__QLineEdit.mousePressEvent = self._on_trigger_key_input_clicked
             self.TriggerKeyInput__QLineEdit.setPlaceholderText("트리거 키를 설정하세요")
 
-    def get_logic_data(self):
-        """기존 메서드 수정"""
-        # 가장 큰 order 값 찾기
-        logics = self.settings_manager.load_logics(force=True)
-        max_order = 0
-        for logic in logics.values():
-            order = logic.get('order', 0)
-            if order > max_order:
-                max_order = order
-
-        data = {
-            'order': max_order + 1,  # 가장 큰 order + 1
-            'name': self.LogicNameInput__QLineEdit.text(),
-            'repeat_count': self.RepeatCountInput__QSpinBox.value(),
-            'items': self.get_logic_detail_items(),
-            'is_nested': self.is_nested_checkbox.isChecked()
-        }
-        
-        # 중첩로직이 아닐 경우에만 트리거 키 추가
-        if not data['is_nested']:
-            # trigger_key_info가 있고 modifiers_key_flag가 정수가 아닌 경우 변환
-            if self.trigger_key_info and 'modifiers_key_flag' in self.trigger_key_info:
-                trigger_key = self.trigger_key_info.copy()
-                if not isinstance(trigger_key['modifiers_key_flag'], int):
-                    trigger_key['modifiers_key_flag'] = trigger_key['modifiers_key_flag'].value
-                data['trigger_key'] = trigger_key
-            else:
-                data['trigger_key'] = self.trigger_key_info
-            
-        return data
-
-    def set_logic_data(self, logic_data):
-        """기존 메서드 수정"""
-        self.LogicNameInput__QLineEdit.setText(logic_data.get('name', ''))
-        self.RepeatCountInput__QSpinBox.setValue(logic_data.get('repeat_count', 1))
-        self.LogicItemList__QListWidget.set_items(logic_data.get('items', []))
-        
-        # 중첩로직 여부 설정
-        is_nested = logic_data.get('is_nested', False)
-        self.is_nested_checkbox.setChecked(is_nested)
-        
-        # 중첩로직이 아닐 경우에만 트리거 키 설정
-        if not is_nested:
-            self.trigger_key_info = logic_data.get('trigger_key')
-            if self.trigger_key_info:
-                self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.set_key_info(self.trigger_key_info)
-
-    def clear_logic_info(self):
-        """로직 정보 초기화"""
-        try:
-            # 로직 이름 초기화
-            self.LogicNameInput__QLineEdit.clear()
-            
-            # 트리거 키 초기화
-            self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.clear_key()
-            self.trigger_key_info = {}
-            
-            # 반복 횟수 초기화
-            self.RepeatCountInput__QSpinBox.setValue(1)
-            
-            # 중첩로직용 체크박스 초기화
-            self.is_nested_checkbox.setChecked(False)
-            
-            # 로직 아이템 목록 초기화
-            self.LogicItemList__QListWidget.clear()
-            
-            # 로직 아이템 정보 초기화
-            self.logic_items.clear()
-            
-            # 현재 편집 중인 로직 ID 초기화
-            self.current_logic_id = None
-            
-            self.base_log_manager.log(
-                message="로직 정보가 초기화되었습니다",
-                level="INFO",
-                file_name="logic_detail_widget",
-                method_name="clear_logic_info"
-            )
-            
-        except Exception as e:
-            self.base_log_manager.log(
-                message=f"로직 정보 초기화 중 오류 발생: {str(e)}",
-                level="ERROR", 
-                file_name="logic_detail_widget",
-                method_name="clear_logic_info"
-            )
-
     def _copy_item(self):
         """선택된 아이템들을 복사"""
         selected_items = self.LogicItemList__QListWidget.selectedItems()
@@ -1112,9 +963,6 @@ class LogicDetailWidget(QFrame):
         )
     def clear_all(self):
         """모든 UI 필드 초기화"""
-        self.LogicNameInput__QLineEdit.clear()
-        self.RepeatCountInput__QSpinBox.setValue(1)
-        self.is_nested_checkbox.setChecked(False)
-        self.clear_key()
+        self.controller.clear_logic_info()  # 컨트롤러를 통해 초기화
         self.logic_detail_data_repository_and_service.clear_logic_detail_items()  # Repository를 통해 아이템 목록 초기화
         

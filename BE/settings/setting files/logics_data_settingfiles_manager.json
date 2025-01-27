@@ -13981,10 +13981,10 @@
         },
         "b8fb5742-73cd-490e-8b7d-e8ae213b5827": {
             "order": 126,
-            "name": "asdfasdf",
+            "name": "asdfasdf'''",
             "created_at": "2025-01-27T08:37:31.298072",
-            "updated_at": "2025-01-27T08:37:31.303208",
-            "trigger_key": null,
+            "updated_at": "2025-01-27T09:26:51.977352",
+            "trigger_key": {},
             "repeat_count": 1,
             "is_nested": true,
             "items": [
@@ -14006,6 +14006,26 @@
                     "key_code": "A",
                     "scan_code": 30,
                     "virtual_key": 65,
+                    "modifiers_key_flag": 0
+                },
+                {
+                    "order": 3,
+                    "logic_detail_item_dp_text": "엔터  ((메인키)) --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
+                    "modifiers_key_flag": 0
+                },
+                {
+                    "order": 4,
+                    "logic_detail_item_dp_text": "엔터  ((메인키)) --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "엔터",
+                    "scan_code": 28,
+                    "virtual_key": 13,
                     "modifiers_key_flag": 0
                 }
             ]
