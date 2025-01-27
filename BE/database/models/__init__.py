@@ -2,7 +2,7 @@
 Database models package
 """
 
-from BE.database.models.logic import Logic
-from BE.database.models.logic_item import LogicItem
+from .logic import Logic
+from .logic_item import LogicDetailItem
 
-__all__ = ['Logic', 'LogicItem'] 
+__all__ = ['Logic', 'LogicDetailItem'] 

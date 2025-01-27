@@ -3,8 +3,8 @@ from typing import Optional, Any
 import json
 
 @dataclass
-class LogicDetailItem:
-    """로직 상세 아이템 데이터를 표현하는 모델 클래스"""
+class LogicItem:
+    """로직 아이템 데이터를 표현하는 모델 클래스"""
     id: Optional[int] = None
     logic_id: Optional[int] = None
     item_order: int = 0
@@ -16,7 +16,7 @@ class LogicDetailItem:
             self.item_data = {}
             
     def to_dict(self) -> dict:
-        """LogicDetailItem 객체를 dictionary로 변환"""
+        """LogicItem 객체를 dictionary로 변환"""
         return {
             'id': self.id,
             'logic_id': self.logic_id,
@@ -26,8 +26,8 @@ class LogicDetailItem:
         }
     
     @classmethod
-    def from_dict(cls, data: dict) -> 'LogicDetailItem':
-        """dictionary에서 LogicDetailItem 객체 생성"""
+    def from_dict(cls, data: dict) -> 'LogicItem':
+        """dictionary에서 LogicItem 객체 생성"""
         # item_data가 문자열로 저장되어 있을 경우 처리
         item_data = data.get('item_data')
         if isinstance(item_data, str):

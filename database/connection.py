@@ -13,7 +13,7 @@ class DatabaseConnection:
         return cls._instance
     
     def __init__(self):
-        self.db_path = Path("settings/setting files/logic_database.db")
+        self.db_path = Path("./data/logic_database.db")
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self.connection: Optional[sqlite3.Connection] = None
         
@@ -36,30 +36,30 @@ class DatabaseConnection:
         cursor = conn.cursor()
         
         try:
-            # logic_data 테이블 생성
+            # logics 테이블 생성
             cursor.execute("""
-                CREATE TABLE IF NOT EXISTS logic_data (
+                CREATE TABLE IF NOT EXISTS logics (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    logic_order INTEGER NOT NULL  -- 로직 순서
+                    uuid TEXT UNIQUE NOT NULL,
                     name TEXT NOT NULL,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    isNestedLogicCheckboxSelected BOOLEAN DEFAULT FALSE,
+                    is_nested BOOLEAN DEFAULT FALSE,
                     trigger_key TEXT,
                     repeat_count INTEGER DEFAULT 1,
-
+                    display_order INTEGER NOT NULL
                 )
             """)
             
-            # logic_detail_items_data 테이블 생성
+            # logic_items 테이블 생성
             cursor.execute("""
-                CREATE TABLE IF NOT EXISTS logic_detail_items_data (
+                CREATE TABLE IF NOT EXISTS logic_items (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    item_order INTEGER NOT NULL,
                     logic_id INTEGER NOT NULL,
+                    item_order INTEGER NOT NULL,
                     item_type TEXT NOT NULL,
                     item_data JSON NOT NULL,
-                    FOREIGN KEY (logic_id) REFERENCES logic_data(id) ON DELETE CASCADE
+                    FOREIGN KEY (logic_id) REFERENCES logics(id) ON DELETE CASCADE
                 )
             """)
             
