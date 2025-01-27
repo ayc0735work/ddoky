@@ -18,6 +18,7 @@ from BE.function._common_components.modal.entered_key_info_modal.entered_key_inf
 from BE.function._common_components.modal.text_input_modal.text_input_dialog import TextInputDialog
 from BE.log.base_log_manager import BaseLogManager
 from BE.function.make_logic.repository_and_service.logic_detail_data_repository_and_service import LogicDetailDataRepositoryAndService
+import json
 
 class LogicDetailWidget(QFrame):
     """로직 상세 내용을 표시하고 관리하는 위젯"""
@@ -995,7 +996,8 @@ class LogicDetailWidget(QFrame):
             # 트리거 키 정보 설정
             if not logic_detail['isNestedLogicCheckboxSelected'] and logic_detail.get('trigger_key'):
                 self.trigger_key_info = logic_detail['trigger_key']
-                self.TriggerKeyInput__QLineEdit.setText(str(self.trigger_key_info))
+                # key_code만 표시하도록 수정
+                self.TriggerKeyInput__QLineEdit.setText(self.trigger_key_info.get('key_code', ''))
                 self.EditTriggerKeyButton__QPushButton.setEnabled(True)
                 self.DeleteTriggerKeyButton__QPushButton.setEnabled(True)
             else:
@@ -1007,7 +1009,11 @@ class LogicDetailWidget(QFrame):
             # 아이템 목록 업데이트
             self.LogicItemList__QListWidget.clear()
             for item in logic_detail.get('items', []):
-                list_item = QListWidgetItem(item.get('logic_detail_item_dp_text', ''))
+                # item_data에서 logic_detail_item_dp_text 추출
+                item_data = json.loads(item.get('item_data', '{}')) if item.get('item_data') else {}
+                display_text = item_data.get('logic_detail_item_dp_text', '')
+                
+                list_item = QListWidgetItem(display_text)
                 list_item.setData(Qt.UserRole, item)
                 self.LogicItemList__QListWidget.addItem(list_item)
             
