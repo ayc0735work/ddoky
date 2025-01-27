@@ -250,3 +250,92 @@ class Logic_Database_Manager:
                 print_to_terminal=True
             )
             return False 
+
+    def update_logic_detail(self, logic_id: int, logic_data: dict):
+        """기존 로직의 상세 정보를 업데이트합니다.
+        
+        Args:
+            logic_id (int): 업데이트할 로직의 ID
+            logic_data (dict): 업데이트할 로직 데이터
+            
+        Returns:
+            bool: 업데이트 성공 여부
+        """
+        try:
+            # trigger_key를 JSON으로 직렬화
+            trigger_key_json = json.dumps(logic_data.get('trigger_key'), ensure_ascii=False)
+            
+            query = """
+                UPDATE logic_data
+                SET logic_name = ?,
+                    logic_order = ?,
+                    updated_at = ?,
+                    repeat_count = ?,
+                    isNestedLogicCheckboxSelected = ?,
+                    trigger_key = ?
+                WHERE id = ?
+            """
+            
+            connection = self.db.get_connection()
+            cursor = connection.cursor()
+            
+            # 트랜잭션 시작
+            connection.execute("BEGIN TRANSACTION")
+            
+            try:
+                # 1. 로직 기본 정보 업데이트
+                cursor.execute(
+                    query,
+                    (
+                        logic_data.get('logic_name'),
+                        logic_data.get('logic_order'),
+                        logic_data.get('updated_at'),
+                        logic_data.get('repeat_count', 1),
+                        logic_data.get('isNestedLogicCheckboxSelected', False),
+                        trigger_key_json,
+                        logic_id
+                    )
+                )
+                
+                # 2. 기존 로직 상세 아이템 삭제
+                cursor.execute("DELETE FROM logic_detail_items_data WHERE logic_id = ?", (logic_id,))
+                
+                # 3. 새로운 로직 상세 아이템 추가
+                items = logic_data.get('items', [])
+                for item in items:
+                    cursor.execute("""
+                        INSERT INTO logic_detail_items_data (
+                            logic_id, item_order, item_type, item_data
+                        ) VALUES (?, ?, ?, ?)
+                    """, (
+                        logic_id,
+                        item.get('item_order'),
+                        item.get('type'),
+                        item.get('item_data')
+                    ))
+                
+                # 트랜잭션 커밋
+                connection.commit()
+                
+                self.base_log_manager.log(
+                    message=f"로직 '{logic_data.get('logic_name')}'의 상세 정보가 업데이트되었습니다.",
+                    level="INFO",
+                    file_name="Logic_Database_Manager",
+                    method_name="update_logic_detail"
+                )
+                return True
+                
+            except Exception as e:
+                # 오류 발생 시 롤백
+                connection.rollback()
+                raise e
+                
+        except Exception as e:
+            self.base_log_manager.log(
+                message=f"로직 상세 정보 업데이트 중 오류 발생: {str(e)}",
+                level="ERROR",
+                file_name="Logic_Database_Manager",
+                method_name="update_logic_detail",
+                print_to_terminal=True
+            )
+            return False 

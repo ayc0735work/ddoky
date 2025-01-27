@@ -339,8 +339,6 @@ class MainWindow(QMainWindow):
         self.logic_list_widget.logic_edit_requested.connect(self.logic_detail_widget.update_logic_detail)
         
         # 로직 저장/수정 시그널 연결
-        self.logic_detail_widget.logic_saved.connect(self.logic_list_controller.on_logic_saved)
-        self.logic_detail_widget.logic_updated.connect(self.logic_list_controller.on_logic_updated)
         self.logic_detail_widget.logic_saved.connect(self._on_logic_saved)
         self.logic_detail_widget.logic_updated.connect(self._on_logic_updated)
         
@@ -600,7 +598,7 @@ class MainWindow(QMainWindow):
         Args:
             logic_info (dict): 저장된 로직 정보
                 - id (str): 로직 ID
-                - name (str): 로직 이름
+                - logic_name (str): 로직 이름
                 - items (list): 로직 아이템 목록
         """
         try:
@@ -612,7 +610,7 @@ class MainWindow(QMainWindow):
             self.logic_item_repository.clear_logic_detail_items()
             
             self.base_log_manager.log(
-                message=f"로직 '{logic_info.get('name', '')}'이(가) 저장되었습니다",
+                message=f"로직 '{logic_info.get('logic_name', '')}'이(가) 저장되었습니다",
                 level="INFO",
                 file_name="main_window"
             )

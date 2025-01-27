@@ -1,5 +1,4 @@
 from PySide6.QtCore import QObject, Signal
-from BE.settings.logics_data_settingfiles_manager import LogicsDataSettingFilesManager
 from BE.log.base_log_manager import BaseLogManager
 from .Logic_Database_Manager import Logic_Database_Manager
 import uuid
@@ -13,8 +12,6 @@ class LogicListController(QObject):
     
     Attributes:
         widget (LogicListWidget): 연결된 로직 리스트 위젯
-        settings_manager (LogicsDataSettingFilesManager): 설정 관리자
-        saved_logics (dict): 메모리에 저장된 로직 정보
         clipboard (dict): 복사된 로직 정보 임시 저장
     """
     
@@ -26,16 +23,13 @@ class LogicListController(QObject):
             
         초기화 프로세스:
         1. 위젯 연결
-        2. 설정 매니저 초기화
-        3. 메모리 상태 초기화
-        4. 시그널 연결
-        5. 저장된 로직 로드
+        2. 메모리 상태 초기화
+        3. 시그널 연결
+        4. 저장된 로직 로드
         """
         super().__init__()
         self.widget = widget
         self.widget.set_controller(self)  # 위젯에 컨트롤러 설정
-        self.settings_manager = LogicsDataSettingFilesManager()
-        self.saved_logics = {}  # 저장된 로직들을 관리하는 딕셔너리
         self.clipboard = None  # 복사된 로직 저장용
         self.logic_database_manager = Logic_Database_Manager()
         self.base_log_manager = BaseLogManager.instance()
@@ -93,82 +87,6 @@ class LogicListController(QObject):
                 method_name="load_saved_logics"
             )
             
-    def save_logics_to_settings(self):
-        """현재 로직 목록을 설정에 저장
-        
-        현재 UI에 표시된 로직 목록의 순서와 정보를 설정 파일에 저장합니다.
-        
-        프로세스:
-        1. 현재 표시된 모든 로직 정보 수집
-        2. 각 로직의 순서 정보 업데이트
-        3. 설정 파일에 저장
-        
-        Raises:
-            Exception: 저장 중 오류 발생 시
-        """
-        try:
-            self.base_log_manager.log(
-                message="[로직 저장 시작] 현재 로직 목록을 설정에 저장합니다",
-                level="INFO",
-                file_name="logic_list_controller", 
-                method_name="save_logics_to_settings"
-            )
-            logics = {}
-            
-            # 모든 로직 정보 수집
-            for i in range(self.widget.get_logic_count()):
-                logic_id = self.widget.get_logic_id_at(i)
-                if not logic_id:
-                    self.base_log_manager.log(
-                        message=f"[경고] 아이템 {i}에 로직 ID가 없습니다",
-                        level="WARNING",
-                        file_name="logic_list_controller", 
-                        method_name="save_logics_to_settings"
-                    )
-                    continue
-                
-                self.base_log_manager.log(
-                    message=f"[로직 처리] 로직 ID: {logic_id} 처리 시작",
-                    level="DEBUG",
-                    file_name="logic_list_controller"
-                )
-                
-                # 로직 정보 가져오기
-                logic_info = self.settings_manager.load_logics(force=True).get(logic_id)
-                if not logic_info:
-                    self.base_log_manager.log(
-                        message=f"[경고] 로직 ID {logic_id}에 해당하는 로직 정보를 찾을 수 없습니다",
-                        level="ERROR",
-                        file_name="logic_list_controller", 
-                        method_name="save_logics_to_settings", 
-                        print_to_terminal=True
-                    )
-                    continue
-                
-                # 순서 업데이트
-                logic_info['order'] = i
-                logics[logic_id] = logic_info
-            
-            # 설정에 저장
-            settings = self.settings_manager._load_settings() or {}
-            settings['logics'] = logics
-            self.settings_manager._save_settings(settings)
-            self.base_log_manager.log(
-                message="[설정 저장 완료] 로직 정보가 성공적으로 저장되었습니다",
-                level="INFO",
-                file_name="logic_list_controller", 
-                method_name="save_logics_to_settings"
-            )
-            
-        except Exception as e:
-            self.base_log_manager.log(
-                message=f"[오류] 로직 저장 중 오류 발생: {str(e)}",
-                level="ERROR",
-                file_name="logic_list_controller", 
-                method_name="save_logics_to_settings",
-                print_to_terminal=True
-            )
-            
     def process_logic_save(self, logic_info):
         """새로운 로직 저장 처리
         
@@ -181,22 +99,17 @@ class LogicListController(QObject):
             str: 생성된 로직 ID. 실패 시 None
             
         프로세스:
-        1. 새 UUID 생성
-        2. 설정에 저장
-        3. UI 업데이트
+        1. DB에 로직 저장
+        2. UI 업데이트
         """
         try:
-            # 새 UUID 생성
-            logic_id = str(uuid.uuid4())
-            logic_info['id'] = logic_id
-            
-            # 설정에 저장
-            logics = self.settings_manager.load_logics()
-            logics[logic_id] = logic_info
-            self.settings_manager.save_logics(logics)
+            # DB에 저장
+            if not self.logic_database_manager.save_logic_detail(logic_info):
+                raise Exception("DB에 로직 저장 실패")
             
             # UI 업데이트
-            self.widget.add_logic_item(logic_info, logic_id)
+            self.load_saved_logics()  # 전체 목록 새로고침
+            
             self.base_log_manager.log(
                 message=f"로직 '{logic_info.get('logic_name', '')}'이(가) 저장되었습니다",
                 level="INFO",
@@ -204,7 +117,7 @@ class LogicListController(QObject):
                 method_name="process_logic_save"
             )
             
-            return logic_id
+            return logic_info.get('id')
             
         except Exception as e:
             self.base_log_manager.log(
@@ -226,22 +139,23 @@ class LogicListController(QObject):
             new_info (dict): 새로운 로직 정보
             
         프로세스:
-        1. 기존 로직 정보 업데이트
-        2. 설정 저장
-        3. UI 업데이트
+        1. DB에서 로직 정보 업데이트
+        2. UI 업데이트
         """
         try:
-            logics = self.settings_manager.load_logics()
-            if logic_id in logics:
-                logics[logic_id].update(new_info)
-                self.settings_manager.save_logics(logics)
-                self.widget.update_logic_item(logic_id, logics[logic_id])
-                self.base_log_manager.log(
-                    message=f"로직 '{new_info.get('logic_name', '')}'이(가) 업데이트되었습니다",
-                    level="INFO",
-                    file_name="logic_list_controller", 
-                    method_name="process_logic_update"
-                )
+            # 1. DB에서 로직 정보 업데이트
+            if not self.logic_database_manager.update_logic_detail(logic_id, new_info):
+                raise Exception("DB에서 로직 업데이트 실패")
+            
+            # 2. UI 업데이트
+            self.load_saved_logics()  # 전체 목록 새로고침
+            
+            self.base_log_manager.log(
+                message=f"로직 '{new_info.get('logic_name', '')}'이(가) 업데이트되었습니다",
+                level="INFO",
+                file_name="logic_list_controller", 
+                method_name="process_logic_update"
+            )
                 
         except Exception as e:
             self.base_log_manager.log(
@@ -308,21 +222,23 @@ class LogicListController(QObject):
             new_position (int): 새로운 위치
             
         프로세스:
-        1. 순서 값 업데이트
-        2. 설정 저장
-        3. 전체 목록 새로고침
+        1. DB에서 로직 순서 업데이트
+        2. 전체 목록 새로고침
         """
         try:
-            logics = self.settings_manager.load_logics()
-            if logic_id in logics:
-                # 순서 업데이트
-                for id, logic in logics.items():
-                    if logic.get('order', 0) >= new_position:
-                        logic['order'] += 1
-                logics[logic_id]['order'] = new_position
-                
-                self.settings_manager.save_logics(logics)
-                self.load_saved_logics()  # 전체 목록 새로고침
+            # 1. DB에서 로직 순서 업데이트
+            if not self.logic_database_manager.update_logic_order(logic_id, new_position):
+                raise Exception("DB에서 로직 순서 업데이트 실패")
+            
+            # 2. 전체 목록 새로고침
+            self.load_saved_logics()
+            
+            self.base_log_manager.log(
+                message=f"로직 순서가 변경되었습니다 (ID: {logic_id}, 새 위치: {new_position})",
+                level="INFO",
+                file_name="logic_list_controller", 
+                method_name="process_logic_move"
+            )
                 
         except Exception as e:
             self.base_log_manager.log(
@@ -342,20 +258,26 @@ class LogicListController(QObject):
             logic_id (str): 복사할 로직의 ID
             
         프로세스:
-        1. 로직 정보 깊은 복사
-        2. 클립보드에 저장
+        1. DB에서 로직 정보 조회
+        2. 로직 정보 깊은 복사
+        3. 클립보드에 저장
         """
         try:
-            logics = self.settings_manager.load_logics()
-            if logic_id in logics:
-                self.clipboard = copy.deepcopy(logics[logic_id])
-                self.clipboard['id'] = logic_id
-                self.base_log_manager.log(
-                    message=f"로직 '{self.clipboard.get('logic_name', '')}'이(가) 복사되었습니다",
-                    level="INFO",
-                    file_name="logic_list_controller", 
-                    method_name="process_logic_copy"
-                )
+            # 1. DB에서 로직 정보 조회
+            logic_detail = self.logic_database_manager.get_logic_detail_data(logic_id)
+            if not logic_detail:
+                raise Exception("DB에서 로직 정보를 찾을 수 없습니다")
+            
+            # 2. 로직 정보 깊은 복사 및 클립보드에 저장
+            self.clipboard = copy.deepcopy(logic_detail)
+            self.clipboard['id'] = logic_id
+            
+            self.base_log_manager.log(
+                message=f"로직 '{logic_detail.get('logic_name', '')}'이(가) 복사되었습니다",
+                level="INFO",
+                file_name="logic_list_controller", 
+                method_name="process_logic_copy"
+            )
                 
         except Exception as e:
             self.base_log_manager.log(
@@ -436,20 +358,44 @@ class LogicListController(QObject):
             return text
 
     def get_saved_logics(self):
-        """저장된 로직 정보 반환"""
-        return self.saved_logics
+        """저장된 모든 로직 정보를 반환합니다.
+        
+        Returns:
+            list: 모든 로직의 정보 목록
+        """
+        try:
+            return self.logic_database_manager.get_all_logics_list()
+        except Exception as e:
+            self.base_log_manager.log(
+                message=f"저장된 로직 목록 조회 중 오류 발생: {str(e)}",
+                level="ERROR",
+                file_name="logic_list_controller",
+                method_name="get_saved_logics",
+                print_to_terminal=True
+            )
+            return []
 
     def get_logic_by_name(self, logic_name):
-        """이름으로 로직 정보 찾기"""
-        try:
-            # 설정에서 최신 로직 정보 가져오기
-            logics = self.settings_manager.load_logics()
+        """이름으로 로직 정보 찾기
+        
+        Args:
+            logic_name (str): 찾을 로직의 이름
             
-            # 이름으로 로직 찾기
-            for logic_id, logic_info in logics.items():
-                if logic_info.get('logic_name') == logic_name:
-                    return logic_info
-            return None
+        Returns:
+            dict: 찾은 로직 정보. 없으면 None
+        """
+        try:
+            # DB에서 로직 정보 찾기
+            logic_info = self.logic_database_manager.get_logic_by_name(logic_name)
+            
+            if not logic_info:
+                self.base_log_manager.log(
+                    message=f"로직 '{logic_name}'을(를) 찾을 수 없습니다",
+                    level="WARNING",
+                    file_name="logic_list_controller", 
+                    method_name="get_logic_by_name"
+                )
+            return logic_info
             
         except Exception as e:
             self.base_log_manager.log(
@@ -460,30 +406,6 @@ class LogicListController(QObject):
                 print_to_terminal=True
             )
             return None
-
-    def on_logic_saved(self, logic_info):
-        """로직이 저장되었을 때의 처리"""
-        logic_id = logic_info.get('id') or str(uuid.uuid4())
-        self.saved_logics[logic_id] = logic_info
-        self.widget.add_logic_item(logic_info, logic_id)
-        self.base_log_manager.log(
-            message=f"로직 '{logic_info.get('logic_name')}'이(가) 저장되었습니다",
-            level="INFO",
-            file_name="logic_list_controller"
-        )
-
-    def on_logic_updated(self, logic_info):
-        """로직이 수정되었을 때의 처리"""
-        logic_id = logic_info.get('id')
-        if logic_id in self.saved_logics:
-            self.saved_logics[logic_id].update(logic_info)
-            self.widget.update_logic_item(logic_id, self.saved_logics[logic_id])
-            self.base_log_manager.log(
-                message=f"로직 '{logic_info.get('logic_name')}'이(가) 업데이트되었습니다",
-                level="INFO",
-                file_name="logic_list_controller", 
-                method_name="on_logic_updated"
-            )
 
     def load_logic_detail(self, logic_id):
         """로직 상세 정보를 불러옵니다.
