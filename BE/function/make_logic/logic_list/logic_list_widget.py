@@ -24,7 +24,7 @@ class LogicListWidget(QFrame):
         logic_up_move_requested (str): 위로 이동 요청 (logic_id)
         logic_down_move_requested (str): 아래로 이동 요청 (logic_id)
         logic_edit_requested (str, dict): 로직 수정 요청 (logic_id, new_data)
-        logic_delete_requested (str): 로직 삭제 요청 (logic_id)
+        logic_delete_requested (list): 삭제할 로직 ID 리스트
         logic_copy_requested (list): 복사할 로직 ID 리스트
         logic_paste_requested: 로직 붙여넣기 요청
         logic_selected (str): 로직 선택 시 (로직 이름)
@@ -37,7 +37,7 @@ class LogicListWidget(QFrame):
     logic_up_move_requested = Signal(str)  # 위로 이동 시그널 (logic_id)
     logic_down_move_requested = Signal(str)  # 아래로 이동 시그널 (logic_id)
     logic_edit_requested = Signal(str, dict)  # logic_id, new_data
-    logic_delete_requested = Signal(str)  # logic_id
+    logic_delete_requested = Signal(list)  # 삭제할 로직 ID 리스트
     logic_copy_requested = Signal(list)  # 복사할 로직 ID 리스트
     logic_paste_requested = Signal()
     logic_selected = Signal(str)  # 로직이 선택되었을 때 (로직 이름)
@@ -226,8 +226,9 @@ class LogicListWidget(QFrame):
         프로세스:
         1. 선택된 아이템 확인
         2. 삭제 확인 대화상자 표시
-        3. 사용자 확인 시 각 아이템에 대해:
-           - logic_delete_requested 시그널 발생
+        3. 사용자 확인 시:
+           - 모든 선택된 로직의 ID를 수집
+           - 한 번에 삭제 요청
         """
         selected_items = self.logic_list.selectedItems()
         if not selected_items:
@@ -248,9 +249,9 @@ class LogicListWidget(QFrame):
         )
         
         if reply == QMessageBox.Yes:
-            for item in selected_items:
-                logic_id = item.data(Qt.UserRole)
-                self.logic_delete_requested.emit(logic_id)
+            # 삭제할 아이템들의 ID를 수집하여 한 번에 전달
+            logic_ids = [item.data(Qt.UserRole) for item in selected_items]
+            self.logic_delete_requested.emit(logic_ids)
                 
     def _on_reload_button_clicked(self):
         """로직 다시 불러오기 버튼 클릭 시 호출되는 메서드"""
@@ -293,7 +294,7 @@ class LogicListWidget(QFrame):
                 
             # Delete: 삭제
             elif key == Qt.Key_Delete:
-                self._on_delete_clicked()  # 기존 삭제 메서드 재사용
+                self._on_delete_clicked()
                 return True
                 
         return super().eventFilter(obj, event)

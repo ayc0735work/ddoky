@@ -182,28 +182,32 @@ class LogicListController(QObject):
                 print_to_terminal=True
             )
             
-    def process_logic_data_delete(self, logic_id):
+    def process_logic_data_delete(self, logic_ids):
         """로직 삭제 처리
         
-        지정된 로직을 삭제합니다.
+        지정된 로직들을 삭제합니다.
         
         Args:
-            logic_id (str): 삭제할 로직의 ID
+            logic_ids (list): 삭제할 로직의 ID 리스트
             
         프로세스:
-        1. 데이터베이스에서 로직 삭제
-        2. 설정에서 로직 삭제
+        1. 현재 스크롤 위치 저장
+        2. 데이터베이스에서 로직들 삭제
         3. 전체 로직 목록 새로고침
+        4. 스크롤 위치 복원
         """
         try:
             # 현재 스크롤 위치 저장
             current_scroll = self.logic_list_widget.get_current_scroll_position()
 
-            # 1. 데이터베이스에서 삭제
-            if not self.logic_database_manager.delete_logic_data(logic_id):
-                raise Exception("데이터베이스에서 로직 삭제 실패")
+            # 모든 로직 삭제
+            for logic_id in logic_ids:
+                # 문자열로 변환하여 전달
+                str_logic_id = str(logic_id)
+                if not self.logic_database_manager.delete_logic_data(str_logic_id):
+                    raise Exception(f"데이터베이스에서 로직 {str_logic_id} 삭제 실패")
 
-            # 2. 전체 로직 목록 새로고침
+            # 전체 로직 목록 새로고침 (한 번만 수행)
             self.load_saved_logics_list()
 
             # 스크롤 위치 복원
