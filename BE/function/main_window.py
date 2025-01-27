@@ -410,11 +410,6 @@ class MainWindow(QMainWindow):
         """
         # Repository를 통해 아이템 추가
         self.logic_item_repository.add_logic_detail_item(delay_info)
-        
-    def _on_record_mode(self, is_recording):
-        """기록 모드가 토글되었을 때 호출"""
-        # TODO: 기록 모드 처리 로직 구현
-        pass
 
     def _load_window_settings(self):
         """윈도우 설정 로드
