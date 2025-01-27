@@ -283,8 +283,7 @@ class LogicDetailDataRepositoryAndService(QObject):
             # 3. UUID 설정 및 검증
             self.current_logic_id = logic_info.get('id')
             self.base_log_manager.log(
-                message=f"로직 정보 (logic_info): {logic_info} \n
-                  받아온 현재 로직 ID: {self.current_logic_id}",
+                message=f"로직 정보 (logic_info): {logic_info} \n 받아온 현재 로직 ID: {self.current_logic_id}",
                 level="DEBUG",
                 file_name="logic_detail_data_repository_and_service",
                 method_name="load_logic_detail_items"
