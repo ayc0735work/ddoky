@@ -104,10 +104,28 @@ class JsonToDbMigration:
             
     def confirm_migration(self) -> bool:
         """사용자에게 마이그레이션 실행 여부를 확인"""
+        # key_input_delays_data.json 파일 존재 여부 확인
+        key_input_delays_path = Path("BE") / "settings" / "setting files" / "key_input_delays_data.json"
+        
+        # DB가 비어있는지 확인
+        cursor = self.db.get_connection().cursor()
+        cursor.execute("SELECT COUNT(*) FROM logic_data")
+        is_db_empty = cursor.fetchone()[0] == 0
+        
+        message = "기존 JSON 데이터를 DB로 마이그레이션하시겠습니까?"
+        
+        # key_input_delays_data.json 파일이 존재하고 DB가 비어있는 경우
+        if key_input_delays_path.exists() and is_db_empty:
+            message = (
+                "이전 버전의 데이터 파일(key_input_delays_data.json)이 발견되었습니다.\n"
+                "이 데이터를 새로운 DB 형식으로 마이그레이션하시겠습니까?\n\n"
+                "※ 마이그레이션 후에도 원본 파일은 보존됩니다."
+            )
+        
         response = QMessageBox.question(
             None,
             "데이터 마이그레이션",
-            "기존 JSON 데이터를 DB로 마이그레이션하시겠습니까?",
+            message,
             QMessageBox.Yes | QMessageBox.No
         )
         return response == QMessageBox.Yes 
