@@ -406,11 +406,6 @@ class LogicDetailWidget(QFrame):
         if not key_info:
             return False
             
-        # modifiers_key_flag가 이미 정수값인지 확인하고, 아니라면 int() 변환
-        modifiers_key_flag = key_info['modifiers_key_flag']
-        if not isinstance(modifiers_key_flag, int):
-            modifiers_key_flag = modifiers_key_flag.value
-            
         # 트리거 키 중복 체크
         logics = self.settings_manager.load_logics(force=True)
         duplicate_logics = []
@@ -420,8 +415,7 @@ class LogicDetailWidget(QFrame):
                 not logic.get('is_nested', False)):
                 trigger_key = logic.get('trigger_key', {})
                 if (trigger_key and
-                    trigger_key.get('virtual_key') == key_info.get('virtual_key') and 
-                    trigger_key.get('modifiers_key_flag') == modifiers_key_flag):
+                    trigger_key.get('virtual_key') == key_info.get('virtual_key')):
                     duplicate_logics.append({
                         'name': logic.get('name'),
                         'id': logic_id
@@ -543,6 +537,60 @@ class LogicDetailWidget(QFrame):
                 QMessageBox.Ok
             )
             return False
+
+    def load_logic(self, logic_info):
+        """로직 정보를 UI 위젯에 로드하는 메서드
+        
+        주어진 로직 정보를 바탕으로 UI 위젯들의 상태를 업데이트합니다.
+        
+        프로세스:
+        1. logic_detail_data_repository_and_servicey에 로직 로드 요청
+        2. 로직 이름과 반복 횟수 UI 업데이트
+        3. 중첩로직 여부에 따른 트리거 키 UI 처리
+           - 중첩로직일 경우: 트리거 키 비활성화
+           - 일반 로직일 경우: 트리거 키 정보 설정 및 UI 업데이트
+        
+        연결된 메서드:
+        - MainWindow._handle_edit_logic()에서 호출됨
+        - LogicListWidget의 logic_selected 시그널에 연결
+        
+        Args:
+            logic_info (dict): 로드할 로직 정보
+                - name (str): 로직 이름
+                - repeat_count (int): 반복 횟수
+                - is_nested (bool): 중첩로직 여부
+                - trigger_key (dict): 트리거 키 정보
+        
+        Returns:
+            bool: 로드 성공 여부
+        """
+        # logic_detail_data_repository_and_service에 로드 요청
+        if self.logic_detail_data_repository_and_service.load_logic_detail_items(logic_info):
+            # UI 업데이트
+            self.LogicNameInput__QLineEdit.setText(logic_info.get('name', ''))
+            self.RepeatCountInput__QSpinBox.setValue(logic_info.get('repeat_count', 1))
+            
+            # logic_detail_data_repository_and_service에서 받은 logic_info의 is_nested 값에 따라 트리거 키 활성 여부 처리
+            # 중첩로직일 경우 트리거 키 비활성화
+            is_nested = logic_info.get('is_nested', False)
+            self.is_nested_checkbox.setChecked(is_nested)
+            
+            # 중첩로직이 아닐 경우에만 트리거 키 설정
+            if not is_nested:
+                trigger_key = logic_info.get('trigger_key', {})
+                if isinstance(trigger_key, dict) and trigger_key: # trigger_key가 dict이고 비어있지 않을 경우
+                    self.trigger_key_info = trigger_key.copy()
+                    self.base_log_manager.log(
+                        message=f"load_logic - 트리거 키 정보 불러오기 완료(self.trigger_key_info): {self.trigger_key_info}",
+                        level="DEBUG",
+                        file_name="logic_detail_widget"
+                    )
+                    formatted_info = create_formatted_key_info(trigger_key)
+                    self.TriggerKeyInput__QLineEdit.setText(formatted_info['simple_display_text'])
+                    self.EditTriggerKeyButton__QPushButton.setEnabled(True)
+                    self.DeleteTriggerKeyButton__QPushButton.setEnabled(True)
+            
+            return True
 
     def _create_nested_logic_item(self, logic_name, logic_id=None, original_data=None):
         """중첩로직 아이템 생성을 위한 공통 메서드
