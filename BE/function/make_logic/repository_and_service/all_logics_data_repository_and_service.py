@@ -68,7 +68,7 @@ class AllLogicsDataRepositoryAndService(QObject):
         """
         return self.current_logic_name
 
-    def get_all_logics(self, force=False):
+    def get_all_logics_list(self, force=False):
         """모든 로직 반환
         Returns:
             dict: 모든 로직 정보
@@ -81,7 +81,7 @@ class AllLogicsDataRepositoryAndService(QObject):
                 message=f"로직 목록 로드 중 오류 발생: {e}",
                 level="ERROR",
                 file_name="all_logics_data_repository_and_service",
-                method_name="get_all_logics",
+                method_name="get_all_logics_list",
                 print_to_terminal=True
             )
             return {}
