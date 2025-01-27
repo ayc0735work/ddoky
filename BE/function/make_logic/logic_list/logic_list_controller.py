@@ -62,8 +62,12 @@ class LogicListController(QObject):
         """저장된 로직 정보 불러오기
         
         DB에서 로직 기본 정보를 로드하고 UI를 업데이트합니다.
+        스크롤 위치를 보존합니다.
         """
         try:
+            # 현재 스크롤 위치 저장
+            current_scroll = self.widget.get_scroll_position()
+            
             # DB에서 로직 정보 가져오기
             logics = self.logic_database_manager.get_all_logics_list()
             
@@ -71,9 +75,12 @@ class LogicListController(QObject):
             self.widget.clear_logic_list()
             for logic in logics:
                 self.widget.add_logic_item({
-                    'logic_name': logic['logic_name']  # DB 컬럼명에 맞춰 수정
+                    'logic_name': logic['logic_name']
                 }, str(logic['id']))
                 
+            # 스크롤 위치 복원
+            self.widget.refresh_logic_list(current_scroll)
+            
             self.base_log_manager.log(
                 message="로직 목록을 DB에서 불러왔습니다",
                 level="INFO",
@@ -182,12 +189,18 @@ class LogicListController(QObject):
         3. 전체 로직 목록 새로고침
         """
         try:
+            # 현재 스크롤 위치 저장
+            current_scroll = self.widget.get_scroll_position()
+            
             # 1. 데이터베이스에서 삭제
             if not self.logic_database_manager.delete_logic(logic_id):
                 raise Exception("데이터베이스에서 로직 삭제 실패")
                
             # 2. 전체 로직 목록 새로고침
             self.load_saved_logics()
+            
+            # 스크롤 위치 복원
+            self.widget.refresh_logic_list(current_scroll)
                 
             self.base_log_manager.log(
                 message="로직 목록을 새로고침했습니다",
@@ -196,18 +209,9 @@ class LogicListController(QObject):
                 method_name="process_logic_delete"
             )
 
-                
         except Exception as e:
             self.base_log_manager.log(
                 message=f"로직 삭제 중 오류 발생: {str(e)}",
-                level="ERROR",
-                file_name="logic_list_controller", 
-                method_name="process_logic_delete",
-                print_to_terminal=True
-            )
-            import traceback
-            self.base_log_manager.log(
-                message=f"스택 트레이스:\n{traceback.format_exc()}",
                 level="ERROR",
                 file_name="logic_list_controller", 
                 method_name="process_logic_delete",

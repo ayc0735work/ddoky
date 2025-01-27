@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout, 
                              QPushButton, QLabel, QListWidget, QListWidgetItem,
                              QSizePolicy, QMessageBox)
-from PySide6.QtCore import Qt, Signal, QEvent
+from PySide6.QtCore import Qt, Signal, QEvent, QTimer
 from PySide6.QtGui import QFont
 from BE.log.base_log_manager import BaseLogManager
 import json
@@ -298,6 +298,25 @@ class LogicListWidget(QFrame):
                 
         return super().eventFilter(obj, event)
         
+    def get_scroll_position(self):
+        """현재 스크롤 위치를 반환합니다.
+        
+        Returns:
+            int: 현재 스크롤바의 위치
+        """
+        return self.logic_list.verticalScrollBar().value()
+        
+    def set_scroll_position(self, position):
+        """스크롤 위치를 설정합니다.
+        
+        Args:
+            position (int): 설정할 스크롤바 위치
+        """
+        # 스크롤바가 있고 유효한 위치값인 경우에만 설정
+        scrollbar = self.logic_list.verticalScrollBar()
+        if scrollbar and 0 <= position <= scrollbar.maximum():
+            scrollbar.setValue(position)
+            
     def clear_logic_list(self):
         """로직 목록 초기화
         
@@ -305,6 +324,23 @@ class LogicListWidget(QFrame):
         """
         self.logic_list.clear()
         
+    def refresh_logic_list(self, scroll_position=None):
+        """로직 목록을 새로고침하고 스크롤 위치를 복원합니다.
+        
+        Args:
+            scroll_position (int, optional): 복원할 스크롤 위치
+        """
+        if scroll_position is not None:
+            # 목록이 업데이트된 후 스크롤 위치 복원
+            QTimer.singleShot(0, lambda: self.set_scroll_position(scroll_position))
+
+            self.base_log_manager.log( 
+                message=f"스크롤 위치가 복원되었습니다. : {scroll_position}",
+                level="INFO",
+                file_name="logic_list_widget",
+                method_name="refresh_logic_list"
+            )
+            
     def add_logic_item(self, logic_info, logic_id):
         """로직 아이템 추가
         
