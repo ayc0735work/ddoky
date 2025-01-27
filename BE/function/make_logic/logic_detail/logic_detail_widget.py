@@ -4,9 +4,7 @@ from PySide6.QtWidgets import (QFrame, QVBoxLayout, QHBoxLayout,
 from PySide6.QtCore import Qt, Signal, QObject, QEvent
 from PySide6.QtGui import QFont, QGuiApplication, QIntValidator
 from datetime import datetime
-import uuid
-import win32con
-import win32api
+from BE.function.make_logic.logic_list.logic_list_widget import LogicListWidget
 from BE.settings.logics_data_settingfiles_manager import LogicsDataSettingFilesManager
 from BE.function.make_logic.repository_and_service.all_logics_data_repository_and_service import AllLogicsDataRepositoryAndService
 from BE.function.constants.styles import (FRAME_STYLE, LIST_STYLE, BUTTON_STYLE, CONTAINER_STYLE,
@@ -27,8 +25,7 @@ class LogicDetailWidget(QFrame):
     item_edited = Signal(str)
     item_deleted = Signal(str)
     logic_name_saved = Signal(str)
-    logic_saved = Signal(dict)
-    logic_updated = Signal(str, dict)
+
     
     def __init__(self, LogicDetailDataRepositoryAndService: LogicDetailDataRepositoryAndService, parent=None):
         super().__init__(parent)
@@ -45,7 +42,7 @@ class LogicDetailWidget(QFrame):
         self.current_logic = None  # 현재 로직 정보
         self.settings_manager = LogicsDataSettingFilesManager()
         self.all_logics_data_repository_and_service = AllLogicsDataRepositoryAndService(self.settings_manager)
-        
+
         # Repository 시그널 연결
         self.logic_detail_data_repository_and_service.logic_detail_item_added.connect(self._update_list_widget)
         self.logic_detail_data_repository_and_service.logic_detail_item_deleted.connect(self._update_list_widget)
@@ -56,7 +53,7 @@ class LogicDetailWidget(QFrame):
         
         # 키보드 이벤트 필터 설치
         self.installEventFilter(self)
-        
+
     def set_controller(self, controller):
         """컨트롤러 설정 및 시그널 연결"""
         self.controller = controller
@@ -497,7 +494,7 @@ class LogicDetailWidget(QFrame):
         """
         try:
             # Repository에 저장 요청
-            success, message = self.logic_detail_data_repository_and_service.save_logic_detail_data(self.controller)
+            success, message = self.logic_detail_data_repository_and_service.save_logic_detail_data_data(self.controller)
             
             # UI 업데이트
             if success:
@@ -977,7 +974,7 @@ class LogicDetailWidget(QFrame):
         self.controller.clear_logic_info()  # 컨트롤러를 통해 초기화
         self.logic_detail_data_repository_and_service.clear_logic_detail_items()  # Repository를 통해 아이템 목록 초기화
 
-    def update_logic_detail(self, logic_id, logic_detail):
+    def update_logic_detail_data(self, logic_id, logic_detail):
         """로직 상세 정보로 UI 업데이트
         
         Args:
@@ -1000,6 +997,13 @@ class LogicDetailWidget(QFrame):
                 self.TriggerKeyInput__QLineEdit.setText(self.trigger_key_info.get('key_code', ''))
                 self.EditTriggerKeyButton__QPushButton.setEnabled(True)
                 self.DeleteTriggerKeyButton__QPushButton.setEnabled(True)
+                self.base_log_manager.log( 
+                    message=f"트리거 키 정보가 업데이트되었습니다: {self.trigger_key_info}",
+                    level="DEBUG",
+                    file_name="logic_detail_widget",
+                    method_name="update_logic_detail_data"
+                )
+
             else:
                 self.trigger_key_info = None
                 self.TriggerKeyInput__QLineEdit.clear()
@@ -1021,7 +1025,7 @@ class LogicDetailWidget(QFrame):
                 message=f"로직 '{logic_detail['logic_name']}'의 상세 정보로 UI를 업데이트했습니다.",
                 level="INFO",
                 file_name="logic_detail_widget",
-                method_name="update_logic_detail"
+                method_name="update_logic_detail_data"
             )
             
         except Exception as e:
@@ -1029,7 +1033,7 @@ class LogicDetailWidget(QFrame):
                 message=f"UI 업데이트 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_detail_widget",
-                method_name="update_logic_detail",
+                method_name="update_logic_detail_data",
                 print_to_terminal=True
             )
         

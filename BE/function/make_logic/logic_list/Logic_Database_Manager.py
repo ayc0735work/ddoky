@@ -126,13 +126,7 @@ class Logic_Database_Manager:
                     'item_data': item[3]  # JSON 문자열로 저장된 아이템 상세 정보
                 }
                 logic_detail['items'].append(item_data)
-            
-            self.base_log_manager.log(
-                message=f"로직 '{logic_detail['logic_name']}'의 상세 정보를 불러왔습니다. \n 불러온 로직: {logic_detail}",
-                level="INFO",
-                file_name="Logic_Database_Manager",
-                method_name="get_logic_detail_data"
-            )
+
             return logic_detail
             
         except Exception as e:
@@ -145,7 +139,7 @@ class Logic_Database_Manager:
             )
             return None 
 
-    def save_logic_detail(self, logic_data):
+    def save_logic_detail_data(self, logic_data):
         try:
             # trigger_key를 JSON으로 직렬화
             trigger_key_json = json.dumps(logic_data.get('trigger_key'), ensure_ascii=False)
@@ -177,7 +171,7 @@ class Logic_Database_Manager:
                 message=f"로직 '{logic_data['logic_name']}'의 상세 정보를 저장했습니다.",
                 level="INFO",
                 file_name="Logic_Database_Manager",
-                method_name="save_logic_detail"
+                method_name="save_logic_detail_data"
             )
             return True
             
@@ -186,12 +180,12 @@ class Logic_Database_Manager:
                 message=f"로직 상세 정보 저장 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="Logic_Database_Manager",
-                method_name="save_logic_detail",
+                method_name="save_logic_detail_data",
                 print_to_terminal=True
             )
             return False 
 
-    def delete_logic(self, logic_id: int):
+    def delete_logic_data(self, logic_id: int):
         """로직과 관련된 모든 데이터를 삭제합니다.
         
         Args:
@@ -244,7 +238,7 @@ class Logic_Database_Manager:
                     file_name="Logic_Database_Manager",
                     method_name="delete_logic"
                 )
-                
+
                 return True
                 
             except Exception as e:
@@ -262,7 +256,7 @@ class Logic_Database_Manager:
             )
             return False
 
-    def update_logic_detail(self, logic_id: int, logic_data: dict):
+    def update_logic_detail_data(self, logic_id: int, logic_data: dict):
         """기존 로직의 상세 정보를 업데이트합니다.
         
         Args:
@@ -332,7 +326,7 @@ class Logic_Database_Manager:
                     message=f"로직 '{logic_data.get('logic_name')}'의 상세 정보가 업데이트되었습니다.",
                     level="INFO",
                     file_name="Logic_Database_Manager",
-                    method_name="update_logic_detail"
+                    method_name="update_logic_detail_data"
                 )
                 return True
                 
@@ -346,12 +340,12 @@ class Logic_Database_Manager:
                 message=f"로직 상세 정보 업데이트 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="Logic_Database_Manager",
-                method_name="update_logic_detail",
+                method_name="update_logic_detail_data",
                 print_to_terminal=True
             )
             return False 
 
-    def update_logic_order(self, logic_id: int, new_order: int):
+    def update_logic_data_order(self, logic_id: int, new_order: int):
         """로직의 순서를 업데이트합니다.
         
         Args:
@@ -405,7 +399,7 @@ class Logic_Database_Manager:
                     message=f"로직 '{logic_name}'의 순서가 {current_order}에서 {new_order}로 변경되었습니다.",
                     level="INFO",
                     file_name="Logic_Database_Manager",
-                    method_name="update_logic_order"
+                    method_name="update_logic_data_order"
                 )
                 return True
                 
@@ -419,7 +413,7 @@ class Logic_Database_Manager:
                 message=f"로직 순서 업데이트 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="Logic_Database_Manager",
-                method_name="update_logic_order",
+                method_name="update_logic_data_order",
                 print_to_terminal=True
             )
             return False
@@ -462,65 +456,6 @@ class Logic_Database_Manager:
             )
             return None
             
-    def update_logic_orders_after_delete(self, deleted_order: int):
-        """삭제된 로직 이후의 모든 로직 순서를 -1 합니다.
-        
-        Args:
-            deleted_order (int): 삭제된 로직의 순서
-            
-        Returns:
-            bool: 업데이트 성공 여부
-        """
-        try:
-            connection = self.db.get_connection()
-            cursor = connection.cursor()
-            
-            # 트랜잭션 시작
-            connection.execute("BEGIN TRANSACTION")
-            
-            try:
-                # 삭제된 순서보다 큰 모든 로직의 순서를 -1
-                cursor.execute("""
-                    UPDATE logic_data
-                    SET logic_order = logic_order - 1
-                    WHERE logic_order > ?
-                """, (deleted_order,))
-                
-                # 전체 로직 순서 검증
-                cursor.execute("SELECT COUNT(*) FROM logic_data")
-                total_count = cursor.fetchone()[0]
-                
-                cursor.execute("SELECT MAX(logic_order) FROM logic_data")
-                max_order = cursor.fetchone()[0]
-                
-                if total_count != max_order:
-                    raise Exception("로직 순서가 불연속적입니다.")
-                
-                # 트랜잭션 커밋
-                connection.commit()
-                
-                self.base_log_manager.log(
-                    message=f"삭제된 로직({deleted_order}) 이후의 순서가 업데이트되었습니다.",
-                    level="INFO",
-                    file_name="Logic_Database_Manager",
-                    method_name="update_logic_orders_after_delete"
-                )
-                return True
-                
-            except Exception as e:
-                # 오류 발생 시 롤백
-                connection.rollback()
-                raise e
-                
-        except Exception as e:
-            self.base_log_manager.log(
-                message=f"로직 순서 업데이트 중 오류 발생: {str(e)}",
-                level="ERROR",
-                file_name="Logic_Database_Manager",
-                method_name="update_logic_orders_after_delete",
-                print_to_terminal=True
-            )
-            return False 
 
     def logic_order_plus_one_change(self, selected_logic_id: int):
         try:
@@ -686,67 +621,3 @@ class Logic_Database_Manager:
             )
             return False
             
-    def logic_order_minus_one(self, deleted_order: int):
-        """삭제된 로직 이후의 모든 로직 순서를 -1 합니다.
-        
-        Args:
-            deleted_order (int): 삭제된 로직의 순서
-            
-        Returns:
-            bool: 성공 여부
-        """
-        try:
-            connection = self.db.get_connection()
-            cursor = connection.cursor()
-            
-            # 트랜잭션 시작
-            connection.execute("BEGIN TRANSACTION")
-            
-            try:
-                # 1. 삭제된 순서보다 큰 모든 로직의 순서를 -1
-                cursor.execute("""
-                    UPDATE logic_data
-                    SET logic_order = logic_order - 1
-                    WHERE logic_order > ?
-                """, (deleted_order,))
-                
-                # 2. 순서 검증
-                cursor.execute("""
-                    SELECT COUNT(*) as cnt, COUNT(DISTINCT logic_order) as distinct_cnt,
-                           MAX(logic_order) as max_order
-                    FROM logic_data
-                """)
-                validation_row = cursor.fetchone()
-                total_count, distinct_count, max_order = validation_row
-                
-                if total_count != distinct_count:
-                    raise Exception("로직 순서가 중복되었습니다.")
-                    
-                if total_count != max_order:
-                    raise Exception("로직 순서가 불연속적입니다.")
-                
-                # 트랜잭션 커밋
-                connection.commit()
-                
-                self.base_log_manager.log(
-                    message=f"삭제된 로직({deleted_order}) 이후의 순서가 업데이트되었습니다.",
-                    level="INFO",
-                    file_name="Logic_Database_Manager",
-                    method_name="logic_order_minus_one"
-                )
-                return True
-                
-            except Exception as e:
-                # 오류 발생 시 롤백
-                connection.rollback()
-                raise e
-                
-        except Exception as e:
-            self.base_log_manager.log(
-                message=f"로직 순서 업데이트 중 오류 발생: {str(e)}",
-                level="ERROR",
-                file_name="Logic_Database_Manager",
-                method_name="logic_order_minus_one",
-                print_to_terminal=True
-            )
-            return False 

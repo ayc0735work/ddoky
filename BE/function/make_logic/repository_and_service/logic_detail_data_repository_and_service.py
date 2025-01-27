@@ -173,7 +173,7 @@ class LogicDetailDataRepositoryAndService(QObject):
             'items': self.get_logic_detail_items()
         }
 
-    def save_logic_detail_data(self, controller) -> tuple[bool, str]:
+    def save_logic_detail_data_data(self, controller) -> tuple[bool, str]:
         """로직을 저장합니다.
         
         Args:
@@ -234,7 +234,7 @@ class LogicDetailDataRepositoryAndService(QObject):
                     message=f"로직 '{logic_info['name']}'이(가) 저장되었습니다",
                     level="INFO",
                     file_name="logic_detail_data_repository_and_service",
-                    method_name="save_logic_detail_data"
+                    method_name="save_logic_detail_data_data"
                 )
                 return True, "저장 성공"
             else:
@@ -242,7 +242,7 @@ class LogicDetailDataRepositoryAndService(QObject):
                     message=f"저장 실패: {result}",
                     level="ERROR",
                     file_name="logic_detail_data_repository_and_service",
-                    method_name="save_logic_detail_data"
+                    method_name="save_logic_detail_data_data"
                 )
                 return False, result
                 
@@ -251,7 +251,7 @@ class LogicDetailDataRepositoryAndService(QObject):
                 message=f"로직 저장 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_detail_data_repository_and_service",
-                method_name="save_logic_detail_data",
+                method_name="save_logic_detail_data_data",
                 print_to_terminal=True
             )
             return False, str(e)

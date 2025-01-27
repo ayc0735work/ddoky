@@ -33,9 +33,12 @@ class LogicListController(QObject):
         self.clipboard = None  # 복사된 로직 저장용
         self.logic_database_manager = Logic_Database_Manager()
         self.base_log_manager = BaseLogManager.instance()
+        self.logic_list_widget.request_logic_detail.connect(self._load_logic_detail)
         self._connect_signals()
         self.load_saved_logics_list()
-        
+
+    logic_detail_updated = Signal(int, dict)  # 로직 ID와 상세 정보를 전달하는 시그널  
+
     def _connect_signals(self):
         """시그널 연결 설정
         
@@ -45,21 +48,27 @@ class LogicListController(QObject):
         - logic_up_move_requested -> process_logic_move_up
         - logic_down_move_requested -> process_logic_move_down
         - logic_edit_requested -> process_logic_update
-        - logic_delete_requested -> process_logic_delete
+        - logic_delete_requested -> process_logic_data_delete
         - logic_copy_requested -> process_logic_copy
         - logic_paste_requested -> process_logic_paste
         - reload_logics_requested -> load_saved_logics_list
-        - request_logic_detail -> _handle_logic_detail_request
+        - request_logic_detail -> _request_getting_logic_detail_data
         """
         self.logic_list_widget.logic_up_move_requested.connect(self.process_logic_move_up)
         self.logic_list_widget.logic_down_move_requested.connect(self.process_logic_move_down)
-        self.logic_list_widget.logic_edit_requested.connect(self.process_logic_update)
-        self.logic_list_widget.logic_delete_requested.connect(self.process_logic_delete)
+        self.logic_list_widget.logic_delete_requested.connect(self.process_logic_data_delete)
         self.logic_list_widget.logic_copy_requested.connect(self.process_logic_copy)
         self.logic_list_widget.logic_paste_requested.connect(self.process_logic_paste)
         self.logic_list_widget.reload_logics_requested.connect(self.load_saved_logics_list)
-        self.logic_list_widget.request_logic_detail.connect(self._handle_logic_detail_request)
-        
+        self.logic_list_widget.request_logic_detail.connect(self._request_getting_logic_detail_data)
+        # self.logic_list_widget.logic_edit_requested.connect(self.process_logic_update) # 기존 로직 정보 업데이트 시그널 연결해야함
+
+    def _load_logic_detail(self, logic_id):
+        logic_detail = self.logic_database_manager.get_logic_detail_data(logic_id)
+        if logic_detail:
+            self.logic_detail_updated.emit(logic_id, logic_detail)
+    
+
     def load_saved_logics_list(self):
         """저장된 로직 리스트를 불러오기
         
@@ -91,7 +100,7 @@ class LogicListController(QObject):
                 method_name="load_saved_logics_list"
             )
             
-    def process_logic_save(self, logic_info):
+    def process_logic_data_save(self, logic_info):
         """새로운 로직 저장 처리
         
         새로 생성된 로직을 저장하고 UI에 추가합니다.
@@ -108,7 +117,7 @@ class LogicListController(QObject):
         """
         try:
             # DB에 저장
-            if not self.logic_database_manager.save_logic_detail(logic_info):
+            if not self.logic_database_manager.save_logic_detail_data(logic_info):
                 raise Exception("DB에 로직 저장 실패")
             
             # UI 업데이트
@@ -118,7 +127,7 @@ class LogicListController(QObject):
                 message=f"로직 '{logic_info.get('logic_name', '')}'이(가) 저장되었습니다",
                 level="INFO",
                 file_name="logic_list_controller", 
-                method_name="process_logic_save"
+                method_name="process_logic_data_save"
             )
             
             return logic_info.get('id')
@@ -128,7 +137,7 @@ class LogicListController(QObject):
                 message=f"로직 저장 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_list_controller", 
-                method_name="process_logic_save", 
+                method_name="process_logic_data_save", 
                 print_to_terminal=True
             )
             return None
@@ -148,7 +157,7 @@ class LogicListController(QObject):
         """
         try:
             # 1. DB에서 로직 정보 업데이트
-            if not self.logic_database_manager.update_logic_detail(logic_id, new_info):
+            if not self.logic_database_manager.update_logic_detail_data(logic_id, new_info):
                 raise Exception("DB에서 로직 업데이트 실패")
             
             # 2. UI 업데이트
@@ -170,7 +179,7 @@ class LogicListController(QObject):
                 print_to_terminal=True
             )
             
-    def process_logic_delete(self, logic_id):
+    def process_logic_data_delete(self, logic_id):
         """로직 삭제 처리
         
         지정된 로직을 삭제합니다.
@@ -188,7 +197,7 @@ class LogicListController(QObject):
             current_scroll = self.logic_list_widget.get_current_scroll_position()
 
             # 1. 데이터베이스에서 삭제
-            if not self.logic_database_manager.delete_logic(logic_id):
+            if not self.logic_database_manager.delete_logic_data(logic_id):
                 raise Exception("데이터베이스에서 로직 삭제 실패")
 
             # 2. 전체 로직 목록 새로고침
@@ -202,7 +211,7 @@ class LogicListController(QObject):
                 message=f"로직 삭제 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_list_controller", 
-                method_name="process_logic_delete",
+                method_name="process_logic_data_delete",
                 print_to_terminal=True
             )
             
@@ -329,7 +338,7 @@ class LogicListController(QObject):
             new_logic['isNestedLogicCheckboxSelected'] = True
             
             # 새로운 UUID로 저장
-            self.process_logic_save(new_logic)
+            self.process_logic_data_save(new_logic)
             
         except Exception as e:
             self.base_log_manager.log(
@@ -427,47 +436,7 @@ class LogicListController(QObject):
             )
             return None
 
-    def load_logic_detail(self, logic_id):
-        """로직 상세 정보를 불러옵니다.
-        
-        Args:
-            logic_id (str): 불러올 로직의 ID
-            
-        Returns:
-            dict: 로직 상세 정보. 실패 시 None
-        """
-        try:
-            # DB에서 로직 상세 정보 조회
-            logic_detail = self.logic_database_manager.get_logic_detail_data(logic_id)
-            
-            if logic_detail:
-                self.base_log_manager.log(
-                    message=f"로직 '{logic_detail['logic_name']}'의 상세 정보를 불러왔습니다. \n 불러온 로직: {logic_detail}",
-                    level="INFO",
-                    file_name="logic_list_controller",
-                    method_name="load_logic_detail"
-                )
-            else:
-                self.base_log_manager.log(
-                    message=f"로직 ID {logic_id}의 상세 정보를 불러오지 못했습니다.",
-                    level="WARNING",
-                    file_name="logic_list_controller",
-                    method_name="load_logic_detail"
-                )
-                
-            return logic_detail
-            
-        except Exception as e:
-            self.base_log_manager.log(
-                message=f"로직 상세 정보 불러오기 중 오류 발생: {str(e)}",
-                level="ERROR",
-                file_name="logic_list_controller",
-                method_name="load_logic_detail",
-                print_to_terminal=True
-            )
-            return None
-
-    def _handle_logic_detail_request(self, logic_id):
+    def _request_getting_logic_detail_data(self, logic_id):
         """로직 상세 정보 요청 처리
         
         Args:
@@ -483,12 +452,12 @@ class LogicListController(QObject):
                 message=f"로직 '{logic_detail['logic_name']}'의 상세 정보를 불러왔습니다",
                 level="INFO",
                 file_name="logic_list_controller",
-                method_name="_handle_logic_detail_request"
+                method_name="_request_getting_logic_detail_data"
             )
         else:
             self.base_log_manager.log(
                 message="로직 상세 정보를 불러오지 못했습니다",
                 level="WARNING",
                 file_name="logic_list_controller",
-                method_name="_handle_logic_detail_request"
+                method_name="_request_getting_logic_detail_data"
             )

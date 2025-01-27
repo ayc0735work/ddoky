@@ -319,6 +319,7 @@ class MainWindow(QMainWindow):
             message=msg,
             level="ERROR",
             file_name="main_window",
+            method_name="_setup_connections",
             print_to_terminal=True
         ))
         
@@ -332,15 +333,8 @@ class MainWindow(QMainWindow):
         # 프로세스 선택 시 기타 기능 컨트롤러에도 전달
         self.process_manager.process_selected.connect(self.countdown_controller__input_sequence.process_manager.set_selected_process)
         
-        # 로직 리스트와 상세 정보 연결
-        self.logic_list_widget.logic_selected.connect(self._handle_edit_logic)
-        
-        # 로직 리스트의 edit_requested 시그널을 로직 상세 위젯의 update_logic_detail에 연결
-        self.logic_list_widget.logic_edit_requested.connect(self.logic_detail_widget.update_logic_detail)
-        
-        # 로직 저장/수정 시그널 연결
-        self.logic_detail_widget.logic_saved.connect(self._on_logic_saved)
-        self.logic_detail_widget.logic_updated.connect(self._on_logic_updated)
+        # 로직 리스트의 logic_detail_updated 시그널을 로직 상세 위젯의 update_logic_detail_data에 연결
+        self.logic_list_controller.logic_detail_updated.connect(self.logic_detail_widget.update_logic_detail_data)
         
         # 로직 실행 관련 시그널 연결
         self.logic_operation_widget.operation_toggled.connect(self._on_logic_operation_toggled)
@@ -352,6 +346,7 @@ class MainWindow(QMainWindow):
             message="로직 실행이 시작되었습니다",
             level="INFO",
             file_name="main_window",
+            method_name="_setup_connections",
             include_time=True
         ))
         
@@ -359,6 +354,7 @@ class MainWindow(QMainWindow):
             message="로직 실행이 완료되었습니다",
             level="INFO",
             file_name="main_window",
+            method_name="_setup_connections",
             include_time=True
         ))
         
@@ -366,6 +362,7 @@ class MainWindow(QMainWindow):
             message=f"로직 실행 중 오류 발생: {msg}",
             level="ERROR",
             file_name="main_window",
+            method_name="_setup_connections",
             include_time=True,
             print_to_terminal=True
         ))
@@ -389,7 +386,8 @@ class MainWindow(QMainWindow):
                 self.base_log_manager.log(
                     message=f"마우스 입력이 추가되었습니다: {logic_detail_item_dp_text}",
                     level="INFO",
-                    file_name="main_window"
+                    file_name="main_window",
+                    method_name="_on_mouse_input"
                 )
                 
                 # Repository를 통해 아이템 추가
@@ -400,6 +398,7 @@ class MainWindow(QMainWindow):
                 message=f"마우스 입력 처리 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="main_window",
+                method_name="_on_mouse_input",
                 print_to_terminal=True
             )
 
@@ -416,60 +415,6 @@ class MainWindow(QMainWindow):
         """기록 모드가 토글되었을 때 호출"""
         # TODO: 기록 모드 처리 로직 구현
         pass
-
-    def _handle_edit_logic(self, logic_info):
-        """로직 편집 처리
-        
-        로직 편집이 요청되었을 때 처리합니다.
-        
-        Args:
-            logic_info (dict): 로직 정보
-                - id (str): 로직 ID
-                - name (str): 로직 이름
-                - items (list): 로직 아이템 목록
-                
-        프로세스:
-        1. 로직 정보 검증
-        2. LogicDetailWidget에 로직 정보 전달
-        3. 편집 모드 활성화
-        """
-        if self.logic_detail_widget.has_items():
-            # 확인 모달 시그널
-            reply = QMessageBox.question(
-                self,
-                "로직 불러오기",
-                "현재 작성 중인 로직이 있습니다. 덮어쓰시겠습니까?",
-                QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.No
-            )
-            
-            if reply == QMessageBox.No:
-                self.base_log_manager.log(
-                    message="로직 불러오기가 취소되었습니다",
-                    level="INFO",
-                    file_name="main_window"
-                )
-                return
-        
-        # logic_info가 문자열(로직 이름)인 경우 로직 정보를 가져옴
-        if isinstance(logic_info, str):
-            logic_name = logic_info
-            logic_info = self.logic_list_controller.get_logic_by_name(logic_name)
-            if not logic_info:
-                self.base_log_manager.log(
-                    message=f"로직 '{logic_name}'을(를) 찾을 수 없습니다",
-                    level="ERROR",
-                    file_name="main_window"
-                )
-                return
-        
-        # 로직 데이터 로드
-        self.logic_detail_widget.load_logic(logic_info)
-        self.base_log_manager.log(
-            message=f"로직 '{logic_info.get('name', '')}'를(를) 수정합니다",
-            level="INFO",
-            file_name="main_window"
-        )
 
     def _load_window_settings(self):
         """윈도우 설정 로드
@@ -502,6 +447,7 @@ class MainWindow(QMainWindow):
                 message=f"윈도우 위치 저장 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="main_window",
+                method_name="moveEvent",
                 print_to_terminal=True
             )
     
@@ -519,6 +465,7 @@ class MainWindow(QMainWindow):
                 message=f"윈도우 크기 저장 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="main_window",
+                method_name="resizeEvent",
                 print_to_terminal=True
             )
 
@@ -558,6 +505,7 @@ class MainWindow(QMainWindow):
                 message=f"윈도우 종료 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="main_window",
+                method_name="closeEvent",
                 print_to_terminal=True
             )
             event.accept()
@@ -580,114 +528,26 @@ class MainWindow(QMainWindow):
             self.base_log_manager.log(
                 message="로직 동작 허용 여부가 허용 상태로 변경되었습니다",
                 level="INFO",
-                file_name="main_window"
+                file_name="main_window",
+                method_name="_on_logic_operation_toggled"
             )
         else:
             self.logic_executor.stop_monitoring()
             self.base_log_manager.log(
                 message="로직 동작 허용 여부가 불허용 상태로 변경되었습니다",
                 level="INFO",
-                file_name="main_window"
-            )
-    
-    def _on_logic_saved(self, logic_info):
-        """로직 저장 완료 처리
-        
-        새로운 로직이 저장되었을 때 처리합니다.
-        
-        Args:
-            logic_info (dict): 저장된 로직 정보
-                - id (str): 로직 ID
-                - logic_name (str): 로직 이름
-                - items (list): 로직 아이템 목록
-        """
-        try:
-            # 로직 리스트 컨트롤러를 통해 저장된 로직 정보 가져오기
-            saved_logics = self.logic_list_controller.get_saved_logics()
-            self.logic_maker_tool_widget.update_saved_logics(saved_logics)
-            
-            # Repository 초기화
-            self.logic_item_repository.clear_logic_detail_items()
-            
-            self.base_log_manager.log(
-                message=f"로직 '{logic_info.get('logic_name', '')}'이(가) 저장되었습니다",
-                level="INFO",
-                file_name="main_window"
-            )
-        except Exception as e:
-            self.base_log_manager.log(
-                message=f"로직 저장 처리 중 오류 발생: {str(e)}",
-                level="ERROR",
                 file_name="main_window",
-                print_to_terminal=True
+                method_name="_on_logic_operation_toggled"
             )
-    
-    def _on_logic_updated(self, logic_info):
-        """로직 수정 완료 처리
-        
-        기존 로직이 수정되었을 때 처리합니다.
-        
-        Args:
-            logic_info (dict): 수정된 로직 정보
-                - id (str): 로직 ID
-                - name (str): 로직 이름
-                - items (list): 로직 아이템 목록
-        """
-        try:
-            # 로직 리스트 컨트롤러를 통해 저장된 로직 정보 가져오기
-            saved_logics = self.logic_list_controller.get_saved_logics()
-            self.logic_maker_tool_widget.update_saved_logics(saved_logics)
-            
-            # Repository 초기화
-            self.logic_item_repository.clear_logic_detail_items()
-            
-            self.base_log_manager.log(
-                message=f"로직 '{logic_info.get('name', '')}'이(가) 수정되었습니다",
-                level="INFO",
-                file_name="main_window"
-            )
-        except Exception as e:
-            self.base_log_manager.log(
-                message=f"로직 수정 처리 중 오류 발생: {str(e)}",
-                level="ERROR",
-                file_name="main_window",
-                print_to_terminal=True
-            )
-
-    def _on_logic_deleted(self, logic_name):
-        """로직이 삭제되었을 때 호출
-        
-        Args:
-            logic_name (str): 삭제된 로직의 이름
-        """
-        try:
-            # 로직 리스트 컨트롤러를 통해 저장된 로직 정보 가져오기
-            saved_logics = self.logic_list_controller.get_saved_logics()
-            self.logic_maker_tool_widget.update_saved_logics(saved_logics)
-            
-            # Repository 초기화
-            self.logic_item_repository.clear_logic_detail_items()
-            
-            self.base_log_manager.log(
-                message=f"로직 '{logic_name}'이(가) 삭제되었습니다",
-                level="INFO",
-                file_name="main_window"
-            )
-        except Exception as e:
-            self.base_log_manager.log(
-                message=f"로직 삭제 처리 중 오류 발생: {str(e)}",
-                level="ERROR",
-                file_name="main_window",
-                print_to_terminal=True
-            )
-
+ 
     def _on_process_selected(self, process_info):
         """프로세스가 선택되었을 때 호출"""
         self.process_manager.set_selected_process(process_info)
         self.base_log_manager.log(
             message=f"프로세스를 선택했습니다: {process_info}",
             level="INFO",
-            file_name="main_window"
+            file_name="main_window",
+            method_name="_on_process_selected"
         )
     
     def _on_process_reset(self):
@@ -696,33 +556,9 @@ class MainWindow(QMainWindow):
         self.base_log_manager.log(
             message="프로세스 선택이 초기화되었습니다",
             level="INFO",
-            file_name="main_window"
+            file_name="main_window",
+            method_name="_on_process_reset"
         )
-
-    def _on_add_logic(self, logic_name):
-        """새로운 로직 추가 처리
-        
-        Args:
-            logic_name (str): 로직 이름
-        """
-        if logic_name in self.logic_list_controller.get_saved_logics():
-            # 로직 정보에서 이름을 가져와서 아이템으로 추가
-            logic_info = self.logic_list_controller.get_logic_by_name(logic_name)
-            display_name = logic_info.get('name', logic_name)
-            
-            # Repository를 통해 아이템 추가
-            item_info = {
-                'type': 'logic',
-                'logic_name': display_name,
-                'logic_detail_item_dp_text': display_name
-            }
-            self.logic_item_repository.add_logic_detail_item(item_info)
-            
-            self.base_log_manager.log(
-                message=f"로직 '{display_name}'이(가) 추가되었습니다",
-                level="INFO",
-                file_name="main_window"
-            )
 
     def _on_wait_click_input(self, wait_click_info):
         """클릭 대기 입력 처리
@@ -735,7 +571,8 @@ class MainWindow(QMainWindow):
             self.base_log_manager.log(
                 message=f"클릭 대기 아이템이 추가되었습니다: {logic_detail_item_dp_text}",
                 level="INFO",
-                file_name="main_window"
+                file_name="main_window",
+                method_name="_on_wait_click_input"
             )
             
             # Repository를 통해 아이템 추가
@@ -746,23 +583,6 @@ class MainWindow(QMainWindow):
                 message=f"클릭 대기 입력 처리 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="main_window",
+                method_name="_on_wait_click_input",
                 print_to_terminal=True
-            )
-
-    def _on_logic_selected(self, logic_name):
-        """로직이 선택되었을 때 호출"""
-        # 로직 리스트 컨트롤러를 통해 로직 정보 가져오기
-        logic_info = self.logic_list_controller.get_logic_by_name(logic_name)
-        if logic_info:
-            self.logic_detail_widget.set_logic_data(logic_info)
-            self.base_log_manager.log(
-                message=f"로직 '{logic_name}'이(가) 선택되었습니다",
-                level="INFO",
-                file_name="main_window"
-            )
-        else:
-            self.base_log_manager.log(
-                message=f"로직 '{logic_name}'을(를) 찾을 수 없습니다",
-                level="ERROR",
-                file_name="main_window"
             )
