@@ -19,18 +19,6 @@ class LogicListWidget(QFrame):
     """로직 목록 UI 위젯
     
     로직 목록을 표시하고 사용자 상호작용을 처리하는 UI 컴포넌트입니다.
-    
-    Signals:
-        logic_up_move_requested (str): 위로 이동 요청 (logic_id)
-        logic_down_move_requested (str): 아래로 이동 요청 (logic_id)
-        logic_edit_requested (str, dict): 로직 수정 요청 (logic_id, new_data)
-        logic_delete_requested (list): 삭제할 로직 ID 리스트
-        logic_copy_requested (list): 복사할 로직 ID 리스트
-        logic_paste_requested: 로직 붙여넣기 요청
-        logic_selected (str): 로직 선택 시 (로직 이름)
-        edit_logic (dict): 로직 불러오기 (로직 정보)
-        reload_logics_requested: 로직 다시 불러오기 요청
-        request_logic_detail (str): 로직 상세 정보 요청 시그널 (logic_id)
     """
     
     # 시그널 정의

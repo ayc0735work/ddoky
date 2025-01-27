@@ -46,16 +46,6 @@ class LogicListController(QObject):
         """시그널 연결 설정
         
         위젯에서 발생하는 다양한 이벤트 시그널을 해당하는 처리 메서드에 연결합니다.
-        
-        연결되는 시그널:
-        - logic_up_move_requested -> process_logic_move_up
-        - logic_down_move_requested -> process_logic_move_down
-        - logic_edit_requested -> process_logic_update
-        - logic_delete_requested -> process_logic_data_delete
-        - logic_copy_requested -> process_logic_copy
-        - logic_paste_requested -> process_logic_paste
-        - reload_logics_requested -> load_saved_logics_list
-        - request_logic_detail -> _request_getting_logic_detail_data
         """
         self.logic_list_widget.logic_up_move_requested.connect(self.process_logic_move_up)
         self.logic_list_widget.logic_down_move_requested.connect(self.process_logic_move_down)
@@ -355,6 +345,7 @@ class LogicListController(QObject):
         3. 트랜잭션으로 순서 업데이트
         4. 복사된 로직들을 순서대로 저장
         5. 스크롤 위치 복원
+        6. 마지막으로 붙여넣기한 로직 선택
         """
         if not self.clipboard['items']:
             return
@@ -388,6 +379,7 @@ class LogicListController(QObject):
                 """, (shift_amount, target_order))
                 
                 # 5. 새 로직들 순서대로 저장
+                last_saved_id = None  # 마지막으로 저장된 로직의 ID를 저장할 변수
                 for idx, logic_data in enumerate(self.clipboard['items'], 1):
                     new_logic = copy.deepcopy(logic_data)
                     new_logic['logic_name'] = f"{new_logic['logic_name']} (복사본)"
@@ -395,12 +387,27 @@ class LogicListController(QObject):
                     new_logic['isNestedLogicCheckboxSelected'] = True
                     new_logic['logic_order'] = target_order + idx
                     
-                    self.process_logic_data_save(new_logic)
+                    # 로직 저장
+                    self.logic_database_manager.save_logic_detail_data(new_logic)
+                    
+                    # 마지막 로직의 ID를 저장
+                    if idx == len(self.clipboard['items']):
+                        # 방금 저장한 로직의 순서로 ID 찾기
+                        last_logic = self.logic_database_manager.get_logic_by_order(target_order + idx)
+                        if last_logic:
+                            last_saved_id = str(last_logic['id'])
                 
                 # 트랜잭션 커밋
                 connection.commit()
                 
-                # 6. 스크롤 위치 복원
+                # 6. 전체 목록 새로고침
+                self.load_saved_logics_list()
+                
+                # 7. 마지막으로 붙여넣기한 로직 선택
+                if last_saved_id:
+                    self.logic_list_widget.select_logic_by_id(last_saved_id)
+                
+                # 8. 스크롤 위치 복원
                 self.logic_list_widget.set_scroll_position(current_scroll)
                 
                 self.base_log_manager.log(
