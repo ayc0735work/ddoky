@@ -408,3 +408,20 @@ class LogicListWidget(QFrame):
         """
         # 로직 상세 정보 요청 시그널 발생
         self.request_logic_detail.emit(logic_id)
+
+    def select_logic_by_id(self, logic_id):
+        """ID로 로직을 선택합니다.
+        사용처: 로직 추가, 이동 삭제 등 동작 후 기존에 선택한 로직 재선택
+        
+        Args:
+            logic_id (str): 선택할 로직의 ID
+        """
+        # 모든 아이템을 순회하며 해당 ID를 가진 아이템 찾기
+        for i in range(self.logic_list.count()):
+            item = self.logic_list.item(i)
+            if item and item.data(Qt.UserRole) == logic_id:
+                # 아이템 선택
+                self.logic_list.setCurrentItem(item)
+                # 아이템이 보이도록 스크롤
+                self.logic_list.scrollToItem(item)
+                break
