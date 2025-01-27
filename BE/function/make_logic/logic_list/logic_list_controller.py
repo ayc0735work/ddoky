@@ -330,15 +330,20 @@ class LogicListController(QObject):
         클립보드에 저장된 로직들을 새로운 로직으로 붙여넣기합니다.
         
         프로세스:
-        1. 현재 선택된 로직의 순서 확인
-        2. 트랜잭션으로 순서 업데이트
-        3. 복사된 로직들을 순서대로 저장
+        1. 현재 스크롤 위치 저장
+        2. 현재 선택된 로직의 순서 확인
+        3. 트랜잭션으로 순서 업데이트
+        4. 복사된 로직들을 순서대로 저장
+        5. 스크롤 위치 복원
         """
         if not self.clipboard['items']:
             return
             
         try:
-            # 1. 현재 선택된 로직의 순서 가져오기
+            # 1. 현재 스크롤 위치 저장
+            current_scroll = self.logic_list_widget.get_current_scroll_position()
+
+            # 2. 현재 선택된 로직의 순서 가져오기
             current_item = self.logic_list_widget.logic_list.currentItem()
             if not current_item:
                 return
@@ -347,14 +352,14 @@ class LogicListController(QObject):
             current_logic = self.logic_database_manager.get_logic_detail_data(current_logic_id)
             target_order = current_logic['logic_order']
             
-            # 2. 트랜잭션 시작
+            # 3. 트랜잭션 시작
             connection = self.logic_database_manager.db.get_connection()
             cursor = connection.cursor()
             
             try:
                 connection.execute("BEGIN TRANSACTION")
                 
-                # 3. 뒤의 로직들 순서 조정 (복사된 로직 개수만큼)
+                # 4. 뒤의 로직들 순서 조정 (복사된 로직 개수만큼)
                 shift_amount = len(self.clipboard['items'])
                 cursor.execute("""
                     UPDATE logic_data
@@ -362,7 +367,7 @@ class LogicListController(QObject):
                     WHERE logic_order > ?
                 """, (shift_amount, target_order))
                 
-                # 4. 새 로직들 순서대로 저장
+                # 5. 새 로직들 순서대로 저장
                 for idx, logic_data in enumerate(self.clipboard['items'], 1):
                     new_logic = copy.deepcopy(logic_data)
                     new_logic['logic_name'] = f"{new_logic['logic_name']} (복사본)"
@@ -374,6 +379,9 @@ class LogicListController(QObject):
                 
                 # 트랜잭션 커밋
                 connection.commit()
+                
+                # 6. 스크롤 위치 복원
+                self.logic_list_widget.set_scroll_position(current_scroll)
                 
                 self.base_log_manager.log(
                     message=f"{shift_amount}개의 로직이 순서 {target_order + 1}부터 붙여넣기되었습니다",
