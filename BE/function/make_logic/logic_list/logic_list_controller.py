@@ -1,6 +1,7 @@
 from PySide6.QtCore import QObject, Signal
 from BE.log.base_log_manager import BaseLogManager
 from .Logic_Database_Manager import Logic_Database_Manager
+from BE.function.make_logic.logic_list.logic_list_widget import LogicListWidget
 import uuid
 import copy
 
@@ -15,7 +16,7 @@ class LogicListController(QObject):
         clipboard (dict): 복사된 로직 정보 임시 저장
     """
     
-    def __init__(self, widget):
+    def __init__(self, widget: LogicListWidget):
         """초기화
         
         Args:
@@ -28,8 +29,7 @@ class LogicListController(QObject):
         4. 저장된 로직 로드
         """
         super().__init__()
-        self.widget = widget
-        self.widget.set_controller(self)  # 위젯에 컨트롤러 설정
+        self.logic_list_widget = widget
         self.clipboard = None  # 복사된 로직 저장용
         self.logic_database_manager = Logic_Database_Manager()
         self.base_log_manager = BaseLogManager.instance()
@@ -49,14 +49,16 @@ class LogicListController(QObject):
         - logic_copy_requested -> process_logic_copy
         - logic_paste_requested -> process_logic_paste
         - reload_logics_requested -> load_saved_logics
+        - request_logic_detail -> _handle_logic_detail_request
         """
-        self.widget.logic_up_move_requested.connect(self.process_logic_move_up)
-        self.widget.logic_down_move_requested.connect(self.process_logic_move_down)
-        self.widget.logic_edit_requested.connect(self.process_logic_update)
-        self.widget.logic_delete_requested.connect(self.process_logic_delete)
-        self.widget.logic_copy_requested.connect(self.process_logic_copy)
-        self.widget.logic_paste_requested.connect(self.process_logic_paste)
-        self.widget.reload_logics_requested.connect(self.load_saved_logics)
+        self.logic_list_widget.logic_up_move_requested.connect(self.process_logic_move_up)
+        self.logic_list_widget.logic_down_move_requested.connect(self.process_logic_move_down)
+        self.logic_list_widget.logic_edit_requested.connect(self.process_logic_update)
+        self.logic_list_widget.logic_delete_requested.connect(self.process_logic_delete)
+        self.logic_list_widget.logic_copy_requested.connect(self.process_logic_copy)
+        self.logic_list_widget.logic_paste_requested.connect(self.process_logic_paste)
+        self.logic_list_widget.reload_logics_requested.connect(self.load_saved_logics)
+        self.logic_list_widget.request_logic_detail.connect(self._handle_logic_detail_request)
         
     def load_saved_logics(self):
         """저장된 로직 정보 불러오기
@@ -66,20 +68,32 @@ class LogicListController(QObject):
         """
         try:
             # 현재 스크롤 위치 저장
-            current_scroll = self.widget.get_scroll_position()
+            current_scroll = self.logic_list_widget.get_current_scroll_position()
+            self.base_log_manager.log(
+                message=f"현재 스크롤 위치를 저장했습니다. {current_scroll}",
+                level="DEBUG",
+                file_name="logic_list_controller",
+                method_name="load_saved_logics"
+            )
             
             # DB에서 로직 정보 가져오기
             logics = self.logic_database_manager.get_all_logics_list()
             
             # 위젯 업데이트
-            self.widget.clear_logic_list()
+            self.logic_list_widget.clear_logic_list()
             for logic in logics:
-                self.widget.add_logic_item({
+                self.logic_list_widget.add_logic_item({
                     'logic_name': logic['logic_name']
                 }, str(logic['id']))
                 
             # 스크롤 위치 복원
-            self.widget.refresh_logic_list(current_scroll)
+            self.logic_list_widget.refresh_logic_list(current_scroll)
+            self.base_log_manager.log(
+                message=f"현재 스크롤 위치를 저장했습니다. {current_scroll}",
+                level="DEBUG",
+                file_name="logic_list_controller",
+                method_name="load_saved_logics"
+            )
             
             self.base_log_manager.log(
                 message="로직 목록을 DB에서 불러왔습니다",
@@ -190,24 +204,31 @@ class LogicListController(QObject):
         """
         try:
             # 현재 스크롤 위치 저장
-            current_scroll = self.widget.get_scroll_position()
-            
+            current_scroll = self.logic_list_widget.get_current_scroll_position()
+
+            self.base_log_manager.log(
+                message=f"현재 스크롤 위치를 저장했습니다. {current_scroll}",
+                level="DEBUG",
+                file_name="logic_list_controller",
+                method_name="process_logic_delete"
+            )
+
             # 1. 데이터베이스에서 삭제
             if not self.logic_database_manager.delete_logic(logic_id):
                 raise Exception("데이터베이스에서 로직 삭제 실패")
-               
+
             # 2. 전체 로직 목록 새로고침
             self.load_saved_logics()
-            
-            # 스크롤 위치 복원
-            self.widget.refresh_logic_list(current_scroll)
-                
+
             self.base_log_manager.log(
                 message="로직 목록을 새로고침했습니다",
                 level="INFO",
                 file_name="logic_list_controller", 
                 method_name="process_logic_delete"
             )
+
+            # 스크롤 위치 복원
+            self.logic_list_widget.refresh_logic_list(current_scroll)
 
         except Exception as e:
             self.base_log_manager.log(
@@ -471,3 +492,29 @@ class LogicListController(QObject):
                 print_to_terminal=True
             )
             return None
+
+    def _handle_logic_detail_request(self, logic_id):
+        """로직 상세 정보 요청 처리
+        
+        Args:
+            logic_id (str): 요청된 로직의 ID
+        """
+        logic_detail = self.logic_database_manager.get_logic_detail_data(logic_id)
+        
+        if logic_detail:
+            # 로직 상세 정보를 위젯으로 전달
+            self.logic_list_widget.logic_edit_requested.emit(logic_id, logic_detail)
+            
+            self.base_log_manager.log(
+                message=f"로직 '{logic_detail['logic_name']}'의 상세 정보를 불러왔습니다",
+                level="INFO",
+                file_name="logic_list_controller",
+                method_name="_handle_logic_detail_request"
+            )
+        else:
+            self.base_log_manager.log(
+                message="로직 상세 정보를 불러오지 못했습니다",
+                level="WARNING",
+                file_name="logic_list_controller",
+                method_name="_handle_logic_detail_request"
+            )

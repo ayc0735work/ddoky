@@ -30,6 +30,7 @@ class LogicListWidget(QFrame):
         logic_selected (str): 로직 선택 시 (로직 이름)
         edit_logic (dict): 로직 불러오기 (로직 정보)
         reload_logics_requested: 로직 다시 불러오기 요청
+        request_logic_detail (str): 로직 상세 정보 요청 시그널 (logic_id)
     """
     
     # 시그널 정의
@@ -41,23 +42,21 @@ class LogicListWidget(QFrame):
     logic_paste_requested = Signal()
     logic_selected = Signal(str)  # 로직이 선택되었을 때 (로직 이름)
     reload_logics_requested = Signal()  # 로직 다시 불러오기 요청
+    request_logic_detail = Signal(str)  # 로직 상세 정보 요청 시그널 (logic_id)
     
     def __init__(self, parent=None):
         super().__init__(parent)
         self.base_log_manager = BaseLogManager.instance()
-        self.controller = None  # 컨트롤러 초기화
         self.init_ui()
         
         # 이벤트 필터 설치
         self.logic_list.installEventFilter(self)
         
-    def set_controller(self, controller):
         """컨트롤러 설정
         
         Args:
             controller (LogicListController): 위젯을 제어할 컨트롤러
         """
-        self.controller = controller
         
     def init_ui(self):
         """UI 초기화
@@ -298,7 +297,7 @@ class LogicListWidget(QFrame):
                 
         return super().eventFilter(obj, event)
         
-    def get_scroll_position(self):
+    def get_current_scroll_position(self):
         """현재 스크롤 위치를 반환합니다.
         
         Returns:
@@ -314,8 +313,34 @@ class LogicListWidget(QFrame):
         """
         # 스크롤바가 있고 유효한 위치값인 경우에만 설정
         scrollbar = self.logic_list.verticalScrollBar()
-        if scrollbar and 0 <= position <= scrollbar.maximum():
-            scrollbar.setValue(position)
+        if scrollbar:
+            # 스크롤바의 최대값과 position을 비교하여 유효한 값으로 조정
+            max_scroll = scrollbar.maximum()
+            adjusted_position = min(position, max_scroll)
+            
+            scrollbar.setValue(adjusted_position)
+            
+            self.base_log_manager.log(
+                message=f"스크롤 위치 설정 - 요청: {position}, 조정: {adjusted_position}, 최대: {max_scroll}",
+                level="DEBUG",
+                file_name="logic_list_widget",
+                method_name="set_scroll_position"
+            )
+
+        self.base_log_manager.log( 
+            message=f"스크롤 위치가 설정되었습니다. : {position}",
+            level="DEBUG",
+            file_name="logic_list_widget",
+            method_name="set_scroll_position"
+        )
+
+        end_scroll_position = self.get_current_scroll_position()
+        self.base_log_manager.log( 
+            message=f"최종 스크롤 위치 : {end_scroll_position}",
+            level="DEBUG",
+            file_name="logic_list_widget",
+            method_name="set_scroll_position"
+        )
             
     def clear_logic_list(self):
         """로직 목록 초기화
@@ -393,28 +418,10 @@ class LogicListWidget(QFrame):
         return item.data(Qt.UserRole) if item else None
 
     def _load_logic_detail(self, logic_id):
-        """로직 상세 정보를 불러와서 UI를 업데이트합니다.
+        """로직 상세 정보를 요청합니다.
         
         Args:
             logic_id (str): 불러올 로직의 ID
         """
-        # 컨트롤러를 통해 로직 상세 정보 불러오기
-        logic_detail = self.controller.load_logic_detail(logic_id)
-        
-        if logic_detail:
-            # 로직 상세 정보 로드 시그널 발생
-            self.logic_edit_requested.emit(logic_id, logic_detail)
-            
-            self.base_log_manager.log(
-                message=f"로직 '{logic_detail['logic_name']}'의 상세 정보를 UI에 표시합니다. \n 불러온 로직: {logic_detail}",
-                level="INFO",
-                file_name="logic_list_widget",
-                method_name="_load_logic_detail"
-            )
-        else:
-            self.base_log_manager.log(
-                message="로직 상세 정보를 불러오지 못했습니다.",
-                level="WARNING",
-                file_name="logic_list_widget",
-                method_name="_load_logic_detail"
-            )
+        # 로직 상세 정보 요청 시그널 발생
+        self.request_logic_detail.emit(logic_id)
