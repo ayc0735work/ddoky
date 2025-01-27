@@ -334,8 +334,6 @@ class MainWindow(QMainWindow):
         
         # 로직 리스트와 상세 정보 연결
         self.logic_list_widget.logic_selected.connect(self._handle_edit_logic)
-        self.logic_list_widget.edit_logic.connect(self._handle_edit_logic)
-        self.logic_list_widget.logic_delete_requested.connect(self._on_logic_deleted)
         
         # 로직 리스트의 edit_requested 시그널을 로직 상세 위젯의 update_logic_detail에 연결
         self.logic_list_widget.logic_edit_requested.connect(self.logic_detail_widget.update_logic_detail)

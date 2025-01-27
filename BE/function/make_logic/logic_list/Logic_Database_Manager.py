@@ -190,3 +190,63 @@ class Logic_Database_Manager:
                 print_to_terminal=True
             )
             return False 
+
+    def delete_logic(self, logic_id: int):
+        """로직과 관련된 모든 데이터를 삭제합니다.
+        
+        Args:
+            logic_id (int): 삭제할 로직의 ID
+            
+        Returns:
+            bool: 삭제 성공 여부
+        """
+        try:
+            connection = self.db.get_connection()
+            cursor = connection.cursor()
+            
+            # 트랜잭션 시작
+            connection.execute("BEGIN TRANSACTION")
+            
+            try:
+                # 1. 로직 이름 조회 (로깅용)
+                cursor.execute("SELECT logic_name FROM logic_data WHERE id = ?", (logic_id,))
+                row = cursor.fetchone()
+                logic_name = row[0] if row else "알 수 없음"
+                
+                # 2. 로직 상세 아이템 삭제
+                cursor.execute("""
+                    DELETE FROM logic_detail_items_data
+                    WHERE logic_id = ?
+                """, (logic_id,))
+                
+                # 3. 로직 기본 정보 삭제
+                cursor.execute("""
+                    DELETE FROM logic_data
+                    WHERE id = ?
+                """, (logic_id,))
+                
+                # 트랜잭션 커밋
+                connection.commit()
+                
+                self.base_log_manager.log(
+                    message=f"로직 '{logic_name}'(ID: {logic_id})이(가) 삭제되었습니다.",
+                    level="INFO",
+                    file_name="Logic_Database_Manager",
+                    method_name="delete_logic"
+                )
+                return True
+                
+            except Exception as e:
+                # 오류 발생 시 롤백
+                connection.rollback()
+                raise e
+                
+        except Exception as e:
+            self.base_log_manager.log(
+                message=f"로직 삭제 중 오류 발생: {str(e)}",
+                level="ERROR",
+                file_name="Logic_Database_Manager",
+                method_name="delete_logic",
+                print_to_terminal=True
+            )
+            return False 

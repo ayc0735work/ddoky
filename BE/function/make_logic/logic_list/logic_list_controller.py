@@ -261,38 +261,25 @@ class LogicListController(QObject):
             logic_id (str): 삭제할 로직의 ID
             
         프로세스:
-        1. 설정에서 로직 삭제
-        2. 메모리상의 saved_logics 업데이트
-        3. UI에서 해당 아이템 제거
+        1. 데이터베이스에서 로직 삭제
+        2. 설정에서 로직 삭제
+        3. 전체 로직 목록 새로고침
         """
         try:
-            # 설정 다시 로드하여 최신 상태 확인
-            self.settings_manager.reload_settings()
-            logics = self.settings_manager.settings.get('logics', {})
-            
-            if logic_id in logics:
-                logic_name = logics[logic_id].get('logic_name', '')
+            # 1. 데이터베이스에서 삭제
+            if not self.logic_database_manager.delete_logic(logic_id):
+                raise Exception("데이터베이스에서 로직 삭제 실패")
+               
+            # 2. 전체 로직 목록 새로고침
+            self.load_saved_logics()
                 
-                # 로직 삭제
-                del logics[logic_id]
-                
-                # 설정 저장
-                settings = self.settings_manager._load_settings() or {}
-                settings['logics'] = logics
-                self.settings_manager._save_settings(settings)
-                
-                # 메모리상의 saved_logics 업데이트
-                self.saved_logics = logics.copy()
-                
-                # UI에서 해당 아이템만 제거
-                self.widget.remove_logic_item(logic_id)
-                
-                self.base_log_manager.log(
-                    message=f"로직 '{logic_name}'이(가) 삭제되었습니다",
-                    level="INFO",
-                    file_name="logic_list_controller", 
-                    method_name="process_logic_delete"
-                )
+            self.base_log_manager.log(
+                message="로직 목록을 새로고침했습니다",
+                level="INFO",
+                file_name="logic_list_controller", 
+                method_name="process_logic_delete"
+            )
+
                 
         except Exception as e:
             self.base_log_manager.log(

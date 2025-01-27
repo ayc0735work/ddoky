@@ -38,7 +38,6 @@ class LogicListWidget(QFrame):
     logic_copy_requested = Signal(str)  # logic_id
     logic_paste_requested = Signal()
     logic_selected = Signal(str)  # 로직이 선택되었을 때 (로직 이름)
-    edit_logic = Signal(dict)  # 로직 불러오기 시그널 (로직 정보)
     reload_logics_requested = Signal()  # 로직 다시 불러오기 요청
     
     def __init__(self, parent=None):
