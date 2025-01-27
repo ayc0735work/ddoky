@@ -1,7 +1,7 @@
 from PySide6.QtCore import QObject, Signal
 from BE.settings.logics_data_settingfiles_manager import LogicsDataSettingFilesManager
 from BE.log.base_log_manager import BaseLogManager
-from .LogicDatabaseManager import LogicDatabaseManager
+from .Logic_Database_Manager import Logic_Database_Manager
 import uuid
 import copy
 
@@ -33,10 +33,11 @@ class LogicListController(QObject):
         """
         super().__init__()
         self.widget = widget
+        self.widget.set_controller(self)  # 위젯에 컨트롤러 설정
         self.settings_manager = LogicsDataSettingFilesManager()
         self.saved_logics = {}  # 저장된 로직들을 관리하는 딕셔너리
         self.clipboard = None  # 복사된 로직 저장용
-        self.logic_database_manager = LogicDatabaseManager()
+        self.logic_database_manager = Logic_Database_Manager()
         self.base_log_manager = BaseLogManager.instance()
         self._connect_signals()
         self.load_saved_logics()
@@ -74,7 +75,7 @@ class LogicListController(QObject):
             self.widget.clear_logic_list()
             for logic in logics:
                 self.widget.add_logic_item({
-                    'name': logic['logic_name']  # 위젯에는 이름만 표시
+                    'logic_name': logic['logic_name']  # DB 컬럼명에 맞춰 수정
                 }, str(logic['id']))
                 
             self.base_log_manager.log(
@@ -197,7 +198,7 @@ class LogicListController(QObject):
             # UI 업데이트
             self.widget.add_logic_item(logic_info, logic_id)
             self.base_log_manager.log(
-                message=f"로직 '{logic_info.get('name', '')}'이(가) 저장되었습니다",
+                message=f"로직 '{logic_info.get('logic_name', '')}'이(가) 저장되었습니다",
                 level="INFO",
                 file_name="logic_list_controller", 
                 method_name="process_logic_save"
@@ -236,7 +237,7 @@ class LogicListController(QObject):
                 self.settings_manager.save_logics(logics)
                 self.widget.update_logic_item(logic_id, logics[logic_id])
                 self.base_log_manager.log(
-                    message=f"로직 '{new_info.get('name', '')}'이(가) 업데이트되었습니다",
+                    message=f"로직 '{new_info.get('logic_name', '')}'이(가) 업데이트되었습니다",
                     level="INFO",
                     file_name="logic_list_controller", 
                     method_name="process_logic_update"
@@ -270,7 +271,7 @@ class LogicListController(QObject):
             logics = self.settings_manager.settings.get('logics', {})
             
             if logic_id in logics:
-                logic_name = logics[logic_id].get('name', '')
+                logic_name = logics[logic_id].get('logic_name', '')
                 
                 # 로직 삭제
                 del logics[logic_id]
@@ -363,7 +364,7 @@ class LogicListController(QObject):
                 self.clipboard = copy.deepcopy(logics[logic_id])
                 self.clipboard['id'] = logic_id
                 self.base_log_manager.log(
-                    message=f"로직 '{self.clipboard.get('name', '')}'이(가) 복사되었습니다",
+                    message=f"로직 '{self.clipboard.get('logic_name', '')}'이(가) 복사되었습니다",
                     level="INFO",
                     file_name="logic_list_controller", 
                     method_name="process_logic_copy"
@@ -394,7 +395,7 @@ class LogicListController(QObject):
             
         try:
             new_logic = copy.deepcopy(self.clipboard)
-            new_logic['name'] = f"{new_logic['name']} (복사본)"
+            new_logic['logic_name'] = f"{new_logic['logic_name']} (복사본)"
             new_logic['trigger_key'] = None
             new_logic['isNestedLogicCheckboxSelected'] = True
             
@@ -414,7 +415,7 @@ class LogicListController(QObject):
         """로직 아이템의 표시 텍스트를 생성"""
         if not logic_info:
             return ""
-        name = logic_info.get('name', '')
+        name = logic_info.get('logic_name', '')  # name을 logic_name으로 수정
         
         if logic_info.get('isNestedLogicCheckboxSelected', False):
             return f"[ {name} ] --- 중첩로직용"
@@ -459,7 +460,7 @@ class LogicListController(QObject):
             
             # 이름으로 로직 찾기
             for logic_id, logic_info in logics.items():
-                if logic_info.get('name') == logic_name:
+                if logic_info.get('logic_name') == logic_name:
                     return logic_info
             return None
             
@@ -479,7 +480,7 @@ class LogicListController(QObject):
         self.saved_logics[logic_id] = logic_info
         self.widget.add_logic_item(logic_info, logic_id)
         self.base_log_manager.log(
-            message=f"로직 '{logic_info.get('name')}'이(가) 저장되었습니다",
+            message=f"로직 '{logic_info.get('logic_name')}'이(가) 저장되었습니다",
             level="INFO",
             file_name="logic_list_controller"
         )
@@ -491,8 +492,48 @@ class LogicListController(QObject):
             self.saved_logics[logic_id].update(logic_info)
             self.widget.update_logic_item(logic_id, self.saved_logics[logic_id])
             self.base_log_manager.log(
-                message=f"로직 '{logic_info.get('name')}'이(가) 업데이트되었습니다",
+                message=f"로직 '{logic_info.get('logic_name')}'이(가) 업데이트되었습니다",
                 level="INFO",
                 file_name="logic_list_controller", 
                 method_name="on_logic_updated"
             )
+
+    def load_logic_detail(self, logic_id):
+        """로직 상세 정보를 불러옵니다.
+        
+        Args:
+            logic_id (str): 불러올 로직의 ID
+            
+        Returns:
+            dict: 로직 상세 정보. 실패 시 None
+        """
+        try:
+            # DB에서 로직 상세 정보 조회
+            logic_detail = self.logic_database_manager.get_logic_detail_data(logic_id)
+            
+            if logic_detail:
+                self.base_log_manager.log(
+                    message=f"로직 '{logic_detail['logic_name']}'의 상세 정보를 불러왔습니다. \n 불러온 로직: {logic_detail}",
+                    level="INFO",
+                    file_name="logic_list_controller",
+                    method_name="load_logic_detail"
+                )
+            else:
+                self.base_log_manager.log(
+                    message=f"로직 ID {logic_id}의 상세 정보를 불러오지 못했습니다.",
+                    level="WARNING",
+                    file_name="logic_list_controller",
+                    method_name="load_logic_detail"
+                )
+                
+            return logic_detail
+            
+        except Exception as e:
+            self.base_log_manager.log(
+                message=f"로직 상세 정보 불러오기 중 오류 발생: {str(e)}",
+                level="ERROR",
+                file_name="logic_list_controller",
+                method_name="load_logic_detail",
+                print_to_terminal=True
+            )
+            return None

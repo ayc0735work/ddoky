@@ -975,4 +975,55 @@ class LogicDetailWidget(QFrame):
         """모든 UI 필드 초기화"""
         self.controller.clear_logic_info()  # 컨트롤러를 통해 초기화
         self.logic_detail_data_repository_and_service.clear_logic_detail_items()  # Repository를 통해 아이템 목록 초기화
+
+    def update_logic_detail(self, logic_id, logic_detail):
+        """로직 상세 정보로 UI 업데이트
+        
+        Args:
+            logic_id (str): 로직 ID
+            logic_detail (dict): 로직 상세 정보
+        """
+        try:
+            # 현재 로직 ID 저장
+            self.current_logic_id = logic_id
+            
+            # 기본 정보 업데이트
+            self.LogicNameInput__QLineEdit.setText(logic_detail['logic_name'])
+            self.RepeatCountInput__QSpinBox.setValue(logic_detail['repeat_count'])
+            self.isNestedLogicCheckboxSelected_checkbox.setChecked(logic_detail['isNestedLogicCheckboxSelected'])
+            
+            # 트리거 키 정보 설정
+            if not logic_detail['isNestedLogicCheckboxSelected'] and logic_detail.get('trigger_key'):
+                self.trigger_key_info = logic_detail['trigger_key']
+                self.TriggerKeyInput__QLineEdit.setText(str(self.trigger_key_info))
+                self.EditTriggerKeyButton__QPushButton.setEnabled(True)
+                self.DeleteTriggerKeyButton__QPushButton.setEnabled(True)
+            else:
+                self.trigger_key_info = None
+                self.TriggerKeyInput__QLineEdit.clear()
+                self.EditTriggerKeyButton__QPushButton.setEnabled(False)
+                self.DeleteTriggerKeyButton__QPushButton.setEnabled(False)
+            
+            # 아이템 목록 업데이트
+            self.LogicItemList__QListWidget.clear()
+            for item in logic_detail.get('items', []):
+                list_item = QListWidgetItem(item.get('logic_detail_item_dp_text', ''))
+                list_item.setData(Qt.UserRole, item)
+                self.LogicItemList__QListWidget.addItem(list_item)
+            
+            self.base_log_manager.log(
+                message=f"로직 '{logic_detail['logic_name']}'의 상세 정보로 UI를 업데이트했습니다.",
+                level="INFO",
+                file_name="logic_detail_widget",
+                method_name="update_logic_detail"
+            )
+            
+        except Exception as e:
+            self.base_log_manager.log(
+                message=f"UI 업데이트 중 오류 발생: {str(e)}",
+                level="ERROR",
+                file_name="logic_detail_widget",
+                method_name="update_logic_detail",
+                print_to_terminal=True
+            )
         

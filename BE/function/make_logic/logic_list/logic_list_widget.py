@@ -44,10 +44,19 @@ class LogicListWidget(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.base_log_manager = BaseLogManager.instance()
+        self.controller = None  # 컨트롤러 초기화
         self.init_ui()
         
         # 이벤트 필터 설치
         self.logic_list.installEventFilter(self)
+        
+    def set_controller(self, controller):
+        """컨트롤러 설정
+        
+        Args:
+            controller (LogicListController): 위젯을 제어할 컨트롤러
+        """
+        self.controller = controller
         
     def init_ui(self):
         """UI 초기화
@@ -121,12 +130,12 @@ class LogicListWidget(QFrame):
         button_layout.addWidget(self.move_down_btn)
         
         # 로직 불러오기 버튼
-        self.edit_btn = QPushButton("선택한 로직 불러오기")
-        self.edit_btn.setFixedWidth(130)
-        self.edit_btn.setStyleSheet(BUTTON_STYLE)
-        self.edit_btn.setEnabled(False)
-        self.edit_btn.clicked.connect(self._on_edit_clicked)
-        button_layout.addWidget(self.edit_btn)
+        self.load_logic_detail_data_btn = QPushButton("선택한 로직 불러오기")
+        self.load_logic_detail_data_btn.setFixedWidth(130)
+        self.load_logic_detail_data_btn.setStyleSheet(BUTTON_STYLE)
+        self.load_logic_detail_data_btn.setEnabled(False)
+        self.load_logic_detail_data_btn.clicked.connect(self._on_edit_clicked)
+        button_layout.addWidget(self.load_logic_detail_data_btn)
         
         # 로직 삭제 버튼
         self.delete_btn = QPushButton("로직 삭제")
@@ -159,7 +168,7 @@ class LogicListWidget(QFrame):
         current_row = self.logic_list.currentRow()
         self.move_up_btn.setEnabled(has_selection and current_row > 0)
         self.move_down_btn.setEnabled(has_selection and current_row < self.logic_list.count() - 1)
-        self.edit_btn.setEnabled(len(selected_items) == 1)
+        self.load_logic_detail_data_btn.setEnabled(len(selected_items) == 1)
         self.delete_btn.setEnabled(has_selection)
         
     def _on_move_up_clicked(self):
@@ -198,52 +207,29 @@ class LogicListWidget(QFrame):
         logic_id = current_item.data(Qt.UserRole)
         self.logic_move_requested.emit(logic_id, current_row + 1)
         
-    def _on_edit_clicked(self):
-        """로직 불러오기 버튼 처리
-        
-        선택된 로직을 수정하기 위해 불러옵니다.
-        
-        프로세스:
-        1. 현재 선택된 아이템 확인
-        2. 설정에서 로직 정보 로드
-        3. 로직 정보가 있으면 edit_logic 시그널 발생
-        """
-        current_item = self.logic_list.currentItem()
-        if not current_item:
-            return
-            
-        # 설정 매니저를 통해 로직 정보 가져오기
-        settings_manager = LogicsDataSettingFilesManager()
-        logics = settings_manager.load_logics()
-        logic_id = current_item.data(Qt.UserRole)
-        
-        if logic_id in logics:
-            self.edit_logic.emit(logics[logic_id])
-        
     def _on_item_double_clicked(self, item):
         """아이템 더블클릭 처리
         
-        로직 아이템이 더블클릭되었을 때 처리합니다.
+        더블클릭된 로직의 상세 정보를 불러옵니다.
         
         Args:
             item (QListWidgetItem): 더블클릭된 아이템
-            
-        프로세스:
-        1. 아이템 유효성 확인
-        2. 설정에서 로직 정보 로드
-        3. 로직 정보가 있으면 edit_logic 시그널 발생
         """
-        if not item:
-            return
-            
-        # 설정 매니저를 통해 로직 정보 가져오기
-        settings_manager = LogicsDataSettingFilesManager()
-        logics = settings_manager.load_logics()
         logic_id = item.data(Qt.UserRole)
+        if logic_id:
+            self._load_logic_detail(logic_id)
+            
+    def _on_edit_clicked(self):
+        """로직 불러오기 버튼 클릭 처리
         
-        if logic_id in logics:
-            self.edit_logic.emit(logics[logic_id])
-        
+        선택된 로직의 상세 정보를 불러옵니다.
+        """
+        selected_items = self.logic_list.selectedItems()
+        if len(selected_items) == 1:
+            logic_id = selected_items[0].data(Qt.UserRole)
+            if logic_id:
+                self._load_logic_detail(logic_id)
+                
     def _on_delete_clicked(self):
         """삭제 버튼 처리
         
@@ -339,7 +325,7 @@ class LogicListWidget(QFrame):
             logic_info (dict): 로직 정보 (이름 등)
             logic_id (str): 로직의 고유 ID
         """
-        item = QListWidgetItem(logic_info.get('name', ''))
+        item = QListWidgetItem(logic_info.get('logic_name', ''))
         item.setData(Qt.UserRole, logic_id)
         self.logic_list.addItem(item)
         
@@ -355,7 +341,7 @@ class LogicListWidget(QFrame):
         for i in range(self.logic_list.count()):
             item = self.logic_list.item(i)
             if item and item.data(Qt.UserRole) == logic_id:
-                item.setText(logic_info.get('name', ''))
+                item.setText(logic_info.get('logic_name', ''))
                 break
                 
     def remove_logic_item(self, logic_id):
@@ -380,3 +366,30 @@ class LogicListWidget(QFrame):
         """특정 인덱스의 로직 ID 반환"""
         item = self.logic_list.item(index)
         return item.data(Qt.UserRole) if item else None
+
+    def _load_logic_detail(self, logic_id):
+        """로직 상세 정보를 불러와서 UI를 업데이트합니다.
+        
+        Args:
+            logic_id (str): 불러올 로직의 ID
+        """
+        # 컨트롤러를 통해 로직 상세 정보 불러오기
+        logic_detail = self.controller.load_logic_detail(logic_id)
+        
+        if logic_detail:
+            # 로직 상세 정보 로드 시그널 발생
+            self.logic_edit_requested.emit(logic_id, logic_detail)
+            
+            self.base_log_manager.log(
+                message=f"로직 '{logic_detail['logic_name']}'의 상세 정보를 UI에 표시합니다. \n 불러온 로직: {logic_detail}",
+                level="INFO",
+                file_name="logic_list_widget",
+                method_name="_load_logic_detail"
+            )
+        else:
+            self.base_log_manager.log(
+                message="로직 상세 정보를 불러오지 못했습니다.",
+                level="WARNING",
+                file_name="logic_list_widget",
+                method_name="_load_logic_detail"
+            )
