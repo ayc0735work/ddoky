@@ -3,6 +3,7 @@ import uuid
 from datetime import datetime
 from BE.log.base_log_manager import BaseLogManager
 
+
 class AllLogicsDataRepositoryAndService(QObject):
     """로직 관리를 담당하는 클래스"""
 
@@ -174,6 +175,7 @@ class AllLogicsDataRepositoryAndService(QObject):
                 file_name="all_logics_data_repository_and_service",
                 method_name="save_logic",
             )
+
             return True, logic_id
 
         except ValueError as e:

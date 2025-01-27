@@ -61,37 +61,26 @@ class LogicDetailController(QObject):
             file_name="logic_detail_controller"
         )
 
-    def get_logic_data(self):
-        """로직 데이터를 구성하고 반환"""
-        # 가장 큰 order 값 찾기
-        logics = self.widget.settings_manager.load_logics(force=True)
-        max_order = 0
-        for logic in logics.values():
-            order = logic.get('order', 0)
-            if order > max_order:
-                max_order = order
-
-        data = {
-            'order': max_order + 1,  # 가장 큰 order + 1
+    def get_logic_data(self) -> dict:
+        """현재 로직 데이터를 반환합니다.
+        
+        Returns:
+            dict: 현재 로직 데이터
+        """
+        # 위젯에서 현재 상태 가져오기
+        logic_data = {
             'name': self.widget.LogicNameInput__QLineEdit.text(),
             'repeat_count': self.widget.RepeatCountInput__QSpinBox.value(),
-            'items': self.get_logic_detail_items(),
-            'is_nested': self.widget.is_nested_checkbox.isChecked()
+            'is_nested': self.widget.is_nested_checkbox.isChecked(),
+            'trigger_key': self.widget.trigger_key_info,
+            'items': self.widget.logic_detail_data_repository_and_service.get_logic_detail_items()
         }
         
-        # 중첩로직이 아닐 경우에만 트리거 키 추가
-        if not data['is_nested']:
-            # trigger_key_info가 있고 modifiers_key_flag가 정수가 아닌 경우 변환
-            if self.widget.trigger_key_info and 'modifiers_key_flag' in self.widget.trigger_key_info:
-                trigger_key = self.widget.trigger_key_info.copy()
-                if not isinstance(trigger_key['modifiers_key_flag'], int):
-                    trigger_key['modifiers_key_flag'] = trigger_key['modifiers_key_flag'].value
-                data['trigger_key'] = trigger_key
-            else:
-                data['trigger_key'] = self.widget.trigger_key_info
+        # 현재 로직 ID가 있다면 포함
+        if hasattr(self.widget, 'current_logic_id') and self.widget.current_logic_id:
+            logic_data['id'] = self.widget.current_logic_id
             
-        self.logic_data_changed.emit(data)
-        return data
+        return logic_data
 
     def set_logic_data(self, logic_data):
         """로직 데이터 설정"""
@@ -116,44 +105,18 @@ class LogicDetailController(QObject):
                 self.widget.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.set_key_info(self.widget.trigger_key_info)
 
     def clear_logic_info(self):
-        """로직 정보 초기화"""
-        try:
-            # 로직 이름 초기화
-            self.widget.LogicNameInput__QLineEdit.clear()
-            
-            # 트리거 키 초기화
-            self.widget.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.clear_key()
-            self.widget.trigger_key_info = {}
-            
-            # 반복 횟수 초기화
-            self.widget.RepeatCountInput__QSpinBox.setValue(1)
-            
-            # 중첩로직용 체크박스 초기화
-            self.widget.is_nested_checkbox.setChecked(False)
-            
-            # 로직 아이템 목록 초기화
-            self.widget.LogicItemList__QListWidget.clear()
-            
-            # 로직 아이템 정보 초기화
-            self.widget.logic_items.clear()
-            
-            # 현재 편집 중인 로직 ID 초기화
-            self.widget.current_logic_id = None
-            
-            self.base_log_manager.log(
-                message="로직 정보가 초기화되었습니다",
-                level="INFO",
-                file_name="logic_detail_controller",
-                method_name="clear_logic_info"
-            )
-            
-        except Exception as e:
-            self.base_log_manager.log(
-                message=f"로직 정보 초기화 중 오류 발생: {str(e)}",
-                level="ERROR", 
-                file_name="logic_detail_controller",
-                method_name="clear_logic_info"
-            )
+        """로직 정보를 초기화합니다."""
+        # 기본 데이터로 초기화
+        empty_logic = {
+            'name': '',
+            'repeat_count': 1,
+            'is_nested': True,
+            'trigger_key': None,
+            'items': []
+        }
+        
+        # UI 업데이트를 위해 시그널 발생
+        self.logic_data_changed.emit(empty_logic)
 
     def get_logic_detail_items(self):
         """현재 아이템 목록을 반환"""

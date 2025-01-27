@@ -496,13 +496,23 @@ class LogicDetailWidget(QFrame):
         """
         try:
             # Repository에 저장 요청
-            # save_logic_detail_data() 메서드는 두 개의 값을 반환합니다:
-            # 1. success: 저장 성공 여부 (bool)
-            # 2. message: 결과 메시지 (str)
             success, message = self.logic_detail_data_repository_and_service.save_logic_detail_data(self.controller)
             
             # UI 업데이트
             if success:
+                # 현재 로직 정보 초기화 (Repository)
+                self.logic_detail_data_repository_and_service.clear_current_logic_detail_data()
+                
+                # UI 초기화 (Controller를 통해)
+                self.controller.clear_logic_info()
+                
+                # 성공 메시지 표시
+                QMessageBox.information(
+                    self,
+                    "저장 성공",
+                    "로직이 성공적으로 저장되었습니다.",
+                    QMessageBox.Ok
+                )
                 return True
             else:
                 QMessageBox.warning(

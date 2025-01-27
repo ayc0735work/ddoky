@@ -3,7 +3,6 @@ import os
 from pathlib import Path
 import uuid
 from datetime import datetime
-import logging
 from BE.log.base_log_manager import BaseLogManager
 
 class LogicsDataSettingFilesManager:

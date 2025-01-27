@@ -282,25 +282,25 @@ class LogicDetailDataRepositoryAndService(QObject):
             
             # 3. UUID 설정 및 검증
             self.current_logic_id = logic_info.get('id')
-            if not self.current_logic_id:  # ID가 없는 경우 이름으로 찾기
-                logics = self.logics_data_settingfiles_manager.load_logics()
-                for logic_id, saved_logic in logics.items():
-                    if saved_logic.get('name') == logic_info.get('name'):
-                        self.current_logic_id = logic_id
-                        break
-                        
-            if not self.current_logic_id:
+            self.base_log_manager.log(
+                message=f"로직 정보 (logic_info): {logic_info} \n
+                  받아온 현재 로직 ID: {self.current_logic_id}",
+                level="DEBUG",
+                file_name="logic_detail_data_repository_and_service",
+                method_name="load_logic_detail_items"
+            )
+            if not self.current_logic_id:  # ID가 없는 경우 새 로직으로 처리
                 self.base_log_manager.log(
-                    message=f"로직 '{logic_info.get('name')}'의 ID를 찾을 수 없습니다",
-                    level="WARNING",
+                    message=f"{logic_info.get('name')} 로직의 ID를 찾을 수 없습니다. 새 로직으로 처리합니다",
+                    level="INFO",
                     file_name="logic_detail_data_repository_and_service",
                     method_name="load_logic_detail_items"
                 )
-                return False
             
             # 4. 현재 로직 정보 저장
             self.current_logic = logic_info.copy()
-            self.current_logic['id'] = self.current_logic_id
+            if self.current_logic_id:
+                self.current_logic['id'] = self.current_logic_id
             
             # 5. 아이템 로드 및 logic_detail_item_dp_text 설정
             items = logic_info.get('items', [])
@@ -333,8 +333,26 @@ class LogicDetailDataRepositoryAndService(QObject):
             )
             return False
             
-    def clear_current_logic_detail_item(self):
-        """현재 로직 정보를 초기화합니다."""
+    def clear_current_logic_detail_data(self):
+        """현재 로직의 모든 정보를 초기화합니다."""
+        # 로직 ID 초기화
         self.current_logic_id = None
-        self.current_logic = None
-        self.clear_logic_detail_items() 
+        
+        # 로직 기본 정보 초기화 
+        self.current_logic = {
+            'name': '',  # 로직 이름
+            'repeat_count': 1,  # 반복 횟수
+            'trigger_key': None,  # 트리거 키
+            'is_nested': True,  # 중첩로직 여부
+            'items': []  # 로직 상세 아이템
+        }
+        
+        # 로직 상세 아이템 초기화
+        self.clear_logic_detail_items()
+        
+        self.base_log_manager.log(
+            message="현재 로직의 모든 정보가 초기화되었습니다",
+            level="DEBUG", 
+            file_name="logic_detail_data_repository_and_service",
+            method_name="clear_current_logic_detail_data"
+        )
