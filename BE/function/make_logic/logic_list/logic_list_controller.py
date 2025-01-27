@@ -1,6 +1,7 @@
 from PySide6.QtCore import QObject, Signal
 from BE.settings.logics_data_settingfiles_manager import LogicsDataSettingFilesManager
 from BE.log.base_log_manager import BaseLogManager
+from .LogicDatabaseManager import LogicDatabaseManager
 import uuid
 import copy
 
@@ -35,6 +36,7 @@ class LogicListController(QObject):
         self.settings_manager = LogicsDataSettingFilesManager()
         self.saved_logics = {}  # 저장된 로직들을 관리하는 딕셔너리
         self.clipboard = None  # 복사된 로직 저장용
+        self.logic_database_manager = LogicDatabaseManager()
         self.base_log_manager = BaseLogManager.instance()
         self._connect_signals()
         self.load_saved_logics()
@@ -50,44 +52,31 @@ class LogicListController(QObject):
         - logic_delete_requested -> process_logic_delete
         - logic_copy_requested -> process_logic_copy
         - logic_paste_requested -> process_logic_paste
+        - reload_logics_requested -> load_saved_logics
         """
         self.widget.logic_move_requested.connect(self.process_logic_move)
         self.widget.logic_edit_requested.connect(self.process_logic_update)
         self.widget.logic_delete_requested.connect(self.process_logic_delete)
         self.widget.logic_copy_requested.connect(self.process_logic_copy)
         self.widget.logic_paste_requested.connect(self.process_logic_paste)
+        self.widget.reload_logics_requested.connect(self.load_saved_logics)
         
     def load_saved_logics(self):
         """저장된 로직 정보 불러오기
         
-        설정 파일에서 저장된 로직 정보를 로드하고 UI를 업데이트합니다.
-        
-        프로세스:
-        1. 설정 다시 로드
-        2. 로직 정보 가져오기
-        3. order 값 기준으로 정렬
-        4. 위젯 UI 업데이트
-        
-        Raises:
-            Exception: 로직 로드 중 오류 발생 시
+        DB에서 저장된 로직 정보를 로드하고 UI를 업데이트합니다.
         """
         try:
-            # 설정 다시 로드
-            self.settings_manager.reload_settings()
-            
-            # 로직 정보 가져오기
-            logics = self.settings_manager.settings.get('logics', {})
-            
-            # order 값으로 정렬
-            sorted_logics = sorted(logics.items(), key=lambda x: x[1].get('order', 0))
+            # DB에서 로직 정보 가져오기
+            logics = self.logic_database_manager.get_all_logics()
             
             # 위젯 업데이트
             self.widget.clear_logic_list()
-            for logic_id, logic_info in sorted_logics:
-                self.widget.add_logic_item(logic_info, logic_id)
+            for logic in logics:
+                self.widget.add_logic_item(logic, str(logic['id']))
                 
             self.base_log_manager.log(
-                message="로직 목록을 불러왔습니다",
+                message="로직 목록을 DB에서 불러왔습니다",
                 level="INFO",
                 file_name="logic_list_controller"
             )

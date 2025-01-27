@@ -28,6 +28,7 @@ class LogicListWidget(QFrame):
         logic_paste_requested: 로직 붙여넣기 요청
         logic_selected (str): 로직 선택 시 (로직 이름)
         edit_logic (dict): 로직 불러오기 (로직 정보)
+        reload_logics_requested: 로직 다시 불러오기 요청
     """
     
     # 시그널 정의
@@ -38,6 +39,7 @@ class LogicListWidget(QFrame):
     logic_paste_requested = Signal()
     logic_selected = Signal(str)  # 로직이 선택되었을 때 (로직 이름)
     edit_logic = Signal(dict)  # 로직 불러오기 시그널 (로직 정보)
+    reload_logics_requested = Signal()  # 로직 다시 불러오기 요청
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -54,8 +56,9 @@ class LogicListWidget(QFrame):
         
         구성요소:
         1. 타이틀 레이블
-        2. 로직 목록 위젯 (QListWidget)
-        3. 제어 버튼들:
+        2. 로직 다시 불러오기 버튼
+        3. 로직 목록 위젯 (QListWidget)
+        4. 제어 버튼들:
            - 위로 이동
            - 아래로 이동
            - 로직 불러오기
@@ -66,21 +69,28 @@ class LogicListWidget(QFrame):
         - 고정 크기 설정
         - 버튼 스타일 적용
         """
+        # 기본 설정
         self.setStyleSheet(FRAME_STYLE)
         self.setFixedSize(LOGIC_LIST_WIDTH, BASIC_SECTION_HEIGHT)
         
-        # 메인 레이아웃
+        # 메인 레이아웃 설정
         layout = QVBoxLayout()
         layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         layout.setContentsMargins(10, 10, 10, 10)
         layout.setSpacing(10)
         
-        # 타이틀
+        # 1. 타이틀 섹션
         title = QLabel("로직 리스트")
         title.setFont(QFont(TITLE_FONT_FAMILY, SECTION_FONT_SIZE, QFont.Weight.Bold))
         layout.addWidget(title)
         
-        # 리스트 위젯
+        # 2. 로직 다시 불러오기 버튼 섹션
+        self.reload_button = QPushButton("로직 다시 불러오기")
+        self.reload_button.setStyleSheet(BUTTON_STYLE)
+        self.reload_button.clicked.connect(self._on_reload_button_clicked)
+        layout.addWidget(self.reload_button)
+        
+        # 3. 로직 리스트 섹션
         self.logic_list = QListWidget()
         self.logic_list.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.logic_list.setStyleSheet(LIST_STYLE)
@@ -89,36 +99,45 @@ class LogicListWidget(QFrame):
         self.logic_list.itemDoubleClicked.connect(self._on_item_double_clicked)
         layout.addWidget(self.logic_list)
         
-        # 버튼 레이아웃
+        # 4. 제어 버튼 섹션
         button_layout = QHBoxLayout()
         button_layout.setContentsMargins(0, 0, 0, 0)
         button_layout.setSpacing(5)
         
-        # 버튼 생성
+        # 위로 이동 버튼
         self.move_up_btn = QPushButton("위로")
+        self.move_up_btn.setFixedWidth(40)
+        self.move_up_btn.setStyleSheet(BUTTON_STYLE)
+        self.move_up_btn.setEnabled(False)
+        self.move_up_btn.clicked.connect(self._on_move_up_clicked)
+        button_layout.addWidget(self.move_up_btn)
+        
+        # 아래로 이동 버튼
         self.move_down_btn = QPushButton("아래로")
-        self.edit_btn = QPushButton("로직 불러오기")
+        self.move_down_btn.setFixedWidth(50)
+        self.move_down_btn.setStyleSheet(BUTTON_STYLE)
+        self.move_down_btn.setEnabled(False)
+        self.move_down_btn.clicked.connect(self._on_move_down_clicked)
+        button_layout.addWidget(self.move_down_btn)
+        
+        # 로직 불러오기 버튼
+        self.edit_btn = QPushButton("선택한 로직 불러오기")
+        self.edit_btn.setFixedWidth(130)
+        self.edit_btn.setStyleSheet(BUTTON_STYLE)
+        self.edit_btn.setEnabled(False)
+        self.edit_btn.clicked.connect(self._on_edit_clicked)
+        button_layout.addWidget(self.edit_btn)
+        
+        # 로직 삭제 버튼
         self.delete_btn = QPushButton("로직 삭제")
-        
-        # 버튼 설정
-        self.move_up_btn.setFixedWidth(LOGIC_BUTTON_WIDTH - 30)
-        self.move_down_btn.setFixedWidth(LOGIC_BUTTON_WIDTH - 30)
-        self.edit_btn.setFixedWidth(LOGIC_BUTTON_WIDTH + 30)
         self.delete_btn.setFixedWidth(LOGIC_BUTTON_WIDTH)
-        
-        for btn in [self.move_up_btn, self.move_down_btn, self.edit_btn, self.delete_btn]:
-            btn.setStyleSheet(BUTTON_STYLE)
-            btn.setEnabled(False)
-            button_layout.addWidget(btn)
+        self.delete_btn.setStyleSheet(BUTTON_STYLE)
+        self.delete_btn.setEnabled(False)
+        self.delete_btn.clicked.connect(self._on_delete_clicked)
+        button_layout.addWidget(self.delete_btn)
         
         layout.addLayout(button_layout)
         self.setLayout(layout)
-        
-        # 버튼 시그널 연결
-        self.move_up_btn.clicked.connect(self._on_move_up_clicked)
-        self.move_down_btn.clicked.connect(self._on_move_down_clicked)
-        self.edit_btn.clicked.connect(self._on_edit_clicked)
-        self.delete_btn.clicked.connect(self._on_delete_clicked)
         
     def _on_selection_changed(self):
         """선택 상태 변경 처리
@@ -259,6 +278,10 @@ class LogicListWidget(QFrame):
                 logic_id = item.data(Qt.UserRole)
                 self.logic_delete_requested.emit(logic_id)
                 
+    def _on_reload_button_clicked(self):
+        """로직 다시 불러오기 버튼 클릭 시 호출되는 메서드"""
+        self.reload_logics_requested.emit()
+        
     def eventFilter(self, obj, event):
         """이벤트 필터
         
