@@ -23,9 +23,47 @@ class LogicsDataSettingFilesManager:
             try:
                 with open(self.settings_file, 'r', encoding='utf-8') as f:
                     settings = json.load(f)
-                    # UUID 마이그레이션 수행
-                    return self._migrate_to_uuid(settings)
-            except json.JSONDecodeError:
+                    
+                # 로직 데이터에서 이스케이프된 문자열 처리
+                if 'logics' in settings:
+                    for logic_id, logic in settings['logics'].items():
+                        if 'trigger_key' in logic and logic['trigger_key']:
+                            trigger_key = logic['trigger_key']
+                            if 'key_code' in trigger_key and isinstance(trigger_key['key_code'], str):
+                                try:
+                                    # 이스케이프된 유니코드 문자열을 실제 한글로 변환
+                                    key_code = trigger_key['key_code']
+                                    if '\\u' in key_code:
+                                        decoded_key_code = bytes(key_code, 'utf-8').decode('unicode-escape')
+                                        trigger_key['key_code'] = decoded_key_code
+                                except Exception as e:
+                                    self.base_log_manager.log(
+                                        message=f"key_code 디코딩 중 오류 발생: {str(e)}",
+                                        level="ERROR",
+                                        file_name="logics_data_settingfiles_manager",
+                                        method_name="_load_settings"
+                                    )
+                    
+                # UUID 마이그레이션 수행
+                return self._migrate_to_uuid(settings)
+                
+            except json.JSONDecodeError as e:
+                self.base_log_manager.log(
+                    message=f"JSON 디코딩 오류: {str(e)}",
+                    level="ERROR",
+                    file_name="logics_data_settingfiles_manager",
+                    method_name="_load_settings",
+                    print_to_terminal=True
+                )
+                return self._get_default_settings()
+            except Exception as e:
+                self.base_log_manager.log(
+                    message=f"설정 로드 중 오류 발생: {str(e)}",
+                    level="ERROR",
+                    file_name="logics_data_settingfiles_manager",
+                    method_name="_load_settings",
+                    print_to_terminal=True
+                )
                 return self._get_default_settings()
         return self._get_default_settings()
 
@@ -67,13 +105,20 @@ class LogicsDataSettingFilesManager:
                             }
                         ordered_items.append(ordered_item)
 
+                    # 트리거 키 정보 정렬
+                    trigger_key = logic_data.get('trigger_key', {})
+                    if trigger_key:
+                        ordered_trigger_key = self._create_ordered_trigger_key(trigger_key)
+                    else:
+                        ordered_trigger_key = {}
+
                     # 필드 순서 정렬
                     ordered_logic = {
                         'order': logic_data.get('order', 0),
                         'name': logic_data.get('name', ''),
                         'created_at': logic_data.get('created_at', ''),
                         'updated_at': logic_data.get('updated_at', ''),
-                        'trigger_key': logic_data.get('trigger_key', {}),
+                        'trigger_key': ordered_trigger_key,
                         'repeat_count': logic_data.get('repeat_count', 1),
                         'isNestedLogicCheckboxSelected': logic_data.get('isNestedLogicCheckboxSelected', False),
                         'items': ordered_items
@@ -83,7 +128,7 @@ class LogicsDataSettingFilesManager:
 
             # 설정 파일 저장
             with open(self.settings_file, 'w', encoding='utf-8') as f:
-                json.dump(settings, f, ensure_ascii=False, indent=4)
+                json.dump(settings, f, ensure_ascii=False, indent=4, separators=(',', ': '))
                 f.flush()
                 os.fsync(f.fileno())
 
@@ -161,6 +206,26 @@ class LogicsDataSettingFilesManager:
                         method_name="_migrate_to_uuid"
                     )
                     continue
+                
+                # 트리거 키 정보가 있는 경우 key_code 처리
+                if 'trigger_key' in logic and logic['trigger_key']:
+                    trigger_key = logic['trigger_key']
+                    if 'key_code' in trigger_key:
+                        # 이스케이프된 문자열을 디코딩
+                        try:
+                            key_code = trigger_key['key_code']
+                            if isinstance(key_code, str) and '\\u' in key_code:
+                                # 이스케이프된 유니코드 문자열을 실제 한글로 변환
+                                decoded_key_code = key_code.encode().decode('unicode-escape')
+                                trigger_key['key_code'] = decoded_key_code
+                        except Exception as e:
+                            self.base_log_manager.log(
+                                message=f"key_code 디코딩 중 오류 발생: {str(e)}",
+                                level="ERROR",
+                                file_name="logics_data_settingfiles_manager",
+                                method_name="_migrate_to_uuid"
+                            )
+
                 # UUID 형식 검증
                 try:
                     uuid.UUID(logic_id)
@@ -237,11 +302,11 @@ class LogicsDataSettingFilesManager:
     def _create_ordered_trigger_key(self, trigger_key):
         """트리거 키의 필드를 정해진 순서로 정렬합니다."""
         return {
-            'logic_detail_item_dp_text': trigger_key.get('logic_detail_item_dp_text', ''),
+            'is_system_key': trigger_key.get('is_system_key', False),
             'key_code': trigger_key.get('key_code', ''),
-            'scan_code': trigger_key.get('scan_code', 0),
-            'virtual_key': trigger_key.get('virtual_key', 0),
             'modifiers_key_flag': trigger_key.get('modifiers_key_flag', 0),
+            'scan_code': trigger_key.get('scan_code', 0),
+            'virtual_key': trigger_key.get('virtual_key', 0)
         }
 
     def _create_ordered_mouse_input_item(self, item):

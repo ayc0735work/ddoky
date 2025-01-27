@@ -1,5 +1,6 @@
 from BE.database.connection import DatabaseConnection
 from BE.log.base_log_manager import BaseLogManager
+import json
 
 class Logic_Database_Manager:
     def __init__(self):
@@ -112,7 +113,7 @@ class Logic_Database_Manager:
                 'updated_at': row[4],
                 'repeat_count': row[5],
                 'isNestedLogicCheckboxSelected': bool(row[6]),
-                'trigger_key': row[7],  # JSON 문자열로 저장된 트리거 키 정보
+                'trigger_key': json.loads(row[7]) if row[7] else None,  # JSON 문자열을 파싱하여 디코딩
                 'items': []
             }
             
@@ -143,3 +144,49 @@ class Logic_Database_Manager:
                 print_to_terminal=True
             )
             return None 
+
+    def save_logic_detail(self, logic_data):
+        try:
+            # trigger_key를 JSON으로 직렬화
+            trigger_key_json = json.dumps(logic_data.get('trigger_key'), ensure_ascii=False)
+            
+            query = """
+                INSERT INTO logic_data (
+                    logic_name, logic_order, created_at, updated_at,
+                    repeat_count, isNestedLogicCheckboxSelected, trigger_key
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)
+            """
+            
+            connection = self.db.get_connection()
+            cursor = connection.cursor()
+            cursor.execute(
+                query,
+                (
+                    logic_data.get('logic_name'),
+                    logic_data.get('logic_order'),
+                    logic_data.get('created_at'),
+                    logic_data.get('updated_at'),
+                    logic_data.get('repeat_count', 1),
+                    logic_data.get('isNestedLogicCheckboxSelected', False),
+                    trigger_key_json
+                )
+            )
+            connection.commit()
+            
+            self.base_log_manager.log(
+                message=f"로직 '{logic_data['logic_name']}'의 상세 정보를 저장했습니다.",
+                level="INFO",
+                file_name="Logic_Database_Manager",
+                method_name="save_logic_detail"
+            )
+            return True
+            
+        except Exception as e:
+            self.base_log_manager.log(
+                message=f"로직 상세 정보 저장 중 오류 발생: {str(e)}",
+                level="ERROR",
+                file_name="Logic_Database_Manager",
+                method_name="save_logic_detail",
+                print_to_terminal=True
+            )
+            return False 
