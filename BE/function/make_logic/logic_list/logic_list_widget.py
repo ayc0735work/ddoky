@@ -21,7 +21,8 @@ class LogicListWidget(QFrame):
     로직 목록을 표시하고 사용자 상호작용을 처리하는 UI 컴포넌트입니다.
     
     Signals:
-        logic_move_requested (str, int): 로직 이동 요청 (logic_id, new_position)
+        logic_up_move_requested (str): 위로 이동 요청 (logic_id)
+        logic_down_move_requested (str): 아래로 이동 요청 (logic_id)
         logic_edit_requested (str, dict): 로직 수정 요청 (logic_id, new_data)
         logic_delete_requested (str): 로직 삭제 요청 (logic_id)
         logic_copy_requested (str): 로직 복사 요청 (logic_id)
@@ -32,7 +33,8 @@ class LogicListWidget(QFrame):
     """
     
     # 시그널 정의
-    logic_move_requested = Signal(str, int)  # logic_id, new_position
+    logic_up_move_requested = Signal(str)  # 위로 이동 시그널 (logic_id)
+    logic_down_move_requested = Signal(str)  # 아래로 이동 시그널 (logic_id)
     logic_edit_requested = Signal(str, dict)  # logic_id, new_data
     logic_delete_requested = Signal(str)  # logic_id
     logic_copy_requested = Signal(str)  # logic_id
@@ -174,37 +176,25 @@ class LogicListWidget(QFrame):
         """위로 이동 버튼 처리
         
         선택된 아이템을 한 칸 위로 이동합니다.
-        
-        프로세스:
-        1. 현재 선택된 아이템 확인
-        2. 이동 가능 여부 확인 (첫 번째 아이템이 아닌지)
-        3. 이동 요청 시그널 발생 (logic_move_requested)
         """
         current_item = self.logic_list.currentItem()
         if not current_item:
             return
             
-        current_row = self.logic_list.currentRow()
         logic_id = current_item.data(Qt.UserRole)
-        self.logic_move_requested.emit(logic_id, current_row - 1)
+        self.logic_up_move_requested.emit(logic_id)
         
     def _on_move_down_clicked(self):
         """아래로 이동 버튼 처리
         
         선택된 아이템을 한 칸 아래로 이동합니다.
-        
-        프로세스:
-        1. 현재 선택된 아이템 확인
-        2. 이동 가능 여부 확인 (마지막 아이템이 아닌지)
-        3. 이동 요청 시그널 발생 (logic_move_requested)
         """
         current_item = self.logic_list.currentItem()
         if not current_item:
             return
             
-        current_row = self.logic_list.currentRow()
         logic_id = current_item.data(Qt.UserRole)
-        self.logic_move_requested.emit(logic_id, current_row + 1)
+        self.logic_down_move_requested.emit(logic_id)
         
     def _on_item_double_clicked(self, item):
         """아이템 더블클릭 처리

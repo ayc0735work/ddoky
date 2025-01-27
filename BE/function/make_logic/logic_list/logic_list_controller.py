@@ -42,14 +42,16 @@ class LogicListController(QObject):
         위젯에서 발생하는 다양한 이벤트 시그널을 해당하는 처리 메서드에 연결합니다.
         
         연결되는 시그널:
-        - logic_move_requested -> process_logic_move
+        - logic_up_move_requested -> process_logic_move_up
+        - logic_down_move_requested -> process_logic_move_down
         - logic_edit_requested -> process_logic_update
         - logic_delete_requested -> process_logic_delete
         - logic_copy_requested -> process_logic_copy
         - logic_paste_requested -> process_logic_paste
         - reload_logics_requested -> load_saved_logics
         """
-        self.widget.logic_move_requested.connect(self.process_logic_move)
+        self.widget.logic_up_move_requested.connect(self.process_logic_move_up)
+        self.widget.logic_down_move_requested.connect(self.process_logic_move_down)
         self.widget.logic_edit_requested.connect(self.process_logic_update)
         self.widget.logic_delete_requested.connect(self.process_logic_delete)
         self.widget.logic_copy_requested.connect(self.process_logic_copy)
@@ -212,32 +214,23 @@ class LogicListController(QObject):
                 print_to_terminal=True
             )
             
-    def process_logic_move(self, logic_id, new_position):
-        """로직 이동 처리
-        
-        로직의 순서를 변경합니다.
+    def process_logic_move_up(self, logic_id):
+        """로직을 위로 이동
         
         Args:
             logic_id (str): 이동할 로직의 ID
-            new_position (int): 새로운 위치
-            
-        프로세스:
-        1. DB에서 로직 순서 업데이트
-        2. 전체 목록 새로고침
         """
         try:
-            # 1. DB에서 로직 순서 업데이트
-            if not self.logic_database_manager.update_logic_order(logic_id, new_position):
+            if not self.logic_database_manager.logic_order_minus_one_change(logic_id):
                 raise Exception("DB에서 로직 순서 업데이트 실패")
             
-            # 2. 전체 목록 새로고침
             self.load_saved_logics()
             
             self.base_log_manager.log(
-                message=f"로직 순서가 변경되었습니다 (ID: {logic_id}, 새 위치: {new_position})",
+                message=f"로직을 위로 이동했습니다 (ID: {logic_id})",
                 level="INFO",
                 file_name="logic_list_controller", 
-                method_name="process_logic_move"
+                method_name="process_logic_move_up"
             )
                 
         except Exception as e:
@@ -245,7 +238,35 @@ class LogicListController(QObject):
                 message=f"로직 이동 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_list_controller", 
-                method_name="process_logic_move", 
+                method_name="process_logic_move_up", 
+                print_to_terminal=True
+            )
+            
+    def process_logic_move_down(self, logic_id):
+        """로직을 아래로 이동
+        
+        Args:
+            logic_id (str): 이동할 로직의 ID
+        """
+        try:
+            if not self.logic_database_manager.logic_order_plus_one_change(logic_id):
+                raise Exception("DB에서 로직 순서 업데이트 실패")
+            
+            self.load_saved_logics()
+            
+            self.base_log_manager.log(
+                message=f"로직을 아래로 이동했습니다 (ID: {logic_id})",
+                level="INFO",
+                file_name="logic_list_controller", 
+                method_name="process_logic_move_down"
+            )
+                
+        except Exception as e:
+            self.base_log_manager.log(
+                message=f"로직 이동 중 오류 발생: {str(e)}",
+                level="ERROR",
+                file_name="logic_list_controller", 
+                method_name="process_logic_move_down", 
                 print_to_terminal=True
             )
             
