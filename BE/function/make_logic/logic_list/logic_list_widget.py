@@ -303,7 +303,16 @@ class LogicListWidget(QFrame):
         Returns:
             int: 현재 스크롤바의 위치
         """
-        return self.logic_list.verticalScrollBar().value()
+        current_scroll = self.logic_list.verticalScrollBar().value()
+        
+        self.base_log_manager.log(
+            message=f"현재 스크롤 위치 기억: {current_scroll}",
+            level="DEBUG",
+            file_name="logic_list_widget",
+            method_name="get_current_scroll_position"
+        )
+        
+        return current_scroll
         
     def set_scroll_position(self, position):
         """스크롤 위치를 설정합니다.
@@ -311,36 +320,24 @@ class LogicListWidget(QFrame):
         Args:
             position (int): 설정할 스크롤바 위치
         """
-        # 스크롤바가 있고 유효한 위치값인 경우에만 설정
-        scrollbar = self.logic_list.verticalScrollBar()
-        if scrollbar:
-            # 스크롤바의 최대값과 position을 비교하여 유효한 값으로 조정
-            max_scroll = scrollbar.maximum()
-            adjusted_position = min(position, max_scroll)
-            
-            scrollbar.setValue(adjusted_position)
-            
-            self.base_log_manager.log(
-                message=f"스크롤 위치 설정 - 요청: {position}, 조정: {adjusted_position}, 최대: {max_scroll}",
-                level="DEBUG",
-                file_name="logic_list_widget",
-                method_name="set_scroll_position"
-            )
+        def _apply_scroll_position():
+            scrollbar = self.logic_list.verticalScrollBar()
+            if scrollbar:
+                # 스크롤바의 최대값과 position을 비교하여 유효한 값으로 조정
+                max_scroll = scrollbar.maximum()
+                adjusted_position = min(position, max_scroll)
+                
+                scrollbar.setValue(adjusted_position)
 
-        self.base_log_manager.log( 
-            message=f"스크롤 위치가 설정되었습니다. : {position}",
-            level="DEBUG",
-            file_name="logic_list_widget",
-            method_name="set_scroll_position"
-        )
+                self.base_log_manager.log(
+                    message=f"스크롤 위치 설정 - 요청: {position}, 조정: {adjusted_position}, 최대: {max_scroll}",
+                    level="DEBUG",
+                    file_name="logic_list_widget",
+                    method_name="set_scroll_position"
+                )
 
-        end_scroll_position = self.get_current_scroll_position()
-        self.base_log_manager.log( 
-            message=f"최종 스크롤 위치 : {end_scroll_position}",
-            level="DEBUG",
-            file_name="logic_list_widget",
-            method_name="set_scroll_position"
-        )
+        # QTimer를 사용하여 이벤트 루프의 다음 사이클에서 스크롤 위치를 설정
+        QTimer.singleShot(0, _apply_scroll_position)
             
     def clear_logic_list(self):
         """로직 목록 초기화
@@ -349,23 +346,7 @@ class LogicListWidget(QFrame):
         """
         self.logic_list.clear()
         
-    def refresh_logic_list(self, scroll_position=None):
-        """로직 목록을 새로고침하고 스크롤 위치를 복원합니다.
-        
-        Args:
-            scroll_position (int, optional): 복원할 스크롤 위치
-        """
-        if scroll_position is not None:
-            # 목록이 업데이트된 후 스크롤 위치 복원
-            QTimer.singleShot(0, lambda: self.set_scroll_position(scroll_position))
-
-            self.base_log_manager.log( 
-                message=f"스크롤 위치가 복원되었습니다. : {scroll_position}",
-                level="INFO",
-                file_name="logic_list_widget",
-                method_name="refresh_logic_list"
-            )
-            
+           
     def add_logic_item(self, logic_info, logic_id):
         """로직 아이템 추가
         

@@ -34,7 +34,7 @@ class LogicListController(QObject):
         self.logic_database_manager = Logic_Database_Manager()
         self.base_log_manager = BaseLogManager.instance()
         self._connect_signals()
-        self.load_saved_logics()
+        self.load_saved_logics_list()
         
     def _connect_signals(self):
         """시그널 연결 설정
@@ -48,7 +48,7 @@ class LogicListController(QObject):
         - logic_delete_requested -> process_logic_delete
         - logic_copy_requested -> process_logic_copy
         - logic_paste_requested -> process_logic_paste
-        - reload_logics_requested -> load_saved_logics
+        - reload_logics_requested -> load_saved_logics_list
         - request_logic_detail -> _handle_logic_detail_request
         """
         self.logic_list_widget.logic_up_move_requested.connect(self.process_logic_move_up)
@@ -57,25 +57,15 @@ class LogicListController(QObject):
         self.logic_list_widget.logic_delete_requested.connect(self.process_logic_delete)
         self.logic_list_widget.logic_copy_requested.connect(self.process_logic_copy)
         self.logic_list_widget.logic_paste_requested.connect(self.process_logic_paste)
-        self.logic_list_widget.reload_logics_requested.connect(self.load_saved_logics)
+        self.logic_list_widget.reload_logics_requested.connect(self.load_saved_logics_list)
         self.logic_list_widget.request_logic_detail.connect(self._handle_logic_detail_request)
         
-    def load_saved_logics(self):
-        """저장된 로직 정보 불러오기
+    def load_saved_logics_list(self):
+        """저장된 로직 리스트를 불러오기
         
-        DB에서 로직 기본 정보를 로드하고 UI를 업데이트합니다.
-        스크롤 위치를 보존합니다.
+        DB에서 로직 리스트를 로드하고 UI를 업데이트합니다.
         """
         try:
-            # 현재 스크롤 위치 저장
-            current_scroll = self.logic_list_widget.get_current_scroll_position()
-            self.base_log_manager.log(
-                message=f"현재 스크롤 위치를 저장했습니다. {current_scroll}",
-                level="DEBUG",
-                file_name="logic_list_controller",
-                method_name="load_saved_logics"
-            )
-            
             # DB에서 로직 정보 가져오기
             logics = self.logic_database_manager.get_all_logics_list()
             
@@ -85,29 +75,20 @@ class LogicListController(QObject):
                 self.logic_list_widget.add_logic_item({
                     'logic_name': logic['logic_name']
                 }, str(logic['id']))
-                
-            # 스크롤 위치 복원
-            self.logic_list_widget.refresh_logic_list(current_scroll)
-            self.base_log_manager.log(
-                message=f"현재 스크롤 위치를 저장했습니다. {current_scroll}",
-                level="DEBUG",
-                file_name="logic_list_controller",
-                method_name="load_saved_logics"
-            )
             
             self.base_log_manager.log(
-                message="로직 목록을 DB에서 불러왔습니다",
+                message="로직 목록을 새로 업데이트 했습니다.",
                 level="INFO",
                 file_name="logic_list_controller",
-                method_name="load_saved_logics"
+                method_name="load_saved_logics_list"
             )
-            
+
         except Exception as e:
             self.base_log_manager.log(
                 message=f"로직 목록 불러오기 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="logic_list_controller",
-                method_name="load_saved_logics"
+                method_name="load_saved_logics_list"
             )
             
     def process_logic_save(self, logic_info):
@@ -131,7 +112,7 @@ class LogicListController(QObject):
                 raise Exception("DB에 로직 저장 실패")
             
             # UI 업데이트
-            self.load_saved_logics()  # 전체 목록 새로고침
+            self.load_saved_logics_list()  # 전체 목록 새로고침
             
             self.base_log_manager.log(
                 message=f"로직 '{logic_info.get('logic_name', '')}'이(가) 저장되었습니다",
@@ -171,7 +152,7 @@ class LogicListController(QObject):
                 raise Exception("DB에서 로직 업데이트 실패")
             
             # 2. UI 업데이트
-            self.load_saved_logics()  # 전체 목록 새로고침
+            self.load_saved_logics_list()  # 전체 목록 새로고침
             
             self.base_log_manager.log(
                 message=f"로직 '{new_info.get('logic_name', '')}'이(가) 업데이트되었습니다",
@@ -206,29 +187,15 @@ class LogicListController(QObject):
             # 현재 스크롤 위치 저장
             current_scroll = self.logic_list_widget.get_current_scroll_position()
 
-            self.base_log_manager.log(
-                message=f"현재 스크롤 위치를 저장했습니다. {current_scroll}",
-                level="DEBUG",
-                file_name="logic_list_controller",
-                method_name="process_logic_delete"
-            )
-
             # 1. 데이터베이스에서 삭제
             if not self.logic_database_manager.delete_logic(logic_id):
                 raise Exception("데이터베이스에서 로직 삭제 실패")
 
             # 2. 전체 로직 목록 새로고침
-            self.load_saved_logics()
-
-            self.base_log_manager.log(
-                message="로직 목록을 새로고침했습니다",
-                level="INFO",
-                file_name="logic_list_controller", 
-                method_name="process_logic_delete"
-            )
+            self.load_saved_logics_list()
 
             # 스크롤 위치 복원
-            self.logic_list_widget.refresh_logic_list(current_scroll)
+            self.logic_list_widget.set_scroll_position(current_scroll)
 
         except Exception as e:
             self.base_log_manager.log(
@@ -245,18 +212,15 @@ class LogicListController(QObject):
         Args:
             logic_id (str): 이동할 로직의 ID
         """
+
+        # 현재 스크롤 위치 저장
+        current_scroll = self.logic_list_widget.get_current_scroll_position()
+
         try:
             if not self.logic_database_manager.logic_order_minus_one_change(logic_id):
                 raise Exception("DB에서 로직 순서 업데이트 실패")
             
-            self.load_saved_logics()
-            
-            self.base_log_manager.log(
-                message=f"로직을 위로 이동했습니다 (ID: {logic_id})",
-                level="INFO",
-                file_name="logic_list_controller", 
-                method_name="process_logic_move_up"
-            )
+            self.load_saved_logics_list()
                 
         except Exception as e:
             self.base_log_manager.log(
@@ -266,6 +230,9 @@ class LogicListController(QObject):
                 method_name="process_logic_move_up", 
                 print_to_terminal=True
             )
+
+        # 스크롤 위치 복원
+        self.logic_list_widget.set_scroll_position(current_scroll)
             
     def process_logic_move_down(self, logic_id):
         """로직을 아래로 이동
@@ -273,11 +240,13 @@ class LogicListController(QObject):
         Args:
             logic_id (str): 이동할 로직의 ID
         """
+
+        # 현재 스크롤 위치 저장
+        current_scroll = self.logic_list_widget.get_current_scroll_position()
+
         try:
             if not self.logic_database_manager.logic_order_plus_one_change(logic_id):
                 raise Exception("DB에서 로직 순서 업데이트 실패")
-            
-            self.load_saved_logics()
             
             self.base_log_manager.log(
                 message=f"로직을 아래로 이동했습니다 (ID: {logic_id})",
@@ -285,6 +254,8 @@ class LogicListController(QObject):
                 file_name="logic_list_controller", 
                 method_name="process_logic_move_down"
             )
+
+            self.load_saved_logics_list()
                 
         except Exception as e:
             self.base_log_manager.log(
@@ -294,6 +265,9 @@ class LogicListController(QObject):
                 method_name="process_logic_move_down", 
                 print_to_terminal=True
             )
+
+        # 스크롤 위치 복원
+        self.logic_list_widget.set_scroll_position(current_scroll)
             
     def process_logic_copy(self, logic_id):
         """로직 복사 처리

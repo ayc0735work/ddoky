@@ -36,14 +36,14 @@ class Logic_Database_Manager:
             
             if logics:  # 데이터를 성공적으로 가져왔을 때만 로그 출력
                 self.base_log_manager.log(
-                    message=f"{len(logics)}개의 로직을 불러왔습니다.",
+                    message=f"DB에서 {len(logics)}개의 로직을 불러왔습니다.",
                     level="INFO",
                     file_name="Logic_Database_Manager",
                     method_name="get_all_logics_list"
                 )
             else:
                 self.base_log_manager.log(
-                    message="로직을 불러오지 못했습니다.",
+                    message="DB에서 로직을 불러오지 못했습니다.",
                     level="ERROR",
                     file_name="Logic_Database_Manager",
                     method_name="get_all_logics_list",
@@ -53,7 +53,7 @@ class Logic_Database_Manager:
             
         except Exception as e:
             self.base_log_manager.log(
-                message=f"로직 데이터 조회 중 오류 발생: {str(e)}",
+                message=f"DB에서 로직 데이터 조회 중 오류 발생: {str(e)}",
                 level="ERROR",
                 file_name="Logic_Database_Manager",
                 method_name="get_all_logics_list",
@@ -239,11 +239,12 @@ class Logic_Database_Manager:
                 connection.commit()
                 
                 self.base_log_manager.log(
-                    message=f"로직 '{logic_name}'(ID: {logic_id})이(가) 삭제되었습니다.",
+                    message=f"ID가 {logic_id}인 로직 '{logic_name}'이(가) 삭제되었습니다.",
                     level="INFO",
                     file_name="Logic_Database_Manager",
                     method_name="delete_logic"
                 )
+                
                 return True
                 
             except Exception as e:
