@@ -13,7 +13,7 @@ class DatabaseConnection:
         return cls._instance
     
     def __init__(self):
-        self.db_path = Path("settings/setting files/logic_database.db")
+        self.db_path = Path("BE/settings/setting files/logic_database.db")
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self.connection: Optional[sqlite3.Connection] = None
         

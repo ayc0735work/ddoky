@@ -12,7 +12,7 @@ class JsonToDbMigration:
     
     def __init__(self):
         self.db = DatabaseConnection.get_instance()
-        self.json_file_path = Path("settings/setting files/logics_data_settingfiles_manager.json")
+        self.json_file_path = Path("BE") / "settings" / "setting files" / "logics_data_settingfiles_manager.json"
         
     def should_migrate(self) -> bool:
         """마이그레이션이 필요한지 확인"""

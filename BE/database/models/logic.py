@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional
+from .logic_detail_item import LogicDetailItem
 
 @dataclass
 class Logic:
@@ -13,7 +14,7 @@ class Logic:
     trigger_key: Optional[str] = None
     repeat_count: int = 1
     logic_order: int = 0  # 로직 순서
-    items: List['LogicDetailItem'] = None
+    items: List[LogicDetailItem] = None
     
     def __post_init__(self):
         if self.created_at is None:
@@ -40,8 +41,6 @@ class Logic:
     @classmethod
     def from_dict(cls, data: dict) -> 'Logic':
         """dictionary에서 Logic 객체 생성"""
-        from .logic_item import LogicDetailItem  # 순환 참조 방지를 위해 지역 import
-        
         items_data = data.pop('items', [])
         created_at = datetime.fromisoformat(data['created_at']) if data.get('created_at') else None
         updated_at = datetime.fromisoformat(data['updated_at']) if data.get('updated_at') else None
