@@ -388,7 +388,7 @@ class LogicListController(QObject):
                     new_logic['logic_order'] = target_order + idx
                     
                     # 로직 저장
-                    self.logic_database_manager.save_logic_detail_data(new_logic)
+                    self.logic_database_manager.save_logic_detail_data(new_logic, start_transaction=False)
                     
                     # 마지막 로직의 ID를 저장
                     if idx == len(self.clipboard['items']):

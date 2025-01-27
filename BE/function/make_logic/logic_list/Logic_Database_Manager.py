@@ -139,7 +139,17 @@ class Logic_Database_Manager:
             )
             return None 
 
-    def save_logic_detail_data(self, logic_data):
+    def save_logic_detail_data(self, logic_data, start_transaction=True):
+        """로직 상세 정보를 저장합니다.
+        
+        Args:
+            logic_data (dict): 저장할 로직 데이터
+            start_transaction (bool): 트랜잭션을 시작할지 여부. 기본값은 True
+            
+        Returns:
+            int: 새로 생성된 로직의 ID
+            None: 저장 실패 시
+        """
         try:
             # trigger_key를 JSON으로 직렬화
             trigger_key_json = json.dumps(logic_data.get('trigger_key'), ensure_ascii=False)
@@ -153,27 +163,62 @@ class Logic_Database_Manager:
             
             connection = self.db.get_connection()
             cursor = connection.cursor()
-            cursor.execute(
-                query,
-                (
-                    logic_data.get('logic_name'),
-                    logic_data.get('logic_order'),
-                    logic_data.get('created_at'),
-                    logic_data.get('updated_at'),
-                    logic_data.get('repeat_count', 1),
-                    logic_data.get('isNestedLogicCheckboxSelected', False),
-                    trigger_key_json
-                )
-            )
-            connection.commit()
             
-            self.base_log_manager.log(
-                message=f"로직 '{logic_data['logic_name']}'의 상세 정보를 저장했습니다.",
-                level="INFO",
-                file_name="Logic_Database_Manager",
-                method_name="save_logic_detail_data"
-            )
-            return True
+            # 외부에서 트랜잭션 시작 여부 확인
+            if start_transaction:
+                connection.execute("BEGIN TRANSACTION")
+            
+            try:
+                # 1. 로직 기본 정보 저장
+                cursor.execute(
+                    query,
+                    (
+                        logic_data.get('logic_name'),
+                        logic_data.get('logic_order'),
+                        logic_data.get('created_at'),
+                        logic_data.get('updated_at'),
+                        logic_data.get('repeat_count', 1),
+                        logic_data.get('isNestedLogicCheckboxSelected', False),
+                        trigger_key_json
+                    )
+                )
+                
+                # 2. 새로 생성된 로직의 ID 가져오기
+                new_logic_id = cursor.lastrowid
+                
+                # 3. 로직 상세 아이템 저장
+                items = logic_data.get('items', [])
+                for item in items:
+                    cursor.execute("""
+                        INSERT INTO logic_detail_items_data (
+                            logic_id, item_order, item_type, item_data
+                        ) VALUES (?, ?, ?, ?)
+                    """, (
+                        new_logic_id,
+                        item.get('item_order'),
+                        item.get('type'),
+                        item.get('item_data')
+                    ))
+                
+                # 트랜잭션 커밋 (외부 트랜잭션이 없을 경우에만)
+                if start_transaction:
+                    connection.commit()
+                
+                self.base_log_manager.log(
+                    message=f"로직 '{logic_data['logic_name']}'의 상세 정보를 저장했습니다.",
+                    level="INFO",
+                    file_name="Logic_Database_Manager",
+                    method_name="save_logic_detail_data"
+                )
+                
+                # 새로 생성된 로직의 ID 반환
+                return new_logic_id
+                
+            except Exception as e:
+                # 오류 발생 시 롤백 (외부 트랜잭션이 없을 경우에만)
+                if start_transaction:
+                    connection.rollback()
+                raise e
             
         except Exception as e:
             self.base_log_manager.log(
@@ -183,7 +228,7 @@ class Logic_Database_Manager:
                 method_name="save_logic_detail_data",
                 print_to_terminal=True
             )
-            return False 
+            return None
 
     def delete_logic_data(self, logic_id: int):
         """로직과 관련된 모든 데이터를 삭제합니다.
