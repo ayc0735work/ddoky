@@ -59,6 +59,7 @@ class LogicDetailWidget(QFrame):
         self.controller = controller
         # 컨트롤러의 시그널을 위젯의 UI 업데이트 메서드에 연결
         self.controller.logic_data_changed.connect(self._update_ui_from_logic_data)
+        # self.controller.clear_logic_data.connect(self._clear_ui)
 
     def _update_ui_from_logic_data(self, logic_data):
         """컨트롤러로부터 받은 로직 데이터로 UI 업데이트"""
@@ -290,14 +291,7 @@ class LogicDetailWidget(QFrame):
 
         LogicConfigurationLayout__QVBoxLayout.addLayout(LogicControlButtonsSection__QHBoxLayout)
         self.setLayout(LogicConfigurationLayout__QVBoxLayout)
-             
-        # 초기 데이터 로드 (테스트용)
-        self._load_test_data()
-        
-    def _load_test_data(self):
-        """테스트용 데이터 로드"""
-        pass  # 더미 데이터 제거
-            
+
     def _on_selection_changed(self):
         """리스트 아이템 선택이 변경되었을 때의 처리"""
         selected_items = self.LogicItemList__QListWidget.selectedItems()
@@ -788,7 +782,7 @@ class LogicDetailWidget(QFrame):
     def _create_new_logic(self):
         """새 로직 버튼 클릭 시 호출되는 메서드"""
         self.controller.clear_logic_info()  # 컨트롤러를 통해 초기화
-        self.isNestedLogicCheckboxSelected_checkbox.setChecked(True)  # 중첩로직용 체크박스를 선택된 상태로 설정
+        # self.isNestedLogicCheckboxSelected_checkbox.setChecked(True)  # 중첩로직용 체크박스를 선택된 상태로 설정
         self.base_log_manager.log(
             message="새 로직 생성을 시작합니다",
             level="INFO",
@@ -956,23 +950,6 @@ class LogicDetailWidget(QFrame):
                 file_name="logic_detail_widget",
                 method_name="_copy_item"
             )
-
-    def clear_key(self):
-        """트리거 키 정보 초기화"""
-        self.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.clear_key()
-        self.TriggerKeyInput__QLineEdit.clear()
-        self.TriggerKeyInput__QLineEdit.setPlaceholderText("트리거 키를 설정하세요")
-        self.trigger_key_info = None
-        self.base_log_manager.log(
-            message="트리거 키 정보가 초기화되었습니다",
-            level="DEBUG",
-            file_name="logic_detail_widget",
-            method_name="clear_key"
-        )
-    def clear_all(self):
-        """모든 UI 필드 초기화"""
-        self.controller.clear_logic_info()  # 컨트롤러를 통해 초기화
-        self.logic_detail_data_repository_and_service.clear_logic_detail_items()  # Repository를 통해 아이템 목록 초기화
 
     def update_logic_detail_data(self, logic_id, logic_detail):
         """로직 상세 정보로 UI 업데이트

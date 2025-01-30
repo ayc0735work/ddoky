@@ -8,6 +8,7 @@ class LogicDetailController(QObject):
     
     # 시그널 추가
     logic_data_changed = Signal(dict)  # 로직 데이터가 변경되었을 때 발생하는 시그널
+    clear_logic_data = Signal(dict)  # 로직 데이터가 초기화되었을 때 발생하는 시그널
     
     def __init__(self, widget):
         """
@@ -116,7 +117,7 @@ class LogicDetailController(QObject):
         }
         
         # UI 업데이트를 위해 시그널 발생
-        self.logic_data_changed.emit(empty_logic)
+        self.clear_logic_data.emit(empty_logic)
 
     def get_logic_detail_items(self):
         """현재 아이템 목록을 반환"""

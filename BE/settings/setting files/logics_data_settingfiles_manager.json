@@ -217,6 +217,7 @@
             "created_at": "2024-12-08T13:23:32.528363",
             "updated_at": "2025-01-07T21:47:30.242710",
             "trigger_key": {
+                "is_system_key": false,
                 "key_code": "F1",
                 "modifiers_key_flag": 0,
                 "hw_key_scan_code": 59,
@@ -510,7 +511,7 @@
             "name": "공증만 1.3초 5회 (다른거랑 같이하면 씹혀서 1초 안됨)",
             "created_at": "2024-12-08T13:23:32.528363",
             "updated_at": "2025-01-12T12:39:32.886692",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 5,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -559,7 +560,7 @@
             "name": "(0.5초) 공증 + 체력",
             "created_at": "2024-12-08T13:23:32.528363",
             "updated_at": "2025-01-13T16:56:13.492663",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -610,7 +611,7 @@
             "name": "공증 후 풀체",
             "created_at": "2024-12-08T13:23:32.528363",
             "updated_at": "2025-01-07T21:45:25.529466",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -669,7 +670,7 @@
             "name": "동동주 마시기 - 1회",
             "created_at": "2024-11-30T07:08:49.271692",
             "updated_at": "2025-01-13T16:56:57.486837",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -744,7 +745,7 @@
             "name": "동동주 마시기 - 2회",
             "created_at": "2024-11-30T07:08:49.271692",
             "updated_at": "2024-12-31T12:17:55.670134",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -845,7 +846,7 @@
             "name": "동동주 마시기 - 4회",
             "created_at": "2024-11-30T07:08:49.271692",
             "updated_at": "2024-12-29T09:33:54.487701",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -1416,7 +1417,7 @@
             "name": "((1초 -- 5회)) 체력회복",
             "created_at": "2024-11-26T06:51:44.957381",
             "updated_at": "2025-01-12T13:16:33.217333",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -1579,7 +1580,7 @@
             "name": "((1초 -- 4회)) 체력회복",
             "created_at": "2024-11-26T06:51:44.957381",
             "updated_at": "2025-01-12T13:16:39.818233",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -1716,7 +1717,7 @@
             "name": "((1초 -- 3회)) 체력회복",
             "created_at": "2024-11-26T06:51:44.957381",
             "updated_at": "2025-01-12T13:13:50.336275",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -1827,7 +1828,7 @@
             "name": "((1초 -- 1회)) 체력회복",
             "created_at": "2024-11-26T06:51:44.957381",
             "updated_at": "2025-01-13T16:56:13.519239",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -1874,7 +1875,7 @@
             "name": "탭탭 고정",
             "created_at": "2024-11-26T06:51:44.957381",
             "updated_at": "2025-01-12T13:16:23.439068",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -1989,7 +1990,7 @@
             "name": "탭탭 고정 해제",
             "created_at": "2024-11-26T06:51:44.957381",
             "updated_at": "2024-12-31T12:34:28.889422",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -2032,7 +2033,7 @@
             "name": "---------------체력---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:09:50.340247",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -2054,6 +2055,7 @@
             "created_at": "2024-11-26T10:58:29.227835",
             "updated_at": "2025-01-18T11:19:06.483719",
             "trigger_key": {
+                "is_system_key": false,
                 "key_code": "숫자패드 +",
                 "modifiers_key_flag": 0,
                 "hw_key_scan_code": 78,
@@ -2293,7 +2295,7 @@
             "name": "((0.75초)) 보호 무장 힘",
             "created_at": "2024-11-26T10:58:29.227835",
             "updated_at": "2025-01-18T11:08:00.369799",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -2849,7 +2851,7 @@
             "name": "---------------버프---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:09:59.687552",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -3816,7 +3818,7 @@
             "name": "헬파 후 신수마법",
             "created_at": "2024-12-16T20:35:45.182176",
             "updated_at": "2025-01-07T13:25:26.239822",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -4009,7 +4011,7 @@
             "name": "((3초 소모)) 디버프&신수 마법",
             "created_at": "2024-12-16T20:35:45.182176",
             "updated_at": "2025-01-10T13:27:42.668887",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 3,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -4130,7 +4132,7 @@
             "name": "★1초씩 무한★ 디버프&신수 마법",
             "created_at": "2024-12-16T20:35:45.182176",
             "updated_at": "2024-12-18T15:40:40.833221",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 9999,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -4292,7 +4294,7 @@
             "name": "ㄴ 첨사냥 중첩로직용 - 241231",
             "created_at": "2024-11-30T10:25:06.438732",
             "updated_at": "2025-01-17T06:47:54.686866",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -4927,7 +4929,7 @@
             "name": "ㄴㄴ 활력, 마비 2번씩",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-31T17:44:13.321424",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -5027,7 +5029,7 @@
             "name": "★1초씩 무한★ 첨 중독",
             "created_at": "2024-12-02T02:03:00.957188",
             "updated_at": "2025-01-03T03:52:49.256715",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 9999,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -5066,7 +5068,7 @@
             "name": "ㄴ 첨 중독 15초 반복 (복사본)",
             "created_at": "2024-12-02T02:03:00.957188",
             "updated_at": "2025-01-16T21:06:57.605011",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 15,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -5106,6 +5108,7 @@
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2025-01-06T14:14:23.831567",
             "trigger_key": {
+                "is_system_key": false,
                 "key_code": "숫자패드 3",
                 "modifiers_key_flag": 0,
                 "hw_key_scan_code": 81,
@@ -5361,7 +5364,7 @@
             "name": "◎ 1초 점 ◎ 상하좌우 - 활력",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-29T06:14:04.629671",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -5400,7 +5403,7 @@
             "name": "◎ 1초 점 ◎ 상하좌우 - 마비",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-30T15:07:09.907541",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -5439,7 +5442,7 @@
             "name": "◎ 1초 점 ◎ 상하좌우 - 저주",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-29T08:19:20.770703",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -5478,7 +5481,7 @@
             "name": "◎ 1초 점 ◎ 상하좌우 - 중독",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-29T09:55:01.564988",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -5517,7 +5520,7 @@
             "name": "◎ 1초 점 ◎ 상하 두 칸 - 저주",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2025-01-04T15:10:06.455649",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -5556,7 +5559,7 @@
             "name": "◎ 1초 점 ◎ 좌우 두 칸 - 저주",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2025-01-04T15:10:06.475193",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -5595,7 +5598,7 @@
             "name": "◎ 1초 점 ◎ 전체 돌리기 - 저주",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-23T12:26:19.156515",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -5634,7 +5637,7 @@
             "name": "◎ 1초 점 ◎ 전체 돌리기 - 중독",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-23T10:31:52.529338",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -5673,7 +5676,7 @@
             "name": "◎ 1초 점 ◎ 체력 4회",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-31T14:10:46.994516",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -5712,7 +5715,7 @@
             "name": "◎ 1초 점 ◎ 버프",
             "created_at": "2024-12-08T20:50:23.839286",
             "updated_at": "2024-12-23T10:32:47.469810",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -5751,7 +5754,7 @@
             "name": "---------------사냥---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:10:04.268329",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -5773,7 +5776,7 @@
             "created_at": "2024-12-06T16:29:20.641646",
             "updated_at": "2024-12-23T09:30:48.396391",
             "trigger_key": {
-                "logic_detail_item_dp_text": "",
+                "is_system_key": false,
                 "key_code": "오른쪽 쉬프트",
                 "modifiers_key_flag": 0,
                 "hw_key_scan_code": 54,
@@ -5914,7 +5917,7 @@
             "name": "((빠른 디버프)) 15초 - 중독",
             "created_at": "2024-12-04T00:08:13.574278",
             "updated_at": "2024-12-28T17:34:52.839896",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 4,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -5985,7 +5988,7 @@
             "name": "((빠른 디버프)) 10.5초 - 중독",
             "created_at": "2024-12-04T00:08:13.574278",
             "updated_at": "2025-01-04T08:43:18.087967",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 7,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -6130,7 +6133,7 @@
             "created_at": "2024-11-30T16:06:26.318706",
             "updated_at": "2024-12-28T16:03:52.019851",
             "trigger_key": {
-                "logic_detail_item_dp_text": "",
+                "is_system_key": false,
                 "key_code": "숫자패드 4",
                 "modifiers_key_flag": 0,
                 "hw_key_scan_code": 75,
@@ -6247,6 +6250,7 @@
             "created_at": "2024-12-04T00:08:13.574278",
             "updated_at": "2024-12-28T16:03:47.207646",
             "trigger_key": {
+                "is_system_key": false,
                 "key_code": "오른쪽 컨트롤(한영 전환)",
                 "modifiers_key_flag": 0,
                 "hw_key_scan_code": 29,
@@ -6363,7 +6367,7 @@
             "created_at": "2024-12-01T02:22:23.843289",
             "updated_at": "2024-12-28T16:04:04.146351",
             "trigger_key": {
-                "logic_detail_item_dp_text": "",
+                "is_system_key": false,
                 "key_code": "숫자패드 0",
                 "modifiers_key_flag": 0,
                 "hw_key_scan_code": 82,
@@ -6596,7 +6600,7 @@
             "name": "((빠른 디버프용)) 0.75초 전체 - 마비",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2025-01-12T13:28:33.627288",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 4,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -6691,7 +6695,7 @@
             "name": "((빠른 디버프용)) 0.75초 전체 - 저주",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2025-01-12T13:27:50.477727",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 4,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -6786,7 +6790,7 @@
             "name": "((빠른 디버프용)) 0.75초 전체 - 중독",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2025-01-12T13:28:01.858488",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 4,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -6881,7 +6885,7 @@
             "name": "((빠른 디버프용)) 0.75초 전체 - 절망",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2025-01-12T13:28:15.870716",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 4,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -6976,7 +6980,7 @@
             "name": "((빠른 디버프용)) 0.75초 전체 - 혼돈",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2025-01-12T13:28:22.859601",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 4,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -7071,7 +7075,7 @@
             "name": "((3초)) 전체 돌리기 - 마비",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-23T09:48:29.081779",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 14,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -7114,7 +7118,7 @@
             "name": "((3초)) 전체 돌리기 - 저주",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-23T09:46:22.258117",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -7157,7 +7161,7 @@
             "name": "((3초)) 전체 돌리기 - 중독",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-23T09:40:12.546231",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -7200,7 +7204,7 @@
             "name": "((3초)) 전체 돌리기 - 절망",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2025-01-03T14:36:26.801819",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -7243,7 +7247,7 @@
             "name": "((3초)) 전체 돌리기 - 혼돈",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2025-01-03T14:37:04.049438",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -7286,7 +7290,7 @@
             "name": "((3초)) 전체 중독, 첨",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2024-12-23T03:31:02.049133",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 3,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -7325,7 +7329,7 @@
             "name": "((1초 4회)) 전체 돌리기 - 마비",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2025-01-12T13:30:06.236226",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 4,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -7420,7 +7424,7 @@
             "name": "((1초 4회)) 전체 돌리기 - 저주",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2025-01-06T16:57:01.401325",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 4,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -7515,7 +7519,7 @@
             "name": "((1초 4회)) 전체 돌리기 - 중독",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2025-01-06T16:57:09.949654",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 4,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -7610,7 +7614,7 @@
             "name": "((1초 4회)) 전체 돌리기 - 절망",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2025-01-06T16:57:26.692587",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 4,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -7705,7 +7709,7 @@
             "name": "((1초 4회)) 전체 돌리기 - 혼돈",
             "created_at": "2024-12-08T20:39:14.995922",
             "updated_at": "2025-01-06T16:57:40.100321",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 4,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -7800,7 +7804,7 @@
             "name": "((상하좌우 1초)) - 활력",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2025-01-12T13:30:37.164719",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -8045,7 +8049,7 @@
             "name": "((상하좌우 1초)) - 마비",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2025-01-12T13:32:23.124880",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -8272,7 +8276,7 @@
             "name": "((상하좌우 1초)) - 저주",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-25T16:14:49.421822",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -8499,7 +8503,7 @@
             "name": "((상하좌우 1초)) - 중독",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-29T09:53:16.137061",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -8726,7 +8730,7 @@
             "name": "((상하 두 칸 1초)) - 저주",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-23T12:23:05.496381",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -8953,7 +8957,7 @@
             "name": "((좌우 두 칸 1초)) - 저주",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-23T12:23:27.531733",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -9180,7 +9184,7 @@
             "name": "((상하 두 칸 1초)) - 중독",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-23T09:51:24.706246",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -9407,7 +9411,7 @@
             "name": "((좌우 두 칸 1초)) - 중독",
             "created_at": "2024-12-09T13:56:02.913186",
             "updated_at": "2024-12-23T09:51:34.849460",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -9634,7 +9638,7 @@
             "name": "((중첩로직)) - 활력 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-28T17:47:12.053684",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -9761,7 +9765,7 @@
             "name": "((중첩로직)) - 마비 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-23T10:18:58.213722",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -9830,7 +9834,7 @@
             "name": "((중첩로직)) - 저주 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-23T10:19:06.274358",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -9899,7 +9903,7 @@
             "name": "((중첩로직)) - 중독 - 홈 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-28T16:59:02.488160",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -9968,7 +9972,7 @@
             "name": "((중첩로직)) - 마비만 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-19T12:51:28.436512",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -10011,7 +10015,7 @@
             "name": "((중첩로직)) - 저주만 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-16T13:48:07.270719",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -10054,7 +10058,7 @@
             "name": "((중첩로직)) - 중독만 클릭",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2024-12-16T14:18:03.585819",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -10097,7 +10101,7 @@
             "name": "((지정 클릭)) 활력",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2025-01-06T12:50:16.343127",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -10236,7 +10240,7 @@
             "name": "((지정 클릭)) 디버프",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2025-01-02T23:06:06.358753",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -10538,7 +10542,7 @@
             "name": "ㄴ 혼돈 반복",
             "created_at": "2024-12-07T06:09:55.766255",
             "updated_at": "2025-01-15T02:35:22.513436",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 30,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -10685,7 +10689,7 @@
             "name": "---------------디버프---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:10:07.682135",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -10707,6 +10711,7 @@
             "created_at": "2024-12-11T21:30:39.063045",
             "updated_at": "2024-12-31T07:41:28.252439",
             "trigger_key": {
+                "is_system_key": false,
                 "key_code": "F3",
                 "modifiers_key_flag": 0,
                 "hw_key_scan_code": 61,
@@ -10801,6 +10806,7 @@
             "created_at": "2024-12-12T08:29:17.016286",
             "updated_at": "2024-12-19T17:38:51.032901",
             "trigger_key": {
+                "is_system_key": false,
                 "key_code": "F4",
                 "modifiers_key_flag": 0,
                 "hw_key_scan_code": 62,
@@ -10927,6 +10933,7 @@
             "created_at": "2024-11-26T10:58:29.227835",
             "updated_at": "2024-12-16T10:19:53.360220",
             "trigger_key": {
+                "is_system_key": false,
                 "key_code": "마침표(.)",
                 "modifiers_key_flag": 0,
                 "hw_key_scan_code": 52,
@@ -11529,7 +11536,7 @@
             "name": "ㄴ→흉가 진입하면서 마비",
             "created_at": "2024-12-19T18:54:30.254977",
             "updated_at": "2025-01-18T11:22:33.074363",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 2,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -11949,7 +11956,7 @@
             "name": "ㄴ왕궁 위로 걸어가기 10초",
             "created_at": "2024-12-19T18:54:30.254977",
             "updated_at": "2025-01-16T13:18:02.793445",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -12135,7 +12142,7 @@
             "name": "왕한테 완료 보고하기",
             "created_at": "2024-12-30T23:21:52.330353",
             "updated_at": "2025-01-15T01:15:08.775060",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -12249,7 +12256,7 @@
             "name": "ㄴ 왕퀘 받고 취소 연속 20회 - 마우스 버전",
             "created_at": "2024-12-30T23:21:52.330353",
             "updated_at": "2025-01-15T15:23:56.264105",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 20,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -12296,7 +12303,7 @@
             "name": "ㄴ 왕 누르기 (탭)",
             "created_at": "2024-12-30T23:21:52.330353",
             "updated_at": "2025-01-16T20:15:05.657226",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -12393,7 +12400,7 @@
             "name": "ㄴ 왕퀘 받기 - 마우스 버전",
             "created_at": "2024-12-30T23:21:52.330353",
             "updated_at": "2025-01-17T17:05:05.280505",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -12590,7 +12597,7 @@
             "name": "ㄴ 왕퀘 취소 - 마우스 버전",
             "created_at": "2024-12-30T23:21:52.330353",
             "updated_at": "2025-01-17T17:05:20.425859",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -12787,7 +12794,7 @@
             "name": "ㄴ 탭 이동 방식 변경 (직관적 이동)",
             "created_at": "2024-12-30T23:21:52.330353",
             "updated_at": "2025-01-17T17:12:57.882244",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -12884,7 +12891,7 @@
             "name": "ㄴ 탭 이동 방식 변경 (라인 이동)",
             "created_at": "2024-12-30T23:21:52.330353",
             "updated_at": "2025-01-17T17:13:07.558237",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -12981,7 +12988,7 @@
             "name": "ㄴ 퀘스트 보기",
             "created_at": "2024-12-19T18:54:30.254977",
             "updated_at": "2025-01-12T11:23:40.979422",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -13076,7 +13083,7 @@
             "name": "ㄴ 아이템 보기",
             "created_at": "2024-12-19T18:54:30.254977",
             "updated_at": "2025-01-12T10:01:43.518906",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -13417,7 +13424,7 @@
             "name": "마력사기 반복",
             "created_at": "2024-12-17T05:32:15.270999",
             "updated_at": "2025-01-11T02:13:29.439077",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 20,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -13752,7 +13759,7 @@
             "name": "---------------편의---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2024-12-15T17:10:11.762423",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -13773,7 +13780,7 @@
             "name": "ㄴ7.5초 짧은 딜레이 반복",
             "created_at": "2024-12-19T18:54:30.254977",
             "updated_at": "2025-01-06T17:18:40.817940",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 300,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -13790,7 +13797,7 @@
             "name": "ㄴ2초 짧은 딜레이 반복",
             "created_at": "2024-12-19T18:54:30.254977",
             "updated_at": "2025-01-06T19:34:10.884350",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 80,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -13807,7 +13814,7 @@
             "name": "ㄴ1.75초 짧은 딜레이 반복",
             "created_at": "2024-12-19T18:54:30.254977",
             "updated_at": "2025-01-15T20:39:14.720052",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 70,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -13824,7 +13831,7 @@
             "name": "ㄴ1.5초 짧은 딜레이 반복",
             "created_at": "2024-12-19T18:54:30.254977",
             "updated_at": "2025-01-18T11:19:22.275523",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 60,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -13841,7 +13848,7 @@
             "name": "ㄴ1.25초 짧은 딜레이 반복",
             "created_at": "2024-12-19T18:54:30.254977",
             "updated_at": "2025-01-18T11:22:03.129833",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 50,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -13858,7 +13865,7 @@
             "name": "ㄴ1초 짧은 딜레이 반복",
             "created_at": "2024-12-19T18:54:30.254977",
             "updated_at": "2025-01-12T11:17:15.824073",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 40,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -13875,7 +13882,7 @@
             "name": "ㄴ0.75초 짧은 딜레이 반복",
             "created_at": "2024-12-19T18:54:30.254977",
             "updated_at": "2025-01-16T14:35:19.833761",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 30,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -13892,7 +13899,7 @@
             "name": "ㄴ0.5초 짧은 딜레이 반복",
             "created_at": "2024-12-19T18:54:30.254977",
             "updated_at": "2025-01-16T20:15:05.577861",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 20,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -13909,7 +13916,7 @@
             "name": "ㄴ0.25초 짧은 딜레이 반복",
             "created_at": "2024-12-19T18:54:30.254977",
             "updated_at": "2025-01-27T07:35:14.379924",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 10,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -13933,7 +13940,7 @@
             "name": "---------------지연시간---------------",
             "created_at": "2024-12-08T13:40:39.094231",
             "updated_at": "2025-01-27T07:46:25.275615",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -14188,7 +14195,7 @@
             "name": "asdfasdf'''jjlllllllll",
             "created_at": "2025-01-27T11:22:09.043528",
             "updated_at": "2025-01-27T11:22:09.049546",
-            "trigger_key": null,
+            "trigger_key": {},
             "repeat_count": 1,
             "isNestedLogicCheckboxSelected": true,
             "items": [
@@ -14231,6 +14238,57 @@
                     "hw_key_scan_code": 28,
                     "virtual_key": 13,
                     "modifiers_key_flag": 0
+                }
+            ]
+        },
+        "2d6716b4-2c9a-47fe-bc92-7f16be5f8d4a": {
+            "order": 131,
+            "name": "sdf",
+            "created_at": "2025-01-30T20:04:00.795611",
+            "updated_at": "2025-01-30T20:04:00.801615",
+            "trigger_key": {},
+            "repeat_count": 1,
+            "isNestedLogicCheckboxSelected": true,
+            "items": [
+                {
+                    "order": 1,
+                    "logic_detail_item_dp_text": "A  ((메인키)) --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "A",
+                    "hw_key_scan_code": 30,
+                    "virtual_key": 65,
+                    "modifiers_key_flag": 0
+                },
+                {
+                    "order": 2,
+                    "logic_detail_item_dp_text": "A  ((메인키)) --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "A",
+                    "hw_key_scan_code": 30,
+                    "virtual_key": 65,
+                    "modifiers_key_flag": 0
+                },
+                {
+                    "order": 3,
+                    "logic_detail_item_dp_text": "왼쪽 Shift + A  ((메인키)) --- 누르기",
+                    "action": "누르기",
+                    "type": "key_input",
+                    "key_code": "A",
+                    "hw_key_scan_code": 30,
+                    "virtual_key": 65,
+                    "modifiers_key_flag": 2
+                },
+                {
+                    "order": 4,
+                    "logic_detail_item_dp_text": "왼쪽 Shift + A  ((메인키)) --- 떼기",
+                    "action": "떼기",
+                    "type": "key_input",
+                    "key_code": "A",
+                    "hw_key_scan_code": 30,
+                    "virtual_key": 65,
+                    "modifiers_key_flag": 2
                 }
             ]
         }
