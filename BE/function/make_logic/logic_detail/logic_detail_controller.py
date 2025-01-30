@@ -1,132 +1,79 @@
-from PySide6.QtCore import Signal, QObject
-from BE.log.base_log_manager import BaseLogManager
-from PySide6.QtWidgets import QListWidgetItem
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QObject, Signal
+from BE.function.make_logic.logic_detail.logic_detail_widget import LogicDetailWidget
+from BE.function.make_logic.repository_and_service.logic_detail_data_repository_and_service import LogicDetailDataRepositoryAndService
 
 class LogicDetailController(QObject):
     """로직 상세 위젯의 동작을 제어하는 컨트롤러"""
     
-    # 시그널 추가
+    # 시그널 정의
     logic_data_changed = Signal(dict)  # 로직 데이터가 변경되었을 때 발생하는 시그널
-    clear_logic_data = Signal(dict)  # 로직 데이터가 초기화되었을 때 발생하는 시그널
     
-    def __init__(self, widget):
-        """
+    def __init__(self, widget: LogicDetailWidget, repository: LogicDetailDataRepositoryAndService):
+        """컨트롤러 초기화
+        
         Args:
             widget (LogicDetailWidget): 제어할 로직 상세 위젯
+            repository (LogicDetailDataRepositoryAndService): 데이터 처리를 위한 레포지토리
         """
         super().__init__()
         self.widget = widget
-        self.base_log_manager = BaseLogManager.instance()
+        self.repository = repository
         self.connect_signals()
         
     def connect_signals(self):
-        """위젯의 시그널을 처리하는 메서드들과 연결"""
-        self.widget.item_moved.connect(self._handle_item_moved)
-        self.widget.item_edited.connect(self._handle_item_edited)
-        self.widget.item_deleted.connect(self._handle_item_deleted)
+        """위젯의 시그널을 컨트롤러의 메서드와 연결"""
+        # 새 로직 버튼
+        self.widget.NewLogicButton__QPushButton.clicked.connect(self.handle_new_logic)
         
-    def _handle_item_moved(self):
-        """아이템 이동 처리"""
-        self.base_log_manager.log(
-            message="로직 구성 순서가 변경되었습니다",
-            level="INFO",
-            file_name="logic_detail_controller"
-        )
+        # 로직 저장 버튼
+        self.widget.LogicSaveButton__QPushButton.clicked.connect(self.handle_save_logic)
         
-    def _handle_item_edited(self, item_text):
-        """아이템 수정 처리"""
-        self.base_log_manager.log(
-            message=f"수정된 로직 구성: {item_text}",
-            level="INFO",
-            file_name="logic_detail_controller"
-        )
+        # 트리거 키 관련 버튼들
+        self.widget.EditTriggerKeyButton__QPushButton.clicked.connect(self.handle_edit_trigger_key)
+        self.widget.DeleteTriggerKeyButton__QPushButton.clicked.connect(self.handle_delete_trigger_key)
         
-    def _handle_item_deleted(self, item_text):
-        """아이템 삭제 처리"""
-        self.base_log_manager.log(
-            message=f"삭제된 로직 구성: {item_text}",
-            level="INFO",
-            file_name="logic_detail_controller"
-        )
+        # 리스트 위젯 관련
+        self.widget.LogicItemList__QListWidget.itemSelectionChanged.connect(self.handle_selection_changed)
+        self.widget.MoveUpButton__QPushButton.clicked.connect(lambda: self.handle_move_item('up'))
+        self.widget.MoveDownButton__QPushButton.clicked.connect(lambda: self.handle_move_item('down'))
+        self.widget.EditItemButton__QPushButton.clicked.connect(self.handle_edit_item)
+        self.widget.DeleteItemButton__QPushButton.clicked.connect(self.handle_delete_items)
         
-    def on_logic_selected(self, logic_name):
-        """로직이 선택되었을 때의 처리
+        # 중첩로직 체크박스
+        self.widget.isNestedLogicCheckboxSelected_checkbox.stateChanged.connect(self.handle_nested_logic_changed)
         
-        Args:
-            logic_name (str): 선택된 로직의 이름
-        """
-        self.base_log_manager.log(
-            message=f"로직 '{logic_name}'이(가) 선택되었습니다",
-            level="INFO",
-            file_name="logic_detail_controller"
-        )
-
-    def get_logic_data(self) -> dict:
-        """현재 로직 데이터를 반환합니다.
+    def handle_new_logic(self):
+        """새 로직 버튼 클릭 핸들러"""
+        pass
         
-        Returns:
-            dict: 현재 로직 데이터
-        """
-        # 위젯에서 현재 상태 가져오기
-        logic_data = {
-            'name': self.widget.LogicNameInput__QLineEdit.text(),
-            'repeat_count': self.widget.RepeatCountInput__QSpinBox.value(),
-            'isNestedLogicCheckboxSelected': self.widget.isNestedLogicCheckboxSelected_checkbox.isChecked(),
-            'trigger_key': self.widget.trigger_key_info,
-            'items': self.widget.logic_detail_data_repository_and_service.get_logic_detail_items()
-        }
+    def handle_save_logic(self):
+        """로직 저장 버튼 클릭 핸들러"""
+        pass
         
-        # 현재 로직 ID가 있다면 포함
-        if hasattr(self.widget, 'current_logic_id') and self.widget.current_logic_id:
-            logic_data['id'] = self.widget.current_logic_id
-            
-        return logic_data
-
-    def set_logic_data(self, logic_data):
-        """로직 데이터 설정"""
-        self.widget.LogicNameInput__QLineEdit.setText(logic_data.get('name', ''))
-        self.widget.RepeatCountInput__QSpinBox.setValue(logic_data.get('repeat_count', 1))
+    def handle_edit_trigger_key(self):
+        """트리거 키 편집 버튼 클릭 핸들러"""
+        pass
         
-        # 리스트 위젯 아이템 설정
-        self.widget.LogicItemList__QListWidget.clear()  # 기존 아이템 모두 제거
-        for item_data in logic_data.get('items', []):
-            list_item = QListWidgetItem(item_data.get('logic_detail_item_dp_text', ''))
-            list_item.setData(Qt.UserRole, item_data)
-            self.widget.LogicItemList__QListWidget.addItem(list_item)
+    def handle_delete_trigger_key(self):
+        """트리거 키 삭제 버튼 클릭 핸들러"""
+        pass
         
-        # 중첩로직 여부 설정
-        isNestedLogicCheckboxSelected = logic_data.get('isNestedLogicCheckboxSelected', False)
-        self.widget.isNestedLogicCheckboxSelected_checkbox.setChecked(isNestedLogicCheckboxSelected)
+    def handle_selection_changed(self):
+        """리스트 아이템 선택 변경 핸들러"""
+        pass
         
-        # 중첩로직이 아닐 경우에만 트리거 키 설정
-        if not isNestedLogicCheckboxSelected:
-            self.widget.trigger_key_info = logic_data.get('trigger_key')
-            if self.widget.trigger_key_info:
-                self.widget.TriggerEnteredKeyInfoDialog__EnteredKeyInfoDialog.set_key_info(self.widget.trigger_key_info)
-
-    def clear_logic_info(self):
-        """로직 정보를 초기화합니다."""
-        # 기본 데이터로 초기화
-        empty_logic = {
-            'name': '',
-            'repeat_count': 1,
-            'isNestedLogicCheckboxSelected': True,
-            'trigger_key': None,
-            'items': []
-        }
+    def handle_move_item(self, direction: str):
+        """아이템 이동 버튼 클릭 핸들러"""
+        pass
         
-        # UI 업데이트를 위해 시그널 발생
-        self.clear_logic_data.emit(empty_logic)
-
-    def get_logic_detail_items(self):
-        """현재 아이템 목록을 반환"""
-        items = self.widget.logic_detail_data_repository_and_service.get_logic_detail_items()
+    def handle_edit_item(self):
+        """아이템 수정 버튼 클릭 핸들러"""
+        pass
         
-        # 키 입력 아이템의 modifiers_key_flag를 정수로 변환
-        for item in items:
-            if item.get('type') == 'key' and 'modifiers_key_flag' in item:
-                if not isinstance(item['modifiers_key_flag'], int):
-                    item['modifiers_key_flag'] = item['modifiers_key_flag'].value
+    def handle_delete_items(self):
+        """아이템 삭제 버튼 클릭 핸들러"""
+        pass
         
-        return items
+    def handle_nested_logic_changed(self, state):
+        """중첩로직 체크박스 상태 변경 핸들러"""
+        pass
