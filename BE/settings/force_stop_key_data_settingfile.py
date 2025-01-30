@@ -36,7 +36,7 @@ class ForceStopKeyDataSettingFilesManager:
         return {
             "type": "key_input",
             "key_code": "ESC",
-            "scan_code": 1,
+            "hw_key_scan_code": 1,
             "virtual_key": 27,
             "modifiers_key_flag": 0
         }

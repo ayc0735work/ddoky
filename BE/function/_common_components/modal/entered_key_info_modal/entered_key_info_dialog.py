@@ -21,12 +21,12 @@ class EnteredKeyInfoDialog(QDialog):
     
     formatted_key_info_changed = Signal(dict)  # 키 입력이 변경되었을 때
     
-    def __init__(self, parent=None, show_details=True):
+    def __init__(self, parent=None, show_detail_key_infos=True):
         """EnteredKeyInfoDialog 초기화
         
         Args:
             parent (QWidget, optional): 부모 위젯
-            show_details (bool): 키 입력 상세 정보 표시 여부
+            show_detail_key_infos (bool): 키 입력 상세 정보 표시 여부
         """
         super().__init__(parent)
         self.setWindowTitle("키 입력")
@@ -48,10 +48,10 @@ class EnteredKeyInfoDialog(QDialog):
         self._result_key_info = None  # 다이얼로그 결과값 저장
         self._current_formatted_key_info = None  # 현재 입력된 키 정보
         
-        self._setup_ui(show_details)
+        self._setup_ui(show_detail_key_infos)
         self._setup_connections()
     
-    def _setup_ui(self, show_details):
+    def _setup_ui(self, show_detail_key_infos):
         """UI 컴포넌트 초기화 및 배치"""
         KeyInputLayout__QVBoxLayout = QVBoxLayout()
         
@@ -68,7 +68,7 @@ class EnteredKeyInfoDialog(QDialog):
         KeyInputLayout__QVBoxLayout.addWidget(self.NumLockWarning__QLabel)
         
         # 키 입력 위젯
-        self.entered_key_info_widget = EnteredKeyInfoWidget(self, show_details)
+        self.entered_key_info_widget = EnteredKeyInfoWidget(self, show_detail_key_infos)
         KeyInputLayout__QVBoxLayout.addWidget(self.entered_key_info_widget)
         
         # 키 정보 라벨
@@ -116,11 +116,11 @@ class EnteredKeyInfoDialog(QDialog):
         UI 업데이트를 하고, Numlock 상태 체크를 하고, 키 정보 변경 시그널을 보내고, 확인 버튼 활성화 상태 업데이트를 한다
         """
         self.base_log_manager.log(
-            message=f"_on_key_pressed - 입력받은 데이터(formatted_key_info): {formatted_key_info}",
+            message=f"입력받은 데이터(formatted_key_info): {formatted_key_info}",
             level="DEBUG",
-            file_name="entered_key_info_dialog"
+            file_name="entered_key_info_dialog", 
+            method_name="_on_key_pressed"
         )
-        
         # 키 정보 저장
         self._current_formatted_key_info = formatted_key_info
         
@@ -168,24 +168,27 @@ class EnteredKeyInfoDialog(QDialog):
     def _on_confirm(self):
         """확인 버튼 클릭 시"""
         self.base_log_manager.log(
-            message=f"_on_confirm - 확인 버튼 클릭 시 현재 키 정보 저장(current_key_info): {self._current_formatted_key_info}",
+            message=f"확인 버튼 클릭 시 현재 키 정보 저장(current_key_info): {self._current_formatted_key_info}",
             level="DEBUG",
-            file_name="entered_key_info_dialog"
+            file_name="entered_key_info_dialog", 
+            method_name="_on_confirm"
         )
         
         if self._current_formatted_key_info:  # 키 정보가 있는 경우
             self.base_log_manager.log(
-                message="_on_confirm - 키 입력 모달의 확인버튼이 클릭되었습니다.",
+                message="키 입력 모달의 확인버튼이 클릭되었습니다.",
                 level="INFO",
-                file_name="entered_key_info_dialog"
+                file_name="entered_key_info_dialog", 
+                method_name="_on_confirm"
             )
             # 결과값 저장
             self._result_key_info = self._current_formatted_key_info
 
             self.base_log_manager.log(
-                message=f"_on_confirm - 키 입력 모달 닫히기 전 최종으로 저장된 키 정보(result_key_info): {self._result_key_info}",
+                message=f"키 입력 모달 닫히기 전 최종으로 저장된 키 정보(result_key_info): {self._result_key_info}",
                 level="DEBUG",
-                file_name="entered_key_info_dialog"
+                file_name="entered_key_info_dialog", 
+                method_name="_on_confirm"
             )
 
             # 키보드 훅 정리

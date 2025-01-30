@@ -61,11 +61,11 @@ class ModifierKeys:
     # AltGr은 오른쪽 Alt와 동일하게 처리
     ALTGR = R_ALT
 
-def get_key_name(vk_code, kb_flags):
+def get_key_name(virtual_key_code_number, kb_flags):
     """가상 키 코드를 사용자가 읽을 수 있는 키 이름으로 변환합니다.
     
     Args:
-        vk_code (int): 변환할 가상 키 코드
+        virtual_key_code_number (int): 변환할 가상 키 코드
         kb_flags (int): 키보드 플래그 (확장 키 여부 등의 추가 정보)
     
     Returns:
@@ -143,23 +143,23 @@ def get_key_name(vk_code, kb_flags):
     }
 
     # 숫자패드 엔터 키의 특수 처리
-    if vk_code == win32con.VK_RETURN and (kb_flags & 0x1):  # 확장 키 플래그 확인
+    if virtual_key_code_number == win32con.VK_RETURN and (kb_flags & 0x1):  # 확장 키 플래그 확인
         return '숫자패드 엔터'
     
-    if vk_code in special_keys:
-        return special_keys[vk_code]
+    if virtual_key_code_number in special_keys:
+        return special_keys[virtual_key_code_number]
     # 일반 문자키 (A-Z)
-    elif 0x41 <= vk_code <= 0x5A:
-        return chr(vk_code)
+    elif 0x41 <= virtual_key_code_number <= 0x5A:
+        return chr(virtual_key_code_number)
     # 숫자키 (0-9)
-    elif 0x30 <= vk_code <= 0x39:
-        return chr(vk_code)
+    elif 0x30 <= virtual_key_code_number <= 0x39:
+        return chr(virtual_key_code_number)
     # 기타 키
     else:
-        return f'키 코드 {vk_code}'
+        return f'키 코드 {virtual_key_code_number}'
 
 def get_modifier_key_flags():
-    """현재 활성화된 수정자 키의 상태를 비트 플래그로 반환합니다.
+    """현재 입력된 수정자 키의 상태를 비트 플래그로 반환합니다.
     
     Returns:
         int: ModifierKeys 클래스에 정의된 비트 플래그의 조합
@@ -187,7 +187,7 @@ def get_modifier_key_flags():
     return modifiers_key_flag
 
 def get_modifier_text(modifiers_key_flag):
-    """수정자 키 상태를 텍스트로 변환합니다.
+    """get_modifier_key_flags에서 정의된 modifiers_key_flag(수정자 키 상태를 비트 플래그로 반환한 값)으로 인지하기 쉬운 텍스트 형태로 변환합니다.
     
     Args:
         modifiers_key_flag (int): ModifierKeys 클래스에 정의된 비트 플래그의 조합
@@ -248,11 +248,11 @@ def get_modifier_from_text(modifier_text):
             
     return modifiers_key_flag
 
-def get_scan_code(key):
+def get_hw_key_scan_code(virtual_key_code_name):
     """키 코드에 해당하는 스캔 코드를 반환합니다.
     
     Args:
-        key (int): 가상 키 코드
+        virtual_key_code_name (str): 키 이름 (예: '엔터', '왼쪽 쉬프트', 'A' 등)
     
     Returns:
         int: 해당 키의 스캔 코드
@@ -298,37 +298,56 @@ def get_scan_code(key):
     }
 
     # 가상 키와 스캔 코드
-    if key in key_code_map:
-        virtual_key = key_code_map[key]
+    if virtual_key_code_name in key_code_map:
+        virtual_key = key_code_map[virtual_key_code_name]
     else:
         # 일반 문자키의 경우
-        virtual_key = ord(key.upper())
+        virtual_key = ord(virtual_key_code_name.upper())
 
     # 숫자패드 엔터 키의 특수 처리
-    if key == '엔터':
-        scan_code = 28  # 0x1C (28) 
+    if virtual_key_code_name == '엔터':
+        hw_key_scan_code = 28  # 0x1C (28) 
     else:
-        scan_code = win32api.MapVirtualKey(virtual_key, 0)
+        hw_key_scan_code = win32api.MapVirtualKey(virtual_key, 0)
 
-    return scan_code, virtual_key
+    return hw_key_scan_code, virtual_key
 
-def get_key_location(scan_code):
+def get_key_location(hw_key_scan_code):
     """스캔 코드를 기반으로 키의 물리적 위치 정보를 반환합니다.
     
     Args:
-        scan_code (int): 키보드 스캔 코드
+        hw_key_scan_code (int): 키보드 스캔 코드
     
     Returns:
         str: 키의 위치 설명 (예: '왼쪽', '오른쪽', '숫자패드')
     """
     # 예시적인 위치 판단 (실제 구현 시 더 자세한 매핑 필요)
-    if scan_code in [42, 29, 56]:  # 왼쪽 Shift, Ctrl, Alt
+    if hw_key_scan_code in [42, 29, 56]:  # 왼쪽 Shift, Ctrl, Alt
         return "왼쪽키"
-    elif scan_code in [54, 285, 312]:  # 오른쪽 Shift, Ctrl, Alt
+    elif hw_key_scan_code in [54, 285, 312]:  # 오른쪽 Shift, Ctrl, Alt
         return "오른쪽키"
-    elif 71 <= scan_code <= 83:  # 숫자패드 영역
+    elif 71 <= hw_key_scan_code <= 83:  # 숫자패드 영역
         return "숫자패드키"
     return "메인키"
+
+def create_simple_display_text(modifier_text: str, key_code_name: str, location: str) -> str:
+    """키 입력 정보를 표시용 텍스트로 변환합니다.
+    
+    Args:
+        modifier_text (str): 수정자 키 텍스트 (예: '왼쪽 Ctrl', '없음')
+        key_code_name (str): 키 코드 이름
+        location (str): 키의 물리적 위치
+        
+    Returns:
+        str: UI에 표시할 텍스트 (예: '왼쪽 Ctrl + A  ((메인키))')
+    """
+    if not key_code_name:
+        return f"알 수 없는 키  (({location}))"
+        
+    if modifier_text != '없음':
+        return f"{modifier_text} + {key_code_name}  (({location}))"
+    
+    return f"{key_code_name}  (({location}))"
 
 def create_formatted_key_info(raw_key_info):
     """키보드 입력의 raw 정보를 UI 표시와 이벤트 처리에 적합한 형식으로 변환합니다.
@@ -339,47 +358,44 @@ def create_formatted_key_info(raw_key_info):
     Args:
         raw_key_info (dict): 키보드 입력 원시 정보
             {
-                'key_code': str,      # 키의 표시 이름 (예: 'A', '엔터', '방향키 왼쪽 ←') 
-                'scan_code': int,     # 하드웨어 키보드의 물리적 위치 값
+                'hw_key_scan_code': int,     # 하드웨어 키보드의 물리적 위치 값
                 'virtual_key': int,   # Windows API 가상 키 코드
                 'modifiers_key_flag': int,     # Qt 기반 수정자 키 상태 플래그 (예: NoModifier=0, ShiftModifier=0x02000000, ControlModifier=0x04000000, AltModifier=0x08000000)
-                'is_system_key': bool # ALT 키 눌림 여부
             }
 
     Returns:
         formatted_key_info (dict): 표준화된 키 정보
             {
-                'key_code': str,      # 키의 표시 이름 (예: 'A', '엔터', '방향키 왼쪽 ←')
-                'scan_code': int,     # 하드웨어 키보드의 물리적 위치 값 
+                'hw_key_scan_code': int,     # 하드웨어 키보드의 물리적 위치 값 
                 'virtual_key': int,   # Windows API 가상 키 코드
                 'location': str,      # 키보드 위치 (예: '왼쪽키', '오른쪽키', '숫자패드키', '메인키')
                 'modifiers_key_flag': int,     # Qt 기반 수정자 키 상태 플래그 (예: NoModifier=0, ShiftModifier=0x02000000, ControlModifier=0x04000000, AltModifier=0x08000000)
                 'modifier_text': str, # 수정자 키 텍스트 (예: '왼쪽 Ctrl', '오른쪽 Alt', '왼쪽 Shift')
-                'is_system_key': bool # ALT 키 눌림 여부
                 'simple_display_text': str   # UI에 표시할 간단한 텍스트 (예: '왼쪽 Ctrl + A  ((메인키))')
             }
     """
     
-    location = get_key_location(raw_key_info['scan_code'])
+    key_code_name = get_key_name(raw_key_info['virtual_key'], raw_key_info['modifiers_key_flag'])
+
+    location = get_key_location(raw_key_info['hw_key_scan_code'])
 
     # get_modifier_text() 함수에서 수정자키가 없을 때 '없음'을 반환함
     modifier_text = get_modifier_text(raw_key_info['modifiers_key_flag'])
     
     # 간단한 표시 텍스트 생성
-    simple_display_text = f"{modifier_text} + {raw_key_info['key_code']}  (({location}))" if modifier_text != '없음' else f"{raw_key_info['key_code']}  (({location}))"
-    if not raw_key_info['key_code']:
-        simple_display_text = f"알 수 없는 키  (({location}))"
+    simple_display_text = create_simple_display_text(modifier_text, key_code_name, location)
+
 
     # 애플리케이션 전체에서 사용할 표준화된 키 정보 생성
     formatted_key_info = {
-        'key_code': raw_key_info['key_code'],
-        'scan_code': raw_key_info['scan_code'],
+        'key_code': key_code_name,
+        'hw_key_scan_code': raw_key_info['hw_key_scan_code'],
         'virtual_key': raw_key_info['virtual_key'],
         'location': location,        
         'modifiers_key_flag': raw_key_info['modifiers_key_flag'],
         'modifier_text': modifier_text,
         'is_system_key': raw_key_info.get('is_system_key', False),
-        'simple_display_text': simple_display_text,
+        'simple_display_text': simple_display_text
     }
     
     return formatted_key_info
@@ -428,11 +444,9 @@ class KeyboardHook(QObject):
                 
             kb = lParam.contents
             raw_key_info = {
-                'key_code': get_key_name(kb.vkCode, kb.flags),
-                'scan_code': kb.scanCode,
+                'hw_key_scan_code': kb.scanCode,
                 'virtual_key': kb.vkCode,
                 'modifiers_key_flag': get_modifier_key_flags(),
-                'is_system_key': wParam in (WM_SYSKEYDOWN, WM_SYSKEYUP)
             }
             
             formatted_key_info = create_formatted_key_info(raw_key_info)

@@ -542,11 +542,11 @@ class LogicExecutor(QObject):
             
             # 키 입력 관련 정보 미리 계산
             virtual_key = step['virtual_key']
-            scan_code = step['scan_code']
+            hw_key_scan_code = step['hw_key_scan_code']
             flags = 0
             
             # 확장 키 플래그 설정
-            if step['key_code'] == '숫자패드 엔터' or scan_code > 0xFF:
+            if step['key_code'] == '숫자패드 엔터' or hw_key_scan_code > 0xFF:
                 flags |= win32con.KEYEVENTF_EXTENDEDKEY
             
             # 쉼표 키 특별 처리
@@ -559,27 +559,27 @@ class LogicExecutor(QObject):
                     message=f"""
                     키 누르기 실행
                     - 가상 키: {virtual_key}
-                    - 스캔 코드: {scan_code} 
+                    - 스캔 코드: {hw_key_scan_code} 
                     - 플래그: {flags}
                     """,
                     level="DEBUG",
                     file_name="logic_executor",
                     print_to_terminal=True
                 )
-                win32api.keybd_event(virtual_key, scan_code, flags, 0)
+                win32api.keybd_event(virtual_key, hw_key_scan_code, flags, 0)
             else:  # 떼기
                 self.base_log_manager.log(
                     message=f"""
                     키 떼기 실행
                     - 가상 키: {virtual_key}
-                    - 스캔 코드: {scan_code}
+                    - 스캔 코드: {hw_key_scan_code}
                     - 플래그: {flags | win32con.KEYEVENTF_KEYUP}
                     """, 
                     level="DEBUG",
                     file_name="logic_executor",
                     print_to_terminal=True
                 )
-                win32api.keybd_event(virtual_key, scan_code, flags | win32con.KEYEVENTF_KEYUP, 0)
+                win32api.keybd_event(virtual_key, hw_key_scan_code, flags | win32con.KEYEVENTF_KEYUP, 0)
             
             self.base_log_manager.log(
                 message="win32api.keybd_event 호출 완료",
@@ -1109,7 +1109,7 @@ class LogicExecutor(QObject):
         
         # 가상 키와 스캔 코드 비교
         is_matched = (trigger_key.get('virtual_key') == formatted_key_info.get('virtual_key') and
-                     trigger_key.get('scan_code') == formatted_key_info.get('scan_code'))
+                     trigger_key.get('hw_key_scan_code') == formatted_key_info.get('hw_key_scan_code'))
         
         # 매칭된 경우에만 로그 출력
         if is_matched:

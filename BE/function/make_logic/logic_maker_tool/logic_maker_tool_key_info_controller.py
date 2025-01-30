@@ -36,7 +36,7 @@ class LogicMakerToolKeyInfoController(QObject):
             )
             return False
             
-        required_fields = ['type', 'key_code', 'modifiers_key_flag', 'scan_code', 'virtual_key']
+        required_fields = ['type', 'key_code', 'modifiers_key_flag', 'hw_key_scan_code', 'virtual_key']
         for field in required_fields:
             if field not in key_info:
                 self.base_log_manager.log(
@@ -84,7 +84,8 @@ class LogicMakerToolKeyInfoController(QObject):
                 message=f"잘못된 형식의 데이터(entered_key_info): {type(entered_key_info)}",
                 level="ERROR",
                 file_name="logic_maker_tool_key_info_controller", 
-                method_name="key_state_info_process"
+                method_name="key_state_info_process",
+                print_to_terminal=True
             )
             return
             
@@ -97,7 +98,7 @@ class LogicMakerToolKeyInfoController(QObject):
             'location': entered_key_info.get('location', ''),
             'logic_detail_item_dp_text': f"{entered_key_info.get('simple_display_text')} --- 누르기",
             'action': '누르기',
-            'scan_code': entered_key_info.get('scan_code'),
+            'hw_key_scan_code': entered_key_info.get('hw_key_scan_code'),
             'virtual_key': entered_key_info.get('virtual_key')
         }
         
@@ -110,7 +111,7 @@ class LogicMakerToolKeyInfoController(QObject):
             'location': entered_key_info.get('location', ''),
             'logic_detail_item_dp_text': f"{entered_key_info.get('simple_display_text')} --- 떼기",
             'action': '떼기',
-            'scan_code': entered_key_info.get('scan_code'),
+            'hw_key_scan_code': entered_key_info.get('hw_key_scan_code'),
             'virtual_key': entered_key_info.get('virtual_key')
         }
         
@@ -130,7 +131,8 @@ class LogicMakerToolKeyInfoController(QObject):
                     message=f"키 정보 검증 실패(key_info): {key_info}",
                     level="ERROR",
                     file_name="logic_maker_tool_key_info_controller", 
-                    method_name="key_state_info_process"
+                    method_name="key_state_info_process",
+                    print_to_terminal=True
                 )
         
         self.base_log_manager.log(

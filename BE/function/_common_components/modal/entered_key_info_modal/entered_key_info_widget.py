@@ -14,15 +14,15 @@ class EnteredKeyInfoWidget(QWidget):
     key_input_area_focused = Signal()    # 키 입력 영역이 포커스를 얻었을 때
     key_input_area_unfocused = Signal()  # 키 입력 영역이 포커스를 잃었을 때
     
-    def __init__(self, parent=None, show_details=True):
+    def __init__(self, parent=None, show_detail_key_infos=True):
         """EnteredKeyInfoWidget 초기화
         
         Args:
             parent (QWidget, optional): 부모 위젯
-            show_details (bool): 키 입력 상세 정보 표시 여부
+            show_detail_key_infos (bool): 키 입력 상세 정보 표시 여부
         """
         super().__init__(parent)
-        self.show_details = show_details
+        self.show_detail_key_infos = show_detail_key_infos
         self.base_log_manager = BaseLogManager.instance()
         self._setup_ui()
     
@@ -41,16 +41,16 @@ class EnteredKeyInfoWidget(QWidget):
         self.key_display.focusOutEvent = self._on_focus_out
         layout.addWidget(self.key_display)
         
-        if self.show_details:
+        if self.show_detail_key_infos:
             # 키 정보 레이블들
             self.key_code_label = QLabel("키 코드: ")
-            self.scan_code_label = QLabel("스캔 코드 (하드웨어 고유값): ")
+            self.hw_key_scan_code_label = QLabel("스캔 코드 (하드웨어 고유값): ")
             self.virtual_key_label = QLabel("확장 가상 키 (운영체제 레벨의 고유 값): ")
             self.location_label = QLabel("키보드 위치: ")
             self.modifiers_key_flag_label = QLabel("수정자 키: ")
             
             layout.addWidget(self.key_code_label)
-            layout.addWidget(self.scan_code_label)
+            layout.addWidget(self.hw_key_scan_code_label)
             layout.addWidget(self.virtual_key_label)
             layout.addWidget(self.location_label)
             layout.addWidget(self.modifiers_key_flag_label)
@@ -73,11 +73,11 @@ class EnteredKeyInfoWidget(QWidget):
         """
         if formatted_key_info:
             self.key_display.setText(formatted_key_info['simple_display_text'])
-            if self.show_details:
+            if self.show_detail_key_infos:
                 self.key_code_label.setText(f"키 코드: {formatted_key_info['key_code']}")
-                self.scan_code_label.setText(f"스캔 코드: {formatted_key_info['scan_code']}")
-                self.virtual_key_label.setText(f"가상 키: {formatted_key_info['virtual_key']}")
-                self.location_label.setText(f"위치: {formatted_key_info['location']}")
+                self.hw_key_scan_code_label.setText(f"스캔 코드 (하드웨어 고유값): {formatted_key_info['hw_key_scan_code']}")
+                self.virtual_key_label.setText(f"확장 가상 키 (운영체제 레벨의 고유 값): {formatted_key_info['virtual_key']}")
+                self.location_label.setText(f"키보드 위치: {formatted_key_info['location']}")
                 self.modifiers_key_flag_label.setText(f"수정자 키: {formatted_key_info['modifier_text']}")
         else:
             self.clear_key()
@@ -85,9 +85,9 @@ class EnteredKeyInfoWidget(QWidget):
     def clear_key(self):
         """키 정보 표시 초기화"""
         self.key_display.clear()
-        if self.show_details:
+        if self.show_detail_key_infos:
             self.key_code_label.setText("키 코드: ")
-            self.scan_code_label.setText("스캔 코드: ")
-            self.virtual_key_label.setText("가상 키: ")
-            self.location_label.setText("위치: ")
+            self.hw_key_scan_code_label.setText("스캔 코드 (하드웨어 고유값): ")
+            self.virtual_key_label.setText("확장 가상 키 (운영체제 레벨의 고유 값): ")
+            self.location_label.setText("키보드 위치: ")
             self.modifiers_key_flag_label.setText("수정자 키: ")

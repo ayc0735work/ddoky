@@ -274,7 +274,7 @@ class LogicsDataSettingFilesManager:
             'action': item.get('action', ''),
             'type': 'key_input',
             'key_code': item.get('key_code', ''),
-            'scan_code': item.get('scan_code', 0),
+            'hw_key_scan_code': item.get('hw_key_scan_code', 0),
             'virtual_key': item.get('virtual_key', 0),
             'modifiers_key_flag': item.get('modifiers_key_flag', 0)
         }
@@ -305,7 +305,7 @@ class LogicsDataSettingFilesManager:
             'is_system_key': trigger_key.get('is_system_key', False),
             'key_code': trigger_key.get('key_code', ''),
             'modifiers_key_flag': trigger_key.get('modifiers_key_flag', 0),
-            'scan_code': trigger_key.get('scan_code', 0),
+            'hw_key_scan_code': trigger_key.get('hw_key_scan_code', 0),
             'virtual_key': trigger_key.get('virtual_key', 0)
         }
 

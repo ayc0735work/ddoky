@@ -27,7 +27,7 @@
 ```python
 {
     'key_code': str,          # 키 코드
-    'scan_code': int,         # 스캔 코드
+    'hw_key_scan_code': int,         # 스캔 코드
     'virtual_key': int,       # 가상 키 코드
     'modifiers_key_flag': list,        # 수정자 키 목록
     'simple_display_text': str # 간단한 표시 텍스트
@@ -68,7 +68,7 @@
 ```python
 {
     'key_code': str,
-    'scan_code': int,
+    'hw_key_scan_code': int,
     'virtual_key': int,
     'modifiers_key_flag': list,
     'simple_display_text': str
@@ -84,7 +84,7 @@
     'modifiers_key_flag': list,
     'logic_detail_item_dp_text': str,
     'action': '누르기',
-    'scan_code': int,
+    'hw_key_scan_code': int,
     'virtual_key': int
 }
 
@@ -95,7 +95,7 @@
     'modifiers_key_flag': list,
     'logic_detail_item_dp_text': str,
     'action': '떼기',
-    'scan_code': int,
+    'hw_key_scan_code': int,
     'virtual_key': int
 }
 ```
@@ -122,7 +122,7 @@
     'modifiers_key_flag': list,
     'logic_detail_item_dp_text': str,
     'action': str,
-    'scan_code': int,
+    'hw_key_scan_code': int,
     'virtual_key': int,
     'order': int  # 자동 할당
 }
