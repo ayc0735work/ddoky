@@ -250,9 +250,12 @@ class MainWindow(QMainWindow):
         self.basic_features_layout.addWidget(self.logic_list_widget)
         
         # 로직 상세 정보 위젯과 컨트롤러
-        self.logic_detail_widget = LogicDetailWidget(self.logic_item_repository)
-        self.logic_detail_controller = LogicDetailController(self.logic_detail_widget)
-        self.logic_detail_widget.set_controller(self.logic_detail_controller)  # 컨트롤러 설정
+        self.logic_detail_widget = LogicDetailWidget(parent=self)
+        self.logic_detail_repository = LogicDetailDataRepositoryAndService()
+        self.logic_detail_controller = LogicDetailController(
+            widget=self.logic_detail_widget,
+            repository=self.logic_detail_repository
+        )
         self.basic_features_layout.addWidget(self.logic_detail_widget)
         
         # 로직 메이커 도구 위젯 초기화
@@ -334,7 +337,7 @@ class MainWindow(QMainWindow):
         self.process_manager.process_selected.connect(self.countdown_controller__input_sequence.process_manager.set_selected_process)
         
         # 로직 리스트의 logic_detail_updated 시그널을 로직 상세 위젯의 update_logic_detail_data에 연결
-        self.logic_list_controller.logic_detail_updated.connect(self.logic_detail_widget.update_logic_detail_data)
+        # self.logic_list_controller.logic_detail_updated.connect(self.logic_detail_widget.update_logic_detail_data)
         
         # 로직 실행 관련 시그널 연결
         self.logic_operation_widget.operation_toggled.connect(self._on_logic_operation_toggled)
